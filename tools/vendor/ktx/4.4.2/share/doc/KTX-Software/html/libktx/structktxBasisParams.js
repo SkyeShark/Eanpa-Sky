@@ -1,0 +1,28 @@
+var structktxBasisParams =
+[
+    [ "compressionLevel", "structktxBasisParams.html#a27652d35542830750e195ab57dd1f3b1", null ],
+    [ "endpointRDOThreshold", "structktxBasisParams.html#aafccbc4e43845f62cf500d4792c7cf6a", null ],
+    [ "inputSwizzle", "structktxBasisParams.html#a0d67004efa49e08a7f39f71c93286b0a", null ],
+    [ "maxEndpoints", "structktxBasisParams.html#a47519cb97d15ade856f899023eab9960", null ],
+    [ "maxSelectors", "structktxBasisParams.html#a93a37769ec5b285051083aa8457e1d1a", null ],
+    [ "noEndpointRDO", "structktxBasisParams.html#a24b0d409b2fbd536216196ca4e27358f", null ],
+    [ "normalMap", "structktxBasisParams.html#a59af70a939f66dce9749174c12cc3725", null ],
+    [ "noSelectorRDO", "structktxBasisParams.html#a740b64ff37292977ab3cf04d3fb3cd6b", null ],
+    [ "noSSE", "structktxBasisParams.html#a0024310d24bafd33ab41de3bd7dd6887", null ],
+    [ "preSwizzle", "structktxBasisParams.html#a13bd0ffd0161a44f84482ece6b270ce7", null ],
+    [ "qualityLevel", "structktxBasisParams.html#aac5068885c586a1454efbf2e9cf4b3ed", null ],
+    [ "selectorRDOThreshold", "structktxBasisParams.html#aea4a4f651952b4831fdfc784f7058866", null ],
+    [ "separateRGToRGB_A", "structktxBasisParams.html#a2b5e77802a353a04d6b8d1d848f98d47", null ],
+    [ "structSize", "structktxBasisParams.html#a51fe881fb2eae346ba017f7f55a1d642", null ],
+    [ "threadCount", "structktxBasisParams.html#a04aa92e2192b36b2d9701d23fd246386", null ],
+    [ "uastc", "structktxBasisParams.html#ac9363a20b43cebc11ab690aec5fbd38d", null ],
+    [ "uastcFlags", "structktxBasisParams.html#ad09ee28fdd7fcd267771deb3d11c2cee", null ],
+    [ "uastcRDO", "structktxBasisParams.html#a762083beb362fc21fc96f9fec210f2cb", null ],
+    [ "uastcRDODictSize", "structktxBasisParams.html#a2db4d897c3dddf44f94be794f242343c", null ],
+    [ "uastcRDODontFavorSimplerModes", "structktxBasisParams.html#a2800eb7a62ed740bd4e13af330058f75", null ],
+    [ "uastcRDOMaxSmoothBlockErrorScale", "structktxBasisParams.html#a144c86b7675a79226b2e88a008078cc8", null ],
+    [ "uastcRDOMaxSmoothBlockStdDev", "structktxBasisParams.html#aacf2963f160d1079e6abccc81e17f7c4", null ],
+    [ "uastcRDONoMultithreading", "structktxBasisParams.html#a8de3ee72ab61a663a495f174796a7b17", null ],
+    [ "uastcRDOQualityScalar", "structktxBasisParams.html#a1214b8b4eca85e666bf92862e0f22aeb", null ],
+    [ "verbose", "structktxBasisParams.html#a6ca13a756a2066f8082772b9207e4bba", null ]
+];

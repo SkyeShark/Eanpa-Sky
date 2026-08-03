@@ -1,0 +1,315 @@
+.TH "ktx_encode" 1 "Sat Oct 4 2025 08:43:36" "Version 4.4.2" "KTX Tools Reference" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ktx_encode \- ktx encode 
+.PP
+Encode a KTX2 file\&.
+.SH "SYNOPSIS"
+.PP
+ktx encode [option\&.\&.\&.] \fIinput-file\fP \fIoutput-file\fP 
+.SH "DESCRIPTION"
+.PP
+\fBktx\fP \fBencode\fP can encode the KTX file specified as the \fIinput-file\fP argument to a universal format or one of the ASTC formats, optionally supercompress the result, and save it as the \fIoutput-file\fP\&. If the \fIinput-file\fP is '-' the file will be read from the stdin\&. If the \fIoutput-path\fP is '-' the output file will be written to the stdout\&.
+
+.PP
+For universal and ASTC LDR formats, the input file must be R8, R8G8, R8G8B8 or R8G8B8A8 (or their sRGB variants)\&.
+
+.PP
+If the input file is invalid the first encountered validation error is displayed to the stderr and the command exits with the relevant non-zero status code\&.
+.SH "OPTIONS"
+.PP
+.SS "General Options"
+The following options are available: 
+
+.PP
+.IP "\fB--codec basis-lz | uastc 
+.IP "" 1c
+Target codec followed by the codec specific options\&. With each choice the specific and common encoder options listed \fBbelow\fP become valid, otherwise they are ignored\&. Case-insensitive\&.
+
+.PP
+
+.PP
+.IP "\fBbasis-lz:  
+.IP "" 1c
+Supercompress the image data with transcodable ETC1S / BasisLZ\&. RED images will become RGB with RED in each component (RRR)\&. RG images will have R in the RGB part and G in the alpha part of the compressed texture (RRRG)\&. When set, the \fIbasis-lz\fP options become valid\&.  
+
+.PP
+.IP "\fBuastc:  
+.IP "" 1c
+Create a texture in high-quality transcodable UASTC format\&. When set the \fIuastc\fP options become valid\&.  
+
+.PP
+
+.PP
+
+.PP
+.IP "\fB--format 
+.IP "" 1c
+KTX format enum that specifies the target ASTC format\&. Non-ASTC formats are invalid\&. When specified the ASTC-specific and common encoder options listed \fBbelow\fP become valid, otherwise they are ignored\&. 
+
+.PP
+
+.PP
+.IP "\fB--zstd <level> 
+.IP "" 1c
+Supercompress the data with Zstandard\&. Cannot be used with ETC1S / BasisLZ format\&. Level range is [1,22]\&. Lower levels give faster but worse compression\&. Values above 20 should be used with caution as they require more memory\&.  
+
+.PP
+.IP "\fB--zlib <level> 
+.IP "" 1c
+Supercompress the data with ZLIB\&. Cannot be used with ETC1S / BasisLZ format\&. Level range is [1,9]\&. Lower levels give faster but worse compression\&.  
+
+.PP
+
+.PP
+
+.PP
+.IP "\fB-h, --help 
+.IP "" 1c
+Print this usage message and exit\&. 
+
+.PP
+.IP "\fB-v, --version 
+.IP "" 1c
+Print the version number of this program and exit\&. 
+
+.PP
+.SS "Specific and Common Encoding Options"
+The following specific and common encoder options are available\&. Specific options become valid only if their encoder has been selected\&. Common encoder options become valid when an encoder they apply to has been selected\&. Otherwise they are ignored\&.   
+
+.PP
+.IP "\fBASTC:  
+.IP "" 1c
+
+.PP
+
+.PP
+.IP "\fB--astc-quality <level> 
+.IP "" 1c
+The quality level configures the quality-performance tradeoff for the compressor; more complete searches of the search space improve image quality at the expense of compression time\&. Default is 'medium'\&. The quality level can be set between fastest (0) and exhaustive (100) via the following fixed quality presets: Level Quality fastest (equivalent to quality = 0) fast (equivalent to quality = 10) medium (equivalent to quality = 60) thorough (equivalent to quality = 98) exhaustive (equivalent to quality = 100) 
+
+.PP
+.IP "\fB--astc-perceptual 
+.IP "" 1c
+The codec should optimize for perceptual error, instead of direct RMS error\&. This aims to improve perceived image quality, but typically lowers the measured PSNR score\&. Perceptual methods are currently only available for normal maps and RGB color data\&. 
+
+.PP
+
+.PP
+
+.PP
+
+.PP
+.IP "\fBbasis-lz:  
+.IP "" 1c
+
+.PP
+.IP "\fB--clevel <level> 
+.IP "" 1c
+ETC1S / BasisLZ compression level, an encoding speed vs\&. quality tradeoff\&. Range is [0,6], default is 1\&. Higher values are slower but give higher quality\&. Use \fB--qlevel\fP first\&. 
+
+.PP
+.IP "\fB--qlevel <level> 
+.IP "" 1c
+ETC1S / BasisLZ quality level\&. Range is [1,255]\&. Lower gives better compression/lower quality/faster\&. Higher gives less compression/higher quality/slower\&. \fB--qlevel\fP automatically determines values for \fB--max-endpoints\fP, \fB--max-selectors\fP, \fB--endpoint-rdo-threshold\fP and \fB--selector-rdo-threshold\fP for the target quality level\&. Setting these options overrides the values determined by -qlevel which defaults to 128 if neither it nor \fB--max-endpoints\fP and \fB--max-selectors\fP have been set\&.
+
+.PP
+Note that both of \fB--max-endpoints\fP and \fB--max-selectors\fP must be set for them to have any effect\&. If all three options are set, a warning will be issued that \fB--qlevel\fP will be ignored\&.
+
+.PP
+Note also that \fB--qlevel\fP will only determine values for \fB--endpoint-rdo-threshold\fP and \fB--selector-rdo-threshold\fP when its value exceeds 128, otherwise their defaults will be used\&. 
+
+.PP
+.IP "\fB--max-endpoints <arg> 
+.IP "" 1c
+Manually set the maximum number of color endpoint clusters\&. Range is [1,16128]\&. Default is 0, unset\&. 
+
+.PP
+.IP "\fB--endpoint-rdo-threshold <arg> 
+.IP "" 1c
+Set endpoint RDO quality threshold\&. The default is 1\&.25\&. Lower is higher quality but less quality per output bit (try [1\&.0,3\&.0])\&. This will override the value chosen by \fB--qlevel\fP\&. 
+
+.PP
+.IP "\fB--max-selectors <arg> 
+.IP "" 1c
+Manually set the maximum number of color selector clusters from [1,16128]\&. Default is 0, unset\&. 
+
+.PP
+.IP "\fB--selector-rdo-threshold <arg> 
+.IP "" 1c
+Set selector RDO quality threshold\&. The default is 1\&.25\&. Lower is higher quality but less quality per output bit (try [1\&.0,3\&.0])\&. This will override the value chosen by \fB--qlevel\fP\&. 
+
+.PP
+.IP "\fB--no-endpoint-rdo 
+.IP "" 1c
+Disable endpoint rate distortion optimizations\&. Slightly faster, less noisy output, but lower quality per output bit\&. Default is to do endpoint RDO\&. 
+
+.PP
+.IP "\fB--no-selector-rdo 
+.IP "" 1c
+Disable selector rate distortion optimizations\&. Slightly faster, less noisy output, but lower quality per output bit\&. Default is to do selector RDO\&. 
+
+.PP
+
+.PP
+
+.PP
+.IP "\fBuastc:  
+.IP "" 1c
+
+.PP
+
+.PP
+.IP "\fB--uastc-quality <level> 
+.IP "" 1c
+This optional parameter selects a speed vs quality tradeoff as shown in the following table:
+
+.PP
+LevelSpeedQuality0 Fastest 43\&.45dB1 Faster 46\&.49dB2 Default 47\&.47dB3 Slower 48\&.01dB4 Very slow 48\&.24dB
+
+.PP
+You are strongly encouraged to also specify \fB--zstd\fP to losslessly compress the UASTC data\&. This and any LZ-style compression can be made more effective by conditioning the UASTC texture data using the Rate Distortion Optimization (RDO) post-process stage\&. When uastc encoding is set the following options become available for controlling RDO: 
+
+.PP
+.IP "\fB--uastc-rdo 
+.IP "" 1c
+Enable UASTC RDO post-processing\&. 
+
+.PP
+.IP "\fB--uastc-rdo-l <lambda> 
+.IP "" 1c
+Set UASTC RDO quality scalar (lambda) to \fIlambda\fP\&. Lower values yield higher quality/larger LZ compressed files, higher values yield lower quality/smaller LZ compressed files\&. A good range to try is [\&.25,10]\&. For normal maps a good range is [\&.25,\&.75]\&. The full range is [\&.001,10\&.0]\&. Default is 1\&.0\&.
+
+.PP
+Note that previous versions used the \fB--uastc-rdo-q\fP option which was removed because the RDO algorithm changed\&. 
+
+.PP
+.IP "\fB--uastc-rdo-d <dictsize> 
+.IP "" 1c
+Set UASTC RDO dictionary size in bytes\&. Default is 4096\&. Lower values=faster, but give less compression\&. Range is [64,65536]\&. 
+
+.PP
+.IP "\fB--uastc-rdo-b <scale> 
+.IP "" 1c
+Set UASTC RDO max smooth block error scale\&. Range is [1\&.0,300\&.0]\&. Default is 10\&.0, 1\&.0 is disabled\&. Larger values suppress more artifacts (and allocate more bits) on smooth blocks\&. 
+
+.PP
+.IP "\fB--uastc-rdo-s <deviation> 
+.IP "" 1c
+Set UASTC RDO max smooth block standard deviation\&. Range is [\&.01,65536\&.0]\&. Default is 18\&.0\&. Larger values expand the range of blocks considered smooth\&. 
+
+.PP
+.IP "\fB--uastc-rdo-f 
+.IP "" 1c
+Do not favor simpler UASTC modes in RDO mode\&. 
+
+.PP
+.IP "\fB--uastc-rdo-m 
+.IP "" 1c
+Disable RDO multithreading (slightly higher compression, deterministic)\&. 
+
+.PP
+
+.PP
+
+.PP
+
+.PP
+.IP "\fBcommon:  
+.IP "" 1c
+
+.PP
+.IP "\fB--normal-mode 
+.IP "" 1c
+Only valid for linear textures with two or more components\&. If the input texture has three or four linear components it is assumed to be a three component linear normal map storing unit length normals as (R=X, G=Y, B=Z)\&. A fourth component will be ignored\&. The map will be converted to a two component X+Y normal map stored as (RGB=X, A=Y) prior to encoding\&. If unsure that your normals are unit length, use \fB--normalize\fP\&. If the input has 2 linear components it is assumed to be an X+Y map of unit normals\&.
+
+.PP
+The Z component can be recovered programmatically in shader code by using the equations: 
+.PP
+.nf
+
+        nml\&.xy = texture(\&.\&.\&.)\&.ga;              // Load in [0,1]
+        nml\&.xy = nml\&.xy * 2\&.0 - 1\&.0;           // Unpack to [-1,1]
+        nml\&.z = sqrt(1 - dot(nml\&.xy, nml\&.xy)); // Compute Z
+                
+.fi
+.PP
+ For ETC1S / BasisLZ encoding, \fB'--encode\fP basis-lz', RDO is disabled (no selector RDO, no endpoint RDO) to provide better quality\&. 
+
+.PP
+.IP "\fB--threads <count> 
+.IP "" 1c
+Explicitly set the number of threads to use during compression\&. By default, ETC1S / BasisLZ will use the number of threads reported by \fRthread::hardware_concurrency\fP or 1 if value returned is 0\&. 
+
+.PP
+.IP "\fB--no-sse 
+.IP "" 1c
+Forbid use of the SSE instruction set\&. Ignored if CPU does not support SSE\&. SSE can only be disabled for the basis-lz and uastc encoders\&. Ignored for other encoders\&.\&. 
+
+.PP
+
+.PP
+
+.PP
+
+.PP
+.IP "\fB
+.IP "" 1c
+
+.PP
+.IP "\fB--compare-ssim 
+.IP "" 1c
+Calculate encoding structural similarity index measure (SSIM) and print it to stdout\&. Requires Basis-LZ, UASTC or ASTC encoding\&. 
+
+.PP
+.IP "\fB--compare-psnr 
+.IP "" 1c
+Calculate encoding peak signal-to-noise ratio (PSNR) and print it to stdout\&. Requires Basis-LZ, UASTC or ASTC encoding\&. 
+
+.PP
+
+.PP
+.SH "EXIT STATUS"
+.PP
+.IP "\(bu" 2
+0 - Success
+.IP "\(bu" 2
+1 - Command line error
+.IP "\(bu" 2
+2 - IO failure
+.IP "\(bu" 2
+3 - Invalid input file
+.IP "\(bu" 2
+4 - Runtime or library error
+.IP "\(bu" 2
+5 - Not supported state or operation
+.IP "\(bu" 2
+6 - Requested feature is not yet implemented  
+.PP
+.SH "HISTORY"
+.PP
+\fBVersion 4\&.0\fP
+.RS 4
+
+.IP "\(bu" 2
+Initial version\&.
+.PP
+.RE
+.PP
+\fBVersion 4\&.4\fP
+.RS 4
+
+.IP "\(bu" 2
+Reorganize encoding options\&.
+.PP
+.RE
+.PP
+.SH "AUTHOR"
+.PP
+.IP "\(bu" 2
+Mátyás Császár [Vader], RasterGrid www\&.rastergrid\&.com
+.IP "\(bu" 2
+Daniel Rákos, RasterGrid www\&.rastergrid\&.com 
+.PP
+

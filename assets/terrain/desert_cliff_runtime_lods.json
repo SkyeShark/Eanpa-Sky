@@ -1,0 +1,192 @@
+{
+  "schema": "eanpa-user-desert-cliff-lods-v1",
+  "blenderVersion": "4.3.2",
+  "lodRatios": [
+    1.0,
+    0.4,
+    0.16
+  ],
+  "lodDistancesMetres": [
+    0,
+    600,
+    1050
+  ],
+  "textureMaximum": 2048,
+  "originalsUntouched": true,
+  "assets": [
+    {
+      "lodWindingRepairs": [
+        {
+          "node": "DesertCliffWideLow_LOD0",
+          "repairs": 0
+        },
+        {
+          "node": "DesertCliffWideLow_LOD1",
+          "repairs": 0
+        },
+        {
+          "node": "DesertCliffWideLow_LOD2",
+          "repairs": 10
+        }
+      ],
+      "key": "wideLow",
+      "master": "assets/terrain/Desert_Cliff_Wide_Mesa_Low.glb",
+      "masterSha256": "77ffa05cc9c04e4763968e187872ef38c6f5599318f3ff07c673ec995234add8",
+      "optimizedSource": "assets/terrain/Desert_Cliff_Wide_Mesa_Low_runtime_2k.glb",
+      "optimizedSourceSha256": "aeea1980e8da1607206b8f78d1945cc6ba4ef0df4d47e4842294f520bef347ed",
+      "runtime": "assets/terrain/Desert_Cliff_Wide_Mesa_Low_runtime_2k_lods.glb",
+      "runtimeSha256": "a5251237247627bf10197fb59643183cce5cfbff2441fe38d39fb5ef4410c5f7",
+      "runtimeBytes": 14039596,
+      "windingRepairs": 0,
+      "lods": [
+        {
+          "lod": 0,
+          "ratio": 1.0,
+          "vertices": 11512,
+          "triangles": 17886,
+          "uvLayers": 1,
+          "materialSlots": 1,
+          "boundaryEdges": 5072,
+          "nonManifoldEdges": 5072,
+          "boundsMin": [
+            -0.9352290034294128,
+            -0.9452850222587585,
+            -0.20794104039669037
+          ],
+          "boundsMax": [
+            0.9353190064430237,
+            0.9503329992294312,
+            0.20427197217941284
+          ]
+        },
+        {
+          "lod": 1,
+          "ratio": 0.4,
+          "vertices": 5864,
+          "triangles": 7154,
+          "uvLayers": 1,
+          "materialSlots": 1,
+          "boundaryEdges": 4508,
+          "nonManifoldEdges": 4508,
+          "boundsMin": [
+            -0.9365264773368835,
+            -0.9452850222587585,
+            -0.2086227387189865
+          ],
+          "boundsMax": [
+            0.9353190064430237,
+            0.9510248303413391,
+            0.20416438579559326
+          ]
+        },
+        {
+          "lod": 2,
+          "ratio": 0.16,
+          "vertices": 2903,
+          "triangles": 2860,
+          "uvLayers": 1,
+          "materialSlots": 1,
+          "boundaryEdges": 2798,
+          "nonManifoldEdges": 2839,
+          "boundsMin": [
+            -0.941853940486908,
+            -0.9496223330497742,
+            -0.21736039221286774
+          ],
+          "boundsMax": [
+            0.93955397605896,
+            0.951088011264801,
+            0.2079032063484192
+          ]
+        }
+      ]
+    },
+    {
+      "lodWindingRepairs": [
+        {
+          "node": "DesertCliffMesaHigh_LOD0",
+          "repairs": 0
+        },
+        {
+          "node": "DesertCliffMesaHigh_LOD1",
+          "repairs": 1
+        },
+        {
+          "node": "DesertCliffMesaHigh_LOD2",
+          "repairs": 25
+        }
+      ],
+      "key": "mesaHigh",
+      "master": "assets/terrain/Desert_Cliff_Mesa_High.glb",
+      "masterSha256": "c0ff4a5aa44fad8f5ec76d699a5ba48b1f72aa6d5a8e13fdb25938ba15701e7e",
+      "optimizedSource": "assets/terrain/Desert_Cliff_Mesa_High_runtime_2k.glb",
+      "optimizedSourceSha256": "c447f767643b795ed3c0c75cacc5593b8d150aee3e9ed92aa1a3cca96034c6a3",
+      "runtime": "assets/terrain/Desert_Cliff_Mesa_High_runtime_2k_lods.glb",
+      "runtimeSha256": "fa2e557fb0e6a5da17bc82d850e693f8406b77ecf43ae709fea80284f49746c6",
+      "runtimeBytes": 17418524,
+      "windingRepairs": 3,
+      "lods": [
+        {
+          "lod": 0,
+          "ratio": 1.0,
+          "vertices": 22268,
+          "triangles": 31984,
+          "uvLayers": 1,
+          "materialSlots": 1,
+          "boundaryEdges": 11940,
+          "nonManifoldEdges": 11940,
+          "boundsMin": [
+            -0.9454429149627686,
+            -0.9259809851646423,
+            -0.5705569982528687
+          ],
+          "boundsMax": [
+            0.9464959502220154,
+            0.939789891242981,
+            0.568481981754303
+          ]
+        },
+        {
+          "lod": 1,
+          "ratio": 0.4,
+          "vertices": 11619,
+          "triangles": 12793,
+          "uvLayers": 1,
+          "materialSlots": 1,
+          "boundaryEdges": 9823,
+          "nonManifoldEdges": 9828,
+          "boundsMin": [
+            -0.9456629157066345,
+            -0.9259809851646423,
+            -0.5712167620658875
+          ],
+          "boundsMax": [
+            0.9464959502220154,
+            0.9408339858055115,
+            0.5680699944496155
+          ]
+        },
+        {
+          "lod": 2,
+          "ratio": 0.16,
+          "vertices": 5845,
+          "triangles": 5116,
+          "uvLayers": 1,
+          "materialSlots": 1,
+          "boundaryEdges": 5686,
+          "nonManifoldEdges": 5824,
+          "boundsMin": [
+            -0.9519096612930298,
+            -0.9366721510887146,
+            -0.5806232690811157
+          ],
+          "boundsMax": [
+            0.9440048336982727,
+            0.9425907135009766,
+            0.5656047463417053
+          ]
+        }
+      ]
+    }
+  ]
+}

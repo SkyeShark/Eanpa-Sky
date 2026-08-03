@@ -1,0 +1,117 @@
+{
+  "format": "eanpa-seedthree-browser-exports/1",
+  "generatedAt": "2026-07-15T22:26:09.9663479Z",
+  "sourceApp": "http://localhost:5390/",
+  "sourceExporter": "THREE.GLTFExporter r184",
+  "exports": [
+    {
+      "file": "saguaro_seed555.glb",
+      "sourcePreset": "saguaro_seed555.seedthree.json",
+      "species": "saguaro",
+      "seed": 555,
+      "bytes": 11704164,
+      "sha256": "11518ba347df150bb7d9cc5efb207e98d9388523a7c8cfa38a03a427ec3d6761",
+      "extensionsUsed": [
+        "KHR_materials_diffuse_transmission",
+        "MSFT_lod"
+      ],
+      "lodNames": [
+        "Saguaro_LOD0",
+        "Saguaro_LOD1",
+        "Saguaro_LOD2",
+        "Saguaro_LOD3"
+      ],
+      "screenCoverage": [
+        0.2688976862334071,
+        0.06722442155835177,
+        0.020620792979792645,
+        0.001
+      ],
+      "realLods": [
+        {
+          "name": "Saguaro_LOD0",
+          "meshCount": 2,
+          "cardMeshCount": 1,
+          "bodyTriangles": 12800,
+          "spineTriangles": 5248,
+          "triangles": 18048
+        },
+        {
+          "name": "Saguaro_LOD1",
+          "meshCount": 2,
+          "cardMeshCount": 1,
+          "bodyTriangles": 4416,
+          "spineTriangles": 1636,
+          "triangles": 6052
+        },
+        {
+          "name": "Saguaro_LOD2",
+          "meshCount": 1,
+          "cardMeshCount": 0,
+          "bodyTriangles": 2048,
+          "spineTriangles": 0,
+          "triangles": 2048
+        }
+      ],
+      "billboardCards": [
+        "billboard_front",
+        "billboard_side"
+      ],
+      "meshes": 7,
+      "materials": 4,
+      "textures": 11,
+      "images": 11
+    },
+    {
+      "file": "joshuaTree_seed555.glb",
+      "sourcePreset": "joshuaTree_seed555.seedthree.json",
+      "species": "joshuaTree",
+      "seed": 555,
+      "bytes": 25496444,
+      "sha256": "0fdbfdc02ab165d28fc2b072c6a2519b28feb79e38957ee084e9ee7700e90402",
+      "extensionsUsed": [
+        "MSFT_lod"
+      ],
+      "lodNames": [
+        "Joshua_Tree_LOD0",
+        "Joshua_Tree_LOD1",
+        "Joshua_Tree_LOD2",
+        "Joshua_Tree_LOD3"
+      ],
+      "screenCoverage": [
+        0.2758609409960013,
+        0.06896523524900032,
+        0.019616778026382318,
+        0.001
+      ],
+      "realLods": [
+        {
+          "name": "Joshua_Tree_LOD0",
+          "meshCount": 2,
+          "cardMeshCount": 1,
+          "triangles": 214604
+        },
+        {
+          "name": "Joshua_Tree_LOD1",
+          "meshCount": 2,
+          "cardMeshCount": 1,
+          "triangles": 79124
+        },
+        {
+          "name": "Joshua_Tree_LOD2",
+          "meshCount": 2,
+          "cardMeshCount": 1,
+          "triangles": 36612
+        }
+      ],
+      "billboardCards": [
+        "billboard_front",
+        "billboard_side"
+      ],
+      "meshes": 8,
+      "materials": 4,
+      "textures": 10,
+      "images": 10
+    }
+  ]
+}

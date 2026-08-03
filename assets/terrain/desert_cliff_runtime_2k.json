@@ -1,0 +1,105 @@
+{
+  "schema": "eanpa-desert-cliff-runtime-2k-v1",
+  "targetTextureSize": 2048,
+  "originalsUntouched": true,
+  "assets": [
+    {
+      "source": "assets/terrain/Desert_Cliff_Wide_Mesa_Low.glb",
+      "runtime": "assets/terrain/Desert_Cliff_Wide_Mesa_Low_runtime_2k.glb",
+      "sourceSha256": "77ffa05cc9c04e4763968e187872ef38c6f5599318f3ff07c673ec995234add8",
+      "runtimeSha256": "aeea1980e8da1607206b8f78d1945cc6ba4ef0df4d47e4842294f520bef347ed",
+      "sourceBytes": 117686776,
+      "runtimeBytes": 13691992,
+      "images": [
+        {
+          "name": "normal",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "runtimeSize": [
+            2048,
+            2048
+          ],
+          "treatment": "lanczos_then_unit_vector_renormalization",
+          "encodedBytes": 5552206
+        },
+        {
+          "name": "Baked_BaseColor",
+          "sourceSize": [
+            8192,
+            8192
+          ],
+          "runtimeSize": [
+            2048,
+            2048
+          ],
+          "treatment": "lanczos",
+          "encodedBytes": 6479095
+        },
+        {
+          "name": "Baked_MetallicRoughness",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "runtimeSize": [
+            2048,
+            2048
+          ],
+          "treatment": "lanczos",
+          "encodedBytes": 1183127
+        }
+      ]
+    },
+    {
+      "source": "assets/terrain/Desert_Cliff_Mesa_High.glb",
+      "runtime": "assets/terrain/Desert_Cliff_Mesa_High_runtime_2k.glb",
+      "sourceSha256": "c0ff4a5aa44fad8f5ec76d699a5ba48b1f72aa6d5a8e13fdb25938ba15701e7e",
+      "runtimeSha256": "c447f767643b795ed3c0c75cacc5593b8d150aee3e9ed92aa1a3cca96034c6a3",
+      "sourceBytes": 133980420,
+      "runtimeBytes": 16748520,
+      "images": [
+        {
+          "name": "normal",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "runtimeSize": [
+            2048,
+            2048
+          ],
+          "treatment": "lanczos_then_unit_vector_renormalization",
+          "encodedBytes": 6666505
+        },
+        {
+          "name": "Baked_BaseColor",
+          "sourceSize": [
+            8192,
+            8192
+          ],
+          "runtimeSize": [
+            2048,
+            2048
+          ],
+          "treatment": "lanczos",
+          "encodedBytes": 7738187
+        },
+        {
+          "name": "Baked_MetallicRoughness",
+          "sourceSize": [
+            4096,
+            4096
+          ],
+          "runtimeSize": [
+            2048,
+            2048
+          ],
+          "treatment": "lanczos",
+          "encodedBytes": 1437490
+        }
+      ]
+    }
+  ]
+}

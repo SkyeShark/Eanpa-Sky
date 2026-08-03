@@ -1,0 +1,351 @@
+{
+  "schema": "eanpa-authored-escarpments-v1",
+  "blenderVersion": "4.3.2",
+  "heightmap": "assets/terrain/painted_escarpment_height_v1.png",
+  "heightmapSha256": "26d125df03377f3fadb8de7c965e080f582e4b8f3a6be4a236a62692f44cf7b3",
+  "heightManifestSha256": "4d567b3ee9e14f962398c2670e308abfe4e920d6f118bffd0cc93db94883af1b",
+  "blend": "assets/terrain/authored_escarpments_v1.blend",
+  "blendSha256": "ed0d0be6532becb68f6d91313d778a70186e4f77fc9035f014185839553601d5",
+  "glb": "assets/terrain/authored_escarpments_v1.glb",
+  "glbSha256": "d94fda0fbc37d6f473d13ea378284580260146e25e21b2c85a3026e30386af0b",
+  "lodRatios": [
+    1.0,
+    0.34,
+    0.11
+  ],
+  "lodDistancesMetres": [
+    0,
+    760,
+    1450
+  ],
+  "buriedTopBorderMetres": 4.5,
+  "closedBottomDepthMetres": 34.0,
+  "materialPayload": "COLOR_0 rgba = cap, exposed-face, talus, macro",
+  "runtimeCollision": false,
+  "modules": [
+    {
+      "name": "WesternButtress",
+      "crop": [
+        0.035,
+        0.105,
+        0.525,
+        0.805
+      ],
+      "worldSizeMetres": [
+        510.0,
+        286.0,
+        94.0
+      ],
+      "terraces": 7,
+      "sideProfileOverhangMetres": 13.5,
+      "lods": [
+        {
+          "lod": 0,
+          "ratio": 1.0,
+          "vertices": 22010,
+          "triangles": 44016,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -278.2174987792969,
+            -141.73487854003906,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            231.7825164794922,
+            144.26512145996094,
+            89.5
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 1,
+          "ratio": 0.34,
+          "vertices": 7484,
+          "triangles": 14964,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -278.2174987792969,
+            -141.73489379882812,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            231.7825164794922,
+            144.26512145996094,
+            89.77277374267578
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 2,
+          "ratio": 0.11,
+          "vertices": 2422,
+          "triangles": 4840,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -278.2174987792969,
+            -141.73489379882812,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            231.7825164794922,
+            144.26512145996094,
+            89.87799835205078
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        }
+      ]
+    },
+    {
+      "name": "NorthernShoulder",
+      "crop": [
+        0.35,
+        0.205,
+        0.685,
+        0.81
+      ],
+      "worldSizeMetres": [
+        352.0,
+        222.0,
+        76.0
+      ],
+      "terraces": 5,
+      "sideProfileOverhangMetres": 9.5,
+      "lods": [
+        {
+          "lod": 0,
+          "ratio": 1.0,
+          "vertices": 15722,
+          "triangles": 31440,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -186.86566162109375,
+            -108.41291809082031,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            165.13433837890625,
+            113.58708190917969,
+            71.5
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 1,
+          "ratio": 0.34,
+          "vertices": 5346,
+          "triangles": 10688,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -186.86566162109375,
+            -108.41351318359375,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            165.13433837890625,
+            113.58708190917969,
+            71.57342529296875
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 2,
+          "ratio": 0.11,
+          "vertices": 1731,
+          "triangles": 3458,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -186.86566162109375,
+            -108.41351318359375,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            165.13433837890625,
+            113.58708190917969,
+            72.33055114746094
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        }
+      ]
+    },
+    {
+      "name": "EasternFins",
+      "crop": [
+        0.555,
+        0.195,
+        0.9,
+        0.81
+      ],
+      "worldSizeMetres": [
+        388.0,
+        238.0,
+        81.0
+      ],
+      "terraces": 9,
+      "sideProfileOverhangMetres": 11.0,
+      "lods": [
+        {
+          "lod": 0,
+          "ratio": 1.0,
+          "vertices": 17198,
+          "triangles": 34392,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -166.77621459960938,
+            -130.2042999267578,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            221.22378540039062,
+            107.79570007324219,
+            76.5
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 1,
+          "ratio": 0.34,
+          "vertices": 5848,
+          "triangles": 11692,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -166.77621459960938,
+            -130.20431518554688,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            221.2238006591797,
+            107.79570007324219,
+            76.62293243408203
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 2,
+          "ratio": 0.11,
+          "vertices": 1893,
+          "triangles": 3782,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -166.77659606933594,
+            -130.20431518554688,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            221.2238006591797,
+            107.79902648925781,
+            76.95917510986328
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        }
+      ]
+    },
+    {
+      "name": "FarOutlier",
+      "crop": [
+        0.715,
+        0.405,
+        0.98,
+        0.845
+      ],
+      "worldSizeMetres": [
+        264.0,
+        178.0,
+        57.0
+      ],
+      "terraces": 6,
+      "sideProfileOverhangMetres": 7.0,
+      "lods": [
+        {
+          "lod": 0,
+          "ratio": 1.0,
+          "vertices": 11186,
+          "triangles": 22368,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -83.9441909790039,
+            -72.85222625732422,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            180.05580139160156,
+            105.14777374267578,
+            52.5
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 1,
+          "ratio": 0.34,
+          "vertices": 3804,
+          "triangles": 7604,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -83.94419860839844,
+            -72.85222625732422,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            180.05581665039062,
+            105.14778137207031,
+            52.54008483886719
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        },
+        {
+          "lod": 2,
+          "ratio": 0.11,
+          "vertices": 1232,
+          "triangles": 2460,
+          "boundaryEdges": 0,
+          "nonManifoldEdges": 0,
+          "boundsMinBlender": [
+            -83.94419860839844,
+            -72.85222625732422,
+            -38.5
+          ],
+          "boundsMaxBlender": [
+            180.05581665039062,
+            105.14778137207031,
+            52.78116989135742
+          ],
+          "colorAttribute": "CliffZone",
+          "colorDomain": "POINT",
+          "colorType": "FLOAT_COLOR"
+        }
+      ]
+    }
+  ]
+}

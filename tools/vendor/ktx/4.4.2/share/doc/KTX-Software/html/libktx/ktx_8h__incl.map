@@ -1,0 +1,13 @@
+<map id="include/ktx.h" name="include/ktx.h">
+<area shape="rect" id="Node000001" title="Declares the public functions and structures of the KTX API." alt="" coords="167,5,262,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,69,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,35,83,76,81,71,182,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="92,80,152,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="200,35,152,73,148,68,197,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="177,80,252,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="217,33,217,64,212,64,212,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="275,80,364,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="234,30,290,69,287,73,231,35"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="389,80,453,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="251,30,376,73,374,78,249,35"/>
+</map>

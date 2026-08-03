@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.ktx_basis_params &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyktx.ktx_basis_params</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyktx.ktx_basis_params</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2023, Shukant Pal and Contributors</span>
+<span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ktx_pack_uastc_flag_bits</span><span class="w"> </span><span class="kn">import</span> <span class="n">KtxPackUastcFlagBits</span>
+
+
+<div class="viewcode-block" id="KtxBasisParams"><a class="viewcode-back" href="../../docs/pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KtxBasisParams</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data for passing extended params to KtxTexture2.compressBasis().&quot;&quot;&quot;</span>
+
+    <span class="n">uastc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;True to use UASTC base, false to use ETC1S base.&quot;&quot;&quot;</span>
+
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;If true, prints Basis Universal encoder operation details to stdout. Not recommended for GUI apps.&quot;&quot;&quot;</span>
+
+    <span class="n">no_sse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;True to forbid use of the SSE instruction set. Ignored if CPU does not support SSE.&quot;&quot;&quot;</span>
+
+    <span class="n">thread_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Number of threads used for compression. Default is 1.&quot;&quot;&quot;</span>
+
+    <span class="n">compression_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encoding speed vs. quality tradeoff. Range is [0,5].</span>
+
+<span class="sd">    Higher values are slower, but give higher quality. There is no default.</span>
+<span class="sd">    Callers must explicitly set this value. Callers can use</span>
+<span class="sd">    KTX_ETC1S_DEFAULT_COMPRESSION_LEVEL as a default value. Currently this is 2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">quality_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compression quality. Range is [1,255].</span>
+
+<span class="sd">    Lower gives better compression/lower quality/faster.</span>
+<span class="sd">    Higher gives less compression/higher quality/slower.</span>
+<span class="sd">    This automatically determines values for max_endpoints, max_selectors,</span>
+<span class="sd">    endpoint_rdo_threshold, and selector_rdo_threshold for the target quality</span>
+<span class="sd">    level. Setting these parameters overrides the values determined by quality_level</span>
+<span class="sd">    which defaults to 128 if neither it nor both of max_endpoints and max_selectors</span>
+<span class="sd">    have been set.</span>
+
+<span class="sd">    Both of max_endpoints and max_selectors must be set for them to have any effect.</span>
+<span class="sd">    quality_level will only determine values for endpoint_rdo_threshold and selector_rdo_threshold</span>
+<span class="sd">    when its value exceeds 128, otherwise their defaults will be used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">max_endpoints</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manually set the max number of color endpoint clusters.</span>
+
+<span class="sd">    Range is [1,16128]. Default is 0, unset. If this is set, max_selectors</span>
+<span class="sd">    must also be set, otherwise the value will be ignored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">endpoint_rdo_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set endpoint RDO quality threshold. The default is 1.25.</span>
+
+<span class="sd">    Lower is higher quality but less quality per output bit (try [1.0,3.0].</span>
+<span class="sd">    This will override the value chosen by quality_level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">max_selectors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manually set the max number of color selector clusters. Range is [1,16128].</span>
+
+<span class="sd">    Default is 0, unset. If this is set, max_endpoints must also be set, otherwise</span>
+<span class="sd">    the value will be ignored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">selector_rdo_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set selector RDO quality threshold. The default is 1.5.</span>
+
+<span class="sd">    Lower is higher quality but less quality per output bit (try [1.0,3.0]).</span>
+<span class="sd">    This will override the value chosen by @c qualityLevel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">input_swizzle</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A swizzle to apply before encoding.</span>
+
+<span class="sd">    It must match the regular expression /^[rgba01]{4}$/. If both this and</span>
+<span class="sd">    pre_swizzle are specified KtxTexture2.compressBasis() will raise INVALID_OPERATION.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">normal_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tunes codec parameters for better quality on normal maps (no</span>
+<span class="sd">    selector RDO, no endpoint RDO) and sets the texture&#39;s DFD appropriately.</span>
+
+<span class="sd">    Only valid for linear textures.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pre_swizzle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If the texture has swizzle metadata, apply it before compressing.</span>
+
+<span class="sd">    Swizzling, like rabb may yield drastically different error metrics</span>
+<span class="sd">    if done after supercompression.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">separate_rg_to_rgb_a</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This was and is a no-op.</span>
+
+<span class="sd">    2-component inputs have always been automatically separated</span>
+<span class="sd">    using an &quot;rrrg&quot; input_swizzle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">no_endpoint_rdo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disable endpoint rate distortion optimizations.</span>
+
+<span class="sd">    Slightly faster, less noisy output, but lower quality per output bit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">no_selector_rdo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disable selector rate distortion optimizations.</span>
+
+<span class="sd">    Slightly faster, less noisy output, but lower quality per output bit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">uastc_flags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">KtxPackUastcFlagBits</span><span class="o">.</span><span class="n">FASTEST</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A set of KtxPackUastcFlagBits controlling UASTC encoding.</span>
+
+<span class="sd">    The most important value is the level given in the</span>
+<span class="sd">    least-significant 4 bits which selects a speed vs quality tradeoff.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">uastc_rdo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enable Rate Distortion Optimization (RDO) post-processing.&quot;&quot;&quot;</span>
+
+    <span class="n">uastc_rdo_quality_scalar</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    UASTC RDO quality scalar (lambda).</span>
+
+<span class="sd">    Lower values yield higher quality/larger LZ compressed files, higher</span>
+<span class="sd">    values yield lower quality/smaller LZ compressed files. A good range to</span>
+<span class="sd">    try is [.2,4]. Full range is [.001,50.0]. Default is 1.0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">uastc_rdo_dict_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    UASTC RDO dictionary size in bytes. Default is 4096. Lower</span>
+<span class="sd">    values=faster, but give less compression. Range is [64,65536].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">uastc_rdo_max_smooth_block_error_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    UASTC RDO max smooth block error scale. Range is [1,300].</span>
+<span class="sd">    Default is 10.0, 1.0 is disabled. Larger values suppress more</span>
+<span class="sd">    artifacts (and allocate more bits) on smooth blocks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">uastc_rdo_max_smooth_block_std_dev</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">18.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    UASTC RDO max smooth block standard deviation. Range is</span>
+<span class="sd">    [.01,65536.0]. Default is 18.0. Larger values expand the range of</span>
+<span class="sd">    blocks considered smooth.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">uastc_rdo_dont_favor_simpler_modes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Do not favor simpler UASTC modes in RDO mode.&quot;&quot;&quot;</span>
+
+    <span class="n">uastc_rdo_no_multithreading</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Disable RDO multithreading (slightly higher compression, deterministic).&quot;&quot;&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,488 @@
+.TH "toktx" 1 "Sat Oct 4 2025 08:43:36" "Version 4.4.2" "KTX Tools Reference" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+toktx \- Create a KTX file from JPEG, PNG or netpbm format files\&.
+.SH "SYNOPSIS"
+.PP
+toktx [options] \fIoutfile\fP [\fIinfile\fP\&.{jpg,png,pam,pgm,ppm} \&.\&.\&.]
+.SH "DESCRIPTION"
+.PP
+Create a Khronos format texture file (KTX) from a set of JPEG (\&.jpg), PNG (\&.png) or Netpbm format (\&.pam, \&.pgm, \&.ppm) images\&. It writes the destination ktx file to \fIoutfile\fP, creating parent directories and appending "\&.ktx{,2}" if necessary\&. If \fIoutfile\fP is '-' the output will be written to stdout\&.
+
+.PP
+\fBtoktx\fP reads each named \fIinfile\fP\&. which must be in \&.jpg, \&.png, \&.pam, \&.ppm or \&.pgm format\&. \fIinfiles\fP prefixed with '@' are read as text files listing actual file names to process with one file path per line\&. Paths must be absolute or relative to the current directory when \fBtoktx\fP is run\&. If '@@' is used instead, paths must be absolute or relative to the location of the list file\&. File paths must be encoded in UTF-8\&.
+
+.PP
+The target texture type (number of components in the output texture) is chosen via \fB--target_type\fP\&. Swizzling of the components of the input file is specified with \fB--input_swizzle\fP and swizzzle metadata can be specified with \fB--swizzle\fP\&. Defaults, shown in the following table, are based on the components of the input file and whether the target texture format is uncompressed or block-compressed including the universal formats\&. Input components are arbitrarily labeled r, g, b & a\&.
+
+.PP
+Uncompressed Formats  Block-compressed formats  Input components  1 (greyscale)  2 (greyscale alpha)  3  4  1  2  3  4  Target type  R  RG  RGB  RGBA  RGB  RGBA  RGB  RGBA  Input swizzle  -  -  -  -  rrr1  rrrg  -  -  Swizzle  rrr1  rrrg  -  -  -  -  -  -  
+
+.PP
+As can be seen from the table one- and two-component inputs are treated as luminance{,-alpha} in accordance with the JPEG and PNG specifications\&. For consistency Netpbm inputs are handled the same way\&. Use of R & RG types for uncompressed formats saves space but note that the sRGB versions of these formats are not widely supported so a warning will be issued prompting you to convert the input to linear\&.
+
+.PP
+The primaries, transfer function (OETF) and the texture's sRGB-ness is set based on the input file unless \fB--assign_oetf\fP linear or \fB--assign_oetf\fP srgb is specified\&. For \&.jpg files \fBtoktx\fP always sets BT709/sRGB primaries and the sRGB OETF in the output file and creates sRGB format textures\&. Netpbm files always use BT\&.709/sRGB primaries and the BT\&.709 OETF\&. \fBtoktx\fP tranforms these images to the sRGB OETF, sets BT709/sRGB primaries and the sRGB OETF in the output file and creates sRGB format textures\&.
+
+.PP
+For \&.png files the OETF is set as follows:
+
+.PP
+
+.PP
+.IP "\fBNo color-info chunks or sRGB chunk present: 
+.IP "" 1c
+primaries are set to BT\&.709 and OETF to sRGB\&. 
+
+.PP
+.IP "\fBsRGB chunk present: 
+.IP "" 1c
+primaries are set to BT\&.709 and OETF to sRGB\&. gAMA and cHRM chunks are ignored\&. 
+
+.PP
+.IP "\fBiCCP chunk present: 
+.IP "" 1c
+General ICC profiles are not yet supported by toktx or the KTX2 format\&. In future these images may be transformed to linear or sRGB OETF as appropriate for the profile\&. sRGB chunk must not be present\&.  
+
+.PP
+.IP "\fBgAMA and/or cHRM chunks present without sRGB or iCCP: 
+.IP "" 1c
+If gAMA is < 60000 the image is transformed to and the OETF is set to sRGB\&. otherwise the image is transformed to and the OETF is set to linear\&. The color primaries in cHRM are matched to one of the standard sets listed in the Khronos Data Format Specification (the KHR_DF_PRIMARIES values from khr_df\&.h) and the primaries field of the output file's DFD is set to the matched value\&. If no match is found the primaries field is set to UNSPECIFIED\&. 
+
+.PP
+
+.PP
+The following options are always available: 
+
+.PP
+.IP "\fB--2d 
+.IP "" 1c
+If the image height is 1, by default a KTX file for a 1D texture is created\&. With this option one for a 2D texture is created instead\&. 
+
+.PP
+.IP "\fB--automipmap 
+.IP "" 1c
+Causes the KTX file to be marked to request generation of a mipmap pyramid when the file is loaded\&. This option is mutually exclusive with \fB--genmipmap\fP, \fB--levels\fP and \fB--mipmap\fP\&. 
+
+.PP
+.IP "\fB--cubemap 
+.IP "" 1c
+KTX file is for a cubemap\&. At least 6 \fIinfiles\fP must be provided, more if \fB--mipmap\fP or \fB--layers\fP is also specified\&. Provide the images in the order +X, -X, +Y, -Y, +Z, -Z where the arrangement is a left-handed coordinate system with +Y up\&. So if you're facing +Z, -X will be on your left and +X on your right\&. If \fB--layers\fP > 1 is specified, provide the faces for layer 0 first then for layer 1, etc\&. Images must have an upper left origin so --lower_left_maps_to_s0t0 is ignored with this option\&. 
+
+.PP
+.IP "\fB--depth <number> 
+.IP "" 1c
+KTX file is for a 3D texture with a depth of \fInumber\fP where \fInumber\fP > 0\&. Provide the file(s) for z=0 first then those for z=1, etc\&. It is an error to specify this together with \fB--layers\fP or \fB--cubemap\fP\&. 
+
+.PP
+.IP "\fB--genmipmap 
+.IP "" 1c
+Causes mipmaps to be generated for each input file\&. This option is mutually exclusive with \fB--automipmap\fP and \fB--mipmap\fP\&. When set, the following mipmap-generation related options become valid, otherwise they are ignored\&. 
+
+.PP
+.IP "\fB--filter <name> 
+.IP "" 1c
+Specifies the filter to use when generating the mipmaps\&. \fIname\fP is a string\&. The default is \fIlanczos4\fP\&. The following names are recognized: \fIbox\fP, \fItent\fP, \fIbell\fP, \fIb-spline\fP, \fImitchell\fP, \fIlanczos3\fP, \fIlanczos4\fP, \fIlanczos6\fP, \fIlanczos12\fP, \fIblackman\fP, \fIkaiser\fP, \fIgaussian\fP, \fIcatmullrom\fP, \fIquadratic_interp\fP, \fIquadratic_approx\fP and \fIquadratic_mix\fP\&. 
+
+.PP
+.IP "\fB--fscale <floatVal> 
+.IP "" 1c
+The filter scale to use\&. The default is 1\&.0\&. 
+
+.PP
+.IP "\fB--wmode <mode> 
+.IP "" 1c
+Specify how to sample pixels near the image boundaries\&. Values are \fIwrap\fP, \fIreflect\fP and \fIclamp\fP\&. The default is \fIclamp\fP\&. 
+
+.PP
+
+.PP
+.IP "\fB--layers <number> 
+.IP "" 1c
+KTX file is for an array texture with \fInumber\fP of layers where \fInumber\fP > 0\&. Provide the file(s) for layer 0 first then those for layer 1, etc\&. It is an error to specify this together with \fB--depth\fP\&. 
+
+.PP
+.IP "\fB--levels <number> 
+.IP "" 1c
+KTX file is for a mipmap pyramid with \fInumber\fP of levels rather than a full pyramid\&. \fInumber\fP must be > 1 and <= the maximum number of levels determined from the size of the base level image\&. Provide the base level image first, if using \fB--mipmap\fP\&. This option is mutually exclusive with \fB--automipmap\fP\&. 
+
+.PP
+.IP "\fB--mipmap 
+.IP "" 1c
+KTX file is for a mipmap pyramid with one \fBinfile\fP being explicitly provided for each level\&. Provide the images in the order of layer then face or depth slice then level with the base-level image first then in order down to the 1x1 image or the level specified by \fB--levels\fP\&. 
+.PP
+\fBNote\fP
+.RS 4
+This ordering differs from that in the created texture as it is felt to be more user-friendly\&.
+.RE
+.PP
+This option is mutually exclusive with \fB--automipmap\fP and \fB--genmipmap\fP\&. 
+
+.PP
+.IP "\fB--nometadata 
+.IP "" 1c
+Do not write KTXorientation metadata into the output file\&. Metadata is written by default\&. Use of this option is not recommended\&. 
+
+.PP
+.IP "\fB--nowarn 
+.IP "" 1c
+Silence warnings which are issued when certain transformations are performed on input images\&. 
+
+.PP
+.IP "\fB--upper_left_maps_to_s0t0 
+.IP "" 1c
+Map the logical upper left corner of the image to s0,t0\&. Although opposite to the OpenGL convention, this is the DEFAULT BEHAVIOUR\&. netpbm and PNG files have an upper left origin so this option does not flip the input images\&. When this option is in effect, toktx writes a KTXorientation value of S=r,T=d into the output file to inform loaders of the logical orientation\&. If an OpenGL {,ES} loader ignores the orientation value, the image will appear upside down\&. 
+
+.PP
+.IP "\fB--lower_left_maps_to_s0t0 
+.IP "" 1c
+Map the logical lower left corner of the image to s0,t0\&. This causes the input netpbm and PNG images to be flipped vertically to a lower-left origin\&. When this option is in effect, toktx writes a KTXorientation value of S=r,T=u into the output file to inform loaders of the logical orientation\&. If a Vulkan loader ignores the orientation value, the image will appear upside down\&. This option is ignored with \fB--cubemap\fP\&.  
+
+.PP
+.IP "\fB--assign_oetf <linear|srgb> 
+.IP "" 1c
+Force the created texture to have the specified transfer function\&. If this is specified, implicit or explicit color space information from the input file(s) will be ignored and no color transformation will be performed\&. USE WITH CAUTION preferably only when you know the file format information is wrong\&. 
+
+.PP
+.IP "\fB--assign_primaries <bt709|none|srgb> 
+.IP "" 1c
+Force the created texture to have the specified primaries\&. If this is specified, implicit or explicit color space information from the input file(s) will be ignored and no color transformation will be performed\&. USE WITH CAUTION preferably only when you know the file format information is wrong\&. 
+
+.PP
+.IP "\fB--convert_oetf <linear|srgb> 
+.IP "" 1c
+Convert the input images to the specified transfer function, if the current transfer function is different\&. If both this and \fB--assign_oetf\fP are specified, conversion will be performed from the assigned transfer function to the transfer function specified by this option, if different\&. 
+
+.PP
+.IP "\fB--convert_primaries <primaries> 
+.IP "" 1c
+Convert the image images to the specified color primaries, if different from the color primaries of the input file(s) or the one specified by --assign-primaries\&. If both this and --assign-primaries are specified, conversion will be performed from the assigned primaries to the primaries specified by this option, if different\&. This option is not allowed to be specified when --assign-primaries is set to 'none'\&. Case insensitive\&. Possible options are: bt709 | srgb | bt601-ebu | bt601-smpte | bt2020 | ciexyz | aces | acescc | ntsc1953 | pal525 | displayp3 | adobergb 
+
+.PP
+.IP "\fB--linear 
+.IP "" 1c
+Deprecated\&. Use \fB--assign_oetf\fP linear\&. 
+
+.PP
+.IP "\fB--srgb 
+.IP "" 1c
+Deprecated\&. Use \fB--assign_oetf\fP srgb\&. 
+
+.PP
+.IP "\fB--resize <width>x<height> 
+.IP "" 1c
+Resize images to \fIwidth\fP X \fIheight\fP\&. This should not be used with \fB--mipmap\fP as it would resize all the images to the same size\&. Resampler options can be set via \fB--filter\fP and \fB--fscale\fP\&.  
+
+.PP
+.IP "\fB--scale <value> 
+.IP "" 1c
+Scale images by \fIvalue\fP as they are read\&. Resampler options can be set via \fB--filter\fP and \fB--fscale\fP\&. \&. 
+
+.PP
+.IP "\fB--swizzle <swizzle> 
+.IP "" 1c
+Add swizzle metadata to the file being created\&. \fIswizzle\fP has the same syntax as the parameter for \fB--input_swizzle\fP\&. Not recommended for use with block-cmpressed textures, including Basis Universal formats, because something like \fRrabb\fP may yield drastically different error metrics if done after compression\&. 
+
+.PP
+.IP "\fB--target_type <type> 
+.IP "" 1c
+Specify the number of components in the created texture\&. \fItype\fP is one of the following strings: \fRR\fP, \fRRG\fP, \fRRGB\fP or \fRRGBA\fP\&. Excess input components will be dropped\&. Output components with no mapping from the input will be set to 0 or, if the alpha component, 1\&.0\&. 
+
+.PP
+.IP "\fB--t2 
+.IP "" 1c
+Output in KTX2 format\&. Default is KTX\&. 
+
+.PP
+
+.PP
+.IP "\fB--encode <astc | etc1s | uastc> 
+.IP "" 1c
+Compress the image data to ASTC, transcodable ETC1S / BasisLZ or high-quality transcodable UASTC format\&. Implies \fB--t2\fP\&. With each encoding option the following encoder specific options become valid, otherwise they are ignored\&. 
+
+.PP
+.IP "\fBastc: 
+.IP "" 1c
+Create a texture in high-quality ASTC format\&. 
+
+.PP
+.IP "\fB--astc_blk_d <XxY | XxYxZ> 
+.IP "" 1c
+Specify which block dimension to use for compressing the textures\&. e\&.g\&. \fB--astc_blk_d\fP 6x5 for 2D or \fB--astc_blk_d\fP 6x6x6 for 3D\&. 6x6 is the default for 2D\&. Supported 2D block dimensions are:4x48\&.00 bpp5x46\&.40 bpp5x55\&.12 bpp6x54\&.27 bpp6x63\&.56 bpp8x53\&.20 bpp8x62\&.67 bpp10x52\&.56 bpp10x62\&.13 bpp8x82\&.00 bpp10x81\&.60 bpp10x101\&.28 bpp12x101\&.07 bpp12x120\&.89 bppSupported 3D block dimensions are:3x3x34\&.74 bpp4x3x33\&.56 bpp4x4x32\&.67 bpp4x4x42\&.00 bpp5x4x41\&.60 bpp5x5x41\&.28 bpp5x5x51\&.02 bpp6x5x50\&.85 bpp6x6x50\&.71 bpp6x6x60\&.59 bpp
+
+.PP
+.IP "\fB--astc_mode <ldr | hdr> 
+.IP "" 1c
+Specify which encoding mode to use\&. LDR is the default unless the input image is 16-bit in which case the default is HDR\&. 
+
+.PP
+.IP "\fB--astc_quality <level> 
+.IP "" 1c
+The quality level configures the quality-performance tradeoff for the compressor; more complete searches of the search space improve image quality at the expense of compression time\&. Default is 'medium'\&. The quality level can be set between fastest (0) and exhaustive (100) via the following fixed quality presets: Level Quality fastest (equivalent to quality = 0) fast (equivalent to quality = 10) medium (equivalent to quality = 60) thorough (equivalent to quality = 98) exhaustive (equivalent to quality = 100) 
+
+.PP
+.IP "\fB--astc_perceptual 
+.IP "" 1c
+The codec should optimize for perceptual error, instead of direct RMS error\&. This aims to improve perceived image quality, but typically lowers the measured PSNR score\&. Perceptual methods are currently only available for normal maps and RGB color data\&. 
+
+.PP
+
+.PP
+.IP "\fBetc1s: 
+.IP "" 1c
+Supercompress the image data with ETC1S / BasisLZ\&. RED images will become RGB with RED in each component\&. RG images will have R in the RGB part and G in the alpha part of the compressed texture\&. When set, the following BasisLZ-related options become valid, otherwise they are ignored\&. 
+
+.PP
+.IP "\fB--no_multithreading 
+.IP "" 1c
+Disable multithreading\&. Deprecated\&. For backward compatibility\&. Use \fB--threads\fP 1 instead\&. 
+
+.PP
+.IP "\fB--clevel <level> 
+.IP "" 1c
+ETC1S / BasisLZ compression level, an encoding speed vs\&. quality tradeoff\&. Range is [0,5], default is 1\&. Higher values are slower but give higher quality\&. 
+
+.PP
+.IP "\fB--qlevel <level> 
+.IP "" 1c
+ETC1S / BasisLZ quality level\&. Range is [1,255]\&. Lower gives better compression/lower quality/faster\&. Higher gives less compression/higher quality/slower\&. \fB--qlevel\fP automatically determines values for \fB--max_endpoints\fP, \fB--max-selectors\fP, \fB--endpoint_rdo_threshold\fP and \fB--selector_rdo_threshold\fP for the target quality level\&. Setting these options overrides the values determined by -qlevel which defaults to 128 if neither it nor both of \fB--max_endpoints\fP and \fB--max_selectors\fP have been set\&.
+
+.PP
+Note that both of \fB--max_endpoints\fP and \fB--max_selectors\fP must be set for them to have any effect\&. If all three options are set, a warning will be issued that \fB--qlevel\fP will be ignored\&.
+
+.PP
+Note also that \fB--qlevel\fP will only determine values for \fB--endpoint_rdo_threshold\fP and \fB--selector_rdo_threshold\fP when its value exceeds 128, otherwise their defaults will be used\&. 
+
+.PP
+.IP "\fB--max_endpoints <arg> 
+.IP "" 1c
+Manually set the maximum number of color endpoint clusters\&. Range is [1,16128]\&. Default is 0, unset\&. 
+
+.PP
+.IP "\fB--endpoint_rdo_threshold <arg> 
+.IP "" 1c
+Set endpoint RDO quality threshold\&. The default is 1\&.25\&. Lower is higher quality but less quality per output bit (try [1\&.0,3\&.0])\&. This will override the value chosen by \fB--qlevel\fP\&. 
+
+.PP
+.IP "\fB--max_selectors <arg> 
+.IP "" 1c
+Manually set the maximum number of color selector clusters from [1,16128]\&. Default is 0, unset\&. 
+
+.PP
+.IP "\fB--selector_rdo_threshold <arg> 
+.IP "" 1c
+Set selector RDO quality threshold\&. The default is 1\&.25\&. Lower is higher quality but less quality per output bit (try [1\&.0,3\&.0])\&. This will override the value chosen by \fB--qlevel\fP\&. 
+
+.PP
+.IP "\fB--no_endpoint_rdo 
+.IP "" 1c
+Disable endpoint rate distortion optimizations\&. Slightly faster, less noisy output, but lower quality per output bit\&. Default is to do endpoint RDO\&. 
+
+.PP
+.IP "\fB--no_selector_rdo 
+.IP "" 1c
+Disable selector rate distortion optimizations\&. Slightly faster, less noisy output, but lower quality per output bit\&. Default is to do selector RDO\&. 
+
+.PP
+
+.PP
+.IP "\fBuastc: 
+.IP "" 1c
+Create a texture in high-quality transcodable UASTC format\&. 
+
+.PP
+.IP "\fB--uastc_quality <level> 
+.IP "" 1c
+This optional parameter selects a speed vs quality tradeoff as shown in the following table:
+
+.PP
+LevelSpeedQuality0 Fastest 43\&.45dB1 Faster 46\&.49dB2 Default 47\&.47dB3 Slower 48\&.01dB4 Very slow 48\&.24dB
+
+.PP
+You are strongly encouraged to also specify \fB--zcmp\fP to losslessly compress the UASTC data\&. This and any LZ-style compression can be made more effective by conditioning the UASTC texture data using the Rate Distortion Optimization (RDO) post-process stage\&. When uastc encoding is set the following options become available for controlling RDO: 
+
+.PP
+.IP "\fB--uastc_rdo_l [<lambda>] 
+.IP "" 1c
+Enable UASTC RDO post-processing and optionally set UASTC RDO quality scalar (lambda) to \fIlambda\fP\&. Lower values yield higher quality/larger LZ compressed files, higher values yield lower quality/smaller LZ compressed files\&. A good range to try is [\&.25,10]\&. For normal maps a good range is [\&.25,\&.75]\&. The full range is [\&.001,10\&.0]\&. Default is 1\&.0\&.
+
+.PP
+Note that previous versions used the \fB--uastc_rdo_q\fP option which was removed because the RDO algorithm changed\&. 
+
+.PP
+.IP "\fB--uastc_rdo_d <dictsize> 
+.IP "" 1c
+Set UASTC RDO dictionary size in bytes\&. Default is 4096\&. Lower values=faster, but give less compression\&. Range is [64,65536]\&. 
+
+.PP
+.IP "\fB--uastc_rdo_b <scale> 
+.IP "" 1c
+Set UASTC RDO max smooth block error scale\&. Range is [1\&.0,300\&.0]\&. Default is 10\&.0, 1\&.0 is disabled\&. Larger values suppress more artifacts (and allocate more bits) on smooth blocks\&. 
+
+.PP
+.IP "\fB--uastc_rdo_s <deviation> 
+.IP "" 1c
+Set UASTC RDO max smooth block standard deviation\&. Range is [\&.01,65536\&.0]\&. Default is 18\&.0\&. Larger values expand the range of blocks considered smooth\&. 
+
+.PP
+.IP "\fB--uastc_rdo_f 
+.IP "" 1c
+Do not favor simpler UASTC modes in RDO mode\&. 
+
+.PP
+.IP "\fB--uastc_rdo_m 
+.IP "" 1c
+Disable RDO multithreading (slightly higher compression, deterministic)\&. 
+
+.PP
+
+.PP
+.IP "\fB--input_swizzle <swizzle> 
+.IP "" 1c
+Swizzle the input components according to \fIswizzle\fP which is an alhpanumeric sequence matching the regular expression \fR^\fP[rgba01]{4}$\&. 
+
+.PP
+.IP "\fB--normal_mode 
+.IP "" 1c
+Only valid for linear textures with two or more components\&. If the input texture has three or four linear components it is assumed to be a three component linear normal map storing unit length normals as (R=X, G=Y, B=Z)\&. A fourth component will be ignored\&. The map will be converted to a two component X+Y normal map stored as (RGB=X, A=Y) prior to encoding\&. If unsure that your normals are unit length, use \fB--normalize\fP\&. If the input has 2 linear components it is assumed to be an X+Y map of unit normals\&.
+
+.PP
+The Z component can be recovered programmatically in shader code by using the equations: 
+.PP
+.nf
+
+          nml\&.xy = texture(\&.\&.\&.)\&.ga;              // Load in [0,1]
+          nml\&.xy = nml\&.xy * 2\&.0 - 1\&.0;           // Unpack to [-1,1]
+          nml\&.z = sqrt(1 - dot(nml\&.xy, nml\&.xy)); // Compute Z
+                     
+.fi
+.PP
+ For ASTC encoding, '\fB--encode\fP astc', encoder parameters are tuned for better quality on normal maps\&. For ETC1S encoding, \fB'--encode\fP etc1s', RDO is disabled (no selector RDO, no endpoint RDO) to provide better quality\&.
+
+.PP
+In \fItoktx\fP you can prevent conversion of the normal map to two components by specifying '\fB--input_swizzle\fP rgb1'\&. 
+
+.PP
+.IP "\fB--normalize 
+.IP "" 1c
+Normalize input normals to have a unit length\&. Only valid for linear textures with 2 or more components\&. For 2-component inputs 2D unit normals are calculated\&. Do not use these 2D unit normals to generate X+Y normals for --normal_mode\&. For 4-component inputs a 3D unit normal is calculated\&. 1\&.0 is used for the value of the 4th component\&. 
+
+.PP
+.IP "\fB--no_sse 
+.IP "" 1c
+Forbid use of the SSE instruction set\&. Ignored if CPU does not support SSE\&. Only the Basis Universal compressor uses SSE\&. 
+
+.PP
+.IP "\fB--bcmp 
+.IP "" 1c
+Deprecated\&. Use '\fB--encode\fP etc1s' instead\&. 
+
+.PP
+.IP "\fB--uastc [<level>] 
+.IP "" 1c
+Deprecated\&. Use '\fB--encode\fP uastc' instead\&. 
+
+.PP
+.IP "\fB--zcmp [<compressionLevel>] 
+.IP "" 1c
+Supercompress the data with Zstandard\&. Implies \fB--t2\fP\&. Can be used with data in any format except ETC1S / BasisLZ\&. Most effective with RDO-conditioned UASTC or uncompressed formats\&. The optional compressionLevel range is 1 - 22 and the default is 3\&. Lower values=faster but give less compression\&. Values above 20 should be used with caution as they require more memory\&. 
+
+.PP
+.IP "\fB--threads <count> 
+.IP "" 1c
+Explicitly set the number of threads to use during compression\&. By default, ETC1S / BasisLZ and ASTC compression will use the number of threads reported by thread::hardware_concurrency or 1 if value returned is 0\&. 
+
+.PP
+.IP "\fB--verbose 
+.IP "" 1c
+Print encoder/compressor activity status to stdout\&. Currently only the astc, etc1s and uastc encoders emit status\&. 
+
+.PP
+
+.PP
+.IP "\fB-h, --help 
+.IP "" 1c
+Print this usage message and exit\&. 
+
+.PP
+.IP "\fB-v, --version 
+.IP "" 1c
+Print the version number of this program and exit\&. 
+
+.PP
+
+.PP
+.PP
+.nf
+    In case of ambiguity, such as when the last option is one with an optional
+    parameter, separate options from file names with " -- "\&.
+
+    Any specified ASTC, ETC1S / BasisLZ, UASTC and supercompression options are
+    recorded in the metadata item @c KTXwriterScParams in the output file\&.
+
+Options can also be set in the environment variable TOKTX_OPTIONS\&.
+TOKTX_OPTIONS is parsed first\&. If conflicting options appear in
+TOKTX_OPTIONS or the command line, the last one seen wins\&. However if both
+@b --automipmap and @b --mipmap are seen, it is always flagged as an error\&.
+You can, for example, set TOKTX_OPTIONS=--lower_left_maps_to_s0t0 to change
+the default mapping of the logical image origin to match the GL convention\&.
+.fi
+.PP
+  
+.SH "EXIT STATUS"
+.PP
+\fBtoktx\fP exits 0 on success, 1 on command line errors and 2 on functional errors\&.
+.SH "HISTORY"
+.PP
+\fBVersion 4\&.0 (using new version numbering system)\fP
+.RS 4
+
+.IP "\(bu" 2
+Add KTX version 2 support including Basis Universal encoding\&.
+.IP "\(bu" 2
+Add \&.png and \&.jpg readers\&.
+.IP "\(bu" 2
+Transform NetPBM input files to sRGB OETF\&.
+.IP "\(bu" 2
+Add mipmap generation\&.
+.IP "\(bu" 2
+Remove legacy items\&.
+.PP
+.RE
+.PP
+\fBVersion 1\&.3\fP
+.RS 4
+
+.IP "\(bu" 2
+Switch to ktxTexture API\&.
+.IP "\(bu" 2
+Add --levels option\&.
+.IP "\(bu" 2
+Add --2d option\&.
+.PP
+.RE
+.PP
+\fBVersion 1\&.2\fP
+.RS 4
+
+.IP "\(bu" 2
+Remove --sized; always create sized format\&.
+.IP "\(bu" 2
+Write metadata by default\&.
+.IP "\(bu" 2
+Bug fixes\&.
+.PP
+.RE
+.PP
+\fBVersion 1\&.1\fP
+.RS 4
+
+.IP "\(bu" 2
+Moved --alpha and --luminance to legacy\&.
+.PP
+.RE
+.PP
+.SH "AUTHOR"
+.PP
+Mark Callow, github\&.com/MarkCallow 

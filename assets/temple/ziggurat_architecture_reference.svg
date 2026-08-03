@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <style>
+      .bg { fill:#10151b; }
+      .grid { stroke:#25313d; stroke-width:1; }
+      .stone { fill:#806044; stroke:#e5c39b; stroke-width:2; }
+      .stair { fill:#b18a61; stroke:#fff0d7; stroke-width:2.5; }
+      .metal { fill:#243746; stroke:#72a9c2; stroke-width:1.5; }
+      .lapis { fill:#173e91; stroke:#5e91ff; stroke-width:1.5; }
+      .carnelian { fill:#9c321d; stroke:#ff8460; stroke-width:1.5; }
+      .dim { stroke:#7fd1d8; stroke-width:1.5; fill:none; marker-start:url(#arrow); marker-end:url(#arrow); }
+      .guide { stroke:#55727d; stroke-width:1; stroke-dasharray:6 6; }
+      .title { fill:#f4e4cc; font:700 28px sans-serif; }
+      .label { fill:#e7e1d6; font:18px sans-serif; }
+      .small { fill:#b9c6cd; font:15px monospace; }
+      .accent { fill:#7fd1d8; font:700 17px sans-serif; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse">
+      <path d="M0,0 L8,4 L0,8 z" fill="#7fd1d8"/>
+    </marker>
+    <pattern id="minorGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" class="grid" fill="none"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" class="bg"/>
+  <rect x="45" y="90" width="1510" height="720" fill="url(#minorGrid)"/>
+
+  <text x="55" y="48" class="title">TEMPLE OF INANNA — MEASURED ZIGGURAT REBUILD REFERENCE</text>
+  <text x="55" y="75" class="small">Engine coordinates: Y up; ceremonial approach from +Z • architectural section, dimensions in metres</text>
+
+  <!-- Side elevation. X maps decreasing +Z from left to right; Y datum is the local temple datum. -->
+  <g id="side-elevation" transform="translate(70 700)">
+    <line x1="0" y1="0" x2="1040" y2="0" stroke="#c7d2d5" stroke-width="2"/>
+    <text x="4" y="26" class="small">LOCAL DATUM ±0.00</text>
+
+    <!-- Gate envelope: centered Z=48, deliberately separate from ziggurat geometry. -->
+    <rect x="4" y="-178" width="42" height="178" fill="#1c2a33" stroke="#72a9c2" stroke-width="2" stroke-dasharray="7 5"/>
+    <text x="-4" y="-192" class="accent">EIDOVERSE GATE</text>
+    <text x="-2" y="48" class="small">Z +48</text>
+
+    <!-- Four vertical rectilinear tiers with strong horizontal setbacks. -->
+    <rect x="200" y="-163.2" width="476" height="211.2" class="stone"/>
+    <rect x="326" y="-297.6" width="350" height="134.4" class="stone"/>
+    <rect x="438" y="-417.6" width="238" height="120" class="stone"/>
+    <rect x="550" y="-523.2" width="126" height="105.6" class="stone"/>
+
+    <!-- Deliberately restrained inset material bands, never loose blocks. -->
+    <path d="M206 -145 H670" class="lapis" stroke-width="8"/>
+    <path d="M332 -280 H670" class="carnelian" stroke-width="7"/>
+    <path d="M444 -400 H670" class="lapis" stroke-width="7"/>
+    <path d="M556 -505 H670" class="carnelian" stroke-width="6"/>
+    <path d="M390 -245 H430 M510 -365 H550 M590 -470 H626" class="metal" stroke-width="12"/>
+
+    <!-- Processional stair schedule: 35 + 28 + 25 + 22 = 110 true treads. -->
+    <path d="M65 4 L212 -163.2 L234 -163.2 L352 -297.6 L374 -297.6 L479 -417.6 L501 -417.6 L593 -523.2" class="stair"/>
+    <path d="M65 14 L212 -153.2 L234 -153.2 L352 -287.6 L374 -287.6 L479 -407.6 L501 -407.6 L593 -513.2" class="metal" stroke-width="5"/>
+    <text x="86" y="-82" class="small">F1 · 35</text>
+    <text x="259" y="-225" class="small">F2 · 28</text>
+    <text x="392" y="-352" class="small">F3 · 25</text>
+    <text x="516" y="-462" class="small">F4 · 22</text>
+
+    <!-- Summit dais and sphere clearance. -->
+    <path d="M548 -523.2 H686 L677 -548.4 H557 Z" class="stone"/>
+    <path d="M566 -548.4 H668 L658 -565.7 H576 Z" class="stone"/>
+    <circle cx="617" cy="-622" r="52" fill="none" stroke="#dbe9ee" stroke-width="2" stroke-dasharray="8 5"/>
+    <text x="684" y="-612" class="small">INANNA SPHERE</text>
+
+    <!-- Key dimensions. -->
+    <line x1="65" y1="77" x2="593" y2="77" class="dim"/>
+    <line x1="65" y1="15" x2="65" y2="91" class="guide"/>
+    <line x1="593" y1="-523" x2="593" y2="91" class="guide"/>
+    <text x="272" y="70" class="accent">37.80 TOTAL PROCESSIONAL RUN</text>
+    <line x1="718" y1="0" x2="718" y2="-523.2" class="dim"/>
+    <text x="735" y="-255" class="accent">21.80 SUMMIT</text>
+    <line x1="46" y1="32" x2="65" y2="32" class="dim"/>
+    <text x="-1" y="62" class="small">4.65 m gate forecourt</text>
+  </g>
+
+  <!-- Exact schedule is the contract shared by Blender and temple_real.js. -->
+  <g id="schedule" transform="translate(1120 125)">
+    <rect width="420" height="620" rx="10" fill="#121d25" stroke="#45606e" stroke-width="2"/>
+    <text x="24" y="42" class="title" font-size="23">STAIR / TERRACE CONTRACT</text>
+    <text x="24" y="79" class="accent">Universal stair module</text>
+    <text x="24" y="107" class="small">riser  0.200</text>
+    <text x="24" y="131" class="small">tread  0.300</text>
+    <text x="24" y="155" class="small">width 13.400</text>
+    <text x="24" y="179" class="small">landing depth 1.600</text>
+
+    <text x="24" y="222" class="accent">Flight 1</text>
+    <text x="24" y="248" class="small">Z 43.35 → 32.85 · Y -0.20 → 6.80 · 35</text>
+    <text x="24" y="274" class="small">landing Z 32.85 → 31.25 · Y 6.80</text>
+
+    <text x="24" y="317" class="accent">Flight 2</text>
+    <text x="24" y="343" class="small">Z 31.25 → 22.85 · Y 6.80 → 12.40 · 28</text>
+    <text x="24" y="369" class="small">landing Z 22.85 → 21.25 · Y 12.40</text>
+
+    <text x="24" y="412" class="accent">Flight 3</text>
+    <text x="24" y="438" class="small">Z 21.25 → 13.75 · Y 12.40 → 17.40 · 25</text>
+    <text x="24" y="464" class="small">landing Z 13.75 → 12.15 · Y 17.40</text>
+
+    <text x="24" y="507" class="accent">Flight 4</text>
+    <text x="24" y="533" class="small">Z 12.15 → 5.55 · Y 17.40 → 21.80 · 22</text>
+
+    <text x="24" y="574" class="accent">Construction language</text>
+    <text x="24" y="600" class="small">vertical load-bearing stone · strong terrace setbacks</text>
+    <text x="24" y="624" class="small">flush chamfered metal panels · metal-capped cheek walls</text>
+  </g>
+
+  <text x="55" y="854" class="small">Acceptance: 110 closed geometric treads; 3 supported landings; no floating blocks; face-aligned inlays/panels; zero open or zero-area mesh faces.</text>
+</svg>

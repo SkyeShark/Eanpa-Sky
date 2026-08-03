@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.ktx_texture_create_info module &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyktx.ktx_texture_create_storage module" href="pyktx.ktx_texture_create_storage.html" />
+    <link rel="prev" title="pyktx.ktx_texture_create_flag_bits module" href="pyktx.ktx_texture_create_flag_bits.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyktx.ktx_texture_create_info module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_depth"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.base_depth</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_height"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.base_height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_width"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.base_width</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.generate_mipmaps"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.generate_mipmaps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.gl_internal_format"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.gl_internal_format</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.is_array"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.is_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_dimensions"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_dimensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_faces"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_faces</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_layers"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_layers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_levels"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_levels</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.vk_format"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.vk_format</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">pyktx</a></li>
+          <li class="breadcrumb-item"><a href="pyktx.html">pyktx package</a></li>
+      <li class="breadcrumb-item active">pyktx.ktx_texture_create_info module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/docs/pyktx.ktx_texture_create_info.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyktx.ktx_texture_create_info">
+<span id="pyktx-ktx-texture-create-info-module"></span><h1>pyktx.ktx_texture_create_info module<a class="headerlink" href="#module-pyktx.ktx_texture_create_info" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyktx.ktx_texture_create_info.</span></span><span class="sig-name descname"><span class="pre">KtxTextureCreateInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gl_internal_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat" title="pyktx.gl_internalformat.GlInternalformat"><span class="pre">GlInternalformat</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vk_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat" title="pyktx.vk_format.VkFormat"><span class="pre">VkFormat</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">VkFormat.VK_FORMAT_UNDEFINED</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_levels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_mipmaps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyktx/ktx_texture_create_info.html#KtxTextureCreateInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Data for passing texture information to KtxTexture1.create() and KtxTexture2.create().</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_depth">
+<span class="sig-name descname"><span class="pre">base_depth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_depth" title="Permalink to this definition"></a></dt>
+<dd><p>Depth of the base level of the texture.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_height">
+<span class="sig-name descname"><span class="pre">base_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_height" title="Permalink to this definition"></a></dt>
+<dd><p>Height of the base level of the texture.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_width">
+<span class="sig-name descname"><span class="pre">base_width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_width" title="Permalink to this definition"></a></dt>
+<dd><p>Width of the base level of the texture.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.generate_mipmaps">
+<span class="sig-name descname"><span class="pre">generate_mipmaps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.generate_mipmaps" title="Permalink to this definition"></a></dt>
+<dd><p>Set to true if mipmaps should be generated for the texture when loading into a 3D API.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.gl_internal_format">
+<span class="sig-name descname"><span class="pre">gl_internal_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat" title="pyktx.gl_internalformat.GlInternalformat"><span class="pre">GlInternalformat</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.gl_internal_format" title="Permalink to this definition"></a></dt>
+<dd><p>Internal format for the texture, e.g., GlInteralformat.RGB8. Ignored when creating a KtxTexture2.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.is_array">
+<span class="sig-name descname"><span class="pre">is_array</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.is_array" title="Permalink to this definition"></a></dt>
+<dd><p>Set to true if the texture is to be an array texture. Means OpenGL will use a GL_TEXTURE_*_ARRAY target.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_dimensions">
+<span class="sig-name descname"><span class="pre">num_dimensions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_dimensions" title="Permalink to this definition"></a></dt>
+<dd><p>Number of dimensions in the texture, 1, 2 or 3.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_faces">
+<span class="sig-name descname"><span class="pre">num_faces</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_faces" title="Permalink to this definition"></a></dt>
+<dd><p>6 for cube maps, 1 otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of faces</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_layers">
+<span class="sig-name descname"><span class="pre">num_layers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_layers" title="Permalink to this definition"></a></dt>
+<dd><p>Number of array layers in the texture.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_levels">
+<span class="sig-name descname"><span class="pre">num_levels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_levels" title="Permalink to this definition"></a></dt>
+<dd><p>Number of mip levels in the texture. Should be 1 if generateMipmaps is true.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_texture_create_info.KtxTextureCreateInfo.vk_format">
+<span class="sig-name descname"><span class="pre">vk_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat" title="pyktx.vk_format.VkFormat"><span class="pre">VkFormat</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.vk_format" title="Permalink to this definition"></a></dt>
+<dd><p>VkFormat for texture. Ignored when creating a KtxTexture1.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyktx.ktx_texture_create_flag_bits.html" class="btn btn-neutral float-left" title="pyktx.ktx_texture_create_flag_bits module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyktx.ktx_texture_create_storage.html" class="btn btn-neutral float-right" title="pyktx.ktx_texture_create_storage module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

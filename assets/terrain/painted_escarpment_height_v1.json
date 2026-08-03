@@ -1,0 +1,38 @@
+{
+  "schema": "eanpa-authored-heightmap-v1",
+  "source": "assets/terrain/painted_escarpment_height_source_v1.png",
+  "sourceSha256": "87bfcd267b99718f45210b0d0f09400013d873493471c5cfb499bb818c3e97c8",
+  "sourcePixels": [
+    1254,
+    1254
+  ],
+  "output": "assets/terrain/painted_escarpment_height_v1.png",
+  "outputSha256": "26d125df03377f3fadb8de7c965e080f582e4b8f3a6be4a236a62692f44cf7b3",
+  "outputPixels": [
+    1024,
+    1024
+  ],
+  "encoding": "unsigned 16-bit linear grayscale; 0=buried terrain datum; 65535=module peak",
+  "orientation": "top-left image origin; module front is image bottom",
+  "normalization": {
+    "lowLuma": 46.0,
+    "highLuma": 205.0,
+    "broadBlurRadius": 3.4,
+    "mediumBlurRadius": 1.2,
+    "broadWeight": 0.82,
+    "mediumWeight": 0.18,
+    "edgeFadeFraction": 0.075
+  },
+  "statistics": {
+    "nonzeroFraction": 0.6316404342651367,
+    "nonzeroMin": 8.790372874045715e-09,
+    "mean": 0.1526399552822113,
+    "max": 1.0
+  },
+  "authoringContract": {
+    "preserveZeroBorder": true,
+    "heightfieldProvidesPlanAndCap": true,
+    "sideProfileAddsBenchesButtressesAndUndercuts": true,
+    "runtimeCollision": false
+  }
+}

@@ -1,0 +1,90 @@
+.TH "ktx_deflate" 1 "Sat Oct 4 2025 08:43:36" "Version 4.4.2" "KTX Tools Reference" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ktx_deflate \- ktx deflate 
+.PP
+Deflate (supercompress) a KTX2 file\&.
+.SH "SYNOPSIS"
+.PP
+ktx deflate [option\&.\&.\&.] \fIinput-file\fP \fIoutput-file\fP 
+.SH "DESCRIPTION"
+.PP
+\fBktx\fP \fBdeflate\fP deflates (supercompresses) the KTX file specified as the \fIinput-file\fP and saves it as the \fIoutput-file\fP\&. If the \fIinput-file\fP is '-' the file will be read from the stdin\&. If the \fIoutput-path\fP is '-' the output file will be written to the stdout\&. If the input file is already supercompressed it will be inflated then supercompressed again using the options specified here and a warning will be issued\&. If the input file is invalid the first encountered validation error is displayed to the stderr and the command exits with the relevant non-zero status code\&.
+
+.PP
+\fBktx\fP \fBdeflate\fP cannot be applied to KTX files that have been supercompressed with BasisLZ\&.
+.SH "OPTIONS"
+.PP
+The following options are available:   
+
+.PP
+.IP "\fB--zstd <level> 
+.IP "" 1c
+Supercompress the data with Zstandard\&. Cannot be used with ETC1S / BasisLZ format\&. Level range is [1,22]\&. Lower levels give faster but worse compression\&. Values above 20 should be used with caution as they require more memory\&.  
+
+.PP
+.IP "\fB--zlib <level> 
+.IP "" 1c
+Supercompress the data with ZLIB\&. Cannot be used with ETC1S / BasisLZ format\&. Level range is [1,9]\&. Lower levels give faster but worse compression\&.  
+
+.PP
+
+.PP
+
+.PP
+.IP "\fB-q, --quiet 
+.IP "" 1c
+Silence warning about already supercompressed input fiile\&. 
+
+.PP
+.IP "\fB-e, --warnings-as-errors 
+.IP "" 1c
+Treat warnings as errors\&. 
+
+.PP
+
+.PP
+.IP "\fB-h, --help 
+.IP "" 1c
+Print this usage message and exit\&. 
+
+.PP
+.IP "\fB-v, --version 
+.IP "" 1c
+Print the version number of this program and exit\&. 
+
+.PP
+.SH "EXIT STATUS"
+.PP
+.IP "\(bu" 2
+0 - Success
+.IP "\(bu" 2
+1 - Command line error
+.IP "\(bu" 2
+2 - IO failure
+.IP "\(bu" 2
+3 - Invalid input file
+.IP "\(bu" 2
+4 - Runtime or library error
+.IP "\(bu" 2
+5 - Not supported state or operation
+.IP "\(bu" 2
+6 - Requested feature is not yet implemented  
+.PP
+.SH "HISTORY"
+.PP
+\fBVersion 4\&.0\fP
+.RS 4
+
+.IP "\(bu" 2
+Initial version
+.PP
+.RE
+.PP
+.SH "AUTHOR"
+.PP
+.IP "\(bu" 2
+Mark Callow [@MarkCallow] 
+.PP
+

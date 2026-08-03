@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.ktx_texture2 module &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyktx.ktx_texture_create_flag_bits module" href="pyktx.ktx_texture_create_flag_bits.html" />
+    <link rel="prev" title="pyktx.ktx_texture1 module" href="pyktx.ktx_texture1.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyktx.ktx_texture2 module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2"><code class="docutils literal notranslate"><span class="pre">KtxTexture2</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.compress_astc"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.compress_astc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.compress_basis"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.compress_basis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.create"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.create_from_named_file"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.create_from_named_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.deflate_zstd"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.deflate_zstd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.needs_transcoding"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.needs_transcoding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.oetf"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.oetf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.premultipled_alpha"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.premultipled_alpha</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.supercompression_scheme"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.supercompression_scheme</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.transcode_basis"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.transcode_basis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2.vk_format"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.vk_format</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">pyktx</a></li>
+          <li class="breadcrumb-item"><a href="pyktx.html">pyktx package</a></li>
+      <li class="breadcrumb-item active">pyktx.ktx_texture2 module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/docs/pyktx.ktx_texture2.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyktx.ktx_texture2">
+<span id="pyktx-ktx-texture2-module"></span><h1>pyktx.ktx_texture2 module<a class="headerlink" href="#module-pyktx.ktx_texture2" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyktx.ktx_texture2.</span></span><span class="sig-name descname"><span class="pre">KtxTexture2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ptr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">c_ulonglong</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyktx/ktx_texture2.html#KtxTexture2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture" title="pyktx.ktx_texture.KtxTexture"><code class="xref py py-class docutils literal notranslate"><span class="pre">KtxTexture</span></code></a></p>
+<p>Class representing a KTX version 2 format texture.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.compress_astc">
+<span class="sig-name descname"><span class="pre">compress_astc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams" title="pyktx.ktx_astc_params.KtxAstcParams"><span class="pre">KtxAstcParams</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pyktx/ktx_texture2.html#KtxTexture2.compress_astc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.compress_astc" title="Permalink to this definition"></a></dt>
+<dd><p>Encode and compress a ktx texture with uncompressed images to ASTC.</p>
+<p>The images are either encoded to ASTC block-compressed format. The
+encoded images replace the original images and the texture’s fields
+including the dfd are modified to reflect the new state.</p>
+<p>Such textures can be directly uploaded to a GPU via a graphics API.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.compress_basis">
+<span class="sig-name descname"><span class="pre">compress_basis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams" title="pyktx.ktx_basis_params.KtxBasisParams"><span class="pre">KtxBasisParams</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pyktx/ktx_texture2.html#KtxTexture2.compress_basis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.compress_basis" title="Permalink to this definition"></a></dt>
+<dd><p>Supercompress a KTX2 texture with uncompressed images.</p>
+<p>The images are either encoded to ETC1S block-compressed format and supercompressed
+with Basis LZ or they are encoded to UASTC block-compressed format. UASTC format is
+selected by setting the uastc field of params to true. The encoded images replace
+the original images and the texture’s fields including the DFD are modified to reflect
+the new state.  Such textures must be transcoded to a desired target block compressed
+format before they can be uploaded to a GPU via a graphics API.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.create">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">create_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo" title="pyktx.ktx_texture_create_info.KtxTextureCreateInfo"><span class="pre">KtxTextureCreateInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_allocation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html#pyktx.ktx_texture_create_storage.KtxTextureCreateStorage" title="pyktx.ktx_texture_create_storage.KtxTextureCreateStorage"><span class="pre">KtxTextureCreateStorage</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2" title="pyktx.ktx_texture2.KtxTexture2"><span class="pre">KtxTexture2</span></a></span></span><a class="reference internal" href="../_modules/pyktx/ktx_texture2.html#KtxTexture2.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.create" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new empty KtxTexture2.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.create_from_named_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_from_named_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_flags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KtxTextureCreateFlagBits.LOAD_IMAGE_DATA_BIT</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyktx.ktx_texture2.KtxTexture2" title="pyktx.ktx_texture2.KtxTexture2"><span class="pre">KtxTexture2</span></a></span></span><a class="reference internal" href="../_modules/pyktx/ktx_texture2.html#KtxTexture2.create_from_named_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.create_from_named_file" title="Permalink to this definition"></a></dt>
+<dd><p>Create a KtxTexture2 from a named KTX file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.deflate_zstd">
+<span class="sig-name descname"><span class="pre">deflate_zstd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression_level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pyktx/ktx_texture2.html#KtxTexture2.deflate_zstd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.deflate_zstd" title="Permalink to this definition"></a></dt>
+<dd><p>Deflate the data in a ktxTexture2 object using Zstandard.</p>
+<p>The texture’s level_index, data_size, dfd and supercompression_scheme will all
+be updated after successful deflation to reflect the deflated data.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.needs_transcoding">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">needs_transcoding</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.needs_transcoding" title="Permalink to this definition"></a></dt>
+<dd><p>If the images are in a transcodable format.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.oetf">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">oetf</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.oetf" title="Permalink to this definition"></a></dt>
+<dd><p>The opto-electrical transfer function of the images.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.premultipled_alpha">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">premultipled_alpha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.premultipled_alpha" title="Permalink to this definition"></a></dt>
+<dd><p>Whether the RGB components have been premultiplied by the alpha component.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.supercompression_scheme">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">supercompression_scheme</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html#pyktx.ktx_supercmp_scheme.KtxSupercmpScheme" title="pyktx.ktx_supercmp_scheme.KtxSupercmpScheme"><span class="pre">KtxSupercmpScheme</span></a></em><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.supercompression_scheme" title="Permalink to this definition"></a></dt>
+<dd><p>The supercompression scheme used to compress the texture data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.transcode_basis">
+<span class="sig-name descname"><span class="pre">transcode_basis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt" title="pyktx.ktx_transcode_fmt.KtxTranscodeFmt"><span class="pre">KtxTranscodeFmt</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transcode_flags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pyktx/ktx_texture2.html#KtxTexture2.transcode_basis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.transcode_basis" title="Permalink to this definition"></a></dt>
+<dd><p>Transcode a KTX2 texture with BasisLZ/ETC1S or UASTC images.</p>
+<p>If the texture contains BasisLZ supercompressed images, inflates them from back to
+ETC1S then transcodes them to the specified block-compressed format. If the texture
+contains UASTC images, inflates them, if they have been supercompressed with zstd, then
+transcodes then to the specified format, The transcoded images replace the original images
+and the texture’s fields including the dfd are modified to reflect the new format.</p>
+<p>These types of textures must be transcoded to a desired target block-compressed format
+before they can be uploaded to a GPU via a graphics API.</p>
+<p>The following block compressed transcode targets (KtxTranscodeFmt) are available: ETC1_RGB,
+ETC2_RGBA, BC1_RGB, BC3_RGBA, BC4_R, BC5_RG, BC7_RGBA, PVRTC1_4_RGB, PVRTC1_4_RGBA,
+PVRTC2_4_RGB, PVRTC2_4_RGBA, ASTC_4x4_RGBA, ETC2_EAC_R11, ETC2_EAC_RG11, ETC and BC1_OR_3.</p>
+<p>ETC automatically selects between ETC1_RGB and ETC2_RGBA according to whether an alpha
+channel is available. BC1_OR_3 does likewise between BC1_RGB and BC3_RGBA. Note that if
+PVRTC1_4_RGBA or PVRTC2_4_RGBA is specified and there is no alpha channel PVRTC1_4_RGB
+or PVRTC2_4_RGB respectively will be selected.</p>
+<p>Transcoding to ATC &amp; FXT1 formats is not supported by libktx as there are no equivalent Vulkan formats.</p>
+<p>The following uncompressed transcode targets are also available: RGBA32, RGB565, BGR565 and RGBA4444.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyktx.ktx_texture2.KtxTexture2.vk_format">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vk_format</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat" title="pyktx.vk_format.VkFormat"><span class="pre">VkFormat</span></a></em><a class="headerlink" href="#pyktx.ktx_texture2.KtxTexture2.vk_format" title="Permalink to this definition"></a></dt>
+<dd><p>VkFormat for texture.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyktx.ktx_texture1.html" class="btn btn-neutral float-left" title="pyktx.ktx_texture1 module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyktx.ktx_texture_create_flag_bits.html" class="btn btn-neutral float-right" title="pyktx.ktx_texture_create_flag_bits module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

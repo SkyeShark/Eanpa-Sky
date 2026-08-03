@@ -1,0 +1,26 @@
+# -- source masters (kept locally; the game loads runtime/ variants) --------
+assets/pbr/*/sources/
+assets/pbr/eanpa_southwest_ground_v2/
+assets/player/*.glb
+assets/player/*.blend
+assets/player/*.blend1
+assets/terrain/Desert_rock_chunks_12_pieces.glb
+assets/terrain/Desert_Cliff_Mesa_High.glb
+assets/terrain/Desert_Cliff_Wide_Mesa_Low.glb
+assets/audio/cc0_sources/
+assets/audio/generated_sources/
+assets/audio/licensed_sources/
+
+# -- local working state ----------------------------------------------------
+artifacts/
+.backup_pre_sky_backport/
+*.backup*
+*.rejected*
+__pycache__/
+*.pyc
+FOR_SOL.md
+
+# unused non-LOD duplicates (engine loads *_runtime_2k_lods.glb)
+assets/terrain/Desert_rock_chunks_12_pieces_runtime_2k.glb
+assets/terrain/Desert_Cliff_Mesa_High_runtime_2k.glb
+assets/terrain/Desert_Cliff_Wide_Mesa_Low_runtime_2k.glb

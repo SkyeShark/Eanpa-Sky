@@ -1,0 +1,63 @@
+{
+  "schema": "eanpa-desert-rock-chunks-runtime-2k-v1",
+  "targetTextureMaximum": 2048,
+  "originalUntouched": true,
+  "asset": {
+    "source": "assets/terrain/Desert_rock_chunks_12_pieces.glb",
+    "runtime": "assets/terrain/Desert_rock_chunks_12_pieces_runtime_2k.glb",
+    "sourceSha256": "233a8c11fb0e281b38a6e7df1ff0fe20f3ff00f3fe31b858971041637e89714f",
+    "runtimeSha256": "670d3d5cc52e4c5b565a646c2b1f1bca902743903e672f760652d082c964c4a0",
+    "sourceBytes": 140184988,
+    "runtimeBytes": 17840300,
+    "images": [
+      {
+        "name": "normal",
+        "roles": [
+          "normal"
+        ],
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "runtimeSize": [
+          2048,
+          2048
+        ],
+        "treatment": "lanczos_then_unit_vector_renormalization",
+        "encodedBytes": 6815223
+      },
+      {
+        "name": "Baked_BaseColor",
+        "roles": [
+          "baseColor"
+        ],
+        "sourceSize": [
+          8192,
+          8192
+        ],
+        "runtimeSize": [
+          2048,
+          2048
+        ],
+        "treatment": "lanczos_downsample",
+        "encodedBytes": 8000571
+      },
+      {
+        "name": "Baked_MetallicRoughness",
+        "roles": [
+          "metallicRoughness"
+        ],
+        "sourceSize": [
+          4096,
+          4096
+        ],
+        "runtimeSize": [
+          2048,
+          2048
+        ],
+        "treatment": "lanczos_downsample",
+        "encodedBytes": 1540218
+      }
+    ]
+  }
+}

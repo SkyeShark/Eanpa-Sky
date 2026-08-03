@@ -1,0 +1,2558 @@
+{
+  "palette_reference": {
+    "method": {
+      "source": "embedded baseColor image in each authored runtime LOD GLB",
+      "resize": "Pillow Lanczos into a 512x512 bounding box, aspect preserved",
+      "visible_texel_rule": "include texels only when max(sRGB RGB) > 0.08",
+      "rgb_statistics": "arithmetic mean and per-channel median of visible encoded sRGB bytes",
+      "hsv_statistics": "per-channel median after encoded sRGB RGB-to-HSV conversion",
+      "hsv_range": [
+        0.0,
+        1.0
+      ],
+      "purpose": "deterministic cliff-calibrated terrain albedo grade reference"
+    },
+    "assets": [
+      {
+        "path": "assets/terrain/Desert_Cliff_Wide_Mesa_Low_runtime_2k_lods.glb",
+        "sha256": "a5251237247627bf10197fb59643183cce5cfbff2441fe38d39fb5ef4410c5f7",
+        "visible_mean_rgb8": [
+          148.1,
+          87.3,
+          61.8
+        ],
+        "visible_median_rgb8": [
+          150,
+          88,
+          61
+        ],
+        "visible_median_hsv": [
+          0.05,
+          0.586,
+          0.588
+        ]
+      },
+      {
+        "path": "assets/terrain/Desert_Cliff_Mesa_High_runtime_2k_lods.glb",
+        "sha256": "fa2e557fb0e6a5da17bc82d850e693f8406b77ecf43ae709fea80284f49746c6",
+        "visible_mean_rgb8": [
+          134.9,
+          71.0,
+          47.0
+        ],
+        "visible_median_rgb8": [
+          137,
+          72,
+          46
+        ],
+        "visible_median_hsv": [
+          0.046,
+          0.657,
+          0.537
+        ]
+      },
+      {
+        "path": "assets/terrain/Desert_rock_chunks_12_pieces_runtime_2k_lods.glb",
+        "sha256": "781d4ed5816140066d3e1c793385c42c037cf00dec996206c11e91810922721d",
+        "visible_mean_rgb8": [
+          156.6,
+          94.4,
+          53.5
+        ],
+        "visible_median_rgb8": [
+          162,
+          97,
+          54
+        ],
+        "visible_median_hsv": [
+          0.066,
+          0.661,
+          0.631
+        ]
+      }
+    ]
+  },
+  "official_poly_haven_4k_jpg_sources": {
+    "GravellySand": {
+      "asset_page_url": "https://polyhaven.com/a/gravelly_sand",
+      "files": {
+        "albedo": {
+          "filename": "gravelly_sand_diff_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/gravelly_sand/gravelly_sand_diff_4k.jpg"
+        },
+        "normal_gl": {
+          "filename": "gravelly_sand_nor_gl_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/gravelly_sand/gravelly_sand_nor_gl_4k.jpg"
+        },
+        "roughness": {
+          "filename": "gravelly_sand_rough_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/gravelly_sand/gravelly_sand_rough_4k.jpg"
+        },
+        "ao": {
+          "filename": "gravelly_sand_ao_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/gravelly_sand/gravelly_sand_ao_4k.jpg"
+        },
+        "displacement": {
+          "filename": "gravelly_sand_disp_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/gravelly_sand/gravelly_sand_disp_4k.jpg"
+        }
+      }
+    },
+    "RockFace03": {
+      "asset_page_url": "https://polyhaven.com/a/rock_face_03",
+      "files": {
+        "albedo": {
+          "filename": "rock_face_03_diff_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face_03/rock_face_03_diff_4k.jpg"
+        },
+        "normal_gl": {
+          "filename": "rock_face_03_nor_gl_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face_03/rock_face_03_nor_gl_4k.jpg"
+        },
+        "roughness": {
+          "filename": "rock_face_03_rough_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face_03/rock_face_03_rough_4k.jpg"
+        },
+        "ao": {
+          "filename": "rock_face_03_ao_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face_03/rock_face_03_ao_4k.jpg"
+        },
+        "displacement": {
+          "filename": "rock_face_03_disp_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face_03/rock_face_03_disp_4k.jpg"
+        }
+      }
+    },
+    "SandyGravel02": {
+      "asset_page_url": "https://polyhaven.com/a/sandy_gravel_02",
+      "files": {
+        "albedo": {
+          "filename": "sandy_gravel_02_diff_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/sandy_gravel_02/sandy_gravel_02_diff_4k.jpg"
+        },
+        "normal_gl": {
+          "filename": "sandy_gravel_02_nor_gl_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/sandy_gravel_02/sandy_gravel_02_nor_gl_4k.jpg"
+        },
+        "roughness": {
+          "filename": "sandy_gravel_02_rough_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/sandy_gravel_02/sandy_gravel_02_rough_4k.jpg"
+        },
+        "ao": {
+          "filename": "sandy_gravel_02_ao_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/sandy_gravel_02/sandy_gravel_02_ao_4k.jpg"
+        },
+        "displacement": {
+          "filename": "sandy_gravel_02_disp_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/sandy_gravel_02/sandy_gravel_02_disp_4k.jpg"
+        }
+      }
+    },
+    "RockyTrail": {
+      "asset_page_url": "https://polyhaven.com/a/rocky_trail",
+      "files": {
+        "albedo": {
+          "filename": "rocky_trail_diff_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocky_trail/rocky_trail_diff_4k.jpg"
+        },
+        "normal_gl": {
+          "filename": "rocky_trail_nor_gl_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocky_trail/rocky_trail_nor_gl_4k.jpg"
+        },
+        "roughness": {
+          "filename": "rocky_trail_rough_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocky_trail/rocky_trail_rough_4k.jpg"
+        },
+        "ao": {
+          "filename": "rocky_trail_ao_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocky_trail/rocky_trail_ao_4k.jpg"
+        },
+        "displacement": {
+          "filename": "rocky_trail_disp_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocky_trail/rocky_trail_disp_4k.jpg"
+        }
+      }
+    },
+    "RockFace": {
+      "asset_page_url": "https://polyhaven.com/a/rock_face",
+      "files": {
+        "albedo": {
+          "filename": "rock_face_diff_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face/rock_face_diff_4k.jpg"
+        },
+        "normal_gl": {
+          "filename": "rock_face_nor_gl_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face/rock_face_nor_gl_4k.jpg"
+        },
+        "roughness": {
+          "filename": "rock_face_rough_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face/rock_face_rough_4k.jpg"
+        },
+        "ao": {
+          "filename": "rock_face_ao_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face/rock_face_ao_4k.jpg"
+        },
+        "displacement": {
+          "filename": "rock_face_disp_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_face/rock_face_disp_4k.jpg"
+        }
+      }
+    },
+    "RockBoulderCracked": {
+      "asset_page_url": "https://polyhaven.com/a/rock_boulder_cracked",
+      "files": {
+        "albedo": {
+          "filename": "rock_boulder_cracked_diff_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_boulder_cracked/rock_boulder_cracked_diff_4k.jpg"
+        },
+        "normal_gl": {
+          "filename": "rock_boulder_cracked_nor_gl_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_boulder_cracked/rock_boulder_cracked_nor_gl_4k.jpg"
+        },
+        "roughness": {
+          "filename": "rock_boulder_cracked_rough_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_boulder_cracked/rock_boulder_cracked_rough_4k.jpg"
+        },
+        "ao": {
+          "filename": "rock_boulder_cracked_ao_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_boulder_cracked/rock_boulder_cracked_ao_4k.jpg"
+        },
+        "displacement": {
+          "filename": "rock_boulder_cracked_disp_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rock_boulder_cracked/rock_boulder_cracked_disp_4k.jpg"
+        }
+      }
+    },
+    "RocksGround02": {
+      "asset_page_url": "https://polyhaven.com/a/rocks_ground_02",
+      "files": {
+        "albedo": {
+          "filename": "rocks_ground_02_col_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocks_ground_02/rocks_ground_02_col_4k.jpg"
+        },
+        "normal_gl": {
+          "filename": "rocks_ground_02_nor_gl_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocks_ground_02/rocks_ground_02_nor_gl_4k.jpg"
+        },
+        "roughness": {
+          "filename": "rocks_ground_02_rough_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocks_ground_02/rocks_ground_02_rough_4k.jpg"
+        },
+        "ao": {
+          "filename": "rocks_ground_02_ao_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocks_ground_02/rocks_ground_02_ao_4k.jpg"
+        },
+        "displacement": {
+          "filename": "rocks_ground_02_height_4k.jpg",
+          "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/4k/rocks_ground_02/rocks_ground_02_height_4k.jpg"
+        }
+      }
+    }
+  },
+  "schema_version": 4,
+  "generated_by": "tools/build-southwest-ground-v3.py",
+  "source_acquisition": "tools/download-southwest-ground-v3.py",
+  "hash_algorithm": "SHA-256",
+  "deterministic_build": true,
+  "layer_order": [
+    "RockyTrail02",
+    "DryGroundRocks",
+    "RedLateriteSoilStones",
+    "CrackedRedGround",
+    "MudCrackedDryRiverbed002",
+    "Rock029",
+    "Rock061",
+    "GravellySand",
+    "RockFace03",
+    "SandyGravel02",
+    "RockyTrail",
+    "RockFace",
+    "RockBoulderCracked",
+    "RocksGround02"
+  ],
+  "source_file_count": 70,
+  "runtime_file_count": 28,
+  "runtime_resolution": [
+    2048,
+    2048
+  ],
+  "runtime_resolution_rationale": "True 2K is the visual-quality floor after the rejected low-resolution pass. At 4-8 m scene repeats it supplies 256-512 texels/m; future GPU block compression should reduce the honestly recorded decoded cost without reducing authored resolution.",
+  "scene_scale_calibration": {
+    "source_span_policy": "physical_span_m records source/capture provenance and does not drive runtime UVs",
+    "runtime_span_policy": "scene_repeat_m is the complete world-XZ texture repeat used by the shader",
+    "seedthree_base_ground_repeat_m": 4.0,
+    "seedthree_rock_repeat_m": 7.272727,
+    "seedthree_derivation": "560 m terrain / 140 base repeats = 4 m; rock UV multiplier 0.55 gives 4 / 0.55 = 7.272727 m",
+    "stochastic_cell_m": 12.0
+  },
+  "decoded_array_memory": {
+    "base_level_bytes": 469762048,
+    "estimated_with_complete_mips_bytes": 626349398,
+    "array_count": 2,
+    "layer_count": 14,
+    "channels_per_array": 4
+  },
+  "runtime_png": {
+    "lossless": true,
+    "albedo_mode": "RGBA",
+    "packed_mode": "RGBA",
+    "resampling": "Lanczos",
+    "mips_generated_at_runtime": true,
+    "anisotropy_requested": 8
+  },
+  "albedo_packing": {
+    "RGB": "graded sRGB albedo; decoded to the renderer working color space",
+    "A": "linear per-source relative displacement height encoded as UNORM8",
+    "alpha_color_conversion": "none; sRGB transfer applies to RGB only",
+    "height_use": "bounded transition-weight bias only; not displacement or SPOM"
+  },
+  "channel_packing": {
+    "R": "renormalized tangent-space NormalGL X encoded as UNORM8",
+    "G": "renormalized tangent-space NormalGL Y encoded as UNORM8",
+    "B": "linear roughness encoded as UNORM8",
+    "A": "linear ambient occlusion encoded as UNORM8",
+    "normal_z_reconstruction": "sqrt(max(0, 1 - x*x - y*y))"
+  },
+  "layers": [
+    {
+      "id": "RockyTrail02",
+      "order": 0,
+      "semantic": "dominant-alluvial-gravel-and-stony-trail",
+      "physical_span_m": [
+        2.0,
+        2.0
+      ],
+      "span_basis": "author-published 2 m width",
+      "scene_repeat_m": [
+        4.0,
+        4.0
+      ],
+      "scene_repeat_basis": "SeedThree 4 m base-ground period; doubled after live motif-scale review",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        512.0,
+        512.0
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/rocky_trail_02",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/RockyTrail02_Color_4K.jpg",
+            "sha256": "f1ba59876a78cd2ad555de4f3c3aeb2053712d4279088bf74b22adbb5210bfa9",
+            "byte_size": 13483924,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/RockyTrail02_NormalGL_4K.jpg",
+            "sha256": "e374064d3723872509c22991885ebb82753f31025d2454d310160f69730ad212",
+            "byte_size": 21124568,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/RockyTrail02_Roughness_4K.jpg",
+            "sha256": "0e4a1cf984998b71118c041c6aad2d12faa3aa775a8e00482d4fa6c877dbfd16",
+            "byte_size": 8511926,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/RockyTrail02_AO_4K.jpg",
+            "sha256": "d14f55e143adc80f86ef171d16e25594c081edb8fc69cef573185c90b3f8fa55",
+            "byte_size": 13065228,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/RockyTrail02_Displacement_4K.jpg",
+            "sha256": "0b74bf2ad53503c61d137f3a01376fe128111c5a292b3d2bfd1ca33e920adba6",
+            "byte_size": 5049955,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/RockyTrail02_AlbedoGrade_2K.png",
+          "sha256": "ef257452b152bac35e28ad1cad2ac25f09934080c18f4e08c34b3dc0a8b8be0d",
+          "byte_size": 10296713,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/RockyTrail02_PackedNxyRoughAO_2K.png",
+          "sha256": "ea34ed06ad97ba88b8cffafadf82f0b7e12365191f23bd79249cff9583cb6856",
+          "byte_size": 13269682,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.58,
+              0.34,
+              0.21
+            ],
+            "chroma_mix": 0.65,
+            "exposure_stops": 0.0,
+            "luma_contrast": 1.02
+          },
+          "source_luminance": {
+            "q05": 0.10901951044797897,
+            "median": 0.1633620411157608,
+            "q95": 0.2371012568473816
+          },
+          "runtime_luminance": {
+            "q05": 0.10822447389364243,
+            "median": 0.1631632000207901,
+            "q95": 0.23881231248378754
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/RockyTrail02_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.25532656580209734,
+            "source_q99": 0.7008451390266415,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.39508484859092563,
+            "runtime_stddev": 0.18078720010465174
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/RockyTrail02_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/RockyTrail02_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/RockyTrail02_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "DryGroundRocks",
+      "order": 1,
+      "semantic": "stony-transition-soil",
+      "physical_span_m": [
+        4.0,
+        4.0
+      ],
+      "span_basis": "author-published 4 m width",
+      "scene_repeat_m": [
+        8.0,
+        8.0
+      ],
+      "scene_repeat_basis": "rounded above SeedThree 7.27 m rock period for large stony motifs",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        256.0,
+        256.0
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/dry_ground_rocks",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/DryGroundRocks_Color_4K.jpg",
+            "sha256": "7ccce8cb4c88df6762e9059295f4895a6f55d089ebefb518a077deae30afe2d5",
+            "byte_size": 13984328,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/DryGroundRocks_NormalGL_4K.jpg",
+            "sha256": "085840ecb1a0e3050158f6d74408c7bdb2f6785bf4036eed252949097471ac09",
+            "byte_size": 20931431,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/DryGroundRocks_Roughness_4K.jpg",
+            "sha256": "9b73463c13f3edcf4b74aa573f841838ae0fc6265fb711ed2f82518661d6d55d",
+            "byte_size": 7966801,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/DryGroundRocks_AO_4K.jpg",
+            "sha256": "a0cff23694d6ea118d1895cb98b920dcd48e92ea325e06ce4ba6a1369ad8d5f2",
+            "byte_size": 9177035,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/DryGroundRocks_Displacement_4K.jpg",
+            "sha256": "04bc7a82f795e2faf6a3f4a2bf35c747744a3e737c8ddce5f3e1e8e9fa66682e",
+            "byte_size": 2602589,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/DryGroundRocks_AlbedoGrade_2K.png",
+          "sha256": "307caaf2f66c45922f80cc4b2d1f0864e5866ff2a4482f691c71617b1e8af4f9",
+          "byte_size": 12799912,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/DryGroundRocks_PackedNxyRoughAO_2K.png",
+          "sha256": "e5fcb01c50d7e6e7cfb9725354728407c0578eae5d5536105d98d65aca722e27",
+          "byte_size": 13954977,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.6,
+              0.33,
+              0.18
+            ],
+            "chroma_mix": 0.65,
+            "exposure_stops": -0.15,
+            "luma_contrast": 1.0
+          },
+          "source_luminance": {
+            "q05": 0.04424133524298668,
+            "median": 0.20880042016506195,
+            "q95": 0.38047072291374207
+          },
+          "runtime_luminance": {
+            "q05": 0.0397971011698246,
+            "median": 0.1879815012216568,
+            "q95": 0.3428064286708832
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/DryGroundRocks_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.18435396254062653,
+            "source_q99": 0.5683214414119718,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.4672387263354133,
+            "runtime_stddev": 0.21284457828212994
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/DryGroundRocks_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/DryGroundRocks_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/DryGroundRocks_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "RedLateriteSoilStones",
+      "order": 2,
+      "semantic": "warm-gravel-transition-soil",
+      "physical_span_m": [
+        2.0,
+        2.0
+      ],
+      "span_basis": "author-published 2 m width",
+      "scene_repeat_m": [
+        4.0,
+        4.0
+      ],
+      "scene_repeat_basis": "SeedThree 4 m base-ground period; doubled after live motif-scale review",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        512.0,
+        512.0
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/red_laterite_soil_stones",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/RedLateriteSoilStones_Color_4K.png",
+            "sha256": "efa58107f7f937a00fceb66b16e3785908b1792b7728f8aeff032bf0868a1458",
+            "byte_size": 99792426,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGBA",
+            "format": "PNG"
+          },
+          "normal_gl": {
+            "path": "sources/RedLateriteSoilStones_NormalGL_4K.png",
+            "sha256": "a08096639c943bbf3d3593df53bb344ed1e3412d6d1e3ba154842a81c152ef48",
+            "byte_size": 110936949,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGBA",
+            "format": "PNG"
+          },
+          "roughness": {
+            "path": "sources/RedLateriteSoilStones_Roughness_4K.png",
+            "sha256": "872e6b5b2b9814dfc9d60c09b8c4d5f1ded339ca7c4c6f152896de0dafb043c0",
+            "byte_size": 29599396,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "I;16",
+            "format": "PNG"
+          },
+          "ao": {
+            "path": "sources/RedLateriteSoilStones_AO_4K.png",
+            "sha256": "bbfdab649480ce2dc47f8c5e34e5b794e363a396d4cc373db2924148ff977741",
+            "byte_size": 16776648,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "I;16",
+            "format": "PNG"
+          },
+          "displacement": {
+            "path": "sources/RedLateriteSoilStones_Displacement_4K.png",
+            "sha256": "384b7b548cdb0c845000e165e715c26b3eddada37f5893d17b1770af18b00940",
+            "byte_size": 27158016,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "I;16",
+            "format": "PNG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/RedLateriteSoilStones_AlbedoGrade_2K.png",
+          "sha256": "50865d9738ae84183f6d5e63acc667f6a1bd17bfa13df60a3bd77d383901751a",
+          "byte_size": 10752567,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/RedLateriteSoilStones_PackedNxyRoughAO_2K.png",
+          "sha256": "90e5e9004f747ce5cfdb2db9136ac3cd37a9d7a0eeff40949f8e7f38d1517897",
+          "byte_size": 13779292,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.61,
+              0.3,
+              0.16
+            ],
+            "chroma_mix": 0.65,
+            "exposure_stops": 0.6,
+            "luma_contrast": 1.0
+          },
+          "source_luminance": {
+            "q05": 0.04280299320816994,
+            "median": 0.0597466304898262,
+            "q95": 0.11358389258384705
+          },
+          "runtime_luminance": {
+            "q05": 0.06504572182893753,
+            "median": 0.09061920642852783,
+            "q95": 0.17194092273712158
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/RedLateriteSoilStones_Displacement_4K.png",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.14650031730532645,
+            "source_q99": 0.5044642400741575,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.4000729701098274,
+            "runtime_stddev": 0.18663817010999892
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/RedLateriteSoilStones_Displacement_4K.png",
+        "runtime_height_path": "runtime/RedLateriteSoilStones_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/RedLateriteSoilStones_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "CrackedRedGround",
+      "order": 3,
+      "semantic": "compacted-cracked-flats",
+      "physical_span_m": [
+        2.0,
+        2.0
+      ],
+      "span_basis": "author-published 2 m width",
+      "scene_repeat_m": [
+        6.0,
+        6.0
+      ],
+      "scene_repeat_basis": "expanded beyond SeedThree ground period so crack plates read above pebble scale",
+      "scene_scale_factor_from_physical": [
+        3.0,
+        3.0
+      ],
+      "runtime_texels_per_m": [
+        341.333333,
+        341.333333
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/cracked_red_ground",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/CrackedRedGround_Color_4K.jpg",
+            "sha256": "b7f2a8e8269aab3cec7f3a2e9360cbbcb1e249779c125c88357aca4647c8f605",
+            "byte_size": 10740544,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/CrackedRedGround_NormalGL_4K.jpg",
+            "sha256": "f7bd46b289cb5383816e51b85c548995d7f0d28036cebe6af37354ef935081a0",
+            "byte_size": 16766261,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/CrackedRedGround_Roughness_4K.jpg",
+            "sha256": "526bb6c66972e43de9a83bb3facd83123fac82e1543508663645a0ba7839efcc",
+            "byte_size": 7910468,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/CrackedRedGround_AO_4K.jpg",
+            "sha256": "5a217c414ad7c90a3d28e0c8c31666f01b90cad1ef1ca260b4f31cb2b064ad54",
+            "byte_size": 10011165,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/CrackedRedGround_Displacement_4K.jpg",
+            "sha256": "14b2ae6b795f9e83af974dd3925a40430d0cce8d10cdd4160f9b6de757495b4f",
+            "byte_size": 3665118,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/CrackedRedGround_AlbedoGrade_2K.png",
+          "sha256": "a7d9aa598d409ab04b8f35feca57f7673c9c08d808f63d1275f47373e68863d8",
+          "byte_size": 8438160,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/CrackedRedGround_PackedNxyRoughAO_2K.png",
+          "sha256": "3ad2a3a19cfe350d04ca3b6c882ee74104db228c8f662dec482d184dd7e7eea4",
+          "byte_size": 10618542,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.58,
+              0.29,
+              0.17
+            ],
+            "chroma_mix": 0.6,
+            "exposure_stops": 0.24,
+            "luma_contrast": 1.03
+          },
+          "source_luminance": {
+            "q05": 0.05866977199912071,
+            "median": 0.0795607790350914,
+            "q95": 0.10251933336257935
+          },
+          "runtime_luminance": {
+            "q05": 0.06847980618476868,
+            "median": 0.09397964179515839,
+            "q95": 0.1219433918595314
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/CrackedRedGround_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.22295423194766045,
+            "source_q99": 0.6560001790523527,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.5572332466349882,
+            "runtime_stddev": 0.20572320489759344
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/CrackedRedGround_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/CrackedRedGround_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/CrackedRedGround_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "MudCrackedDryRiverbed002",
+      "order": 4,
+      "semantic": "authored-dry-washes-only",
+      "physical_span_m": [
+        2.0,
+        2.0
+      ],
+      "span_basis": "author-published 2 m width",
+      "scene_repeat_m": [
+        6.0,
+        6.0
+      ],
+      "scene_repeat_basis": "expanded beyond SeedThree ground period so wash polygons remain legible",
+      "scene_scale_factor_from_physical": [
+        3.0,
+        3.0
+      ],
+      "runtime_texels_per_m": [
+        341.333333,
+        341.333333
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/mud_cracked_dry_riverbed_002",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/MudCrackedDryRiverbed002_Color_4K.jpg",
+            "sha256": "4846f2389e8f2bb13132c6192734d1500a758ef97f425a3f19d0bebd28a4add6",
+            "byte_size": 13557284,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/MudCrackedDryRiverbed002_NormalGL_4K.jpg",
+            "sha256": "cfe4bc7c0db5af90f845a45733b3b594a8670d7c627bc221e51c2d438bd62e94",
+            "byte_size": 21982777,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/MudCrackedDryRiverbed002_Roughness_4K.jpg",
+            "sha256": "8ff5a05f127fe30263994ae87c89c41d503c9ece44ac44528bb82f9605a26db2",
+            "byte_size": 7406508,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/MudCrackedDryRiverbed002_AO_4K.jpg",
+            "sha256": "ce920e89c0e4ba413cc2ddd9546528a81684d8900d11b9f10db5c0488e5f8ced",
+            "byte_size": 13811741,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/MudCrackedDryRiverbed002_Displacement_4K.jpg",
+            "sha256": "4727469c7b2e176fc081072ee76ed1dd6790c4e0a08e0ce7226f817e8fb55cac",
+            "byte_size": 4419545,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/MudCrackedDryRiverbed002_AlbedoGrade_2K.png",
+          "sha256": "94635fc5b2f21eb1fe15236ff55c4abc5d598458c20f3b44a874387d18dbf867",
+          "byte_size": 10288646,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/MudCrackedDryRiverbed002_PackedNxyRoughAO_2K.png",
+          "sha256": "480eb1420e7d3c3bb5f6df935ac62cc4a98d95795bfeff94ee88fdd7ed190a85",
+          "byte_size": 12930796,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.58,
+              0.33,
+              0.21
+            ],
+            "chroma_mix": 0.65,
+            "exposure_stops": -0.1,
+            "luma_contrast": 1.05
+          },
+          "source_luminance": {
+            "q05": 0.13773372769355774,
+            "median": 0.20370157063007355,
+            "q95": 0.2637764811515808
+          },
+          "runtime_luminance": {
+            "q05": 0.12572571635246277,
+            "median": 0.18957963585853577,
+            "q95": 0.2506275177001953
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/MudCrackedDryRiverbed002_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.14075158029794693,
+            "source_q99": 0.6270983779430389,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.7073050583110136,
+            "runtime_stddev": 0.25356490012383753
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/MudCrackedDryRiverbed002_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/MudCrackedDryRiverbed002_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/MudCrackedDryRiverbed002_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "Rock029",
+      "order": 5,
+      "semantic": "orange-bedrock-and-steep-outcrop",
+      "physical_span_m": [
+        4.0,
+        4.0
+      ],
+      "span_basis": "calibrated 4 m projection; procedural source publishes no metre span",
+      "scene_repeat_m": [
+        8.0,
+        8.0
+      ],
+      "scene_repeat_basis": "rounded above SeedThree 7.27 m rock period for terrain-scale bedrock relief",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        256.0,
+        256.0
+      ],
+      "provenance": {
+        "provider": "ambientCG",
+        "asset_page_url": "https://ambientcg.com/view?id=Rock029",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/Rock029_Color_4K.jpg",
+            "sha256": "dc6fdcf2d55398bd540a790b9307b40e6af54c27fa72502532a8a4ae6761596f",
+            "byte_size": 23455737,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/Rock029_NormalGL_4K.jpg",
+            "sha256": "1415f85589b092eccbb4f4770c70d8dc0e4475c297bd6a0f643570f520352db1",
+            "byte_size": 41261103,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/Rock029_Roughness_4K.jpg",
+            "sha256": "62ce884c0a5631dcf44d5c419c94fde9471c062e30c57912b30c1c795723ea1f",
+            "byte_size": 8604944,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/Rock029_AO_4K.jpg",
+            "sha256": "1be119695929b164be3ba8ffdcb08c5cf3e3d7042a837296725f684c6adf9134",
+            "byte_size": 6804561,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/Rock029_Displacement_4K.jpg",
+            "sha256": "d300d50306e6ee90be832a079339d56adaf14aaf0ca45553a4237a3d7f4245e7",
+            "byte_size": 2154307,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/Rock029_AlbedoGrade_2K.png",
+          "sha256": "23ae4cd47cb0225a63125e79e7d0c7fb05da9a021a7e0eb4fb344ff36b5dde5e",
+          "byte_size": 9120147,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/Rock029_PackedNxyRoughAO_2K.png",
+          "sha256": "91ad160668b1b8d98492fb4f3102fdf94d64f14f02061fc67ecb95f18b9688f3",
+          "byte_size": 13040611,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.59,
+              0.29,
+              0.16
+            ],
+            "chroma_mix": 0.65,
+            "exposure_stops": 0.3,
+            "luma_contrast": 1.02
+          },
+          "source_luminance": {
+            "q05": 0.05970766767859459,
+            "median": 0.10136839747428894,
+            "q95": 0.20030635595321655
+          },
+          "runtime_luminance": {
+            "q05": 0.07285627722740173,
+            "median": 0.12476648390293121,
+            "q95": 0.2502928078174591
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/Rock029_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.18685138702392579,
+            "source_q99": 0.9773642963171005,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.6934689624636781,
+            "runtime_stddev": 0.23380040572195376
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/Rock029_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/Rock029_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/Rock029_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "Rock061",
+      "order": 6,
+      "semantic": "tan-bedrock-and-outcrop-transition",
+      "physical_span_m": [
+        4.0,
+        4.0
+      ],
+      "span_basis": "calibrated 4 m projection; procedural source publishes no metre span",
+      "scene_repeat_m": [
+        8.0,
+        8.0
+      ],
+      "scene_repeat_basis": "rounded above SeedThree 7.27 m rock period for terrain-scale bedrock relief",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        256.0,
+        256.0
+      ],
+      "provenance": {
+        "provider": "ambientCG",
+        "asset_page_url": "https://ambientcg.com/view?id=Rock061",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/Rock061_Color_4K.jpg",
+            "sha256": "302e7beafc6677cc566005ca0a8f9a731ef1d443fb2ea95816b466f3df4ae91f",
+            "byte_size": 14441084,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/Rock061_NormalGL_4K.jpg",
+            "sha256": "99982aa0a8892fbb8f5f1df94e00287db3f52a490357418b6936b6bb20369a79",
+            "byte_size": 24652163,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/Rock061_Roughness_4K.jpg",
+            "sha256": "e7c0d7016816817948404644bcbf3c7c5f0d1baddc977e79f28c524565b06fa0",
+            "byte_size": 9903136,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/Rock061_AO_4K.jpg",
+            "sha256": "b210cd8c3cdc3e3a73d39b4939d49ef74b3a3d918558e685f80a107534a9b9e9",
+            "byte_size": 5942773,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/Rock061_Displacement_4K.jpg",
+            "sha256": "7020dac55317b965e52873ecb9a1a775845a1a1fe7a1c2c5fb3cacd2da756473",
+            "byte_size": 2056982,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/Rock061_AlbedoGrade_2K.png",
+          "sha256": "4bc28068924e5bb978ac778aa007904f9f3aab502011290d817cf2e1869b03ac",
+          "byte_size": 7082318,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/Rock061_PackedNxyRoughAO_2K.png",
+          "sha256": "bfca7deafc804f67a308fe6ecf3f1770f897a400c3ac5b75739a0370dc88904d",
+          "byte_size": 9943244,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.56,
+              0.28,
+              0.18
+            ],
+            "chroma_mix": 0.8,
+            "exposure_stops": 0.3,
+            "luma_contrast": 1.0
+          },
+          "source_luminance": {
+            "q05": 0.059709332883358,
+            "median": 0.08064635097980499,
+            "q95": 0.13482138514518738
+          },
+          "runtime_luminance": {
+            "q05": 0.07389312237501144,
+            "median": 0.09936963766813278,
+            "q95": 0.16650569438934326
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/Rock061_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.07265025898814201,
+            "source_q99": 0.8262144821882242,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.48597044383778293,
+            "runtime_stddev": 0.2158427431732837
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/Rock061_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/Rock061_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/Rock061_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "GravellySand",
+      "order": 7,
+      "semantic": "wash-and-alluvial-sandy-gravel",
+      "physical_span_m": [
+        2.5,
+        2.5
+      ],
+      "span_basis": "author-published 2.5 m width",
+      "scene_repeat_m": [
+        5.0,
+        5.0
+      ],
+      "scene_repeat_basis": "two authored spans per repeat for wash-scale grit without giant stones",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        409.6,
+        409.6
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/gravelly_sand",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/GravellySand_Color_4K.jpg",
+            "sha256": "c5a505ca4e00ae72378cbcfc56d07d521d32b5292d3f8db8e51256784c13913e",
+            "byte_size": 17471864,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/GravellySand_NormalGL_4K.jpg",
+            "sha256": "877d53726c09600b2315cf26d09ba9c06d1c801edd6cecea51729fc4a96875c1",
+            "byte_size": 23414234,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/GravellySand_Roughness_4K.jpg",
+            "sha256": "9291c47001378299a6c0768f9ebb2f52c4a6abb6044a07b539d9f27cac5900e4",
+            "byte_size": 7825969,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/GravellySand_AO_4K.jpg",
+            "sha256": "2d6db09b83d1bbe51923db47d4c13bd8fbd6e481baf1bc7ece2fff9593ff2e74",
+            "byte_size": 13100296,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/GravellySand_Displacement_4K.jpg",
+            "sha256": "5d0c4af713dd0bbbdc88ebb3621e6b32483100898ec9ec594a8957a8803cec4c",
+            "byte_size": 3888104,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/GravellySand_AlbedoGrade_2K.png",
+          "sha256": "d613d739eb9dfcb92eb11d8b3f7acd48dce08d1b0b1c1c83902c670ed80db9ea",
+          "byte_size": 12169987,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/GravellySand_PackedNxyRoughAO_2K.png",
+          "sha256": "d9c0b65ce65b2bd58b06971de8ed57127bfc2099379cb3a2c1dfd67d5317e43d",
+          "byte_size": 13405301,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.59,
+              0.34,
+              0.21
+            ],
+            "chroma_mix": 0.68,
+            "exposure_stops": 0.0,
+            "luma_contrast": 1.02
+          },
+          "source_luminance": {
+            "q05": 0.09954265505075455,
+            "median": 0.17478825151920319,
+            "q95": 0.3050929009914398
+          },
+          "runtime_luminance": {
+            "q05": 0.09862758219242096,
+            "median": 0.17485059797763824,
+            "q95": 0.30860045552253723
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/GravellySand_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.17090127676725386,
+            "source_q99": 0.30045220166444775,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.39709687793956083,
+            "runtime_stddev": 0.16851503786054065
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/GravellySand_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/GravellySand_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/GravellySand_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "RockFace03",
+      "order": 8,
+      "semantic": "elevated-steep-weathered-rock-face",
+      "physical_span_m": [
+        2.7,
+        2.7
+      ],
+      "span_basis": "author-published 2.7 m width",
+      "scene_repeat_m": [
+        8.0,
+        8.0
+      ],
+      "scene_repeat_basis": "terrain-scale triplanar projection for elevated and steep rock",
+      "scene_scale_factor_from_physical": [
+        2.962963,
+        2.962963
+      ],
+      "runtime_texels_per_m": [
+        256.0,
+        256.0
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/rock_face_03",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/RockFace03_Color_4K.jpg",
+            "sha256": "83148536c125cee3a2e2fc1368c8851ad4c87aef8b8bb35c5129d82d223effb3",
+            "byte_size": 15319503,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/RockFace03_NormalGL_4K.jpg",
+            "sha256": "b479761c4d48511f3c0bb8a27d948082c6d88ab584e38ff3791ca395d27a16ea",
+            "byte_size": 16283883,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/RockFace03_Roughness_4K.jpg",
+            "sha256": "b6bf6baf88d605e6d4532a844c85b39eaf7141d57ec0e2b55ad0991b3200546c",
+            "byte_size": 10380943,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/RockFace03_AO_4K.jpg",
+            "sha256": "d94f5490a21faa8a92d1b1ba97904c0e017a1842c0180d2138b2efebab55d1f9",
+            "byte_size": 9638961,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/RockFace03_Displacement_4K.jpg",
+            "sha256": "44446dd462dc07ab8c62b9dcb752f4a6f2ed0c4dde9103559dcde31e5360aaff",
+            "byte_size": 2365155,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/RockFace03_AlbedoGrade_2K.png",
+          "sha256": "390a3e9abdd58bfd4a86601789f1580ff69d54033546bd12e5bb25099a6e1d9e",
+          "byte_size": 9757118,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/RockFace03_PackedNxyRoughAO_2K.png",
+          "sha256": "872b272b3979fc45aa3160d1d572926757ca3afd949dd71e78eada752acfba23",
+          "byte_size": 11204002,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.57,
+              0.28,
+              0.17
+            ],
+            "chroma_mix": 0.78,
+            "exposure_stops": 0.0,
+            "luma_contrast": 1.03
+          },
+          "source_luminance": {
+            "q05": 0.085942842066288,
+            "median": 0.15090304613113403,
+            "q95": 0.26597891300916504
+          },
+          "runtime_luminance": {
+            "q05": 0.08473813533782959,
+            "median": 0.15061388909816742,
+            "q95": 0.27091363072395325
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/RockFace03_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.251305787563324,
+            "source_q99": 0.8353774458169936,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.5547143206876867,
+            "runtime_stddev": 0.2137715295849324
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/RockFace03_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/RockFace03_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/RockFace03_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "SandyGravel02",
+      "order": 9,
+      "semantic": "wash-and-alluvial-warm-sandy-gravel",
+      "physical_span_m": [
+        2.5,
+        2.5
+      ],
+      "span_basis": "author-published 2.5 m width",
+      "scene_repeat_m": [
+        5.0,
+        5.0
+      ],
+      "scene_repeat_basis": "two authored spans per repeat for alluvial gravel at scene scale",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        409.6,
+        409.6
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/sandy_gravel_02",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/SandyGravel02_Color_4K.jpg",
+            "sha256": "d496e2080cf268b74c6d898f699490dab432772ef44153b37584292f71e33157",
+            "byte_size": 16812608,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/SandyGravel02_NormalGL_4K.jpg",
+            "sha256": "a3e24ffe00b7b717cf244f73552df3e18761a27a188e0aed85bc25b00643db6d",
+            "byte_size": 21104384,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/SandyGravel02_Roughness_4K.jpg",
+            "sha256": "69a8ce6b916ec1cbf3c187495dac59acb7bb58e9b8b315898fd579a7db9b3f1f",
+            "byte_size": 7684312,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/SandyGravel02_AO_4K.jpg",
+            "sha256": "23b1ead47ad4f9052c074b19ff09fa582bfe0cd68ac6c4a125977b07adc7af74",
+            "byte_size": 14490362,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/SandyGravel02_Displacement_4K.jpg",
+            "sha256": "9a802132c46b239da4aafdb0c307b6412e4cf6c7fa9cfba03851f47511e60ebb",
+            "byte_size": 4798007,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/SandyGravel02_AlbedoGrade_2K.png",
+          "sha256": "163c7a144a75f0af6f80c532e1f44fd5a5c548765de65bec66741fd65da6e7d7",
+          "byte_size": 11595132,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/SandyGravel02_PackedNxyRoughAO_2K.png",
+          "sha256": "9711a6ab77067464040f24e8277760231a1e933f42b7c65552f4c035d057cd11",
+          "byte_size": 12948027,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.6,
+              0.32,
+              0.18
+            ],
+            "chroma_mix": 0.65,
+            "exposure_stops": -0.15,
+            "luma_contrast": 1.01
+          },
+          "source_luminance": {
+            "q05": 0.12874752283096313,
+            "median": 0.19202084839344025,
+            "q95": 0.3086472749710083
+          },
+          "runtime_luminance": {
+            "q05": 0.1151842400431633,
+            "median": 0.17281897366046906,
+            "q95": 0.27972936630249023
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/SandyGravel02_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.3472631374001503,
+            "source_q99": 0.6575024276971813,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.48599228952445234,
+            "runtime_stddev": 0.21923921363587998
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/SandyGravel02_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/SandyGravel02_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/SandyGravel02_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "RockyTrail",
+      "order": 10,
+      "semantic": "general-gravel-and-broken-talus",
+      "physical_span_m": [
+        2.0,
+        2.0
+      ],
+      "span_basis": "author-published 2 m width",
+      "scene_repeat_m": [
+        4.0,
+        4.0
+      ],
+      "scene_repeat_basis": "SeedThree-scale general gravel and talus repeat",
+      "scene_scale_factor_from_physical": [
+        2.0,
+        2.0
+      ],
+      "runtime_texels_per_m": [
+        512.0,
+        512.0
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/rocky_trail",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/RockyTrail_Color_4K.jpg",
+            "sha256": "6ff77bb06195dfcaf0412ac2b6252adc80288e88f7891b730ffa5a0a6e5a5b8d",
+            "byte_size": 15529297,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/RockyTrail_NormalGL_4K.jpg",
+            "sha256": "638f2c46548bcffc70c7bbd82e5b6214226648eb4458f26c77a72cc08eaa9583",
+            "byte_size": 21747920,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/RockyTrail_Roughness_4K.jpg",
+            "sha256": "a980ea8769ecd8c45b728c9cde34debe63292daf458ff6d0628c3a02bc300fb5",
+            "byte_size": 9527379,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/RockyTrail_AO_4K.jpg",
+            "sha256": "25946daca463c2d73ccba4368eaf2c4fddf40a60c9f1e6172fc74627c16f1f2d",
+            "byte_size": 12570287,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/RockyTrail_Displacement_4K.jpg",
+            "sha256": "c29712c066b3ca4297f4f03f75404d5e28c68a6303d753d67cda70fe5d613466",
+            "byte_size": 3714434,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/RockyTrail_AlbedoGrade_2K.png",
+          "sha256": "de590af2cdcf975c457a20e86c93f0edb97260bdf32b03dd3036a3fc2e008c59",
+          "byte_size": 11092158,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/RockyTrail_PackedNxyRoughAO_2K.png",
+          "sha256": "ec430773829a919ad3989e6912f9f233644d1299623b337a2847f5483fe05b38",
+          "byte_size": 12930354,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.59,
+              0.31,
+              0.18
+            ],
+            "chroma_mix": 0.75,
+            "exposure_stops": -0.38,
+            "luma_contrast": 1.02
+          },
+          "source_luminance": {
+            "q05": 0.11573178321123123,
+            "median": 0.22710567712783813,
+            "q95": 0.38640671968460083
+          },
+          "runtime_luminance": {
+            "q05": 0.0878482535481453,
+            "median": 0.17435921728610992,
+            "q95": 0.30008500814437866
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/RockyTrail_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.4750607725977898,
+            "source_q99": 0.8039548850059508,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.44294460053537404,
+            "runtime_stddev": 0.1823586894745564
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/RockyTrail_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/RockyTrail_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/RockyTrail_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "RockFace",
+      "order": 11,
+      "semantic": "elevated-steep-reddish-rock-face",
+      "physical_span_m": [
+        2.4,
+        2.4
+      ],
+      "span_basis": "author-published 2.4 m width",
+      "scene_repeat_m": [
+        8.0,
+        8.0
+      ],
+      "scene_repeat_basis": "terrain-scale triplanar projection for elevated and steep rock",
+      "scene_scale_factor_from_physical": [
+        3.333333,
+        3.333333
+      ],
+      "runtime_texels_per_m": [
+        256.0,
+        256.0
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/rock_face",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/RockFace_Color_4K.jpg",
+            "sha256": "f22c19c46d8a03b199b92d779d1e28a00481098177fba41c4f84cf100c5e7164",
+            "byte_size": 11665139,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/RockFace_NormalGL_4K.jpg",
+            "sha256": "b486e62629b35dd3ae4c820012846a477b1e667e9329b37ff9b06516e0a4d9d3",
+            "byte_size": 14512278,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/RockFace_Roughness_4K.jpg",
+            "sha256": "8eb454fbb58ef3cb54101864e8c04c0efe6a4b12e54a954cad44c58aa056b504",
+            "byte_size": 4256170,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/RockFace_AO_4K.jpg",
+            "sha256": "83bf1ab7bc0f675b62ad84aed15b2f97ccd96df80c26fa4315f9b27fe0940739",
+            "byte_size": 5218819,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/RockFace_Displacement_4K.jpg",
+            "sha256": "f033d7447d57361a8f7e9b5f4e8ac0d50384c759f9fa2569236c7fd181424966",
+            "byte_size": 2636714,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/RockFace_AlbedoGrade_2K.png",
+          "sha256": "f884a58ae91b5dd39314ad5bbe81e302b615c23f76958d09a49f0d479af50689",
+          "byte_size": 8692719,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/RockFace_PackedNxyRoughAO_2K.png",
+          "sha256": "6287fee14f0992fe8de3fb3277b9916f9cfea3dce6a68d3ed06b60c0ed7a8214",
+          "byte_size": 9250450,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.56,
+              0.27,
+              0.16
+            ],
+            "chroma_mix": 0.72,
+            "exposure_stops": 0.92,
+            "luma_contrast": 0.99
+          },
+          "source_luminance": {
+            "q05": 0.04397974908351898,
+            "median": 0.07106131315231323,
+            "q95": 0.10459204018115997
+          },
+          "runtime_luminance": {
+            "q05": 0.08349141478538513,
+            "median": 0.13467717170715332,
+            "q95": 0.19744807481765747
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/RockFace_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.17983524471521378,
+            "source_q99": 0.8443627649545666,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.5183061562332453,
+            "runtime_stddev": 0.2013656222982019
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/RockFace_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/RockFace_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/RockFace_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "RockBoulderCracked",
+      "order": 12,
+      "semantic": "elevated-steep-cracked-orange-boulder",
+      "physical_span_m": [
+        1.4,
+        1.4
+      ],
+      "span_basis": "author-published 1.4 m height",
+      "scene_repeat_m": [
+        6.0,
+        6.0
+      ],
+      "scene_repeat_basis": "enlarged cracked-boulder motifs for elevated and steep terrain",
+      "scene_scale_factor_from_physical": [
+        4.285714,
+        4.285714
+      ],
+      "runtime_texels_per_m": [
+        341.333333,
+        341.333333
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/rock_boulder_cracked",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/RockBoulderCracked_Color_4K.jpg",
+            "sha256": "34aa6d4a6a131353e2de2ae7dd3e3d804ea4ba2195ea6aaabef3674e6d541e10",
+            "byte_size": 15067334,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/RockBoulderCracked_NormalGL_4K.jpg",
+            "sha256": "d3af7779caac844ee744d7f9a201e38298cd3c1bec9368807e279c6e170d138d",
+            "byte_size": 17094508,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/RockBoulderCracked_Roughness_4K.jpg",
+            "sha256": "eaab6218fef01b2eb10df49ed1626efe9d98c95ffd6cd0b644dfe26a165063a2",
+            "byte_size": 6583310,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/RockBoulderCracked_AO_4K.jpg",
+            "sha256": "11a53dc458072e71a33b93458bbfade5e65e62241f1e1bd172018a66d6e17a5f",
+            "byte_size": 8369879,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/RockBoulderCracked_Displacement_4K.jpg",
+            "sha256": "b5cd3fb2e815d5ea2a8ccf8d0b98c87d37bedc8d77ae581e07a641135b5529e3",
+            "byte_size": 1883364,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/RockBoulderCracked_AlbedoGrade_2K.png",
+          "sha256": "9dd3c8903f279bb22484223f046d423df1c1183913804383a0daac6e06070e9d",
+          "byte_size": 9100939,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/RockBoulderCracked_PackedNxyRoughAO_2K.png",
+          "sha256": "2e668aa2bcc14100989de9b1c4317bcc8289bb239d8fe8e046fac16b4233e732",
+          "byte_size": 9810914,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.6,
+              0.29,
+              0.15
+            ],
+            "chroma_mix": 0.7,
+            "exposure_stops": -1.0,
+            "luma_contrast": 1.04
+          },
+          "source_luminance": {
+            "q05": 0.17674344778060913,
+            "median": 0.3479379713535309,
+            "q95": 0.48062872886657715
+          },
+          "runtime_luminance": {
+            "q05": 0.08586497604846954,
+            "median": 0.17384424805641174,
+            "q95": 0.24335584044456482
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/RockBoulderCracked_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.14270613476634025,
+            "source_q99": 0.6233717095851897,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.5592316421807981,
+            "runtime_stddev": 0.22408007760456433
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/RockBoulderCracked_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/RockBoulderCracked_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/RockBoulderCracked_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    },
+    {
+      "id": "RocksGround02",
+      "order": 13,
+      "semantic": "elevated-coarse-scree-talus-and-rocky-shoulders",
+      "physical_span_m": [
+        2.0,
+        2.0
+      ],
+      "span_basis": "author-published 2 m width",
+      "scene_repeat_m": [
+        7.0,
+        7.0
+      ],
+      "scene_repeat_basis": "enlarged slope-only coarse scree repeat to suppress large-stone tiling",
+      "scene_scale_factor_from_physical": [
+        3.5,
+        3.5
+      ],
+      "runtime_texels_per_m": [
+        292.571429,
+        292.571429
+      ],
+      "provenance": {
+        "provider": "Poly Haven",
+        "asset_page_url": "https://polyhaven.com/a/rocks_ground_02",
+        "license": "CC0 1.0 Universal",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+      },
+      "source": {
+        "resolution_class": "retained 4K masters",
+        "files": {
+          "albedo": {
+            "path": "sources/RocksGround02_Color_4K.jpg",
+            "sha256": "b48c2f6429795667fc33bc4777260d469d5131541b1e68aa2a33dc550c5e966e",
+            "byte_size": 10480633,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "normal_gl": {
+            "path": "sources/RocksGround02_NormalGL_4K.jpg",
+            "sha256": "965ee62e1b5fce3331f85cfe4e8dd98800d43fdedd6ddfc751ec44b36279c57b",
+            "byte_size": 17223401,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "RGB",
+            "format": "JPEG"
+          },
+          "roughness": {
+            "path": "sources/RocksGround02_Roughness_4K.jpg",
+            "sha256": "166e90f0f170d37c8b69214d9c1cea4242d4aaf89fc2f4f28bc44e4a98b72e11",
+            "byte_size": 6131738,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "ao": {
+            "path": "sources/RocksGround02_AO_4K.jpg",
+            "sha256": "8c8dfaddc49aa84c0068e09e3e2b34b2449ea1784a9554c35d480fa6979f6b6f",
+            "byte_size": 8554818,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          },
+          "displacement": {
+            "path": "sources/RocksGround02_Displacement_4K.jpg",
+            "sha256": "e2de75f3dd02ed7083cc2db9eef4cbd14b0ec566d6af50a7f1d28cf9fc5d55e2",
+            "byte_size": 1249092,
+            "dimensions": [
+              4096,
+              4096
+            ],
+            "mode": "L",
+            "format": "JPEG"
+          }
+        }
+      },
+      "runtime": {
+        "albedo": {
+          "path": "runtime/RocksGround02_AlbedoGrade_2K.png",
+          "sha256": "17f591d9cb29844d3f59a13cfd0e444a4466052533ef683f533ec301c88078f5",
+          "byte_size": 11301100,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "runtime/RocksGround02_PackedNxyRoughAO_2K.png",
+          "sha256": "20d0e624b5d1e43d5e53f99e7695cd67ca54bb49a985b796d556d0b0e3ba412b",
+          "byte_size": 13121205,
+          "dimensions": [
+            2048,
+            2048
+          ],
+          "mode": "RGBA",
+          "format": "PNG"
+        },
+        "albedo_grade": {
+          "method": "linear-luminance-preserving-individual-chroma-grade-v1",
+          "parameters": {
+            "target_srgb": [
+              0.58,
+              0.3,
+              0.18
+            ],
+            "chroma_mix": 0.78,
+            "exposure_stops": 0.2,
+            "luma_contrast": 1.02
+          },
+          "source_luminance": {
+            "q05": 0.022210583090782166,
+            "median": 0.10625570267438889,
+            "q95": 0.3759183555841431
+          },
+          "runtime_luminance": {
+            "q05": 0.024741463363170624,
+            "median": 0.12202896177768707,
+            "q95": 0.4427771270275116
+          },
+          "detail_policy": "local scan luminance retained; only modest exposure/contrast and per-layer chroma alignment",
+          "height_alpha": {
+            "source": "sources/RocksGround02_Displacement_4K.jpg",
+            "normalization": "source 1st-99th percentile remapped to linear UNORM8 0-1",
+            "source_q01": 0.1290923236310482,
+            "source_q99": 0.8803800743818282,
+            "runtime_min": 0,
+            "runtime_max": 255,
+            "runtime_mean": 0.33393594236934887,
+            "runtime_stddev": 0.1975278873115605
+          }
+        }
+      },
+      "future_spom_height": {
+        "enabled": false,
+        "source_master_path": "sources/RocksGround02_Displacement_4K.jpg",
+        "runtime_height_path": "runtime/RocksGround02_AlbedoGrade_2K.png",
+        "runtime_blend_path": "runtime/RocksGround02_AlbedoGrade_2K.png",
+        "runtime_blend_channel": "A",
+        "runtime_blend_resolution": [
+          2048,
+          2048
+        ],
+        "dominant_layer_ready": true,
+        "reason": "The normalized 2K alpha is active only for bounded material-transition weighting. Geometric displacement/SPOM remains disabled; the authored 4K master is retained for that later implementation."
+      }
+    }
+  ]
+}

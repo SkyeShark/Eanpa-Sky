@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.vk_format &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyktx.vk_format</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyktx.vk_format</h1><div class="highlight"><pre>
+<span></span>
+<span class="c1">#******************************* Do not edit.  *****************************</span>
+<span class="c1"># Automatically generated from vulkan_core.h version 287 by mkvkformatfiles.</span>
+<span class="c1">#***************************************************************************</span>
+
+<span class="c1"># Copyright 2015-2024 The Khronos Group Inc.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
+
+<div class="viewcode-block" id="VkFormat"><a class="viewcode-back" href="../../docs/pyktx.vk_format.html#pyktx.vk_format.VkFormat">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">VkFormat</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Vulkan texture format constants.&quot;&quot;&quot;</span>
+
+    <span class="n">VK_FORMAT_UNDEFINED</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">VK_FORMAT_R4G4_UNORM_PACK8</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">VK_FORMAT_R4G4B4A4_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">VK_FORMAT_B4G4R4A4_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">VK_FORMAT_R5G6B5_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">VK_FORMAT_B5G6R5_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">VK_FORMAT_R5G5B5A1_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">VK_FORMAT_B5G5R5A1_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">VK_FORMAT_A1R5G5B5_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">VK_FORMAT_R8_UNORM</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">VK_FORMAT_R8_SNORM</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">VK_FORMAT_R8_UINT</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">VK_FORMAT_R8_SINT</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">VK_FORMAT_R8_SRGB</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">VK_FORMAT_R8G8_UNORM</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">VK_FORMAT_R8G8_SNORM</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">VK_FORMAT_R8G8_UINT</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">VK_FORMAT_R8G8_SINT</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">VK_FORMAT_R8G8_SRGB</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">VK_FORMAT_R8G8B8_UNORM</span> <span class="o">=</span> <span class="mi">23</span>
+    <span class="n">VK_FORMAT_R8G8B8_SNORM</span> <span class="o">=</span> <span class="mi">24</span>
+    <span class="n">VK_FORMAT_R8G8B8_UINT</span> <span class="o">=</span> <span class="mi">27</span>
+    <span class="n">VK_FORMAT_R8G8B8_SINT</span> <span class="o">=</span> <span class="mi">28</span>
+    <span class="n">VK_FORMAT_R8G8B8_SRGB</span> <span class="o">=</span> <span class="mi">29</span>
+    <span class="n">VK_FORMAT_B8G8R8_UNORM</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">VK_FORMAT_B8G8R8_SNORM</span> <span class="o">=</span> <span class="mi">31</span>
+    <span class="n">VK_FORMAT_B8G8R8_UINT</span> <span class="o">=</span> <span class="mi">34</span>
+    <span class="n">VK_FORMAT_B8G8R8_SINT</span> <span class="o">=</span> <span class="mi">35</span>
+    <span class="n">VK_FORMAT_B8G8R8_SRGB</span> <span class="o">=</span> <span class="mi">36</span>
+    <span class="n">VK_FORMAT_R8G8B8A8_UNORM</span> <span class="o">=</span> <span class="mi">37</span>
+    <span class="n">VK_FORMAT_R8G8B8A8_SNORM</span> <span class="o">=</span> <span class="mi">38</span>
+    <span class="n">VK_FORMAT_R8G8B8A8_UINT</span> <span class="o">=</span> <span class="mi">41</span>
+    <span class="n">VK_FORMAT_R8G8B8A8_SINT</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="n">VK_FORMAT_R8G8B8A8_SRGB</span> <span class="o">=</span> <span class="mi">43</span>
+    <span class="n">VK_FORMAT_B8G8R8A8_UNORM</span> <span class="o">=</span> <span class="mi">44</span>
+    <span class="n">VK_FORMAT_B8G8R8A8_SNORM</span> <span class="o">=</span> <span class="mi">45</span>
+    <span class="n">VK_FORMAT_B8G8R8A8_UINT</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="n">VK_FORMAT_B8G8R8A8_SINT</span> <span class="o">=</span> <span class="mi">49</span>
+    <span class="n">VK_FORMAT_B8G8R8A8_SRGB</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">VK_FORMAT_A8B8G8R8_UNORM_PACK32</span> <span class="o">=</span> <span class="mi">51</span>
+    <span class="n">VK_FORMAT_A8B8G8R8_SNORM_PACK32</span> <span class="o">=</span> <span class="mi">52</span>
+    <span class="n">VK_FORMAT_A8B8G8R8_UINT_PACK32</span> <span class="o">=</span> <span class="mi">55</span>
+    <span class="n">VK_FORMAT_A8B8G8R8_SINT_PACK32</span> <span class="o">=</span> <span class="mi">56</span>
+    <span class="n">VK_FORMAT_A8B8G8R8_SRGB_PACK32</span> <span class="o">=</span> <span class="mi">57</span>
+    <span class="n">VK_FORMAT_A2R10G10B10_UNORM_PACK32</span> <span class="o">=</span> <span class="mi">58</span>
+    <span class="n">VK_FORMAT_A2R10G10B10_SNORM_PACK32</span> <span class="o">=</span> <span class="mi">59</span>
+    <span class="n">VK_FORMAT_A2R10G10B10_UINT_PACK32</span> <span class="o">=</span> <span class="mi">62</span>
+    <span class="n">VK_FORMAT_A2R10G10B10_SINT_PACK32</span> <span class="o">=</span> <span class="mi">63</span>
+    <span class="n">VK_FORMAT_A2B10G10R10_UNORM_PACK32</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">VK_FORMAT_A2B10G10R10_SNORM_PACK32</span> <span class="o">=</span> <span class="mi">65</span>
+    <span class="n">VK_FORMAT_A2B10G10R10_UINT_PACK32</span> <span class="o">=</span> <span class="mi">68</span>
+    <span class="n">VK_FORMAT_A2B10G10R10_SINT_PACK32</span> <span class="o">=</span> <span class="mi">69</span>
+    <span class="n">VK_FORMAT_R16_UNORM</span> <span class="o">=</span> <span class="mi">70</span>
+    <span class="n">VK_FORMAT_R16_SNORM</span> <span class="o">=</span> <span class="mi">71</span>
+    <span class="n">VK_FORMAT_R16_UINT</span> <span class="o">=</span> <span class="mi">74</span>
+    <span class="n">VK_FORMAT_R16_SINT</span> <span class="o">=</span> <span class="mi">75</span>
+    <span class="n">VK_FORMAT_R16_SFLOAT</span> <span class="o">=</span> <span class="mi">76</span>
+    <span class="n">VK_FORMAT_R16G16_UNORM</span> <span class="o">=</span> <span class="mi">77</span>
+    <span class="n">VK_FORMAT_R16G16_SNORM</span> <span class="o">=</span> <span class="mi">78</span>
+    <span class="n">VK_FORMAT_R16G16_UINT</span> <span class="o">=</span> <span class="mi">81</span>
+    <span class="n">VK_FORMAT_R16G16_SINT</span> <span class="o">=</span> <span class="mi">82</span>
+    <span class="n">VK_FORMAT_R16G16_SFLOAT</span> <span class="o">=</span> <span class="mi">83</span>
+    <span class="n">VK_FORMAT_R16G16B16_UNORM</span> <span class="o">=</span> <span class="mi">84</span>
+    <span class="n">VK_FORMAT_R16G16B16_SNORM</span> <span class="o">=</span> <span class="mi">85</span>
+    <span class="n">VK_FORMAT_R16G16B16_UINT</span> <span class="o">=</span> <span class="mi">88</span>
+    <span class="n">VK_FORMAT_R16G16B16_SINT</span> <span class="o">=</span> <span class="mi">89</span>
+    <span class="n">VK_FORMAT_R16G16B16_SFLOAT</span> <span class="o">=</span> <span class="mi">90</span>
+    <span class="n">VK_FORMAT_R16G16B16A16_UNORM</span> <span class="o">=</span> <span class="mi">91</span>
+    <span class="n">VK_FORMAT_R16G16B16A16_SNORM</span> <span class="o">=</span> <span class="mi">92</span>
+    <span class="n">VK_FORMAT_R16G16B16A16_UINT</span> <span class="o">=</span> <span class="mi">95</span>
+    <span class="n">VK_FORMAT_R16G16B16A16_SINT</span> <span class="o">=</span> <span class="mi">96</span>
+    <span class="n">VK_FORMAT_R16G16B16A16_SFLOAT</span> <span class="o">=</span> <span class="mi">97</span>
+    <span class="n">VK_FORMAT_R32_UINT</span> <span class="o">=</span> <span class="mi">98</span>
+    <span class="n">VK_FORMAT_R32_SINT</span> <span class="o">=</span> <span class="mi">99</span>
+    <span class="n">VK_FORMAT_R32_SFLOAT</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">VK_FORMAT_R32G32_UINT</span> <span class="o">=</span> <span class="mi">101</span>
+    <span class="n">VK_FORMAT_R32G32_SINT</span> <span class="o">=</span> <span class="mi">102</span>
+    <span class="n">VK_FORMAT_R32G32_SFLOAT</span> <span class="o">=</span> <span class="mi">103</span>
+    <span class="n">VK_FORMAT_R32G32B32_UINT</span> <span class="o">=</span> <span class="mi">104</span>
+    <span class="n">VK_FORMAT_R32G32B32_SINT</span> <span class="o">=</span> <span class="mi">105</span>
+    <span class="n">VK_FORMAT_R32G32B32_SFLOAT</span> <span class="o">=</span> <span class="mi">106</span>
+    <span class="n">VK_FORMAT_R32G32B32A32_UINT</span> <span class="o">=</span> <span class="mi">107</span>
+    <span class="n">VK_FORMAT_R32G32B32A32_SINT</span> <span class="o">=</span> <span class="mi">108</span>
+    <span class="n">VK_FORMAT_R32G32B32A32_SFLOAT</span> <span class="o">=</span> <span class="mi">109</span>
+    <span class="n">VK_FORMAT_R64_UINT</span> <span class="o">=</span> <span class="mi">110</span>
+    <span class="n">VK_FORMAT_R64_SINT</span> <span class="o">=</span> <span class="mi">111</span>
+    <span class="n">VK_FORMAT_R64_SFLOAT</span> <span class="o">=</span> <span class="mi">112</span>
+    <span class="n">VK_FORMAT_R64G64_UINT</span> <span class="o">=</span> <span class="mi">113</span>
+    <span class="n">VK_FORMAT_R64G64_SINT</span> <span class="o">=</span> <span class="mi">114</span>
+    <span class="n">VK_FORMAT_R64G64_SFLOAT</span> <span class="o">=</span> <span class="mi">115</span>
+    <span class="n">VK_FORMAT_R64G64B64_UINT</span> <span class="o">=</span> <span class="mi">116</span>
+    <span class="n">VK_FORMAT_R64G64B64_SINT</span> <span class="o">=</span> <span class="mi">117</span>
+    <span class="n">VK_FORMAT_R64G64B64_SFLOAT</span> <span class="o">=</span> <span class="mi">118</span>
+    <span class="n">VK_FORMAT_R64G64B64A64_UINT</span> <span class="o">=</span> <span class="mi">119</span>
+    <span class="n">VK_FORMAT_R64G64B64A64_SINT</span> <span class="o">=</span> <span class="mi">120</span>
+    <span class="n">VK_FORMAT_R64G64B64A64_SFLOAT</span> <span class="o">=</span> <span class="mi">121</span>
+    <span class="n">VK_FORMAT_B10G11R11_UFLOAT_PACK32</span> <span class="o">=</span> <span class="mi">122</span>
+    <span class="n">VK_FORMAT_E5B9G9R9_UFLOAT_PACK32</span> <span class="o">=</span> <span class="mi">123</span>
+    <span class="n">VK_FORMAT_D16_UNORM</span> <span class="o">=</span> <span class="mi">124</span>
+    <span class="n">VK_FORMAT_X8_D24_UNORM_PACK32</span> <span class="o">=</span> <span class="mi">125</span>
+    <span class="n">VK_FORMAT_D32_SFLOAT</span> <span class="o">=</span> <span class="mi">126</span>
+    <span class="n">VK_FORMAT_S8_UINT</span> <span class="o">=</span> <span class="mi">127</span>
+    <span class="n">VK_FORMAT_D16_UNORM_S8_UINT</span> <span class="o">=</span> <span class="mi">128</span>
+    <span class="n">VK_FORMAT_D24_UNORM_S8_UINT</span> <span class="o">=</span> <span class="mi">129</span>
+    <span class="n">VK_FORMAT_D32_SFLOAT_S8_UINT</span> <span class="o">=</span> <span class="mi">130</span>
+    <span class="n">VK_FORMAT_BC1_RGB_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">131</span>
+    <span class="n">VK_FORMAT_BC1_RGB_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">132</span>
+    <span class="n">VK_FORMAT_BC1_RGBA_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">133</span>
+    <span class="n">VK_FORMAT_BC1_RGBA_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">134</span>
+    <span class="n">VK_FORMAT_BC2_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">135</span>
+    <span class="n">VK_FORMAT_BC2_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">136</span>
+    <span class="n">VK_FORMAT_BC3_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">137</span>
+    <span class="n">VK_FORMAT_BC3_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">138</span>
+    <span class="n">VK_FORMAT_BC4_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">139</span>
+    <span class="n">VK_FORMAT_BC4_SNORM_BLOCK</span> <span class="o">=</span> <span class="mi">140</span>
+    <span class="n">VK_FORMAT_BC5_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">141</span>
+    <span class="n">VK_FORMAT_BC5_SNORM_BLOCK</span> <span class="o">=</span> <span class="mi">142</span>
+    <span class="n">VK_FORMAT_BC6H_UFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">143</span>
+    <span class="n">VK_FORMAT_BC6H_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">144</span>
+    <span class="n">VK_FORMAT_BC7_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">145</span>
+    <span class="n">VK_FORMAT_BC7_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">146</span>
+    <span class="n">VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">147</span>
+    <span class="n">VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">148</span>
+    <span class="n">VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">149</span>
+    <span class="n">VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">151</span>
+    <span class="n">VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">152</span>
+    <span class="n">VK_FORMAT_EAC_R11_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">153</span>
+    <span class="n">VK_FORMAT_EAC_R11_SNORM_BLOCK</span> <span class="o">=</span> <span class="mi">154</span>
+    <span class="n">VK_FORMAT_EAC_R11G11_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">155</span>
+    <span class="n">VK_FORMAT_EAC_R11G11_SNORM_BLOCK</span> <span class="o">=</span> <span class="mi">156</span>
+    <span class="n">VK_FORMAT_ASTC_4x4_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">157</span>
+    <span class="n">VK_FORMAT_ASTC_4x4_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">158</span>
+    <span class="n">VK_FORMAT_ASTC_5x4_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">159</span>
+    <span class="n">VK_FORMAT_ASTC_5x4_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">160</span>
+    <span class="n">VK_FORMAT_ASTC_5x5_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">161</span>
+    <span class="n">VK_FORMAT_ASTC_5x5_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">162</span>
+    <span class="n">VK_FORMAT_ASTC_6x5_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">163</span>
+    <span class="n">VK_FORMAT_ASTC_6x5_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">164</span>
+    <span class="n">VK_FORMAT_ASTC_6x6_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">165</span>
+    <span class="n">VK_FORMAT_ASTC_6x6_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">166</span>
+    <span class="n">VK_FORMAT_ASTC_8x5_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">167</span>
+    <span class="n">VK_FORMAT_ASTC_8x5_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">168</span>
+    <span class="n">VK_FORMAT_ASTC_8x6_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">169</span>
+    <span class="n">VK_FORMAT_ASTC_8x6_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">170</span>
+    <span class="n">VK_FORMAT_ASTC_8x8_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">171</span>
+    <span class="n">VK_FORMAT_ASTC_8x8_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">172</span>
+    <span class="n">VK_FORMAT_ASTC_10x5_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">173</span>
+    <span class="n">VK_FORMAT_ASTC_10x5_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">174</span>
+    <span class="n">VK_FORMAT_ASTC_10x6_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">175</span>
+    <span class="n">VK_FORMAT_ASTC_10x6_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">176</span>
+    <span class="n">VK_FORMAT_ASTC_10x8_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">177</span>
+    <span class="n">VK_FORMAT_ASTC_10x8_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">178</span>
+    <span class="n">VK_FORMAT_ASTC_10x10_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">179</span>
+    <span class="n">VK_FORMAT_ASTC_10x10_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">180</span>
+    <span class="n">VK_FORMAT_ASTC_12x10_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">181</span>
+    <span class="n">VK_FORMAT_ASTC_12x10_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">182</span>
+    <span class="n">VK_FORMAT_ASTC_12x12_UNORM_BLOCK</span> <span class="o">=</span> <span class="mi">183</span>
+    <span class="n">VK_FORMAT_ASTC_12x12_SRGB_BLOCK</span> <span class="o">=</span> <span class="mi">184</span>
+    <span class="n">VK_FORMAT_G8B8G8R8_422_UNORM</span> <span class="o">=</span> <span class="mi">1000156000</span>
+    <span class="n">VK_FORMAT_B8G8R8G8_422_UNORM</span> <span class="o">=</span> <span class="mi">1000156001</span>
+    <span class="n">VK_FORMAT_R10X6_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">1000156007</span>
+    <span class="n">VK_FORMAT_R10X6G10X6_UNORM_2PACK16</span> <span class="o">=</span> <span class="mi">1000156008</span>
+    <span class="n">VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16</span> <span class="o">=</span> <span class="mi">1000156009</span>
+    <span class="n">VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16</span> <span class="o">=</span> <span class="mi">1000156010</span>
+    <span class="n">VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16</span> <span class="o">=</span> <span class="mi">1000156011</span>
+    <span class="n">VK_FORMAT_R12X4_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">1000156017</span>
+    <span class="n">VK_FORMAT_R12X4G12X4_UNORM_2PACK16</span> <span class="o">=</span> <span class="mi">1000156018</span>
+    <span class="n">VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16</span> <span class="o">=</span> <span class="mi">1000156019</span>
+    <span class="n">VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16</span> <span class="o">=</span> <span class="mi">1000156020</span>
+    <span class="n">VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16</span> <span class="o">=</span> <span class="mi">1000156021</span>
+    <span class="n">VK_FORMAT_G16B16G16R16_422_UNORM</span> <span class="o">=</span> <span class="mi">1000156027</span>
+    <span class="n">VK_FORMAT_B16G16R16G16_422_UNORM</span> <span class="o">=</span> <span class="mi">1000156028</span>
+    <span class="n">VK_FORMAT_A4R4G4B4_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">1000340000</span>
+    <span class="n">VK_FORMAT_A4B4G4R4_UNORM_PACK16</span> <span class="o">=</span> <span class="mi">1000340001</span>
+    <span class="n">VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066000</span>
+    <span class="n">VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066001</span>
+    <span class="n">VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066002</span>
+    <span class="n">VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066003</span>
+    <span class="n">VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066004</span>
+    <span class="n">VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066005</span>
+    <span class="n">VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066006</span>
+    <span class="n">VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066007</span>
+    <span class="n">VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066008</span>
+    <span class="n">VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066009</span>
+    <span class="n">VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066010</span>
+    <span class="n">VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066011</span>
+    <span class="n">VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066012</span>
+    <span class="n">VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK</span> <span class="o">=</span> <span class="mi">1000066013</span>
+    <span class="n">VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054000</span>
+    <span class="n">VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054001</span>
+    <span class="n">VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054002</span>
+    <span class="n">VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054003</span>
+    <span class="n">VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054004</span>
+    <span class="n">VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054005</span>
+    <span class="n">VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054006</span>
+    <span class="n">VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG</span> <span class="o">=</span> <span class="mi">1000054007</span>
+    <span class="n">VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288000</span>
+    <span class="n">VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288001</span>
+    <span class="n">VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288002</span>
+    <span class="n">VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288003</span>
+    <span class="n">VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288004</span>
+    <span class="n">VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288005</span>
+    <span class="n">VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288006</span>
+    <span class="n">VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288007</span>
+    <span class="n">VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288008</span>
+    <span class="n">VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288009</span>
+    <span class="n">VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288010</span>
+    <span class="n">VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288011</span>
+    <span class="n">VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288012</span>
+    <span class="n">VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288013</span>
+    <span class="n">VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288014</span>
+    <span class="n">VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288015</span>
+    <span class="n">VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288016</span>
+    <span class="n">VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288017</span>
+    <span class="n">VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288018</span>
+    <span class="n">VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288019</span>
+    <span class="n">VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288020</span>
+    <span class="n">VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288021</span>
+    <span class="n">VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288022</span>
+    <span class="n">VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288023</span>
+    <span class="n">VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288024</span>
+    <span class="n">VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288025</span>
+    <span class="n">VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288026</span>
+    <span class="n">VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288027</span>
+    <span class="n">VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288028</span>
+    <span class="n">VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT</span> <span class="o">=</span> <span class="mi">1000288029</span>
+    <span class="n">VK_FORMAT_R16G16_SFIXED5_NV</span> <span class="o">=</span> <span class="mi">1000464000</span>
+    <span class="n">VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR</span> <span class="o">=</span> <span class="mi">1000470000</span>
+    <span class="n">VK_FORMAT_A8_UNORM_KHR</span> <span class="o">=</span> <span class="mi">1000470001</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

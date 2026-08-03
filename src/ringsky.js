@@ -1,0 +1,194 @@
+// Ringworld skybox: the megastructure arc overhead, land/ocean band with
+// day-night terminator, solar-panel inner surfaces — the sky runs in ring
+// mode (cloud deck bows up along the band). Faithful port of the vista
+// wiring with browser-safe per-material baked reflections (never a global
+// scene.environment, which kills the Basic-family domes).
+import { makeLazyWeatherAttachment } from './weathersky.js';
+
+function disposeObject(root) {
+    const geometries = new Set(), materials = new Set();
+    root?.traverse?.((o) => {
+        if (o.geometry) geometries.add(o.geometry);
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        for (const m of mats) if (m) materials.add(m);
+    });
+    for (const g of geometries) g.dispose?.();
+    for (const m of materials) m.dispose?.();
+}
+
+export async function makeRingworld({
+    THREE,
+    scene,
+    camera,
+    sun,
+    hemi,
+    loadEngine,
+    quality,
+    hours,
+    blueNoise,
+    worldRayDir,
+    cloudPreset = 'cumulus',
+    weatherState = 'none',
+}) {
+    await loadEngine('sky_system.js');
+    await loadEngine('ringworld.js');
+    // SPOM: the ringworld engine ray-marches the band's height field so ridges
+    // occlude the valleys behind them and cast onto each other — without this
+    // global (plus bandHeight below) its POM_ON gate fails SILENTLY and the
+    // 31 km arc reads as flat painted normal-map shading. A real ESM import:
+    // loadEngine()'s eval cannot execute import/export statements.
+    globalThis.parallaxOcclusionUV ??= (await import('./parallax_occlusion.js')).parallaxOcclusionUV;
+
+    const load = globalThis.loadImageTexture;
+    const stars = await load('./assets/starmap_tycho_4k.jpg', { srgb: true });
+    const moon = await load('./assets/ringworld/alien_planet_or_moon.png', { srgb: true });
+
+    const sky = await globalThis.makeSkySystem({
+        scene,
+        textures: { stars, moon },
+        opts: {
+            hours, clouds: cloudPreset, ringCurve: 5000, moonAngularDeg: 16,
+            // planet-shine: the rock-giant companion reflects warm near-white
+            // onto the night side (eidoverse sky_worlds parity — the same
+            // value the band material receives as planetShineColor below).
+            moonLightColor: [1.00, 0.92, 0.82],
+            skySamples: quality.skySamples,
+            lightSamples: quality.lightSamples,
+            cloudPasses: quality.cloudPasses,
+            densityCache: quality.densityCache,
+            lightCache: quality.lightCache,
+            blueNoise,
+            worldRayDir: !!worldRayDir,
+            stableCloudPhase: !!worldRayDir,
+        },
+    });
+    globalThis._sky = sky;
+    sky.wrapCloudShadows?.(scene, 0.42);
+
+    let ring = null;
+    let weatherAttachment = null;
+    let disposed = false;
+    const disposeRingworld = () => {
+        if (disposed) return;
+        disposed = true;
+        weatherAttachment?.dispose();
+        if (ring?.group) scene.remove(ring.group);
+        ring?.disposeLights?.();
+        disposeObject(ring?.group);
+        sky.dispose?.();
+        // These came from GLTFLoader, not the shared loadImageTexture
+        // cache. Material.dispose() does not dispose texture storage.
+        for (const texture of ring?.info?.sourceTextures ?? []) texture.dispose?.();
+        if (globalThis._sky === sky) globalThis._sky = null;
+        if (globalThis._ringworld === ring) globalThis._ringworld = null;
+    };
+
+    try {
+
+    const glbBytes = new Uint8Array(await (await fetch('./assets/ringworld/RINGWORLDskyelement.glb')).arrayBuffer());
+    ring = await globalThis.makeRingworld({
+        glbBytes,
+        textures: {
+            landmask: await load('./assets/ringworld/ringworldlandmask.png', {}),
+            solarColor: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Color.jpg', { srgb: true }),
+            solarNormal: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_NormalGL.jpg', {}),
+            solarRough: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Roughness.jpg', {}),
+            solarMetal: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Metalness.jpg', {}),
+            // The same filtered normal drives terrain relief plus two cheap,
+            // scrolling water reads. Mips keep the distant arc from aliasing.
+            // EXACT eidoverse parity: readTex loads this WITHOUT mips
+            // (LinearFilter only). The mipmapped variant sampled differently
+            // under SPOM's displaced UVs and warped the band's relief.
+            bandNormal: await load('./assets/ringworld/ring_band_normal_v2.png', {}),
+            bandAO: await load('./assets/ringworld/ring_band_ao.png', {}),
+            // No mips: the SPOM march samples with explicit textureLevel(0),
+            // matching the prealpha's readTex(..., false).
+            bandHeight: await load('./assets/ringworld/ring_band_height.png', {}),
+        },
+        // Preserve animated water/glint identically in every sky quality. This
+        // path uses two existing-normal reads, not the full procedural ALU field.
+        // planetShineColor states the engine default explicitly (prealpha parity).
+        opts: { waves: 'lightweight', planetShineColor: [1.00, 0.92, 0.82] },
+    });
+    globalThis._ringworld = ring;
+    // authored placement: band rises from the horizon, crests ~9.8 km overhead
+    ring.group.position.set(0, 4940, 0);
+    // sky-element depth: clouds render in front; the band never writes depth
+    ring.group.traverse((o) => {
+        if (!o.isMesh) return;
+        o.userData.noCloudShadow = true;
+        o.userData.noWet = true;
+        o.renderOrder = -99;
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        for (const m of mats) if (m) m.depthWrite = false;
+    });
+    scene.add(ring.group);
+
+    // The band lights itself. The engine owns a real directional "underground
+    // sun" plus planetshine that track the sky's TRUE sun vector, so the arc
+    // warms at its own sunset and the arch shadow sweeps around the ring as the
+    // sun travels beneath it. They attach themselves to the scene root on the
+    // first update() and are isolated to the band via the material's own light
+    // list, so nothing here needs wiring per frame.
+    //
+    // This replaces a fixed layer-2 DirectionalLight that used to live here. It
+    // was wrong twice over. Its position was constant, so the band's lighting
+    // never moved with the day cycle. And the isolation it claimed did not
+    // exist: three.js light layers are tested against the CAMERA
+    // (`light.layers.test(camera.layers)`), not against the objects a light may
+    // touch — so once the camera enabled layer 2, that light lit the WHOLE
+    // scene from below. Layer 2 had no other user, so it is gone entirely.
+
+    weatherAttachment = await makeLazyWeatherAttachment({
+        scene,
+        camera,
+        sky,
+        sun,
+        hemi,
+        loadEngine,
+        quality,
+        baseCloudPreset: cloudPreset,
+        initialWeatherState: weatherState,
+    });
+    // bindWeather keeps this stable facade. Its getters proxy the real system
+    // after lazy activation, so the far Ringworld cloud/rain layers transition
+    // on the same state as the local volumetric deck.
+    ring.bindWeather(weatherAttachment, sky);
+
+    return {
+        sky,
+        reflectionBake: {
+            ringworld: {
+                centerY: ring.group.position.y,
+                radius: ring.info.radius,
+                halfWidth: ring.info.halfWidth,
+                map: ring.info.mapTex,
+                mask: ring.info.maskTex,
+                repeat: ring.info.repeat,
+            },
+        },
+        supportsWeather: true,
+        weatherTransitionSeconds: weatherAttachment.weatherTransitionSeconds,
+        setTime(h) { sky.setTime(h); },
+        setCloudPreset(name, onTransitionStart) {
+            return weatherAttachment.setCloudPreset(name, onTransitionStart);
+        },
+        setWeather(state, onTransitionStart) {
+            return weatherAttachment.setWeather(state, onTransitionStart);
+        },
+        update(t) {
+            sky.update(t, camera);
+            weatherAttachment.update(t);
+            ring.update(t);
+            sky.applyToLights({ sun, hemi, fog: scene.fog });
+            weatherAttachment.applyLightDim();
+        },
+        dispose: disposeRingworld,
+    };
+    } catch (error) {
+        // The sky is already live before the GLB and its textures finish
+        // loading. Roll back that partial preset if any later stage rejects.
+        disposeRingworld();
+        throw error;
+    }
+}

@@ -1,0 +1,33 @@
+<map id="lib/filestream.c" name="lib/filestream.c">
+<area shape="rect" id="Node000001" title="Implementation of ktxStream for FILE." alt="" coords="385,5,491,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,74,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="385,30,255,51,89,82,88,77,254,46,384,25"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,80,160,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="385,34,175,82,174,77,384,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="183,80,261,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="401,35,275,77,273,72,400,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="286,80,350,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="419,35,353,74,351,69,416,30"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="309,155,370,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="432,34,358,143,354,140,428,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="550,80,614,107"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="464,30,544,70,542,75,462,35"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="394,155,483,181"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="441,33,441,139,436,139,436,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="638,80,718,107"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="481,30,624,73,623,78,479,35"/>
+<area shape="rect" id="Node000010" href="$ktx_8h.html" title="Declares the public functions and structures of the KTX API." alt="" coords="476,80,526,107"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="451,31,482,66,478,70,447,34"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="742,80,806,107"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="492,27,727,77,726,82,491,33"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="831,80,920,107"/>
+<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="492,25,816,77,815,82,491,30"/>
+<area shape="poly" id="edge11_Node000010_Node000006" title=" " alt="" coords="476,109,382,150,380,146,474,104"/>
+<area shape="poly" id="edge13_Node000010_Node000008" title=" " alt="" coords="492,109,461,145,457,141,488,105"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="506,155,570,181"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="510,106,527,140,522,142,505,108"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="594,155,669,181"/>
+<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="525,105,596,144,594,149,522,110"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="693,155,757,181"/>
+<area shape="poly" id="edge14_Node000010_Node000013" title=" " alt="" coords="527,100,679,149,677,154,526,105"/>
+</map>

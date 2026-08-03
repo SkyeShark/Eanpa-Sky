@@ -1,0 +1,13 @@
+<map id="ktxTexture1" name="ktxTexture1">
+<area shape="rect" id="Node000001" title="Class representing a KTX version 1 format texture." alt="" coords="398,317,487,344"/>
+<area shape="rect" id="Node000002" href="$structktxTexture__vtbl.html" title="Table of virtual ktxTexture methods." alt="" coords="14,5,124,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,24,201,35,226,43,243,54,262,85,268,115,264,145,256,175,249,205,245,234,251,263,269,291,289,303,322,313,398,323,397,329,321,318,287,308,265,295,246,265,240,234,243,204,251,174,259,144,262,115,257,87,239,58,224,48,200,40,139,29"/>
+<area shape="rect" id="Node000003" href="$structktxTexture.html" title="Base class representing a texture." alt="" coords="28,317,110,344"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="44,45,37,57,15,121,8,175,15,228,37,292,55,315,50,318,32,295,10,229,3,175,10,120,32,55,40,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="66,302,66,33,72,33,72,302"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="314,5,424,32"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="404,41,415,55,424,78,431,109,439,186,445,317,440,317,434,186,425,110,419,79,411,57,400,44"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="339,44,329,57,323,79,320,108,321,178,320,247,314,275,303,295,289,305,270,312,219,323,111,331,110,326,218,318,268,307,287,300,299,292,309,273,314,246,316,178,315,107,317,78,324,55,335,41"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="487,5,622,32"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="562,47,568,97,569,162,565,197,557,232,545,265,527,295,510,311,489,322,486,317,507,307,523,292,540,262,552,230,560,196,564,162,563,98,557,48"/>
+</map>

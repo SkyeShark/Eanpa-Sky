@@ -1,0 +1,249 @@
+.TH "ktx_compare" 1 "Sat Oct 4 2025 08:43:36" "Version 4.4.2" "KTX Tools Reference" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ktx_compare \- ktx compare 
+.PP
+Compare two KTX2 files\&.
+.SH "SYNOPSIS"
+.PP
+ktx compare [option\&.\&.\&.] \fIinput-file1\fP \fIinput-file2\fP 
+.SH "DESCRIPTION"
+.PP
+\fBktx\fP \fBcompare\fP compares the two KTX2 files specified as the \fIinput-file1\fP and \fIinput-file2\fP arguments and outputs any mismatch in texture information and/or image data\&. The command implicitly calls \fBvalidate\fP and prints any found errors and warnings to stdout\&. If any of the specified input files are invalid then comparison is done based on best effort and may be incomplete\&.
+
+.PP
+The JSON output formats conform to the https://schema.khronos.org/ktx/compare_v0.json schema even if the input file is invalid and certain information cannot be parsed or displayed\&. Additionally, for JSON outputs the KTX file identifier is printed using "\\u001A" instead of "\\x1A" as an unescaped "\\x1A" sequence inside a JSON string breaks nearly every JSON tool\&. Note that this does not change the value of the string only its representation\&.
+
+.PP
+\fBNote\fP
+.RS 4
+\fBktx\fP \fBcompare\fP prints using UTF-8 encoding\&. If your console is not set for UTF-8 you will see incorrect characters in output of the file identifier on each side of the "KTX nn"\&.
+.RE
+.PP
+.SH "OPTIONS"
+.PP
+The following options are available:   
+
+.PP
+.IP "\fB--format text | json | mini-json 
+.IP "" 1c
+Specifies the report output format\&. Possible options are: 
+.br
+ \fBtext\fP - Human readable text based format\&. 
+.br
+ \fBjson\fP - Formatted JSON\&. 
+.br
+ \fBmini-json\fP - Minified JSON\&. 
+.br
+ The default format is \fBtext\fP\&.  
+
+.PP
+
+.PP
+
+.PP
+.IP "\fB--content raw | image | ignore 
+.IP "" 1c
+Controls how image content is compared\&. Possible options are: 
+.br
+ \fBraw\fP - Encoded image data is compared verbatim, as it appears in the file\&. 
+.br
+ \fBimage\fP - Effective image data is compared per texel block\&. 
+.br
+ \fBignore\fP - Ignore image contents\&. 
+.br
+ The default mode is \fBraw\fP, meaning that the encoded image data must match exactly\&. Note: When the mode is set to \fBimage\fP, the effective image data of individual mip levels, layers, and faces is compared texel block by texel block after applying one or more of the following transformations, if needed: 
+.br
+ - If the texture is supercompressed (e\&.g\&. using Zstandard or ZLIB), the images are deflated before comparison\&. 
+.br
+ - If the texture is encoded using BasisLZ, the images are transcoded to R8G8B8A_UNORM before comparison\&. 
+.br
+ For block compressed textures and textures encoded using UASTC the texel blocks are the individual compressed blocks, while for other formats the texel blocks are the individual pixels of the image\&. 
+.br
+ When comparing files that use different supercompression schemes, or otherwise different encoding, additional options may need to be used to avoid unexpected differences to be reported related to the meta information of the files\&. For example: 
+.br
+ - The supercompression scheme can be ignored with --ignore-supercomp\&. 
+.br
+ - Compressed byte length and other index section differences can be ignored with --ignore-index all or --ignore-index level\&. 
+.br
+ - DFD section differences can be ignored with --ignore-dfd all or --ignore-dfd all-except-color-space\&. 
+.br
+ - BDFD bytesPlane value differences can be ignored with --ignore-bdfd-bytesplane\&. 
+.br
+ - SGD section differences can be ignored with --ignore-sgd all or --ignore-sgd payload\&. 
+.br
+  
+
+.PP
+.IP "\fB--per-pixel-output all | <number> | none 
+.IP "" 1c
+Controls whether per pixel / texel block difference output is generated when --content is set to \fBimage:\fP 
+.br
+ \fBall\fP - Every single difference is output (may result in a very large output)\&. 
+.br
+ \fB<number>\fP - At most the specified number of differences are output\&. 
+.br
+ \fBnone\fP - No per pixel / texel block differences are output\&. 
+.br
+ The default mode is \fBnone\fP to limit the verbosity of the output\&. 
+
+.PP
+.IP "\fB--allow-invalid-input 
+.IP "" 1c
+Perform best effort comparison even if any of the input files are invalid\&. 
+
+.PP
+.IP "\fB--ignore-format-header
+.IP "" 1c
+
+.PP
+.IP "\fB
+.IP "" 1c
+Ignore the vkFormat and typeSize fields in the file header\&. 
+.br
+ Note: useful when comparing textures with and without BasisLZ encoding, respectively\&. 
+
+.PP
+.IP "\fB--ignore-supercomp 
+.IP "" 1c
+Ignore supercompression scheme in the file header\&. 
+.br
+ Note: use the --ignore-sgd option to also ignore the SGD section, if needed\&. 
+
+.PP
+.IP "\fB--ignore-index all | level | none 
+.IP "" 1c
+Controls the comparison of index entries in the file headers\&. Possible options are: 
+.br
+ \fBall\fP - Ignore all index entries\&. 
+.br
+ \fBlevel\fP - Ignore level index entries only\&. 
+.br
+ \fBnone\fP - Do not ignore any index entries\&. 
+.br
+ The default mode is \fBnone\fP, meaning that all index entries will be compared\&.  
+
+.PP
+.IP "\fB--ignore-dfd all | all-except-color-space | unknown | extended | none 
+.IP "" 1c
+Controls the comparison of DFD blocks\&. Possible options are: 
+.br
+ \fBall\fP - Ignore all DFD blocks\&. 
+.br
+ \fBall-except-color-space\fP: Ignore all DFD blocks except the color space information in the basic DFD block\&. 
+.br
+ \fBunknown\fP - Ignore any unrecognized DFD blocks\&. 
+.br
+ \fBextended\fP - Ignore all DFD blocks except the basic DFD block\&. 
+.br
+ \fBnone\fP - Do not ignore any DFD blocks\&. 
+.br
+ The default mode is \fBnone\fP, meaning that all DFD entries will be compared\&.  
+
+.PP
+.IP "\fB--ignore-bdfd-bytesplane 
+.IP "" 1c
+Ignore BDFD bytesPlane values\&. Useful when comparing pre-spec-2\&.0\&.4 supercompressed files with 2\&.0\&.4+ supercompressed or non-supercompressed ones, as bytesPlane is set to zero in older supercompressed files\&. 
+
+.PP
+.IP "\fB--ignore-metadata all | <key>[,\&.\&.\&.] | none 
+.IP "" 1c
+Controls the comparison of metadata (KVD) entries\&. Possible options are: 
+.br
+ \fBall\fP - Ignore all metadata entries\&. 
+.br
+ \fB<key>\fP[,\&.\&.\&.] - Ignore the specified comma separated list of metadata keys\&. 
+.br
+ \fBnone\fP - Do not ignore any metadata entries\&. 
+.br
+ The default mode is \fBnone\fP, meaning that all metadata entries will be compared\&.  
+
+.PP
+.IP "\fB--ignore-sgd all | unknown | payload | none 
+.IP "" 1c
+Controls the comparison of the SGD section\&. Possible options are: 
+.br
+ \fBall\fP - Ignore the SGD section\&. 
+.br
+ \fBunknown\fP - Ignore any unrecognized SGD section\&. 
+.br
+ \fBpayload\fP - Ignore any unrecognized SGD section and the payload of any known SGD section\&. 
+.br
+ \fBnone\fP - Do not ignore the SGD section\&. 
+.br
+ The default mode is \fBnone\fP, meaning that SGD sections will be always compared\&. Note: --ignore-sgd payload can be used to compare BasisLZ SGD headers without expecting an exact match for the individual SGD payload sections\&.  
+
+.PP
+
+.PP
+.IP "\fB-h, --help 
+.IP "" 1c
+Print this usage message and exit\&. 
+
+.PP
+.IP "\fB-v, --version 
+.IP "" 1c
+Print the version number of this program and exit\&. 
+
+.PP
+
+.PP
+.PP
+.nf
+@note Reports about image content mismatches when --content is set to @b raw or @b image
+include the following information: <br />
+- The level, layer, and face index of the image where the difference was found\&.
+
+@note Reports about individual texel block differences when --content is set to @b image
+include the following additional information: <br />
+- The texel coordinates within the image where the difference was found\&. These
+  coordinates are the raw coordinates of the image and are not affected by metadata
+  such as @b KTXorientation\&.
+- The packed elements of the texel block output as an array of hexadecimal values\&.
+  Each packed element has a byte size equal to the @b typeSize value of the image\&.
+- The channel values of the texel block output as an array of integer (for integer
+  and normalized formats) or floating point (for floating point formats) values\&.
+  In case of floating point formats @b NaN, @b +inf, and @b -inf are used to indicate
+  values that are not a number or represent infinities, respectively\&.
+  The output order of the channels always follow the order they appear in the BDFD\&.
+.fi
+.PP
+.SH "EXIT STATUS"
+.PP
+.IP "\(bu" 2
+0 - Success
+.IP "\(bu" 2
+1 - Command line error
+.IP "\(bu" 2
+2 - IO failure
+.IP "\(bu" 2
+3 - Invalid input file
+.IP "\(bu" 2
+4 - Runtime or library error
+.IP "\(bu" 2
+5 - Not supported state or operation
+.IP "\(bu" 2
+6 - Requested feature is not yet implemented  
+.PP
+
+.PP
+.IP "\(bu" 2
+7 - Input files are different
+.PP
+.SH "HISTORY"
+.PP
+\fBVersion 4\&.0\fP
+.RS 4
+
+.IP "\(bu" 2
+Initial version
+.PP
+.RE
+.PP
+.SH "AUTHOR"
+.PP
+.IP "\(bu" 2
+Daniel Rákos, RasterGrid www\&.rastergrid\&.com 
+.PP
+

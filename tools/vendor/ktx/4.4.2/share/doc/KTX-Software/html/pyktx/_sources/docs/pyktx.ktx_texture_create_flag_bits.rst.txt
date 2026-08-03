@@ -1,0 +1,7 @@
+pyktx.ktx\_texture\_create\_flag\_bits module
+=============================================
+
+.. automodule:: pyktx.ktx_texture_create_flag_bits
+   :members:
+   :undoc-members:
+   :show-inheritance:

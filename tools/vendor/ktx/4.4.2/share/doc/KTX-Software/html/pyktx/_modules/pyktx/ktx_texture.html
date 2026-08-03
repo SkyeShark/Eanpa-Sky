@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.ktx_texture &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyktx.ktx_texture</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyktx.ktx_texture</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2023, Shukant Pal and Contributors</span>
+<span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ctypes</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ktx_error_code</span><span class="w"> </span><span class="kn">import</span> <span class="n">KtxErrorCode</span><span class="p">,</span> <span class="n">KtxError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ktx_hash_list</span><span class="w"> </span><span class="kn">import</span> <span class="n">KtxHashList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyktx.native</span><span class="w"> </span><span class="kn">import</span> <span class="n">ffi</span><span class="p">,</span> <span class="n">lib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
+
+<div class="viewcode-block" id="KtxVersionMismatchError"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxVersionMismatchError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">KtxVersionMismatchError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error thrown when reading a file with wrong KTX version.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="KtxTexture"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">KtxTexture</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class representing a texture.</span>
+
+<span class="sd">    ktxTextures should be created only by one of the static factory methods,</span>
+<span class="sd">    and these fields should be considered read-only.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="n">c_uint64</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span> <span class="o">=</span> <span class="n">ptr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__kv_data_head</span> <span class="o">=</span> <span class="n">KtxHashList</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_kvDataHead</span><span class="p">(</span><span class="n">ptr</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">lib</span><span class="o">.</span><span class="n">free</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">NULL</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">class_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify the class type. 1 for KtxTexture1, 2 for KtxTexture2.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_classId</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_array</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;true if the texture is an array texture, i.e, a GL_TEXTURE_*_ARRAY target is to be used.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_isArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_compressed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the texture&#39;s format is a block compressed format.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_isCompressed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_cubemap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the texture is a cubemap or cubemap array.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_isCubemap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_mipmaps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If mipmaps should be generated for the texture when uploading to graphics APIs.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_generateMipmaps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">base_width</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Width of the texture&#39;s base level.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_baseWidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">base_height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Height of the texture&#39;s base level.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_baseHeight</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">base_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Depth of the texture&#39;s base level.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_baseDepth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_dimensions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of dimensions in the texture: 1, 2 or 3.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_numDimensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of mip levels in the texture.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_numLevels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">num_faces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of faces: 6 for cube maps, 1 otherwise.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_numFaces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">element_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The element size of the texture&#39;s images.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_GetElementSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">kv_data_raw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">c_buffer</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The raw KV data buffer.</span>
+
+<span class="sd">        This is available only if RAW_KVDATA_BIT was used in create-flag bits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">buffer</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_kvData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">buffer</span> <span class="o">==</span> <span class="n">ffi</span><span class="o">.</span><span class="n">NULL</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">ffi</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_get_kvDataLen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">kv_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KtxHashList</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The metadata stored in the texture as a hash-list.</span>
+
+<span class="sd">        This is not available if SKIP_KVDATA_BIT was used in the create-flag bits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__kv_data_head</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">data_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The total size of the texture image data in bytes.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_GetDataSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">data_size_uncompressed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Byte length of the texture&#39;s uncompressed image data.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_GetDataSizeUncompressed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KtxTexture.row_pitch"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.row_pitch">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">row_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return pitch between rows of a texture image level in bytes.</span>
+
+<span class="sd">        For uncompressed textures the pitch is the number of bytes between</span>
+<span class="sd">        rows of texels. For compressed textures it is the number of bytes</span>
+<span class="sd">        between rows of blocks. The value is padded to GL_UNPACK_ALIGNMENT,</span>
+<span class="sd">        if necessary. For all currently known compressed formats padding will</span>
+<span class="sd">        not be necessary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_GetRowPitch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KtxTexture.image_size"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.image_size">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">image_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate &amp; return the size in bytes of an image at the specified mip level.</span>
+
+<span class="sd">        For arrays, this is the size of layer, for cubemaps, the size of a face and</span>
+<span class="sd">        for 3D textures, the size of a depth slice.</span>
+
+<span class="sd">        The size reflects the padding of each row to KTX_GL_UNPACK_ALIGNMENT.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_GetImageSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KtxTexture.image_offset"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.image_offset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">image_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">face_slice</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find the offset of an image within a ktxTexture&#39;s image data.</span>
+
+<span class="sd">        As there is no such thing as a 3D cubemap we make the 3rd location parameter</span>
+<span class="sd">        do double duty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_GetImageOffset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">face_slice</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="p">)</span> <span class="o">!=</span> <span class="n">KtxErrorCode</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KtxError</span><span class="p">(</span><span class="s1">&#39;ktxTexture_GetImageOffset&#39;</span><span class="p">,</span> <span class="n">KtxErrorCode</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">offset</span></div>
+
+<div class="viewcode-block" id="KtxTexture.data"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.data">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a buffer holding the texture image data.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">ffi</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_GetData</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KtxTexture.set_image_from_memory"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.set_image_from_memory">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">set_image_from_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">face_slice</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set image for level, layer, faceSlice from an image in memory.</span>
+
+<span class="sd">        Uncompressed images in memory are expected to have their rows tightly packed</span>
+<span class="sd">        as is the norm for most image file formats. The copied image is padded as</span>
+<span class="sd">        necessary to achieve the KTX-specified row alignment. No padding is done if the</span>
+<span class="sd">        ktxTexture&#39;s is_compressed field is true. Level, layer, face_slice rather than offset</span>
+<span class="sd">        are specified to enable some validation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">error</span> <span class="o">=</span> <span class="n">KtxErrorCode</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_SetImageFromMemory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">face_slice</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="o">!=</span> <span class="n">KtxErrorCode</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KtxError</span><span class="p">(</span><span class="s1">&#39;ktxTexture_SetImageFromMemory&#39;</span><span class="p">,</span> <span class="n">KtxErrorCode</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">error</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="KtxTexture.write_to_named_file"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.write_to_named_file">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_to_named_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save this texture to a named file in KTX format.&quot;&quot;&quot;</span>
+
+        <span class="n">error</span> <span class="o">=</span> <span class="n">KtxErrorCode</span><span class="p">(</span><span class="n">lib</span><span class="o">.</span><span class="n">ktxTexture_WriteToNamedFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">,</span> <span class="n">dst_name</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="o">!=</span> <span class="n">KtxErrorCode</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KtxError</span><span class="p">(</span><span class="s1">&#39;ktxTexture_WriteToNamedFile&#39;</span><span class="p">,</span> <span class="n">KtxErrorCode</span><span class="p">(</span><span class="n">error</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="KtxTexture.write_to_native_memory"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.write_to_native_memory">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_to_native_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;bytes&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write this KTX file to block of memory in KTX format. Recommended to use write_to_memory instead.&quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">lib</span><span class="o">.</span><span class="n">PY_ktxTexture_WriteToMemory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="p">)</span> <span class="o">!=</span> <span class="n">KtxErrorCode</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">KtxError</span><span class="p">(</span><span class="s1">&#39;ktxTexture_WriteToMemory&#39;</span><span class="p">,</span> <span class="n">KtxErrorCode</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">error</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;bytes&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">bytes</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="KtxTexture.write_to_memory"><a class="viewcode-back" href="../../docs/pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.write_to_memory">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">write_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write this KTX file to a buffer in KTX format.&quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_to_native_memory</span><span class="p">()</span>
+        <span class="n">native_buffer</span> <span class="o">=</span> <span class="n">ffi</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bytes&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">))</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="n">native_buffer</span><span class="p">[:]</span>
+
+        <span class="n">lib</span><span class="o">.</span><span class="n">free</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bytes&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">buffer</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

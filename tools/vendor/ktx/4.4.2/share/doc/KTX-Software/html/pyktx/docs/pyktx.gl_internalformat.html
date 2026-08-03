@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.gl_internalformat module &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyktx.ktx_astc_params module" href="pyktx.ktx_astc_params.html" />
+    <link rel="prev" title="pyktx package" href="pyktx.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.html">pyktx package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyktx.gl_internalformat module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat"><code class="docutils literal notranslate"><span class="pre">GlInternalformat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_EXPLICIT_ALPHA_AMD"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ATC_RGBA_EXPLICIT_ALPHA_AMD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_INTERPOLATED_ALPHA_AMD"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ATC_RGBA_INTERPOLATED_ALPHA_AMD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.ATC_RGB_AMD"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ATC_RGB_AMD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_LATC1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_LUMINANCE_LATC1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_R11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_R11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RG11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RG11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_ETC2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB8_ETC2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA8_ETC2_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA8_ETC2_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_12x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x12_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_12x12_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_4x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_4x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_5x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_5x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_6x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_6x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_8x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_8x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_8x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_BPTC_UNORM_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_BPTC_UNORM_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT3_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_S3TC_DXT3_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT5_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_S3TC_DXT5_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_2BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_PVRTC_2BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_4BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_PVRTC_4BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_R11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_R11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_RG11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_RG11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SLUMINANCE_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SLUMINANCE_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.ETC1_RGB8_OES"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ETC1_RGB8_OES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.R3_G3_B2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.R3_G3_B2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB10"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB10</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB10_A2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB10_A2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB12"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB12</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB16"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB4"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB5"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB5_A1"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB5_A1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGB8"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGBA12"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA12</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGBA16"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGBA2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGBA4"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.RGBA8"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_ALPHA8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE8_ALPHA8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SRGB8_ALPHA8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB8_ALPHA8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SRGB8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SRGB_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.gl_internalformat.GlInternalformat.SRGB_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB_EXT</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">pyktx</a></li>
+          <li class="breadcrumb-item"><a href="pyktx.html">pyktx package</a></li>
+      <li class="breadcrumb-item active">pyktx.gl_internalformat module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/docs/pyktx.gl_internalformat.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyktx.gl_internalformat">
+<span id="pyktx-gl-internalformat-module"></span><h1>pyktx.gl_internalformat module<a class="headerlink" href="#module-pyktx.gl_internalformat" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyktx.gl_internalformat.</span></span><span class="sig-name descname"><span class="pre">GlInternalformat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyktx/gl_internalformat.html#GlInternalformat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>OpenGL internalformat constants.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_EXPLICIT_ALPHA_AMD">
+<span class="sig-name descname"><span class="pre">ATC_RGBA_EXPLICIT_ALPHA_AMD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35987</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_EXPLICIT_ALPHA_AMD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_INTERPOLATED_ALPHA_AMD">
+<span class="sig-name descname"><span class="pre">ATC_RGBA_INTERPOLATED_ALPHA_AMD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">34798</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_INTERPOLATED_ALPHA_AMD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.ATC_RGB_AMD">
+<span class="sig-name descname"><span class="pre">ATC_RGB_AMD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35986</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.ATC_RGB_AMD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35954</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_LATC1_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_LUMINANCE_LATC1_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35952</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_LATC1_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_R11_EAC">
+<span class="sig-name descname"><span class="pre">COMPRESSED_R11_EAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37488</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_R11_EAC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RG11_EAC">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RG11_EAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37490</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RG11_EAC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_ETC2">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGB8_ETC2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37492</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_ETC2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37494</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA8_ETC2_EAC">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA8_ETC2_EAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37496</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA8_ETC2_EAC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x10_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_10x10_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37819</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x10_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_10x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37816</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x6_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_10x6_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37817</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x6_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x8_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_10x8_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37818</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x8_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x10_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_12x10_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37820</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x10_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x12_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_12x12_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37821</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x12_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_4x4_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_4x4_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37808</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_4x4_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x4_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_5x4_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37809</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x4_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_5x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37810</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_6x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37811</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x6_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_6x6_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37812</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x6_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_8x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37813</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x6_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_8x6_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37814</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x6_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x8_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_ASTC_8x8_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37815</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x8_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_BPTC_UNORM_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_BPTC_UNORM_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">36492</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_BPTC_UNORM_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_PVRTC_2BPPV1_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35843</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_PVRTC_4BPPV1_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35842</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT1_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_S3TC_DXT1_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33777</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT1_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT3_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_S3TC_DXT3_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33778</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT3_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT5_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGBA_S3TC_DXT5_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33779</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT5_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">36494</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">36495</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_2BPPV1_IMG">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGB_PVRTC_2BPPV1_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35841</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_2BPPV1_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_4BPPV1_IMG">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGB_PVRTC_4BPPV1_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35840</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_4BPPV1_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_S3TC_DXT1_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_RGB_S3TC_DXT1_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33776</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_S3TC_DXT1_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35955</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35953</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_R11_EAC">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SIGNED_R11_EAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37489</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_R11_EAC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_RG11_EAC">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SIGNED_RG11_EAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37491</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_RG11_EAC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_ALPHA_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SLUMINANCE_ALPHA_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35915</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_ALPHA_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SLUMINANCE_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35914</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37851</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37848</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37849</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37850</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37852</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37853</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37840</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37841</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37842</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37843</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37844</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37845</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37846</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37847</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB8_ALPHA8_ETC2_EAC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37497</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">36493</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB_ALPHA_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35913</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35917</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35918</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35919</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35912</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_S3TC_DXT1_EXT">
+<span class="sig-name descname"><span class="pre">COMPRESSED_SRGB_S3TC_DXT1_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35916</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_S3TC_DXT1_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.ETC1_RGB8_OES">
+<span class="sig-name descname"><span class="pre">ETC1_RGB8_OES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">36196</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.ETC1_RGB8_OES" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.R3_G3_B2">
+<span class="sig-name descname"><span class="pre">R3_G3_B2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10768</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.R3_G3_B2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB10">
+<span class="sig-name descname"><span class="pre">RGB10</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32850</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB10" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB10_A2">
+<span class="sig-name descname"><span class="pre">RGB10_A2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32857</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB10_A2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB12">
+<span class="sig-name descname"><span class="pre">RGB12</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32851</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB12" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB16">
+<span class="sig-name descname"><span class="pre">RGB16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32852</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB4">
+<span class="sig-name descname"><span class="pre">RGB4</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32847</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB5">
+<span class="sig-name descname"><span class="pre">RGB5</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32848</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB5" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB5_A1">
+<span class="sig-name descname"><span class="pre">RGB5_A1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32855</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB5_A1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGB8">
+<span class="sig-name descname"><span class="pre">RGB8</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32849</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGB8" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGBA12">
+<span class="sig-name descname"><span class="pre">RGBA12</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32858</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGBA12" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGBA16">
+<span class="sig-name descname"><span class="pre">RGBA16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32859</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGBA16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGBA2">
+<span class="sig-name descname"><span class="pre">RGBA2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32853</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGBA2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGBA4">
+<span class="sig-name descname"><span class="pre">RGBA4</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32854</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGBA4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.RGBA8">
+<span class="sig-name descname"><span class="pre">RGBA8</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32856</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.RGBA8" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_ALPHA8_EXT">
+<span class="sig-name descname"><span class="pre">SLUMINANCE8_ALPHA8_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35909</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_ALPHA8_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_EXT">
+<span class="sig-name descname"><span class="pre">SLUMINANCE8_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35911</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_ALPHA_EXT">
+<span class="sig-name descname"><span class="pre">SLUMINANCE_ALPHA_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35908</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_ALPHA_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_EXT">
+<span class="sig-name descname"><span class="pre">SLUMINANCE_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35910</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SRGB8_ALPHA8_EXT">
+<span class="sig-name descname"><span class="pre">SRGB8_ALPHA8_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35907</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SRGB8_ALPHA8_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SRGB8_EXT">
+<span class="sig-name descname"><span class="pre">SRGB8_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35905</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SRGB8_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SRGB_ALPHA_EXT">
+<span class="sig-name descname"><span class="pre">SRGB_ALPHA_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35906</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SRGB_ALPHA_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.gl_internalformat.GlInternalformat.SRGB_EXT">
+<span class="sig-name descname"><span class="pre">SRGB_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35904</span></em><a class="headerlink" href="#pyktx.gl_internalformat.GlInternalformat.SRGB_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyktx.html" class="btn btn-neutral float-left" title="pyktx package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyktx.ktx_astc_params.html" class="btn btn-neutral float-right" title="pyktx.ktx_astc_params module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+pyktx.ktx\_astc\_params module
+==============================
+
+.. automodule:: pyktx.ktx_astc_params
+   :members:
+   :undoc-members:
+   :show-inheritance:

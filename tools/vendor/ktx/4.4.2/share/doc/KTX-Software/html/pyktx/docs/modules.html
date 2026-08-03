@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyktx package" href="pyktx.html" />
+    <link rel="prev" title="Welcome to pyktx’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyktx</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.html">pyktx package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pyktx</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/docs/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pyktx">
+<h1>pyktx<a class="headerlink" href="#pyktx" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.html">pyktx package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat"><code class="docutils literal notranslate"><span class="pre">GlInternalformat</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxError"><code class="docutils literal notranslate"><span class="pre">KtxError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_hash_list.html#pyktx.ktx_hash_list.KtxHashList"><code class="docutils literal notranslate"><span class="pre">KtxHashList</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html#pyktx.ktx_pack_astc_encoder_mode.KtxPackAstcEncoderMode"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcEncoderMode</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html#pyktx.ktx_supercmp_scheme.KtxSupercmpScheme"><code class="docutils literal notranslate"><span class="pre">KtxSupercmpScheme</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture"><code class="docutils literal notranslate"><span class="pre">KtxTexture</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxVersionMismatchError"><code class="docutils literal notranslate"><span class="pre">KtxVersionMismatchError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1"><code class="docutils literal notranslate"><span class="pre">KtxTexture1</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2"><code class="docutils literal notranslate"><span class="pre">KtxTexture2</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html#pyktx.ktx_texture_create_flag_bits.KtxTextureCreateFlagBits"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateFlagBits</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html#pyktx.ktx_texture_create_storage.KtxTextureCreateStorage"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateStorage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html#pyktx.ktx_transcode_flag_bits.KtxTranscodeFlagBits"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFlagBits</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat"><code class="docutils literal notranslate"><span class="pre">VkFormat</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.html#module-pyktx">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to pyktx’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyktx.html" class="btn btn-neutral float-right" title="pyktx package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

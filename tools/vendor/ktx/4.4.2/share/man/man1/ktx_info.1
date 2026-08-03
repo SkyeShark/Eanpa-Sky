@@ -1,0 +1,90 @@
+.TH "ktx_info" 1 "Sat Oct 4 2025 08:43:36" "Version 4.4.2" "KTX Tools Reference" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ktx_info \- ktx info 
+.PP
+Print information about a KTX2 file\&.
+.SH "SYNOPSIS"
+.PP
+ktx info [option\&.\&.\&.] \fIinput-file\fP 
+.SH "DESCRIPTION"
+.PP
+\fBktx\fP \fBinfo\fP prints information about the KTX v1 or v2 file specified as the \fIinput-file\fP argument\&. If the \fIinput-file\fP is '-' the file will be read from the stdin\&. The command implicitly calls \fBvalidate\fP for KTX v2 files and prints any found errors and warnings to stdout\&. If the specified input file is invalid the information is displayed based on best effort and may be incomplete\&.
+
+.PP
+The JSON output formats conform to the https://schema.khronos.org/ktx/info_v0.json schema even if the input file is invalid and certain information cannot be parsed or displayed\&. Additionally, for JSON outputs the KTX file identifier is printed using "\\u001A" instead of "\\x1A" as an unescaped "\\x1A" sequence inside a JSON string breaks nearly every JSON tool\&. Note that this does not change the value of the string only its representation\&. JSON output is only supported for KTX v2 files\&. If requested for a KTX v1 file, an error is generated\&.
+
+.PP
+\fBNote\fP
+.RS 4
+\fBktx\fP \fBinfo\fP prints using UTF-8 encoding\&. If your console is not set for UTF-8 you will see incorrect characters in output of the file identifier on each side of the "KTX nn"\&.
+.RE
+.PP
+.SH "OPTIONS"
+.PP
+The following options are available:   
+
+.PP
+.IP "\fB--format text | json | mini-json 
+.IP "" 1c
+Specifies the report output format\&. Possible options are: 
+.br
+ \fBtext\fP - Human readable text based format\&. 
+.br
+ \fBjson\fP - Formatted JSON\&. 
+.br
+ \fBmini-json\fP - Minified JSON\&. 
+.br
+ The default format is \fBtext\fP\&.  
+
+.PP
+
+.PP
+
+.PP
+.IP "\fB-h, --help 
+.IP "" 1c
+Print this usage message and exit\&. 
+
+.PP
+.IP "\fB-v, --version 
+.IP "" 1c
+Print the version number of this program and exit\&. 
+
+.PP
+.SH "EXIT STATUS"
+.PP
+.IP "\(bu" 2
+0 - Success
+.IP "\(bu" 2
+1 - Command line error
+.IP "\(bu" 2
+2 - IO failure
+.IP "\(bu" 2
+3 - Invalid input file
+.IP "\(bu" 2
+4 - Runtime or library error
+.IP "\(bu" 2
+5 - Not supported state or operation
+.IP "\(bu" 2
+6 - Requested feature is not yet implemented  
+.PP
+.SH "HISTORY"
+.PP
+\fBVersion 4\&.0\fP
+.RS 4
+
+.IP "\(bu" 2
+Initial version
+.PP
+.RE
+.PP
+.SH "AUTHOR"
+.PP
+.IP "\(bu" 2
+Mátyás Császár [Vader], RasterGrid www\&.rastergrid\&.com
+.IP "\(bu" 2
+Daniel Rákos, RasterGrid www\&.rastergrid\&.com 
+.PP
+

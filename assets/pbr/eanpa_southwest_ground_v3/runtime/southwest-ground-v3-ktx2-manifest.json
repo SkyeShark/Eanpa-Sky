@@ -1,0 +1,327 @@
+{
+    "schema_version":  1,
+    "generated_by":  "tools/build-southwest-ground-v3-ktx2.ps1",
+    "source_manifest":  "assets/pbr/eanpa_southwest_ground_v3/manifest.json",
+    "layer_order":  [
+                        "RockyTrail02",
+                        "DryGroundRocks",
+                        "RedLateriteSoilStones",
+                        "CrackedRedGround",
+                        "MudCrackedDryRiverbed002",
+                        "Rock029",
+                        "Rock061",
+                        "GravellySand",
+                        "RockFace03",
+                        "SandyGravel02",
+                        "RockyTrail",
+                        "RockFace",
+                        "RockBoulderCracked",
+                        "RocksGround02"
+                    ],
+    "layer_count":  14,
+    "runtime_resolution":  [
+                               2048,
+                               2048
+                           ],
+    "input_pngs_preserved":  true,
+    "compression_policy":  {
+                               "codec":  "Basis Universal UASTC 4x4",
+                               "quality":  4,
+                               "rdo":  false,
+                               "normal_mode":  false,
+                               "zstd_level":  3,
+                               "mipmaps":  "complete 2048-to-1 chain",
+                               "mip_filter":  "lanczos4",
+                               "mip_wrap":  "wrap",
+                               "threads":  4
+                           },
+    "official_ktx_tool":  {
+                              "name":  "Khronos KTX-Software",
+                              "version":  "v4.4.2",
+                              "release_url":  "https://github.com/KhronosGroup/KTX-Software/releases/tag/v4.4.2",
+                              "installer_url":  "https://github.com/KhronosGroup/KTX-Software/releases/download/v4.4.2/KTX-Software-4.4.2-Windows-x64.exe",
+                              "installer_path":  "tools/vendor/ktx/KTX-Software-4.4.2-Windows-x64.exe",
+                              "installer_sha256":  "1f323b0fec19794f5e6c0425a61d4b1da396872a10be862d105f4f4b2d2957fe"
+                          },
+    "official_three_loader":  {
+                                  "version":  "r184",
+                                  "tag_url":  "https://github.com/mrdoob/three.js/releases/tag/r184",
+                                  "tag_object_sha":  "e78e81725013343d38ceb7b13070c9ff5b8dafbb",
+                                  "commit_sha":  "d3b629c0c2097cec664ad16369bb6eae3b10e335",
+                                  "immutable_source_root":  "https://raw.githubusercontent.com/mrdoob/three.js/d3b629c0c2097cec664ad16369bb6eae3b10e335/examples/jsm",
+                                  "files":  [
+                                                {
+                                                    "path":  "vendor/three/addons/loaders/KTX2Loader.js",
+                                                    "sha256":  "cc5b9be79563ff07035d6fb7681ee2675811a9556c3fdeaf85f519c81e95009f",
+                                                    "byte_size":  35966
+                                                },
+                                                {
+                                                    "path":  "vendor/three/addons/utils/WorkerPool.js",
+                                                    "sha256":  "5ac7095fd566bc9ae48376055fd66edf27cb9ebbf9e1269dc206bfd4933ae9eb",
+                                                    "byte_size":  3110
+                                                },
+                                                {
+                                                    "path":  "vendor/three/addons/libs/ktx-parse.module.js",
+                                                    "sha256":  "f40c491f6c44dde511268121f778a0050e73b1a15fd844c1ae2c78c73213eafc",
+                                                    "byte_size":  19932
+                                                },
+                                                {
+                                                    "path":  "vendor/three/addons/libs/zstddec.module.js",
+                                                    "sha256":  "5cbf818e842628a4464e748594a6deae18ceddda3c2f541e7b3a0ff5fc7611e2",
+                                                    "byte_size":  39754
+                                                },
+                                                {
+                                                    "path":  "vendor/three/addons/math/ColorSpaces.js",
+                                                    "sha256":  "cc35c01c793cd17ccded7bc8142abffd3ce0d60dd6de8d5d216983bd05aee262",
+                                                    "byte_size":  4290
+                                                },
+                                                {
+                                                    "path":  "vendor/three/addons/libs/basis/basis_transcoder.js",
+                                                    "sha256":  "8478b5b6d6b74e7d3082b89f6417321d8d1dc0307f2b30d4484bb11b441696a1",
+                                                    "byte_size":  57529
+                                                },
+                                                {
+                                                    "path":  "vendor/three/addons/libs/basis/basis_transcoder.wasm",
+                                                    "sha256":  "6cf17dc889352c42e9acf8897107978d127005fe3386c36a0e3845e27967630a",
+                                                    "byte_size":  527333
+                                                }
+                                            ]
+                              },
+    "inputs":  [
+                   {
+                       "index":  0,
+                       "id":  "RockyTrail02",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/RockyTrail02_AlbedoGrade_2K.png",
+                                                 "sha256":  "ef257452b152bac35e28ad1cad2ac25f09934080c18f4e08c34b3dc0a8b8be0d"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/RockyTrail02_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "ea34ed06ad97ba88b8cffafadf82f0b7e12365191f23bd79249cff9583cb6856"
+                                                   }
+                   },
+                   {
+                       "index":  1,
+                       "id":  "DryGroundRocks",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/DryGroundRocks_AlbedoGrade_2K.png",
+                                                 "sha256":  "307caaf2f66c45922f80cc4b2d1f0864e5866ff2a4482f691c71617b1e8af4f9"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/DryGroundRocks_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "e5fcb01c50d7e6e7cfb9725354728407c0578eae5d5536105d98d65aca722e27"
+                                                   }
+                   },
+                   {
+                       "index":  2,
+                       "id":  "RedLateriteSoilStones",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/RedLateriteSoilStones_AlbedoGrade_2K.png",
+                                                 "sha256":  "50865d9738ae84183f6d5e63acc667f6a1bd17bfa13df60a3bd77d383901751a"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/RedLateriteSoilStones_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "90e5e9004f747ce5cfdb2db9136ac3cd37a9d7a0eeff40949f8e7f38d1517897"
+                                                   }
+                   },
+                   {
+                       "index":  3,
+                       "id":  "CrackedRedGround",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/CrackedRedGround_AlbedoGrade_2K.png",
+                                                 "sha256":  "a7d9aa598d409ab04b8f35feca57f7673c9c08d808f63d1275f47373e68863d8"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/CrackedRedGround_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "3ad2a3a19cfe350d04ca3b6c882ee74104db228c8f662dec482d184dd7e7eea4"
+                                                   }
+                   },
+                   {
+                       "index":  4,
+                       "id":  "MudCrackedDryRiverbed002",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/MudCrackedDryRiverbed002_AlbedoGrade_2K.png",
+                                                 "sha256":  "94635fc5b2f21eb1fe15236ff55c4abc5d598458c20f3b44a874387d18dbf867"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/MudCrackedDryRiverbed002_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "480eb1420e7d3c3bb5f6df935ac62cc4a98d95795bfeff94ee88fdd7ed190a85"
+                                                   }
+                   },
+                   {
+                       "index":  5,
+                       "id":  "Rock029",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/Rock029_AlbedoGrade_2K.png",
+                                                 "sha256":  "23ae4cd47cb0225a63125e79e7d0c7fb05da9a021a7e0eb4fb344ff36b5dde5e"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/Rock029_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "91ad160668b1b8d98492fb4f3102fdf94d64f14f02061fc67ecb95f18b9688f3"
+                                                   }
+                   },
+                   {
+                       "index":  6,
+                       "id":  "Rock061",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/Rock061_AlbedoGrade_2K.png",
+                                                 "sha256":  "4bc28068924e5bb978ac778aa007904f9f3aab502011290d817cf2e1869b03ac"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/Rock061_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "bfca7deafc804f67a308fe6ecf3f1770f897a400c3ac5b75739a0370dc88904d"
+                                                   }
+                   },
+                   {
+                       "index":  7,
+                       "id":  "GravellySand",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/GravellySand_AlbedoGrade_2K.png",
+                                                 "sha256":  "d613d739eb9dfcb92eb11d8b3f7acd48dce08d1b0b1c1c83902c670ed80db9ea"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/GravellySand_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "d9c0b65ce65b2bd58b06971de8ed57127bfc2099379cb3a2c1dfd67d5317e43d"
+                                                   }
+                   },
+                   {
+                       "index":  8,
+                       "id":  "RockFace03",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/RockFace03_AlbedoGrade_2K.png",
+                                                 "sha256":  "390a3e9abdd58bfd4a86601789f1580ff69d54033546bd12e5bb25099a6e1d9e"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/RockFace03_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "872b272b3979fc45aa3160d1d572926757ca3afd949dd71e78eada752acfba23"
+                                                   }
+                   },
+                   {
+                       "index":  9,
+                       "id":  "SandyGravel02",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/SandyGravel02_AlbedoGrade_2K.png",
+                                                 "sha256":  "163c7a144a75f0af6f80c532e1f44fd5a5c548765de65bec66741fd65da6e7d7"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/SandyGravel02_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "9711a6ab77067464040f24e8277760231a1e933f42b7c65552f4c035d057cd11"
+                                                   }
+                   },
+                   {
+                       "index":  10,
+                       "id":  "RockyTrail",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/RockyTrail_AlbedoGrade_2K.png",
+                                                 "sha256":  "de590af2cdcf975c457a20e86c93f0edb97260bdf32b03dd3036a3fc2e008c59"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/RockyTrail_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "ec430773829a919ad3989e6912f9f233644d1299623b337a2847f5483fe05b38"
+                                                   }
+                   },
+                   {
+                       "index":  11,
+                       "id":  "RockFace",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/RockFace_AlbedoGrade_2K.png",
+                                                 "sha256":  "f884a58ae91b5dd39314ad5bbe81e302b615c23f76958d09a49f0d479af50689"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/RockFace_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "6287fee14f0992fe8de3fb3277b9916f9cfea3dce6a68d3ed06b60c0ed7a8214"
+                                                   }
+                   },
+                   {
+                       "index":  12,
+                       "id":  "RockBoulderCracked",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/RockBoulderCracked_AlbedoGrade_2K.png",
+                                                 "sha256":  "9dd3c8903f279bb22484223f046d423df1c1183913804383a0daac6e06070e9d"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/RockBoulderCracked_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "2e668aa2bcc14100989de9b1c4317bcc8289bb239d8fe8e046fac16b4233e732"
+                                                   }
+                   },
+                   {
+                       "index":  13,
+                       "id":  "RocksGround02",
+                       "albedo_height_png":  {
+                                                 "path":  "runtime/RocksGround02_AlbedoGrade_2K.png",
+                                                 "sha256":  "17f591d9cb29844d3f59a13cfd0e444a4466052533ef683f533ec301c88078f5"
+                                             },
+                       "packed_nxy_rough_ao_png":  {
+                                                       "path":  "runtime/RocksGround02_PackedNxyRoughAO_2K.png",
+                                                       "sha256":  "20d0e624b5d1e43d5e53f99e7695cd67ca54bb49a985b796d556d0b0e3ba412b"
+                                                   }
+                   }
+               ],
+    "outputs":  [
+                    {
+                        "key":  "albedo_height",
+                        "path":  "runtime/SouthwestGroundV3_AlbedoHeight_14x2K_UASTC.ktx2",
+                        "sha256":  "88071631de1059d037c34f97f13dc4590a60605e277bfaa46dd9bea9bf33c44c",
+                        "byte_size":  71062959,
+                        "dimensions":  [
+                                           2048,
+                                           2048
+                                       ],
+                        "layer_count":  14,
+                        "mip_level_count":  12,
+                        "texture_kind":  "2d-array",
+                        "payload":  "Basis Universal UASTC 4x4",
+                        "uastc_quality":  4,
+                        "uastc_rdo":  false,
+                        "normal_mode":  false,
+                        "supercompression":  "Zstandard level 3",
+                        "mip_filter":  "lanczos4",
+                        "mip_wrap":  "wrap",
+                        "transfer_function":  "KHR_DF_TRANSFER_SRGB",
+                        "color_primaries":  "KHR_DF_PRIMARIES_BT709",
+                        "channel_contract":  {
+                                                 "RGB":  "graded sRGB albedo; hardware sRGB decode applies to RGB",
+                                                 "A":  "linear displacement-derived transition height; sRGB transfer does not apply to alpha"
+                                             }
+                    },
+                    {
+                        "key":  "packed_nxy_rough_ao",
+                        "path":  "runtime/SouthwestGroundV3_PackedNxyRoughAO_14x2K_UASTC.ktx2",
+                        "sha256":  "9cdd1be355062750da992e82c6a1b6f295ffe74ed5edd5575761422f10a453e1",
+                        "byte_size":  75057198,
+                        "dimensions":  [
+                                           2048,
+                                           2048
+                                       ],
+                        "layer_count":  14,
+                        "mip_level_count":  12,
+                        "texture_kind":  "2d-array",
+                        "payload":  "Basis Universal UASTC 4x4",
+                        "uastc_quality":  4,
+                        "uastc_rdo":  false,
+                        "normal_mode":  false,
+                        "supercompression":  "Zstandard level 3",
+                        "mip_filter":  "lanczos4",
+                        "mip_wrap":  "wrap",
+                        "transfer_function":  "KHR_DF_TRANSFER_LINEAR",
+                        "color_primaries":  "KHR_DF_PRIMARIES_UNSPECIFIED",
+                        "channel_contract":  {
+                                                 "R":  "linear tangent-space NormalGL X encoded as UNORM8",
+                                                 "G":  "linear tangent-space NormalGL Y encoded as UNORM8",
+                                                 "B":  "linear roughness encoded as UNORM8",
+                                                 "A":  "linear ambient occlusion encoded as UNORM8"
+                                             }
+                    }
+                ],
+    "runtime_integration":  {
+                                "loader_import":  "./vendor/three/addons/loaders/KTX2Loader.js",
+                                "transcoder_path":  "./vendor/three/addons/libs/basis/",
+                                "required_setup":  [
+                                                       "const loader = new KTX2Loader();",
+                                                       "loader.setTranscoderPath(\u0027./vendor/three/addons/libs/basis/\u0027);",
+                                                       "loader.detectSupport(renderer);"
+                                                   ],
+                                "texture_results":  "Each file loads as a THREE.CompressedArrayTexture with 14 depth layers.",
+                                "color_space_contract":  "Albedo-height reports sRGB and applies decoding to RGB only; packed normalXY/roughness/AO reports no color space and stays linear."
+                            }
+}

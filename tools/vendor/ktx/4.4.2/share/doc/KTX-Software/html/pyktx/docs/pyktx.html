@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx package &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyktx.gl_internalformat module" href="pyktx.gl_internalformat.html" />
+    <link rel="prev" title="pyktx" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pyktx</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyktx package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyktx">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">pyktx</a></li>
+      <li class="breadcrumb-item active">pyktx package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/docs/pyktx.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pyktx-package">
+<h1>pyktx package<a class="headerlink" href="#pyktx-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat"><code class="docutils literal notranslate"><span class="pre">GlInternalformat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_EXPLICIT_ALPHA_AMD"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ATC_RGBA_EXPLICIT_ALPHA_AMD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.ATC_RGBA_INTERPOLATED_ALPHA_AMD"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ATC_RGBA_INTERPOLATED_ALPHA_AMD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.ATC_RGB_AMD"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ATC_RGB_AMD</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_LUMINANCE_LATC1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_LUMINANCE_LATC1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_R11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_R11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RG11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RG11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_ETC2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB8_ETC2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA8_ETC2_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA8_ETC2_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_10x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_10x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_12x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_12x12_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_12x12_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_4x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_4x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_5x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_5x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_5x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_6x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_6x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_6x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_8x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_8x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_ASTC_8x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_ASTC_8x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_BPTC_UNORM_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_BPTC_UNORM_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_PVRTC_2BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_PVRTC_4BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT3_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_S3TC_DXT3_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGBA_S3TC_DXT5_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGBA_S3TC_DXT5_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_BPTC_SIGNED_FLOAT_ARB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_ARB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_2BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_PVRTC_2BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_PVRTC_4BPPV1_IMG"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_PVRTC_4BPPV1_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_RGB_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_RGB_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_R11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_R11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SIGNED_RG11_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SIGNED_RG11_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SLUMINANCE_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SLUMINANCE_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SLUMINANCE_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_BPTC_UNORM_ARB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.COMPRESSED_SRGB_S3TC_DXT1_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.COMPRESSED_SRGB_S3TC_DXT1_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.ETC1_RGB8_OES"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.ETC1_RGB8_OES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.R3_G3_B2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.R3_G3_B2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB10"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB10</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB10_A2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB10_A2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB12"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB12</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB16"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB4"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB5"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB5_A1"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB5_A1</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGB8"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGB8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGBA12"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA12</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGBA16"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGBA2"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGBA4"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.RGBA8"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.RGBA8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_ALPHA8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE8_ALPHA8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SLUMINANCE_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SLUMINANCE_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SRGB8_ALPHA8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB8_ALPHA8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SRGB8_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB8_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SRGB_ALPHA_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB_ALPHA_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.gl_internalformat.html#pyktx.gl_internalformat.GlInternalformat.SRGB_EXT"><code class="docutils literal notranslate"><span class="pre">GlInternalformat.SRGB_EXT</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.block_dimension"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.block_dimension</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.input_swizzle"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.input_swizzle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.mode"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.normal_map"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.normal_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.parse_swizzle"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.parse_swizzle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.perceptual"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.perceptual</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.quality_level"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.quality_level</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.thread_count"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.thread_count</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_astc_params.html#pyktx.ktx_astc_params.KtxAstcParams.verbose"><code class="docutils literal notranslate"><span class="pre">KtxAstcParams.verbose</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.compression_level"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.compression_level</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.endpoint_rdo_threshold"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.endpoint_rdo_threshold</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.input_swizzle"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.input_swizzle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.max_endpoints"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.max_endpoints</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.max_selectors"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.max_selectors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.no_endpoint_rdo"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.no_endpoint_rdo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.no_selector_rdo"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.no_selector_rdo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.no_sse"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.no_sse</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.normal_map"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.normal_map</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.pre_swizzle"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.pre_swizzle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.quality_level"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.quality_level</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.selector_rdo_threshold"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.selector_rdo_threshold</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.separate_rg_to_rgb_a"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.separate_rg_to_rgb_a</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.thread_count"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.thread_count</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_flags"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_flags</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_rdo"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_rdo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_rdo_dict_size"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_rdo_dict_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_rdo_dont_favor_simpler_modes"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_rdo_dont_favor_simpler_modes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_rdo_max_smooth_block_error_scale"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_rdo_max_smooth_block_error_scale</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_rdo_max_smooth_block_std_dev"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_rdo_max_smooth_block_std_dev</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_rdo_no_multithreading"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_rdo_no_multithreading</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.uastc_rdo_quality_scalar"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.uastc_rdo_quality_scalar</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_basis_params.html#pyktx.ktx_basis_params.KtxBasisParams.verbose"><code class="docutils literal notranslate"><span class="pre">KtxBasisParams.verbose</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxError"><code class="docutils literal notranslate"><span class="pre">KtxError</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxError.code"><code class="docutils literal notranslate"><span class="pre">KtxError.code</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxError.invocation"><code class="docutils literal notranslate"><span class="pre">KtxError.invocation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.DECOMPRESS_CHECKSUM_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.DECOMPRESS_CHECKSUM_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.DECOMPRESS_LENGTH_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.DECOMPRESS_LENGTH_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.ERROR_MAX_ENUM"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.ERROR_MAX_ENUM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_DATA_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_DATA_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_ISPIPE"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_ISPIPE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_OPEN_FAILED"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_OPEN_FAILED</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_OVERFLOW"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_OVERFLOW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_READ_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_READ_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_SEEK_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_SEEK_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_UNEXPECTED_EOF"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_UNEXPECTED_EOF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.FILE_WRITE_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.FILE_WRITE_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.GL_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.GL_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.INVALID_OPERATION"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.INVALID_OPERATION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.INVALID_VALUE"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.INVALID_VALUE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.LIBRARY_NOT_LINKED"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.LIBRARY_NOT_LINKED</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.NOT_FOUND"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.NOT_FOUND</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.OUT_OF_MEMORY"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.OUT_OF_MEMORY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.SUCCESS"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.SUCCESS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.TRANSCODE_FAILED"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.TRANSCODE_FAILED</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.UNKNOWN_FILE_FORMAT"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.UNKNOWN_FILE_FORMAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.UNSUPPORTED_FEATURE"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.UNSUPPORTED_FEATURE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_error_code.html#pyktx.ktx_error_code.KtxErrorCode.UNSUPPORTED_TEXTURE_TYPE"><code class="docutils literal notranslate"><span class="pre">KtxErrorCode.UNSUPPORTED_TEXTURE_TYPE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_hash_list.html#pyktx.ktx_hash_list.KtxHashList"><code class="docutils literal notranslate"><span class="pre">KtxHashList</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_hash_list.html#pyktx.ktx_hash_list.KtxHashList.add_kv_pair"><code class="docutils literal notranslate"><span class="pre">KtxHashList.add_kv_pair()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_hash_list.html#pyktx.ktx_hash_list.KtxHashList.copy"><code class="docutils literal notranslate"><span class="pre">KtxHashList.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_hash_list.html#pyktx.ktx_hash_list.KtxHashList.delete_kv_pair"><code class="docutils literal notranslate"><span class="pre">KtxHashList.delete_kv_pair()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_hash_list.html#pyktx.ktx_hash_list.KtxHashList.find_value"><code class="docutils literal notranslate"><span class="pre">KtxHashList.find_value()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D10x10"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D10x10</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D10x5"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D10x5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D10x6"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D10x6</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D10x8"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D10x8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D12x10"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D12x10</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D12x12"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D12x12</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D3x3x3"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D3x3x3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D4x3x3"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D4x3x3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D4x4"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D4x4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D4x4x3"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D4x4x3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D4x4x4"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D4x4x4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D5x4"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D5x4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D5x4x4"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D5x4x4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D5x5"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D5x5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D5x5x4"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D5x5x4</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D5x5x5"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D5x5x5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D6x5"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D6x5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D6x5x5"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D6x5x5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D6x6"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D6x6</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D6x6x5"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D6x6x5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D6x6x6"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D6x6x6</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D8x5"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D8x5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D8x6"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D8x6</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.D8x8"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.D8x8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html#pyktx.ktx_pack_astc_block_dimension.KtxPackAstcBlockDimension.DMAX"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcBlockDimension.DMAX</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html#pyktx.ktx_pack_astc_encoder_mode.KtxPackAstcEncoderMode"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcEncoderMode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html#pyktx.ktx_pack_astc_encoder_mode.KtxPackAstcEncoderMode.DEFAULT"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcEncoderMode.DEFAULT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html#pyktx.ktx_pack_astc_encoder_mode.KtxPackAstcEncoderMode.HDR"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcEncoderMode.HDR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html#pyktx.ktx_pack_astc_encoder_mode.KtxPackAstcEncoderMode.LDR"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcEncoderMode.LDR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html#pyktx.ktx_pack_astc_encoder_mode.KtxPackAstcEncoderMode.MAX"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcEncoderMode.MAX</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels.EXHAUSTIVE"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels.EXHAUSTIVE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels.FAST"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels.FAST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels.FASTEST"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels.FASTEST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels.MAX"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels.MAX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels.MEDIUM"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels.MEDIUM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html#pyktx.ktx_pack_astc_quality_levels.KtxPackAstcQualityLevels.THOROUGH"><code class="docutils literal notranslate"><span class="pre">KtxPackAstcQualityLevels.THOROUGH</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.DEFAULT"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.DEFAULT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_DISABLE_FLIP_AND_INDIVIDUAL"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.ETC1_DISABLE_FLIP_AND_INDIVIDUAL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTER_HINTS"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.ETC1_FASTER_HINTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTEST_HINTS"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.ETC1_FASTEST_HINTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTER"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FASTER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTEST"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FASTEST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_BC7_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FAVOR_BC7_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_UASTC_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FAVOR_UASTC_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.LEVEL_MASK"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.LEVEL_MASK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.MAX_LEVEL"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.MAX_LEVEL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.SLOWER"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.SLOWER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.VERY_SLOW"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.VERY_SLOW</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html#pyktx.ktx_supercmp_scheme.KtxSupercmpScheme"><code class="docutils literal notranslate"><span class="pre">KtxSupercmpScheme</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html#pyktx.ktx_supercmp_scheme.KtxSupercmpScheme.BASIS_LZ"><code class="docutils literal notranslate"><span class="pre">KtxSupercmpScheme.BASIS_LZ</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html#pyktx.ktx_supercmp_scheme.KtxSupercmpScheme.NONE"><code class="docutils literal notranslate"><span class="pre">KtxSupercmpScheme.NONE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html#pyktx.ktx_supercmp_scheme.KtxSupercmpScheme.ZLIB"><code class="docutils literal notranslate"><span class="pre">KtxSupercmpScheme.ZLIB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html#pyktx.ktx_supercmp_scheme.KtxSupercmpScheme.ZSTD"><code class="docutils literal notranslate"><span class="pre">KtxSupercmpScheme.ZSTD</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture"><code class="docutils literal notranslate"><span class="pre">KtxTexture</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.base_depth"><code class="docutils literal notranslate"><span class="pre">KtxTexture.base_depth</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.base_height"><code class="docutils literal notranslate"><span class="pre">KtxTexture.base_height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.base_width"><code class="docutils literal notranslate"><span class="pre">KtxTexture.base_width</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.class_id"><code class="docutils literal notranslate"><span class="pre">KtxTexture.class_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.data"><code class="docutils literal notranslate"><span class="pre">KtxTexture.data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.data_size"><code class="docutils literal notranslate"><span class="pre">KtxTexture.data_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.data_size_uncompressed"><code class="docutils literal notranslate"><span class="pre">KtxTexture.data_size_uncompressed</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.element_size"><code class="docutils literal notranslate"><span class="pre">KtxTexture.element_size</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.generate_mipmaps"><code class="docutils literal notranslate"><span class="pre">KtxTexture.generate_mipmaps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.image_offset"><code class="docutils literal notranslate"><span class="pre">KtxTexture.image_offset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.image_size"><code class="docutils literal notranslate"><span class="pre">KtxTexture.image_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.is_array"><code class="docutils literal notranslate"><span class="pre">KtxTexture.is_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.is_compressed"><code class="docutils literal notranslate"><span class="pre">KtxTexture.is_compressed</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.is_cubemap"><code class="docutils literal notranslate"><span class="pre">KtxTexture.is_cubemap</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.kv_data"><code class="docutils literal notranslate"><span class="pre">KtxTexture.kv_data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.kv_data_raw"><code class="docutils literal notranslate"><span class="pre">KtxTexture.kv_data_raw</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.num_dimensions"><code class="docutils literal notranslate"><span class="pre">KtxTexture.num_dimensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.num_faces"><code class="docutils literal notranslate"><span class="pre">KtxTexture.num_faces</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.num_levels"><code class="docutils literal notranslate"><span class="pre">KtxTexture.num_levels</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.row_pitch"><code class="docutils literal notranslate"><span class="pre">KtxTexture.row_pitch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.set_image_from_memory"><code class="docutils literal notranslate"><span class="pre">KtxTexture.set_image_from_memory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.write_to_memory"><code class="docutils literal notranslate"><span class="pre">KtxTexture.write_to_memory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.write_to_named_file"><code class="docutils literal notranslate"><span class="pre">KtxTexture.write_to_named_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxTexture.write_to_native_memory"><code class="docutils literal notranslate"><span class="pre">KtxTexture.write_to_native_memory()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_texture.html#pyktx.ktx_texture.KtxVersionMismatchError"><code class="docutils literal notranslate"><span class="pre">KtxVersionMismatchError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1"><code class="docutils literal notranslate"><span class="pre">KtxTexture1</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1.create"><code class="docutils literal notranslate"><span class="pre">KtxTexture1.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1.create_from_named_file"><code class="docutils literal notranslate"><span class="pre">KtxTexture1.create_from_named_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1.gl_baseinternalformat"><code class="docutils literal notranslate"><span class="pre">KtxTexture1.gl_baseinternalformat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1.gl_format"><code class="docutils literal notranslate"><span class="pre">KtxTexture1.gl_format</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1.gl_internalformat"><code class="docutils literal notranslate"><span class="pre">KtxTexture1.gl_internalformat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture1.html#pyktx.ktx_texture1.KtxTexture1.gl_type"><code class="docutils literal notranslate"><span class="pre">KtxTexture1.gl_type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2"><code class="docutils literal notranslate"><span class="pre">KtxTexture2</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.compress_astc"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.compress_astc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.compress_basis"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.compress_basis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.create"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.create_from_named_file"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.create_from_named_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.deflate_zstd"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.deflate_zstd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.needs_transcoding"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.needs_transcoding</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.oetf"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.oetf</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.premultipled_alpha"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.premultipled_alpha</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.supercompression_scheme"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.supercompression_scheme</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.transcode_basis"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.transcode_basis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture2.html#pyktx.ktx_texture2.KtxTexture2.vk_format"><code class="docutils literal notranslate"><span class="pre">KtxTexture2.vk_format</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html#pyktx.ktx_texture_create_flag_bits.KtxTextureCreateFlagBits"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateFlagBits</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html#pyktx.ktx_texture_create_flag_bits.KtxTextureCreateFlagBits.LOAD_IMAGE_DATA_BIT"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateFlagBits.LOAD_IMAGE_DATA_BIT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html#pyktx.ktx_texture_create_flag_bits.KtxTextureCreateFlagBits.NO_FLAGS"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateFlagBits.NO_FLAGS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html#pyktx.ktx_texture_create_flag_bits.KtxTextureCreateFlagBits.RAW_KVDATA_BIT"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateFlagBits.RAW_KVDATA_BIT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html#pyktx.ktx_texture_create_flag_bits.KtxTextureCreateFlagBits.SKIP_KVDATA_BIT"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateFlagBits.SKIP_KVDATA_BIT</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_depth"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.base_depth</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_height"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.base_height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.base_width"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.base_width</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.generate_mipmaps"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.generate_mipmaps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.gl_internal_format"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.gl_internal_format</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.is_array"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.is_array</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_dimensions"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_dimensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_faces"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_faces</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_layers"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_layers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.num_levels"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.num_levels</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_info.html#pyktx.ktx_texture_create_info.KtxTextureCreateInfo.vk_format"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateInfo.vk_format</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html#pyktx.ktx_texture_create_storage.KtxTextureCreateStorage"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateStorage</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html#pyktx.ktx_texture_create_storage.KtxTextureCreateStorage.ALLOC"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateStorage.ALLOC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html#pyktx.ktx_texture_create_storage.KtxTextureCreateStorage.NO"><code class="docutils literal notranslate"><span class="pre">KtxTextureCreateStorage.NO</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html#pyktx.ktx_transcode_flag_bits.KtxTranscodeFlagBits"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFlagBits</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html#pyktx.ktx_transcode_flag_bits.KtxTranscodeFlagBits.HIGH_QUALITY"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFlagBits.HIGH_QUALITY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html#pyktx.ktx_transcode_flag_bits.KtxTranscodeFlagBits.PVRTC_DECODE_TO_NEXT_POW2"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFlagBits.PVRTC_DECODE_TO_NEXT_POW2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html#pyktx.ktx_transcode_flag_bits.KtxTranscodeFlagBits.TRANSCODE_ALPHA_DATA_TO_OPAQUE_FORMATS"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFlagBits.TRANSCODE_ALPHA_DATA_TO_OPAQUE_FORMATS</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.ASTC_4x4_RGBA"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.ASTC_4x4_RGBA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.BC1_OR_3"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.BC1_OR_3</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.BC1_RGB"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.BC1_RGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.BC3_RGBA"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.BC3_RGBA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.BC4_R"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.BC4_R</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.BC5_RG"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.BC5_RG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.BC7_RGBA"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.BC7_RGBA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.BGR565"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.BGR565</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.ETC"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.ETC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.ETC1_RGB"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.ETC1_RGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.ETC2_EAC_R11"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.ETC2_EAC_R11</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.ETC2_EAC_RG11"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.ETC2_EAC_RG11</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.ETC2_RGBA"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.ETC2_RGBA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.NO_SELECTION"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.NO_SELECTION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.PVRTC1_4_RGB"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.PVRTC1_4_RGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.PVRTC1_4_RGBA"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.PVRTC1_4_RGBA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.PVRTC2_4_RGB"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.PVRTC2_4_RGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.PVRTC2_4_RGBA"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.PVRTC2_4_RGBA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.RGB565"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.RGB565</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.RGBA32"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.RGBA32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html#pyktx.ktx_transcode_fmt.KtxTranscodeFmt.RGBA4444"><code class="docutils literal notranslate"><span class="pre">KtxTranscodeFmt.RGBA4444</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat"><code class="docutils literal notranslate"><span class="pre">VkFormat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A1R5G5B5_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A1R5G5B5_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_SINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_SNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_UINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_UNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_SINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_SNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_UINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_UNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A4B4G4R4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A4B4G4R4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A4R4G4B4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A4R4G4B4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_SINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_SNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SRGB_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_SRGB_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_UINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_UNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_A8_UNORM_KHR"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8_UNORM_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x10_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x10_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x6_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x6_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x10_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x10_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x12_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x12_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x6_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x6_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B10G11R11_UFLOAT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B10G11R11_UFLOAT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B16G16R16G16_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B16G16R16G16_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B4G4R4A4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B4G4R4A4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B5G5R5A1_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B5G5R5A1_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B5G6R5_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B5G6R5_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8G8_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8G8_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGBA_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGBA_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGB_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGB_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC2_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC2_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC2_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC2_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC3_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC3_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC3_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC3_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC4_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC4_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC4_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC4_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC5_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC5_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC6H_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_UFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC6H_UFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC7_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC7_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_BC7_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC7_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D16_UNORM_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_D24_UNORM_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D24_UNORM_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11G11_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11G11_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_G16B16G16R16_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G16B16G16R16_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_G8B8G8R8_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G8B8G8R8_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6_UNORM_2PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R10X6G10X6_UNORM_2PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R10X6_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4_UNORM_2PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R12X4G12X4_UNORM_2PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R12X4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFIXED5_NV"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SFIXED5_NV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32A32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32A32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R4G4B4A4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R4G4B4A4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R4G4_UNORM_PACK8"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R4G4_UNORM_PACK8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R5G5B5A1_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R5G5B5A1_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R5G6B5_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R5G6B5_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64A64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64A64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64A64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_R8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_UNDEFINED"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_UNDEFINED</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyktx.vk_format.html#pyktx.vk_format.VkFormat.VK_FORMAT_X8_D24_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_X8_D24_UNORM_PACK32</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-pyktx">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyktx" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="pyktx" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyktx.gl_internalformat.html" class="btn btn-neutral float-right" title="pyktx.gl_internalformat module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

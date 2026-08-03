@@ -1,0 +1,7 @@
+pyktx.ktx\_pack\_astc\_block\_dimension module
+==============================================
+
+.. automodule:: pyktx.ktx_pack_astc_block_dimension
+   :members:
+   :undoc-members:
+   :show-inheritance:

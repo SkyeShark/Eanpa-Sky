@@ -1,0 +1,62 @@
+.TH "ktx2ktx2" 1 "Sat Oct 4 2025 08:43:36" "Version 4.4.2" "KTX Tools Reference" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ktx2ktx2 \- Create a KTX 2 file from a KTX file\&.
+.SH "SYNOPSIS"
+.PP
+ktx2ktx2 [options] [\fIinfile\fP \&.\&.\&.]
+.SH "DESCRIPTION"
+.PP
+\fBktx2ktx2\fP creates Khronos texture format version 2 files (KTX2) from Khronos texture format version 1 files\&. \fBktx2ktx2\fP reads each named \fIinfile\fP\&. Output files have the same name as the input but with the extension changed to \fR\fP\&.ktx2\&. When \fBinfile\fP is not specified, a single file will be read from stdin and the output written to standard out\&.
+
+.PP
+If unrecognized metadata with keys beginning "KTX" or "ktx" is found in the input file, it is dropped and a warning is written to standard error\&.
+
+.PP
+The following options are available: 
+
+.PP
+.IP "\fB-b, --rewritebado 
+.IP "" 1c
+Rewrite bad orientation metadata\&. Some in-the-wild KTX files have orientation metadata with the key "KTXOrientation" instead of KTXorientaion\&. This option will rewrite such bad metadata instead of dropping it\&. 
+
+.PP
+.IP "\fB-o outfile, --output=outfile 
+.IP "" 1c
+Name the output file \fIoutfile\fP\&. If \fIoutfile\fP is 'stdout', output will be written to stdout\&. If there is more than 1 input file, the command prints its usage message and exits\&. 
+
+.PP
+.IP "\fB-f, --force 
+.IP "" 1c
+If the destination file already exists, remove it and create a new file, without prompting for confirmation regardless of its permissions\&. 
+
+.PP
+
+.PP
+.IP "\fB-h, --help 
+.IP "" 1c
+Print this usage message and exit\&. 
+
+.PP
+.IP "\fB-v, --version 
+.IP "" 1c
+Print the version number of this program and exit\&. 
+
+.PP
+.SH "EXIT STATUS"
+.PP
+\fBktx2ktx2\fP exits 0 on success, 1 on command line errors and 2 on functional errors\&.
+.SH "HISTORY"
+.PP
+\fBVersion 4\&.0\fP
+.RS 4
+
+.IP "\(bu" 2
+Initial version\&.
+.PP
+.RE
+.PP
+.SH "AUTHOR"
+.PP
+Mark Callow, github\&.com/MarkCallow 

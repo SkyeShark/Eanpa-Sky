@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.vk_format module &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pyktx.native module" href="pyktx.native.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_uastc_flag_bits.html">pyktx.ktx_pack_uastc_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyktx.vk_format module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyktx.vk_format.VkFormat"><code class="docutils literal notranslate"><span class="pre">VkFormat</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A1R5G5B5_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A1R5G5B5_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_SINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_SNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_UINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2B10G10R10_UNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_SINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_SNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_UINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A2R10G10B10_UNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A4B4G4R4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A4B4G4R4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A4R4G4B4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A4R4G4B4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_SINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_SNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SRGB_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_SRGB_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UINT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_UINT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8B8G8R8_UNORM_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8_UNORM_KHR"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_A8_UNORM_KHR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x10_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x10_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x6_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x6_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_10x8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x10_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x10_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x12_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_12x12_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x5_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x6_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x6_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ASTC_8x8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B10G11R11_UFLOAT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B10G11R11_UFLOAT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B16G16R16G16_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B16G16R16G16_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B4G4R4A4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B4G4R4A4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B5G5R5A1_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B5G5R5A1_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B5G6R5_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B5G6R5_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8A8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8G8_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8G8_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_B8G8R8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGBA_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGBA_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGB_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC1_RGB_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC2_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC2_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC2_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC2_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC3_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC3_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC3_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC3_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC4_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC4_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC4_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC4_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC5_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC5_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC5_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC5_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_SFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC6H_SFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_UFLOAT_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC6H_UFLOAT_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC7_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC7_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC7_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_BC7_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D16_UNORM_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D24_UNORM_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D24_UNORM_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11G11_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11G11_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_SNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11_SNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_EAC_R11_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G16B16G16R16_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G16B16G16R16_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G8B8G8R8_422_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_G8B8G8R8_422_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6_UNORM_2PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R10X6G10X6_UNORM_2PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R10X6_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4_UNORM_2PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R12X4G12X4_UNORM_2PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R12X4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16A16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16B16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFIXED5_NV"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SFIXED5_NV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16G16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R16_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32A32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32A32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32B32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32G32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R32_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R4G4B4A4_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R4G4B4A4_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R4G4_UNORM_PACK8"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R4G4_UNORM_PACK8</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R5G5B5A1_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R5G5B5A1_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R5G6B5_UNORM_PACK16"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R5G6B5_UNORM_PACK16</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64A64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64A64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64A64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64B64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64G64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64_SFLOAT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64_SFLOAT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R64_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8A8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8B8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8G8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_SINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_SNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SRGB"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_SRGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_UNORM"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_R8_UNORM</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_S8_UINT"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_S8_UINT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_UNDEFINED"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_UNDEFINED</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.vk_format.VkFormat.VK_FORMAT_X8_D24_UNORM_PACK32"><code class="docutils literal notranslate"><span class="pre">VkFormat.VK_FORMAT_X8_D24_UNORM_PACK32</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">pyktx</a></li>
+          <li class="breadcrumb-item"><a href="pyktx.html">pyktx package</a></li>
+      <li class="breadcrumb-item active">pyktx.vk_format module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/docs/pyktx.vk_format.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyktx.vk_format">
+<span id="pyktx-vk-format-module"></span><h1>pyktx.vk_format module<a class="headerlink" href="#module-pyktx.vk_format" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyktx.vk_format.</span></span><span class="sig-name descname"><span class="pre">VkFormat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyktx/vk_format.html#VkFormat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.vk_format.VkFormat" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Vulkan texture format constants.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000470000</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A1B5G5R5_UNORM_PACK16_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A1R5G5B5_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A1R5G5B5_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A1R5G5B5_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SINT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2B10G10R10_SINT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">69</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SINT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SNORM_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2B10G10R10_SNORM_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">65</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_SNORM_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UINT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2B10G10R10_UINT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">68</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UINT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UNORM_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2B10G10R10_UNORM_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">64</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2B10G10R10_UNORM_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SINT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2R10G10B10_SINT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">63</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SINT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SNORM_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2R10G10B10_SNORM_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">59</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_SNORM_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UINT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2R10G10B10_UINT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">62</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UINT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UNORM_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A2R10G10B10_UNORM_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">58</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A2R10G10B10_UNORM_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A4B4G4R4_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A4B4G4R4_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000340001</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A4B4G4R4_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A4R4G4B4_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A4R4G4B4_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000340000</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A4R4G4B4_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SINT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A8B8G8R8_SINT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">56</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SINT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SNORM_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A8B8G8R8_SNORM_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">52</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SNORM_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SRGB_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A8B8G8R8_SRGB_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">57</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_SRGB_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UINT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A8B8G8R8_UINT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">55</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UINT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UNORM_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A8B8G8R8_UNORM_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">51</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8B8G8R8_UNORM_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_A8_UNORM_KHR">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_A8_UNORM_KHR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000470001</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_A8_UNORM_KHR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066011</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x10_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">180</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x10_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">179</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x10_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066008</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x5_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">174</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x5_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">173</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x5_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066009</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x6_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">176</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x6_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">175</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x6_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066010</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x8_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">178</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_10x8_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">177</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_10x8_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066012</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_12x10_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">182</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_12x10_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">181</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x10_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066013</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_12x12_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">184</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_12x12_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">183</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_12x12_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288002</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288001</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288000</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288005</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288004</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288003</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066000</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">158</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">157</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288008</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288007</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288006</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288011</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288010</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288009</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066001</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x4_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">160</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x4_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">159</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288014</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288013</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288012</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066002</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">162</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">161</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288017</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288016</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288015</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288020</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288019</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288018</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066003</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x5_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">164</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x5_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">163</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288023</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288022</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288021</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066004</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">166</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">165</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288026</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288025</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288024</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288029</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288028</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000288027</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066005</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x5_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">168</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x5_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">167</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x5_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066006</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x6_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">170</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x6_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">169</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x6_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000066007</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x8_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">172</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ASTC_8x8_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">171</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ASTC_8x8_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B10G11R11_UFLOAT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B10G11R11_UFLOAT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">122</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B10G11R11_UFLOAT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156011</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156021</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B16G16R16G16_422_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B16G16R16G16_422_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156028</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B16G16R16G16_422_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B4G4R4A4_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B4G4R4A4_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B4G4R4A4_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B5G5R5A1_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B5G5R5A1_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B5G5R5A1_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B5G6R5_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B5G6R5_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B5G6R5_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8A8_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">49</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8A8_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">45</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SRGB">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8A8_SRGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_SRGB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8A8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">48</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8A8_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">44</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8A8_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8G8_422_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8G8_422_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156001</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8G8_422_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">31</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SRGB">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8_SRGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">36</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_SRGB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">34</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_B8G8R8_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">30</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_B8G8R8_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC1_RGBA_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">134</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC1_RGBA_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">133</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGBA_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC1_RGB_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">132</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC1_RGB_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">131</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC1_RGB_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC2_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC2_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">136</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC2_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC2_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC2_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">135</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC2_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC3_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC3_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">138</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC3_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC3_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC3_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">137</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC3_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC4_SNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC4_SNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">140</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC4_SNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC4_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC4_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">139</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC4_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC5_SNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC5_SNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">142</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC5_SNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC5_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC5_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">141</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC5_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_SFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC6H_SFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">144</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_SFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_UFLOAT_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC6H_UFLOAT_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">143</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC6H_UFLOAT_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC7_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC7_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">146</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC7_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_BC7_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_BC7_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">145</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_BC7_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_D16_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">124</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM_S8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_D16_UNORM_S8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">128</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D16_UNORM_S8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_D24_UNORM_S8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_D24_UNORM_S8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">129</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D24_UNORM_S8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_D32_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">126</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_D32_SFLOAT_S8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">130</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_D32_SFLOAT_S8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_E5B9G9R9_UFLOAT_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">123</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_SNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_EAC_R11G11_SNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">156</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_SNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_EAC_R11G11_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">155</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11G11_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_SNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_EAC_R11_SNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">154</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_SNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_EAC_R11_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">153</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_EAC_R11_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">150</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">149</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">152</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">151</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">148</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">147</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156010</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156020</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_G16B16G16R16_422_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_G16B16G16R16_422_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156027</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G16B16G16R16_422_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_G8B8G8R8_422_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_G8B8G8R8_422_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156000</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_G8B8G8R8_422_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054004</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054000</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054005</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054001</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054006</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054002</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054007</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000054003</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156009</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6_UNORM_2PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R10X6G10X6_UNORM_2PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156008</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6G10X6_UNORM_2PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R10X6_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R10X6_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156007</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R10X6_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156019</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4_UNORM_2PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R12X4G12X4_UNORM_2PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156018</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4G12X4_UNORM_2PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R12X4_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R12X4_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000156017</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R12X4_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16A16_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">97</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16A16_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">96</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16A16_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">92</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16A16_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">95</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16A16_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">91</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16A16_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">90</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">89</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">85</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">88</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16B16_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">84</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16B16_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFIXED5_NV">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16_SFIXED5_NV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000464000</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFIXED5_NV" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">83</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">82</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">78</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">81</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16G16_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">77</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16G16_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">76</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">75</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">71</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">74</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R16_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R16_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">70</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R16_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32B32A32_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">109</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32B32A32_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">108</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32B32A32_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">107</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32A32_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32B32_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">106</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32B32_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">105</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32B32_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">104</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32B32_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">103</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">102</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32G32_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">101</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32G32_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">99</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R32_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R32_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">98</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R32_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R4G4B4A4_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R4G4B4A4_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R4G4B4A4_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R4G4_UNORM_PACK8">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R4G4_UNORM_PACK8</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R4G4_UNORM_PACK8" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R5G5B5A1_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R5G5B5A1_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R5G5B5A1_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R5G6B5_UNORM_PACK16">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R5G6B5_UNORM_PACK16</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R5G6B5_UNORM_PACK16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64B64A64_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">121</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64B64A64_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">120</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64B64A64_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">119</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64A64_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64B64_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">118</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64B64_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">117</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64B64_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">116</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64B64_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">115</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">114</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64G64_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">113</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64G64_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64_SFLOAT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64_SFLOAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">112</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64_SFLOAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">111</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R64_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R64_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">110</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R64_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8A8_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">42</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8A8_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">38</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SRGB">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8A8_SRGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">43</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_SRGB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8A8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">41</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8A8_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">37</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8A8_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">28</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">24</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SRGB">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8_SRGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">29</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_SRGB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">27</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8B8_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">23</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8B8_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SRGB">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8_SRGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">22</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_SRGB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8G8_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8G8_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8_SINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8_SINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8_SNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8_SNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8_SRGB">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8_SRGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">15</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_SRGB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_R8_UNORM">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_R8_UNORM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_R8_UNORM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_S8_UINT">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_S8_UINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">127</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_S8_UINT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_UNDEFINED">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_UNDEFINED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_UNDEFINED" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.vk_format.VkFormat.VK_FORMAT_X8_D24_UNORM_PACK32">
+<span class="sig-name descname"><span class="pre">VK_FORMAT_X8_D24_UNORM_PACK32</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">125</span></em><a class="headerlink" href="#pyktx.vk_format.VkFormat.VK_FORMAT_X8_D24_UNORM_PACK32" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyktx.native.html" class="btn btn-neutral float-left" title="pyktx.native module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

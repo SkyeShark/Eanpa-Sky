@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="./assets/brand/eanpa_favicon.png">
+<title>Eanpa Engine</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #06080c; }
+  #view { position: fixed; inset: 0; }
+  #panel {
+    position: fixed; top: 12px; left: 12px; z-index: 10;
+    font: 12px/1.5 system-ui, sans-serif; color: #cfe3ee;
+    background: rgba(10, 14, 20, 0.82); border: 1px solid #27343f;
+    border-radius: 10px; padding: 12px 14px; width: 230px;
+    backdrop-filter: blur(6px); user-select: none;
+  }
+  #panel h1 { font-size: 13px; margin: 0 0 8px; letter-spacing: 0.12em; color: #8fd8ff; }
+  #panel label { display: block; margin: 8px 0 2px; color: #7f95a3; font-size: 11px; letter-spacing: 0.04em; }
+  #panel select, #panel input[type=range] { width: 100%; accent-color: #35b7ff; }
+  #panel select { background: #0d141c; color: #cfe3ee; border: 1px solid #2a3844; border-radius: 6px; padding: 4px; }
+  #weather-status { float: right; color: #8fb5c8; font-variant-numeric: tabular-nums; text-transform: none; letter-spacing: 0; }
+  #weather-busy {
+    float: right; width: 9px; height: 9px; margin: 2px 6px 0 0;
+    border: 2px solid rgba(143, 216, 255, 0.22); border-top-color: #8fd8ff;
+    border-radius: 50%; will-change: transform;
+    animation: eanpa-spin 0.8s linear infinite;
+  }
+  #weather-busy[hidden] { display: none; }
+  @keyframes eanpa-spin { to { transform: rotate(360deg); } }
+  #meter { margin-top: 10px; padding-top: 8px; border-top: 1px solid #22303a; font-variant-numeric: tabular-nums; }
+  #meter b { color: #9be49b; font-size: 15px; }
+  #boot {
+    position: fixed; inset: 0; display: grid; place-content: center;
+    justify-items: center; gap: 12px; color: #6d8fa0; font: 13px system-ui;
+    z-index: 5; background: rgba(6, 8, 12, 0.55);
+  }
+  /* compositor-thread spinner: keeps rotating even while the main thread is
+     blocked by build/compile work (same mechanism as the weather spinner).
+     A ::before pseudo-element survives textContent updates on #boot. */
+  #boot::before {
+    content: ""; width: 22px; height: 22px;
+    border: 3px solid rgba(143, 216, 255, 0.22); border-top-color: #8fd8ff;
+    border-radius: 50%; will-change: transform;
+    animation: eanpa-spin 0.8s linear infinite;
+  }
+  #controls {
+    position: fixed; left: 50%; bottom: 14px; z-index: 10;
+    transform: translateX(-50%); pointer-events: none; user-select: none;
+    color: rgba(225, 238, 244, 0.86); background: rgba(8, 12, 17, 0.72);
+    border: 1px solid rgba(111, 148, 166, 0.36); border-radius: 999px;
+    padding: 7px 13px; backdrop-filter: blur(6px);
+    font: 11px/1.35 system-ui, sans-serif; letter-spacing: 0.025em;
+    white-space: nowrap; text-shadow: 0 1px 2px #000;
+  }
+  #flashlight-status { color: #93a8b4; }
+  #controls[data-flashlight="on"] #flashlight-status { color: #dff5ff; }
+  @media (max-width: 760px) {
+    #controls { bottom: 8px; max-width: calc(100vw - 28px); white-space: normal; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div id="panel">
+  <h1><img src="./assets/brand/eanpa_favicon.png" alt="" width="20" height="20" style="vertical-align:-4px;margin-right:7px">EANPA ENGINE</h1>
+  <label>Skybox</label>
+  <select id="skybox">
+    <option value="earth" selected>Earth</option>
+    <option value="ringworld">Orbital / Halo</option>
+    <option value="shieldworld">Earth 5129323011 CE (Red Giant)</option>
+  </select>
+  <label>Cloud Type</label>
+  <select id="cloud-type">
+    <option value="clear">Clear Sky</option>
+    <option value="cumulus" selected>Cumulus</option>
+    <option value="stratus">Stratus</option>
+    <option value="cirrus">High Cirrus</option>
+  </select>
+  <label>Weather <span id='weather-status' role='status' aria-live='polite'>None</span><span id="weather-busy" hidden aria-hidden="true"></span></label>
+  <select id="weather">
+    <option value="none" selected>None (sky only)</option>
+    <option value="fair">Fair</option>
+    <option value="sunshower">Sunshower</option>
+    <option value="overcast">Overcast</option>
+    <option value="rain">Rain</option>
+    <option value="storm">Storm</option>
+    <option value="cyclone">Cyclone</option>
+    <option value="darkstorm">Dark Storm</option>
+  </select>
+  <label>Time of day: <span id="todv">10.5</span>h</label>
+  <input id="tod" type="range" min="0" max="24" step="0.1" value="10.5">
+  <label style="display:flex;align-items:center;gap:6px;margin-top:6px">
+    <input id="cycle" type="checkbox" style="width:auto"> day/night cycle
+    <select id="cyclespeed" style="width:auto;margin-left:auto">
+      <option value="60">60s</option>
+      <option value="120" selected>120s</option>
+      <option value="300">300s</option>
+    </select>
+  </label>
+  <label>Quality</label>
+  <select id="quality">
+    <option value="high">High / Insane — 30+ FPS target</option>
+    <option value="balanced" selected>Balanced — 60+ FPS target</option>
+    <option value="performance">Performance — 120+ FPS target</option>
+  </select>
+  <label style="display:flex;align-items:center;gap:6px;margin-top:8px;color:#a8bdc9">
+    <input id="ao" type="checkbox" checked style="width:auto"> WebGPU N8AO
+  </label>
+  <button id="strike-test" style="margin-top:8px;width:100%;background:#0d141c;color:#cfe3ee;border:1px solid #2a3844;border-radius:6px;padding:4px;cursor:pointer">⚡ test lightning strike</button>
+  <div id="meter"><b id="fps">--</b> fps <span id="ms"></span><div id="stage"></div></div>
+</div>
+<div id="controls" data-flashlight="off" aria-label="Player controls">
+  WASD move &nbsp;·&nbsp; Shift run &nbsp;·&nbsp; Space jump &nbsp;·&nbsp;
+  click to lock look &nbsp;·&nbsp; Esc release &nbsp;·&nbsp; wheel zoom &nbsp;·&nbsp; F flashlight
+  &nbsp;·&nbsp; <span id="flashlight-status">flashlight off</span>
+</div>
+<div id="boot">initializing WebGPU…</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.webgpu.js",
+    "three/webgpu": "./vendor/three/three.webgpu.js",
+    "three/tsl": "./vendor/three/three.tsl.js",
+    "three/addons/": "./vendor/three/addons/"
+  }
+}
+</script>
+<script type="module">
+  // cache-busted loader: Chrome's module cache survives F5 and lies (ring-editor lesson)
+  import('./src/main.js?ts=' + Date.now()).catch((e) => {
+    document.getElementById('boot').textContent = 'boot failed: ' + e.message;
+    console.error(e);
+  });
+</script>
+</body>
+</html>

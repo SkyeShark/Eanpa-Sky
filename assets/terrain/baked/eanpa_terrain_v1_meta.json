@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "seed": 4319,
+  "size": 2048,
+  "halfExtentMeters": 1600.0,
+  "metersPerTexel": 1.5625,
+  "heightMinMeters": 0.3297,
+  "heightMaxMeters": 105.6341,
+  "floorElevationMeters": 2.0,
+  "rowOrder": "north-to-south (row 0 = wz -halfExtent)",
+  "encoding": "height01 = (png16 / 65535); meters = min + height01 * (max - min)",
+  "materialChannels": {
+    "r": "textureBaseValue",
+    "g": "wearGully",
+    "b": "ridgeCrest",
+    "a": "slopeMask"
+  },
+  "flats": [
+    {
+      "x": 0.0,
+      "z": 20.0,
+      "radius": 130.0,
+      "blend": 60.0,
+      "elevation": 2.0
+    },
+    {
+      "x": 0.0,
+      "z": 150.0,
+      "radius": 46.0,
+      "blend": 40.0,
+      "elevation": 2.0
+    }
+  ],
+  "generator": "tools/bake-eanpa-terrain.py (swiss turbulence + gully carve + thermal talus)"
+}

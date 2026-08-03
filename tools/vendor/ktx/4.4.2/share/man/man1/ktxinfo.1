@@ -1,0 +1,47 @@
+.TH "ktxinfo" 1 "Sat Oct 4 2025 08:43:36" "Version 4.4.2" "KTX Tools Reference" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ktxinfo \- Print information about KTX or KTX2 files\&.
+.SH "SYNOPSIS"
+.PP
+ktxinfo [options] [\fIinfile\fP \&.\&.\&.]
+.SH "DESCRIPTION"
+.PP
+\fBktxinfo\fP prints information about the KTX files provided as arguments\&. If no arguments are given, it prints information about a single file read from standard input\&.
+
+.PP
+\fBNote\fP
+.RS 4
+\fBktxinfo\fP prints using UTF-8 encoding\&. If your console is not set for UTF-8 you will see incorrect characters in output of the file identifier on each side of the "KTX nn"\&.
+.RE
+.PP
+The following options are available:   
+
+.PP
+.IP "\fB-h, --help 
+.IP "" 1c
+Print this usage message and exit\&. 
+
+.PP
+.IP "\fB-v, --version 
+.IP "" 1c
+Print the version number of this program and exit\&. 
+
+.PP
+.SH "EXIT STATUS"
+.PP
+\fBktxinfo\fP exits 0 on success, 1 on command line errors and 2 if one of the input files is not a KTX file\&.
+.SH "HISTORY"
+.PP
+\fBVersion 4\&.0\fP
+.RS 4
+
+.IP "\(bu" 2
+Initial version
+.PP
+.RE
+.PP
+.SH "AUTHOR"
+.PP
+Mark Callow, github\&.com/MarkCallow 

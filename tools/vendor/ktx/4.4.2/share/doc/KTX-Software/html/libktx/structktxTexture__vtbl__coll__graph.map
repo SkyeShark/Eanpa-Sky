@@ -1,0 +1,8 @@
+<map id="ktxTexture_vtbl" name="ktxTexture_vtbl">
+<area shape="rect" id="Node000001" title="Table of virtual ktxTexture methods." alt="" coords="14,5,124,32"/>
+<area shape="rect" id="Node000002" href="$structktxTexture.html" title="Base class representing a texture." alt="" coords="57,317,140,344"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="48,45,41,57,19,123,8,178,9,204,14,231,25,260,41,292,52,305,67,315,64,319,48,309,37,295,20,262,9,232,4,204,3,177,14,121,36,55,43,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,302,68,33,73,32,99,302"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="245,5,355,32"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="309,47,317,99,319,165,315,200,307,234,293,266,272,295,250,308,216,318,141,329,140,324,215,313,248,303,269,291,288,264,301,233,310,199,313,165,311,99,304,48"/>
+</map>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyktx.ktx_pack_uastc_flag_bits module &mdash; pyktx  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyktx.ktx_supercmp_scheme module" href="pyktx.ktx_supercmp_scheme.html" />
+    <link rel="prev" title="pyktx.ktx_pack_astc_quality_levels module" href="pyktx.ktx_pack_astc_quality_levels.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pyktx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pyktx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.html">pyktx package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.gl_internalformat.html">pyktx.gl_internalformat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_astc_params.html">pyktx.ktx_astc_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_basis_params.html">pyktx.ktx_basis_params module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_error_code.html">pyktx.ktx_error_code module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_hash_list.html">pyktx.ktx_hash_list module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_block_dimension.html">pyktx.ktx_pack_astc_block_dimension module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_encoder_mode.html">pyktx.ktx_pack_astc_encoder_mode module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_pack_astc_quality_levels.html">pyktx.ktx_pack_astc_quality_levels module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyktx.ktx_pack_uastc_flag_bits module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.DEFAULT"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.DEFAULT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_DISABLE_FLIP_AND_INDIVIDUAL"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.ETC1_DISABLE_FLIP_AND_INDIVIDUAL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTER_HINTS"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.ETC1_FASTER_HINTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTEST_HINTS"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.ETC1_FASTEST_HINTS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTER"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FASTER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTEST"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FASTEST</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_BC7_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FAVOR_BC7_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_UASTC_ERROR"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.FAVOR_UASTC_ERROR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.LEVEL_MASK"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.LEVEL_MASK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.MAX_LEVEL"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.MAX_LEVEL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.SLOWER"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.SLOWER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.VERY_SLOW"><code class="docutils literal notranslate"><span class="pre">KtxPackUastcFlagBits.VERY_SLOW</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_supercmp_scheme.html">pyktx.ktx_supercmp_scheme module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture.html">pyktx.ktx_texture module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture1.html">pyktx.ktx_texture1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture2.html">pyktx.ktx_texture2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_flag_bits.html">pyktx.ktx_texture_create_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_info.html">pyktx.ktx_texture_create_info module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_texture_create_storage.html">pyktx.ktx_texture_create_storage module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_flag_bits.html">pyktx.ktx_transcode_flag_bits module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.ktx_transcode_fmt.html">pyktx.ktx_transcode_fmt module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.native.html">pyktx.native module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyktx.vk_format.html">pyktx.vk_format module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyktx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">pyktx</a></li>
+          <li class="breadcrumb-item"><a href="pyktx.html">pyktx package</a></li>
+      <li class="breadcrumb-item active">pyktx.ktx_pack_uastc_flag_bits module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/docs/pyktx.ktx_pack_uastc_flag_bits.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyktx.ktx_pack_uastc_flag_bits">
+<span id="pyktx-ktx-pack-uastc-flag-bits-module"></span><h1>pyktx.ktx_pack_uastc_flag_bits module<a class="headerlink" href="#module-pyktx.ktx_pack_uastc_flag_bits" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyktx.ktx_pack_uastc_flag_bits.</span></span><span class="sig-name descname"><span class="pre">KtxPackUastcFlagBits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyktx/ktx_pack_uastc_flag_bits.html#KtxPackUastcFlagBits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Flags specifiying UASTC encoding options.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.DEFAULT">
+<span class="sig-name descname"><span class="pre">DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.DEFAULT" title="Permalink to this definition"></a></dt>
+<dd><p>Default compression. 47.47dB.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_DISABLE_FLIP_AND_INDIVIDUAL">
+<span class="sig-name descname"><span class="pre">ETC1_DISABLE_FLIP_AND_INDIVIDUAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">256</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_DISABLE_FLIP_AND_INDIVIDUAL" title="Permalink to this definition"></a></dt>
+<dd><p>Not documented in BasisU code.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTER_HINTS">
+<span class="sig-name descname"><span class="pre">ETC1_FASTER_HINTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">64</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTER_HINTS" title="Permalink to this definition"></a></dt>
+<dd><p>Optimize for faster transcoding to ETC1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTEST_HINTS">
+<span class="sig-name descname"><span class="pre">ETC1_FASTEST_HINTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">128</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.ETC1_FASTEST_HINTS" title="Permalink to this definition"></a></dt>
+<dd><p>Optimize for fastest transcoding to ETC1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTER">
+<span class="sig-name descname"><span class="pre">FASTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTER" title="Permalink to this definition"></a></dt>
+<dd><p>Faster compression. 46.49dB.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTEST">
+<span class="sig-name descname"><span class="pre">FASTEST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FASTEST" title="Permalink to this definition"></a></dt>
+<dd><p>Fastest compression. 43.45dB.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_BC7_ERROR">
+<span class="sig-name descname"><span class="pre">FAVOR_BC7_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_BC7_ERROR" title="Permalink to this definition"></a></dt>
+<dd><p>Optimize for lowest BC7 error.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_UASTC_ERROR">
+<span class="sig-name descname"><span class="pre">FAVOR_UASTC_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.FAVOR_UASTC_ERROR" title="Permalink to this definition"></a></dt>
+<dd><p>Optimize for lowest UASTC error.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.LEVEL_MASK">
+<span class="sig-name descname"><span class="pre">LEVEL_MASK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">15</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.LEVEL_MASK" title="Permalink to this definition"></a></dt>
+<dd><p>Mask to extract the level from the other bits.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.MAX_LEVEL">
+<span class="sig-name descname"><span class="pre">MAX_LEVEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.MAX_LEVEL" title="Permalink to this definition"></a></dt>
+<dd><p>Maximum supported quality level.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.SLOWER">
+<span class="sig-name descname"><span class="pre">SLOWER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.SLOWER" title="Permalink to this definition"></a></dt>
+<dd><p>Slower compression. 48.01dB.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.VERY_SLOW">
+<span class="sig-name descname"><span class="pre">VERY_SLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pyktx.ktx_pack_uastc_flag_bits.KtxPackUastcFlagBits.VERY_SLOW" title="Permalink to this definition"></a></dt>
+<dd><p>Very slow compression. 48.24dB.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyktx.ktx_pack_astc_quality_levels.html" class="btn btn-neutral float-left" title="pyktx.ktx_pack_astc_quality_levels module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyktx.ktx_supercmp_scheme.html" class="btn btn-neutral float-right" title="pyktx.ktx_supercmp_scheme module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Khronos Group, Inc. 2023, Shukant Pal.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

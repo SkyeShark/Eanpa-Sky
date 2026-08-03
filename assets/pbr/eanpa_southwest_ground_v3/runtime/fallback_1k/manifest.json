@@ -1,0 +1,524 @@
+{
+  "schema_version": 1,
+  "generated_by": "tools/build-southwest-ground-v3-fallback.py",
+  "source_manifest": {
+    "path": "../../manifest.json",
+    "sha256": "25b9796a59f9c80d2c45db917dcc0529c559bf8d5f6b12fa034891fdf1b9a34e"
+  },
+  "deterministic_build": {
+    "source": "28 verified 2048x2048 RGBA PNGs in authoritative layer order",
+    "resampling": "Pillow Lanczos, each byte channel filtered independently",
+    "numeric_channel_color_conversion": "none",
+    "normal_xy": "resize R/G; decode NormalGL XY; unit-disk/full-vector renormalize; re-encode UNORM8",
+    "png": "lossless RGBA, compress_level=9, optimize=false, no generated metadata"
+  },
+  "runtime_representation": "uncompressed RGBA8 texture-array source decoded from lossless PNG; no block-compression dependency",
+  "layer_order": [
+    "RockyTrail02",
+    "DryGroundRocks",
+    "RedLateriteSoilStones",
+    "CrackedRedGround",
+    "MudCrackedDryRiverbed002",
+    "Rock029",
+    "Rock061",
+    "GravellySand",
+    "RockFace03",
+    "SandyGravel02",
+    "RockyTrail",
+    "RockFace",
+    "RockBoulderCracked",
+    "RocksGround02"
+  ],
+  "layer_count": 14,
+  "texture_count": 28,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "mode": "RGBA",
+  "decoded_memory": {
+    "array_count": 2,
+    "layer_count_per_array": 14,
+    "channels_per_array": 4,
+    "bytes_per_channel": 1,
+    "base_level_bytes_per_array": 58720256,
+    "base_level_bytes_total": 117440512
+  },
+  "albedo_height_packing": {
+    "RGB": "graded sRGB albedo bytes",
+    "A": "linear relative height UNORM8"
+  },
+  "packed_pbr_packing": {
+    "R": "renormalized tangent-space NormalGL X UNORM8",
+    "G": "renormalized tangent-space NormalGL Y UNORM8",
+    "B": "linear roughness UNORM8",
+    "A": "linear ambient occlusion UNORM8",
+    "normal_z_reconstruction": "sqrt(max(0, 1 - x*x - y*y))"
+  },
+  "png_disk_bytes": 82066309,
+  "output_set_sha256": "bb6dc33444ff5b46a102104275adecfeccb03049c56f8a0a89f80d4ac3755c3d",
+  "layers": [
+    {
+      "id": "RockyTrail02",
+      "order": 0,
+      "semantic": "dominant-alluvial-gravel-and-stony-trail",
+      "files": {
+        "albedo_height": {
+          "path": "RockyTrail02_AlbedoHeight_1K.png",
+          "sha256": "0c869eb06e878e925da67d40e5cb276bad0f333c49e0f2b3e47c87490ad54edb",
+          "byte_size": 2722934,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockyTrail02_AlbedoGrade_2K.png",
+          "source_sha256": "ef257452b152bac35e28ad1cad2ac25f09934080c18f4e08c34b3dc0a8b8be0d"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "RockyTrail02_PackedNxyRoughAO_1K.png",
+          "sha256": "df8890345f4a7ee0410321d8468eb95de8333524f1e85f158e2aa545f767b6c4",
+          "byte_size": 3496401,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockyTrail02_PackedNxyRoughAO_2K.png",
+          "source_sha256": "ea34ed06ad97ba88b8cffafadf82f0b7e12365191f23bd79249cff9583cb6856"
+        }
+      }
+    },
+    {
+      "id": "DryGroundRocks",
+      "order": 1,
+      "semantic": "stony-transition-soil",
+      "files": {
+        "albedo_height": {
+          "path": "DryGroundRocks_AlbedoHeight_1K.png",
+          "sha256": "d0285d1ab1e01accd21c9f1a75e64b56671a80087c11a22d03cb4b05c2714681",
+          "byte_size": 3277670,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/DryGroundRocks_AlbedoGrade_2K.png",
+          "source_sha256": "307caaf2f66c45922f80cc4b2d1f0864e5866ff2a4482f691c71617b1e8af4f9"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "DryGroundRocks_PackedNxyRoughAO_1K.png",
+          "sha256": "4782d48de4aef133a298bb5fedd43e62cdbf06b113b4be10b527883507620b7a",
+          "byte_size": 3551769,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/DryGroundRocks_PackedNxyRoughAO_2K.png",
+          "source_sha256": "e5fcb01c50d7e6e7cfb9725354728407c0578eae5d5536105d98d65aca722e27"
+        }
+      }
+    },
+    {
+      "id": "RedLateriteSoilStones",
+      "order": 2,
+      "semantic": "warm-gravel-transition-soil",
+      "files": {
+        "albedo_height": {
+          "path": "RedLateriteSoilStones_AlbedoHeight_1K.png",
+          "sha256": "d5f4a23d3e80052d2f3e38d18c1325268896c6b304f589b6bf325130639b538c",
+          "byte_size": 2948783,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RedLateriteSoilStones_AlbedoGrade_2K.png",
+          "source_sha256": "50865d9738ae84183f6d5e63acc667f6a1bd17bfa13df60a3bd77d383901751a"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "RedLateriteSoilStones_PackedNxyRoughAO_1K.png",
+          "sha256": "2564a69732c21f31c9d49a5e47e603a9aceb24340c9dde6d61fb05912647c774",
+          "byte_size": 3701920,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RedLateriteSoilStones_PackedNxyRoughAO_2K.png",
+          "source_sha256": "90e5e9004f747ce5cfdb2db9136ac3cd37a9d7a0eeff40949f8e7f38d1517897"
+        }
+      }
+    },
+    {
+      "id": "CrackedRedGround",
+      "order": 3,
+      "semantic": "compacted-cracked-flats",
+      "files": {
+        "albedo_height": {
+          "path": "CrackedRedGround_AlbedoHeight_1K.png",
+          "sha256": "906e8c64546acf08bf15cf87bc7c90adbb913c63a32240c8ee7425b3b64f7ca1",
+          "byte_size": 2263236,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/CrackedRedGround_AlbedoGrade_2K.png",
+          "source_sha256": "a7d9aa598d409ab04b8f35feca57f7673c9c08d808f63d1275f47373e68863d8"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "CrackedRedGround_PackedNxyRoughAO_1K.png",
+          "sha256": "7dda84712f867dc1230474bd48e3058e54d17fb2a5159057d1fcda847d5467e0",
+          "byte_size": 2879773,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/CrackedRedGround_PackedNxyRoughAO_2K.png",
+          "source_sha256": "3ad2a3a19cfe350d04ca3b6c882ee74104db228c8f662dec482d184dd7e7eea4"
+        }
+      }
+    },
+    {
+      "id": "MudCrackedDryRiverbed002",
+      "order": 4,
+      "semantic": "authored-dry-washes-only",
+      "files": {
+        "albedo_height": {
+          "path": "MudCrackedDryRiverbed002_AlbedoHeight_1K.png",
+          "sha256": "1a91f763153dc414ea7c7f86472cbee1433201cd6dff9bfb5f2aae648eca7982",
+          "byte_size": 2593310,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/MudCrackedDryRiverbed002_AlbedoGrade_2K.png",
+          "source_sha256": "94635fc5b2f21eb1fe15236ff55c4abc5d598458c20f3b44a874387d18dbf867"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "MudCrackedDryRiverbed002_PackedNxyRoughAO_1K.png",
+          "sha256": "da18cc9248a4d511846881ad8d885f31bcd7af7fe5d1e32ce033945608ca92ca",
+          "byte_size": 3281780,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/MudCrackedDryRiverbed002_PackedNxyRoughAO_2K.png",
+          "source_sha256": "480eb1420e7d3c3bb5f6df935ac62cc4a98d95795bfeff94ee88fdd7ed190a85"
+        }
+      }
+    },
+    {
+      "id": "Rock029",
+      "order": 5,
+      "semantic": "orange-bedrock-and-steep-outcrop",
+      "files": {
+        "albedo_height": {
+          "path": "Rock029_AlbedoHeight_1K.png",
+          "sha256": "bc151c6b1a12fbdb75af45ae0f6b93e4f5107ee35837f433048092614b0c83cb",
+          "byte_size": 2507595,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/Rock029_AlbedoGrade_2K.png",
+          "source_sha256": "23ae4cd47cb0225a63125e79e7d0c7fb05da9a021a7e0eb4fb344ff36b5dde5e"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "Rock029_PackedNxyRoughAO_1K.png",
+          "sha256": "2f659bc60280d610477b81a06cf3bf11e0cb17c8763eb47362efe6b9d79ee3eb",
+          "byte_size": 3295577,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/Rock029_PackedNxyRoughAO_2K.png",
+          "source_sha256": "91ad160668b1b8d98492fb4f3102fdf94d64f14f02061fc67ecb95f18b9688f3"
+        }
+      }
+    },
+    {
+      "id": "Rock061",
+      "order": 6,
+      "semantic": "tan-bedrock-and-outcrop-transition",
+      "files": {
+        "albedo_height": {
+          "path": "Rock061_AlbedoHeight_1K.png",
+          "sha256": "33e49ecdd37170905ccf201e99d0f1d8783e3217d61315bd1dc33e894e66c7a8",
+          "byte_size": 1965771,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/Rock061_AlbedoGrade_2K.png",
+          "source_sha256": "4bc28068924e5bb978ac778aa007904f9f3aab502011290d817cf2e1869b03ac"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "Rock061_PackedNxyRoughAO_1K.png",
+          "sha256": "92b659caa68f0993a1561df5f435d9dc3b3ee34bef493fe7fc08d7dc550107aa",
+          "byte_size": 2664255,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/Rock061_PackedNxyRoughAO_2K.png",
+          "source_sha256": "bfca7deafc804f67a308fe6ecf3f1770f897a400c3ac5b75739a0370dc88904d"
+        }
+      }
+    },
+    {
+      "id": "GravellySand",
+      "order": 7,
+      "semantic": "wash-and-alluvial-sandy-gravel",
+      "files": {
+        "albedo_height": {
+          "path": "GravellySand_AlbedoHeight_1K.png",
+          "sha256": "db4390094a6c12534f33f7d12d0fb00417e913b33cc5c49056ad079450409e7d",
+          "byte_size": 3113498,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/GravellySand_AlbedoGrade_2K.png",
+          "source_sha256": "d613d739eb9dfcb92eb11d8b3f7acd48dce08d1b0b1c1c83902c670ed80db9ea"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "GravellySand_PackedNxyRoughAO_1K.png",
+          "sha256": "04184e819b71a4e0766ce3bf653d8278353f25e8c1b18fbc5daf177c927fc75b",
+          "byte_size": 3398368,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/GravellySand_PackedNxyRoughAO_2K.png",
+          "source_sha256": "d9c0b65ce65b2bd58b06971de8ed57127bfc2099379cb3a2c1dfd67d5317e43d"
+        }
+      }
+    },
+    {
+      "id": "RockFace03",
+      "order": 8,
+      "semantic": "elevated-steep-weathered-rock-face",
+      "files": {
+        "albedo_height": {
+          "path": "RockFace03_AlbedoHeight_1K.png",
+          "sha256": "bf1542adc5254286d27e8aa150eeb3205737c574b8503e02ac53a9c3927d2552",
+          "byte_size": 2547604,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockFace03_AlbedoGrade_2K.png",
+          "source_sha256": "390a3e9abdd58bfd4a86601789f1580ff69d54033546bd12e5bb25099a6e1d9e"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "RockFace03_PackedNxyRoughAO_1K.png",
+          "sha256": "bb1a86f0f0262050e89b47ef6cc6c797d00f78e691e8fcf9bb2d9601f996eb32",
+          "byte_size": 2985305,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockFace03_PackedNxyRoughAO_2K.png",
+          "source_sha256": "872b272b3979fc45aa3160d1d572926757ca3afd949dd71e78eada752acfba23"
+        }
+      }
+    },
+    {
+      "id": "SandyGravel02",
+      "order": 9,
+      "semantic": "wash-and-alluvial-warm-sandy-gravel",
+      "files": {
+        "albedo_height": {
+          "path": "SandyGravel02_AlbedoHeight_1K.png",
+          "sha256": "2dd070e9022cce7c00c65aad842baad75e828fd6e6ec867e9570f3f43ba546c1",
+          "byte_size": 2906158,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/SandyGravel02_AlbedoGrade_2K.png",
+          "source_sha256": "163c7a144a75f0af6f80c532e1f44fd5a5c548765de65bec66741fd65da6e7d7"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "SandyGravel02_PackedNxyRoughAO_1K.png",
+          "sha256": "9038766882ee9ca04f8d9edf42590d46d9c37b250434b4da53f331e6eb307a83",
+          "byte_size": 3187717,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/SandyGravel02_PackedNxyRoughAO_2K.png",
+          "source_sha256": "9711a6ab77067464040f24e8277760231a1e933f42b7c65552f4c035d057cd11"
+        }
+      }
+    },
+    {
+      "id": "RockyTrail",
+      "order": 10,
+      "semantic": "general-gravel-and-broken-talus",
+      "files": {
+        "albedo_height": {
+          "path": "RockyTrail_AlbedoHeight_1K.png",
+          "sha256": "7d5827051a5bbccf5c2cd329951ceecb55dcd7eb8ac0a61dfa63a07641f64c28",
+          "byte_size": 2928797,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockyTrail_AlbedoGrade_2K.png",
+          "source_sha256": "de590af2cdcf975c457a20e86c93f0edb97260bdf32b03dd3036a3fc2e008c59"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "RockyTrail_PackedNxyRoughAO_1K.png",
+          "sha256": "10312ed7c22a588c3126f4cc4f63c25a351c120f0d6a109f0837a3ce66036245",
+          "byte_size": 3435927,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockyTrail_PackedNxyRoughAO_2K.png",
+          "source_sha256": "ec430773829a919ad3989e6912f9f233644d1299623b337a2847f5483fe05b38"
+        }
+      }
+    },
+    {
+      "id": "RockFace",
+      "order": 11,
+      "semantic": "elevated-steep-reddish-rock-face",
+      "files": {
+        "albedo_height": {
+          "path": "RockFace_AlbedoHeight_1K.png",
+          "sha256": "863efafaab610f7dc49e78e7fb33e355b1562c6e6b6f2c12d7a042fcd9c047e7",
+          "byte_size": 2291846,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockFace_AlbedoGrade_2K.png",
+          "source_sha256": "f884a58ae91b5dd39314ad5bbe81e302b615c23f76958d09a49f0d479af50689"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "RockFace_PackedNxyRoughAO_1K.png",
+          "sha256": "fecf1165bfa210b53b2a2666035b367125ca9ba1095ef3d240e42cffa39483db",
+          "byte_size": 2623785,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockFace_PackedNxyRoughAO_2K.png",
+          "source_sha256": "6287fee14f0992fe8de3fb3277b9916f9cfea3dce6a68d3ed06b60c0ed7a8214"
+        }
+      }
+    },
+    {
+      "id": "RockBoulderCracked",
+      "order": 12,
+      "semantic": "elevated-steep-cracked-orange-boulder",
+      "files": {
+        "albedo_height": {
+          "path": "RockBoulderCracked_AlbedoHeight_1K.png",
+          "sha256": "4b6dd30502e40fb704e88d6ecce89d2c488b160dca4a604b6940ec96a4ab44e6",
+          "byte_size": 2389579,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockBoulderCracked_AlbedoGrade_2K.png",
+          "source_sha256": "9dd3c8903f279bb22484223f046d423df1c1183913804383a0daac6e06070e9d"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "RockBoulderCracked_PackedNxyRoughAO_1K.png",
+          "sha256": "cdcd7803445b51381bb791135ecc6d9be842a62b821f282ec250d7c90d8135e4",
+          "byte_size": 2553964,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RockBoulderCracked_PackedNxyRoughAO_2K.png",
+          "source_sha256": "2e668aa2bcc14100989de9b1c4317bcc8289bb239d8fe8e046fac16b4233e732"
+        }
+      }
+    },
+    {
+      "id": "RocksGround02",
+      "order": 13,
+      "semantic": "general-rocky-ground-gravel-and-talus",
+      "files": {
+        "albedo_height": {
+          "path": "RocksGround02_AlbedoHeight_1K.png",
+          "sha256": "b7065e37d565e9dc24862644aef10c8369f453db5713a37f3b733aaa4ac97f5d",
+          "byte_size": 3090489,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RocksGround02_AlbedoGrade_2K.png",
+          "source_sha256": "17f591d9cb29844d3f59a13cfd0e444a4466052533ef683f533ec301c88078f5"
+        },
+        "packed_normal_xy_roughness_ao": {
+          "path": "RocksGround02_PackedNxyRoughAO_1K.png",
+          "sha256": "4d51b4df3b95741d4e95eabce6faad8e306b9ff874d256c3061256003370bc9e",
+          "byte_size": 3462498,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "mode": "RGBA",
+          "format": "PNG",
+          "source_path": "runtime/RocksGround02_PackedNxyRoughAO_2K.png",
+          "source_sha256": "20d0e624b5d1e43d5e53f99e7695cd67ca54bb49a985b796d556d0b0e3ba412b"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+<map id="lib/strings.c" name="lib/strings.c">
+<area shape="rect" id="Node000001" title="Functions to return a string corresponding to various enumerations." alt="" coords="217,5,305,32"/>
+<area shape="rect" id="Node000002" href="$ktx_8h.html" title="Declares the public functions and structures of the KTX API." alt="" coords="189,80,240,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="255,34,233,68,228,66,251,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="263,80,355,107"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="272,31,295,66,290,69,267,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,69,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="190,108,83,151,81,146,188,103"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="92,155,152,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="200,109,152,147,148,143,197,105"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="177,155,252,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="217,107,217,139,212,139,212,107"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="275,155,364,181"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="234,105,290,143,287,148,231,109"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="389,155,453,181"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="241,101,375,148,373,153,239,106"/>
+</map>

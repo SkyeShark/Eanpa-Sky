@@ -1,0 +1,7 @@
+pyktx.ktx\_transcode\_flag\_bits module
+=======================================
+
+.. automodule:: pyktx.ktx_transcode_flag_bits
+   :members:
+   :undoc-members:
+   :show-inheritance:
