@@ -13,11 +13,10 @@ running at high frame rates with a complete playable scene underneath.
 ## Running
 
 Serve the folder with any static file server and open it in a
-WebGPU-capable browser (Chrome/Edge):
+WebGPU-capable browser (Chrome/Edge), e.g.:
 
 ```
-python tools/dev-server.py 8090
-# then open http://127.0.0.1:8090/
+npx serve .
 ```
 
 ## What to try

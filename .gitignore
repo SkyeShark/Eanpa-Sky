@@ -132,3 +132,10 @@ tools/_*
 tools/bake-eanpa-terrain.py
 tools/build-collision-hulls.py
 tools/generate-explosive-thunder.py
+
+# internal working state — never ships
+.artifacts/
+tools/
+FEEDBACK_ACCEPTANCE_CHECKLIST.md
+WORK_SESSION_CHECKPOINT.md
+assets/pbr/eanpa_southwest_ground_v3/README.md

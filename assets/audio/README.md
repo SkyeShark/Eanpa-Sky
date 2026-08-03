@@ -67,7 +67,7 @@ variations exactly: StoneL1, StoneR1, StoneL2, StoneR2.
 | `footstep_stone_03.ogg` | `Fantozzi-StoneL2.ogg` | `1cdd36f02590d2b968b1dd311334e71db8514d7c276e62ad474d01c26b37d4de` | -5.9 dB |
 | `footstep_stone_04.ogg` | `Fantozzi-StoneR2.ogg` | `075c27afbf29b7771cb01a7bf51530b835e82c56698ca5551318fa0c6b7adb9f` | -6.1 dB |
 
-`tools/build-stone-footsteps.py` performs the reproducible export. It keeps
+The reproducible export keeps
 each complete 0.32-0.37 second contact and its natural transient, center-mixes
 to mono for positional playback, resamples to 48 kHz, applies first-order
 30 Hz high-pass and 15 kHz low-pass filters, adds a 2.5 ms input fade and 6 ms
