@@ -2,7 +2,7 @@
 
 # Eanpa Engine — v0.1
 
-**[▶ Live demo](https://skyeshark.github.io/eanpa-engine/)** (WebGPU required — Chrome or Edge)
+**[▶ Live demo](https://skyeshark.github.io/Eanpa-Sky/)** (WebGPU required — Chrome or Edge)
 
 A real-time volumetric **sky and weather engine** for Three.js WebGPU (TSL),
 demonstrated inside a full interactive first-person desert world. The world
