@@ -25,8 +25,9 @@ Actively being worked on, roughly in this order:
    release; if you still hit an invisible wall walking on the trim, it's a
    known hot spot.
 9. **Cliff placement is hand-authored** and due for a revision pass.
-10. **First weather activation can hitch** briefly despite the boot-time
-    warmup; deeper pipeline pre-compilation is planned.
+10. **Weather switching still hangs briefly**, and some other UI transitions
+    (skybox changes, quality changes) carry similar hitches — known, and
+    actively being optimized.
 
 The world exists to prove the sky: the sky/weather engine is the product,
 the desert is its benchmark stage. Sky bug reports are the most valuable.
