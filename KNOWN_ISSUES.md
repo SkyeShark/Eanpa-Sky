@@ -8,8 +8,12 @@ Actively being worked on, roughly in this order:
 2. **Ground materials don't follow the terrain yet** — the baked terrain
    ships with rock/soil/wear maps, but the ground still paints with the older
    hand-authored layering. Wiring the baked maps in is the next major step.
-3. **Screen-space reflection glitch** near the Inanna orb (bottom of screen).
-   The fix is known (screen-edge fade on SSR) and pending port.
+3. **Screen-space reflection (SSR) bugs.** Known concrete case: glitching at
+   the bottom of the screen near the Inanna orb — the fix (screen-edge fade
+   on SSR) exists in the eidoverse-video implementation and is pending port.
+   Beyond that one, full parity with the eidoverse-video reflection fixes has
+   **not** been verified end to end, so additional SSR issues may exist until
+   that investigation is finished.
 4. **Rocks have no player collision.** Their correctly-shaped convex hulls
    are already baked (`assets/collision/`); the placement feed that connects
    them is pending.
