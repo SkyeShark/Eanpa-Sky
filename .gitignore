@@ -127,3 +127,8 @@ tools/strip-perimeter-glb.mjs
 docs/
 tools/vendor/
 tools/_*
+
+# asset generation stays local; only the run server ships
+tools/bake-eanpa-terrain.py
+tools/build-collision-hulls.py
+tools/generate-explosive-thunder.py

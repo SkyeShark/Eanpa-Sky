@@ -27,18 +27,14 @@ python tools/dev-server.py 8090
 - **Weather**: eight states from clear to Dark Storm — sealed volumetric
   storm canopy, forced lightning strikes (⚡ button), burn scorch decals
 - **Time of day** slider and day/night cycle; the moon is NASA LROC imagery
-- **Walk** the desert: procedurally generated eroded terrain (offline-baked
-  from swiss-turbulence + gully carving), Mojave flora with wind and touch
-  response, a climbable ziggurat temple
+- **Walk** the desert: eroded mountain terrain, Mojave flora with wind and
+  touch response, a climbable ziggurat temple
 
 Controls are on-screen. Quality tiers in the panel; Balanced targets 60+ FPS.
 
 ## State of the project
 
 This is an early, honest 0.1 — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
-The generation pipeline is offline-first: terrain, its material maps, and
-collision hulls are baked to assets by the tools in `tools/` (CPU only) and
-the engine just loads them.
 
 ## Credits & licenses
 
@@ -49,5 +45,4 @@ the engine just loads them.
 - PBR surfaces: Poly Haven / ambientCG (CC0); moon: NASA CGI Moon Kit;
   starmap: Tycho
 - Wind/grass techniques derived in part from CK42BB's
-  procedural-grass-threejs (MIT); erosion approach inspired by
-  Rune Skovbo Johansen's phacelle and G.J.P. de Carpentier's swiss turbulence
+  procedural-grass-threejs (MIT)

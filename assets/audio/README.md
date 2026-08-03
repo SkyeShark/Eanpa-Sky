@@ -46,15 +46,11 @@ after the effects/master buses.
 
 ## Synthesized explosive close thunder
 
-`thunder_explosive_01.wav` through `thunder_explosive_03.wav` are procedural
-synthesis, generated in-repo by `tools/generate-explosive-thunder.py` using
-NumPy on the CPU only — no GPU, no model checkpoint, no source recordings.
-The CC0 thunder takes above are rolling/distant by nature; these claps supply
-the sharp broadband crack, tearing mid band, and deep sub boom of a strike
-landing 35-60 m from the listener. Seeds 911/1213/2718 make the three files
-byte-reproducible. Runtime plays them only for local or <=150 m strikes, with
-the CC0 rolling body blended in 0.35 s later as the long tail; distant strikes
-keep the original recordings and their speed-of-sound start delay.
+`thunder_explosive_01.wav` through `thunder_explosive_03.wav` are
+procedural synthesis created for this project — no source recordings
+and no external license terms. Runtime plays them only for strikes
+within 150 m; distant strikes keep the CC0 recordings and their
+speed-of-sound start delay.
 
 ## Real CC0 stone footsteps
 
@@ -153,7 +149,7 @@ were cross-checked through GBIF's xeno-canto occurrence mirror:
 | Gate body layer | [Iron Door](https://opengameart.org/content/iron-door) by themightyglider | CC0 |
 | Close/distant thunder A | [Thunder big](https://freesound.org/people/s-light/sounds/414050/) by s-light | CC0 |
 | Close/distant thunder B | [Thunder](https://freesound.org/people/Fission9/sounds/465314/) by Fission9 | CC0 |
-| Explosive close-strike thunder | Procedural NumPy synthesis, `tools/generate-explosive-thunder.py` (CPU only, no source recordings, no model checkpoint) | Generated in-repo; no external terms |
+| Explosive close-strike thunder | Procedural synthesis created for this project (no source recordings) | No external terms |
 
 The exact downloaded inputs used for the current exports are retained under
 cc0_sources/, including the public HQ Freesound preview encodes whose source
