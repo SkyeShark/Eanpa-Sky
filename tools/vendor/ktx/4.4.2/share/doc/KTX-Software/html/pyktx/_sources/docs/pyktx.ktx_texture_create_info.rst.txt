@@ -1,7 +1,0 @@
-pyktx.ktx\_texture\_create\_info module
-=======================================
-
-.. automodule:: pyktx.ktx_texture_create_info
-   :members:
-   :undoc-members:
-   :show-inheritance:

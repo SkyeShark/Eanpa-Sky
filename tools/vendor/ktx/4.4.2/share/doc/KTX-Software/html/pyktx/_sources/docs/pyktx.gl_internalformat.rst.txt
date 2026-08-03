@@ -1,7 +1,0 @@
-pyktx.gl\_internalformat module
-===============================
-
-.. automodule:: pyktx.gl_internalformat
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,7 +1,0 @@
-pyktx.ktx\_texture\_create\_storage module
-==========================================
-
-.. automodule:: pyktx.ktx_texture_create_storage
-   :members:
-   :undoc-members:
-   :show-inheritance:

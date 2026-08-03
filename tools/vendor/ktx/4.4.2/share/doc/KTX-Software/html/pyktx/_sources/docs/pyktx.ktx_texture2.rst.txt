@@ -1,7 +1,0 @@
-pyktx.ktx\_texture2 module
-==========================
-
-.. automodule:: pyktx.ktx_texture2
-   :members:
-   :undoc-members:
-   :show-inheritance:

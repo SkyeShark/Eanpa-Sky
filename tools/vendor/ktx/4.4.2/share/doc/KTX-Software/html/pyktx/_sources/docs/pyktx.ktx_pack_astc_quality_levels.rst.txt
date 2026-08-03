@@ -1,7 +1,0 @@
-pyktx.ktx\_pack\_astc\_quality\_levels module
-=============================================
-
-.. automodule:: pyktx.ktx_pack_astc_quality_levels
-   :members:
-   :undoc-members:
-   :show-inheritance:

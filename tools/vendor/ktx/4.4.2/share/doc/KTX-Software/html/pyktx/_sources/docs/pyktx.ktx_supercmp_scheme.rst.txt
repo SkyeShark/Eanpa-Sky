@@ -1,7 +1,0 @@
-pyktx.ktx\_supercmp\_scheme module
-==================================
-
-.. automodule:: pyktx.ktx_supercmp_scheme
-   :members:
-   :undoc-members:
-   :show-inheritance:

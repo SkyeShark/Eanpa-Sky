@@ -1,7 +1,0 @@
-pyktx.ktx\_pack\_uastc\_flag\_bits module
-=========================================
-
-.. automodule:: pyktx.ktx_pack_uastc_flag_bits
-   :members:
-   :undoc-members:
-   :show-inheritance:

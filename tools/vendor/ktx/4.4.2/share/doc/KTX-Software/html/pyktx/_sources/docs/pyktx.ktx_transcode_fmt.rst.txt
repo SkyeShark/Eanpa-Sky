@@ -1,7 +1,0 @@
-pyktx.ktx\_transcode\_fmt module
-================================
-
-.. automodule:: pyktx.ktx_transcode_fmt
-   :members:
-   :undoc-members:
-   :show-inheritance:

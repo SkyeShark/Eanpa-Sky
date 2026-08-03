@@ -1,7 +1,0 @@
-pyktx.ktx\_pack\_astc\_encoder\_mode module
-===========================================
-
-.. automodule:: pyktx.ktx_pack_astc_encoder_mode
-   :members:
-   :undoc-members:
-   :show-inheritance:

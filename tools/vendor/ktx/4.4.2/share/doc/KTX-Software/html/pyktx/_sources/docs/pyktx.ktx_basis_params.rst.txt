@@ -1,7 +1,0 @@
-pyktx.ktx\_basis\_params module
-===============================
-
-.. automodule:: pyktx.ktx_basis_params
-   :members:
-   :undoc-members:
-   :show-inheritance:

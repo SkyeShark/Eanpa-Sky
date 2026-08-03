@@ -1,7 +1,0 @@
-pyktx.ktx\_error\_code module
-=============================
-
-.. automodule:: pyktx.ktx_error_code
-   :members:
-   :undoc-members:
-   :show-inheritance:

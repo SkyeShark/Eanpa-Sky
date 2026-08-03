@@ -1,7 +1,0 @@
-pyktx
-=====
-
-.. toctree::
-   :maxdepth: 4
-
-   pyktx
