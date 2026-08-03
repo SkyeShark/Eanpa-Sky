@@ -125,3 +125,5 @@ tools/repair-saguaro-blender.py
 tools/resolve-vendored-three-hooks.mjs
 tools/strip-perimeter-glb.mjs
 docs/
+tools/vendor/
+tools/_*
