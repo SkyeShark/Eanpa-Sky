@@ -1,6 +1,6 @@
 <img src="assets/brand/eanpa_wordmark.png" alt="Eanpa Engine" width="520">
 
-# Eanpa Engine — v0.1
+# Eanpa Sky Engine — v0.1
 
 **[▶ Live demo](https://skyeshark.github.io/Eanpa-Sky/)** (WebGPU required — Chrome or Edge)
 
