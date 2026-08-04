@@ -7,12 +7,13 @@ Actively being worked on, roughly in this order:
    progress.
 2. **Ground materials don't follow the terrain yet** — material placement
    doesn't track the new mountains' rock, soil, and wear the way it should.
-3. **Screen-space reflection (SSR) bugs.** Known concrete case: glitching at
-   the bottom of the screen near the Inanna orb — the fix (screen-edge fade
-   on SSR) exists in the eidoverse-video implementation and is pending port.
-   Beyond that one, full parity with the eidoverse-video reflection fixes has
-   **not** been verified end to end, so additional SSR issues may exist until
-   that investigation is finished.
+3. **Screen-space reflection (SSR) bugs.** The full parity investigation
+   against the donor implementation is done: the SSR node and compose graph
+   match, but SSR ran far outside the donor's validated tuning envelope
+   (180 m rays with a 0.70 m hit-acceptance band at reduced resolution vs.
+   the donor's short, tight, full-resolution march) — the likely cause of
+   the glitching at the bottom of the screen near the Inanna orb. Retuned
+   to the donor envelope; awaiting visual confirmation.
 4. **Rocks have no player collision yet.**
 5. **Occasional position jumps ("teleports") on collision contact.**
    Instrumented — the build logs the responsible subsystem when it happens.
