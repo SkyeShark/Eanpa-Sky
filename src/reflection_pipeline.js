@@ -12,15 +12,22 @@ import { N8AONode } from './vendor/n8ao/N8AONode.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { ssr as makeSsrNode } from 'three/addons/tsl/display/SSRNode.js';
 
+// SSR stays inside the donor Eidoverse stack's validated envelope: short
+// rays, thin hit-acceptance, full-resolution march (its demos ran SSRNode at
+// maxDistance 1 / thickness 0.1 / resolutionScale 1). Long rays widen the
+// screen-space stride at fixed quality, and a fat thickness band then accepts
+// false hits on grazing floor rays — the flickering streak band across the
+// bottom of the screen near the Inanna orb. Distances here are scaled up only
+// enough for dais/temple contact reflections; thickness stays donor-tight.
 const QUALITY = {
     balanced: {
-        ssrDistance: 180, ssrThickness: 0.70,
-        ssrQuality: 0.50, ssrResolutionScale: 0.75,
+        ssrDistance: 32, ssrThickness: 0.15,
+        ssrQuality: 0.50, ssrResolutionScale: 1.0,
         aoQuality: 'Medium', bloomStrength: 0.28, bloomRadius: 0.42,
     },
     performance: {
-        ssrDistance: 120, ssrThickness: 0.90,
-        ssrQuality: 0.38, ssrResolutionScale: 0.60,
+        ssrDistance: 24, ssrThickness: 0.20,
+        ssrQuality: 0.38, ssrResolutionScale: 0.75,
         aoQuality: 'Performance', bloomStrength: 0.20, bloomRadius: 0.34,
     },
 };
@@ -221,6 +228,43 @@ export function makeReflectionPipeline(
     }
 
     const options = qualityOptions(quality);
+    // Donor scene-tunable override (render_scene.mjs pattern): lets SSR be
+    // retuned live from the console without a pipeline rebuild.
+    const ssrOverride = globalThis._ssrParams || {};
+    for (const key of ['maxDistance', 'thickness', 'quality', 'resolutionScale']) {
+        if (ssrOverride[key] !== undefined) {
+            const optKey = key === 'maxDistance' ? 'ssrDistance'
+                : 'ssr' + key[0].toUpperCase() + key.slice(1);
+            options[optKey] = ssrOverride[key];
+        }
+    }
+
+    // Donor G-buffer hygiene (render_scene.mjs defensive material setup):
+    // sprites/points and non-alphaTest transparents must not write depth —
+    // a rain sheet or dust quad that writes depth feeds SSR and AO a false
+    // occluder and reflections ghost against it. alphaToCoverage arms cutout
+    // materials for any future multisampled target; materials opt out with
+    // userData.noAutoAlphaToCoverage.
+    // The pipeline is rebuilt on sky switches: flags are only written when
+    // they actually change, so rebuilds never queue mass shader recompiles.
+    scene.traverse((child) => {
+        if ((child.isSprite || child.isPoints) && child.material?.depthWrite) {
+            child.material.depthWrite = false;
+        }
+        if (!child.isMesh || !child.material) return;
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        for (const mat of mats) {
+            if (mat.alphaTest > 0.0001) {
+                const wanted = mat.userData?.noAutoAlphaToCoverage !== true;
+                if (mat.alphaToCoverage !== wanted) {
+                    mat.alphaToCoverage = wanted;
+                    mat.needsUpdate = true;
+                }
+            } else if (mat.transparent && mat.depthWrite) {
+                mat.depthWrite = false;
+            }
+        }
+    });
 
     // Cloud radiance is already part of the periodically refreshed PMREM that
     // is assigned to every PBR material. Keep it inside Three's native IBL
@@ -433,6 +477,17 @@ export function makeReflectionPipeline(
         setAuditContributions({ ssr = true } = {}) {
             if (disposed) return false;
             uSsrAudit.value = ssr ? 1 : 0;
+            return true;
+        },
+        setSsrParams({ maxDistance, thickness, quality } = {}) {
+            // Donor live-tuning contract: these are SSRNode uniforms, so they
+            // retune the march without any graph or pipeline rebuild.
+            // (resolutionScale is a build-time property — change quality tier
+            // instead.)
+            if (disposed) return false;
+            if (maxDistance !== undefined) ssrNode.maxDistance.value = maxDistance;
+            if (thickness !== undefined) ssrNode.thickness.value = thickness;
+            if (quality !== undefined) ssrNode.quality.value = quality;
             return true;
         },
         setEnvironment(texture) {
