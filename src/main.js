@@ -1347,13 +1347,6 @@ async function buildSkybox() {
             installedWithoutWeather: true,
             quality: q.name,
         };
-        // Donor reflection stack (eidoverse render_scene contract): install
-        // the sky's cloud-reflect hook BEFORE the first bake — bakeEnv feeds
-        // the hook's below-horizon env fallback — and before the pipeline
-        // build captures the hooks into its compose graph. With the hook
-        // active, opaque env-IBL is suppressed at install time and SSR
-        // composes fully on top of the cloud layer via its hit alpha.
-        active.sky?.enableReflections?.(camera);
         reflectionDirty = true;
         reflectionBakedHours = null;
         await rebakeReflections(true);

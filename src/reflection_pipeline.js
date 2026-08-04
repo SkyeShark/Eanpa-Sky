@@ -12,15 +12,22 @@ import { N8AONode } from './vendor/n8ao/N8AONode.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { ssr as makeSsrNode } from 'three/addons/tsl/display/SSRNode.js';
 
+// SSR stays inside the donor Eidoverse stack's validated envelope: short
+// rays, thin hit-acceptance, full-resolution march (its demos ran SSRNode at
+// maxDistance 1 / thickness 0.1 / resolutionScale 1). Long rays widen the
+// screen-space stride at fixed quality, and a fat thickness band then accepts
+// false hits on grazing floor rays — the flickering streak band across the
+// bottom of the screen near the Inanna orb. Distances here are scaled up only
+// enough for dais/temple contact reflections; thickness stays donor-tight.
 const QUALITY = {
     balanced: {
-        ssrDistance: 180, ssrThickness: 0.70,
-        ssrQuality: 0.50, ssrResolutionScale: 0.75,
+        ssrDistance: 32, ssrThickness: 0.15,
+        ssrQuality: 0.50, ssrResolutionScale: 1.0,
         aoQuality: 'Medium', bloomStrength: 0.28, bloomRadius: 0.42,
     },
     performance: {
-        ssrDistance: 120, ssrThickness: 0.90,
-        ssrQuality: 0.38, ssrResolutionScale: 0.60,
+        ssrDistance: 24, ssrThickness: 0.20,
+        ssrQuality: 0.38, ssrResolutionScale: 0.75,
         aoQuality: 'Performance', bloomStrength: 0.20, bloomRadius: 0.34,
     },
 };
@@ -50,16 +57,7 @@ function qualityOptions(quality) {
  */
 export function installReflectionEnvironment(scene, texture) {
     if (!scene || !texture) return null;
-    // Donor contract (render_scene.mjs "cloud-reflect active → opaque env
-    // suppressed"): when the sky's cloud-reflect hook is installed, sky
-    // reflection on opaque surfaces comes from that screen-space layer,
-    // composed with SSR fully on top via its hit alpha. Opaque env-IBL must
-    // then be OFF or the same sky is counted twice and the two layers fight.
-    // Transmissive materials keep the env for their refracted-through colour,
-    // exactly as the donor keeps scene.environment for them.
-    const hookActive = typeof globalThis._autoEnhanceCloudReflectHook === 'function';
     const installed = new Set();
-    let suppressed = 0;
     scene.traverse((object) => {
         if (!object?.isMesh || object.userData?.noSkyReflection) return;
         const materials = Array.isArray(object.material)
@@ -74,15 +72,6 @@ export function installReflectionEnvironment(scene, texture) {
                     && material.metalness !== undefined
                     && material.roughness !== undefined);
             if (!isPbr) continue;
-            const transmissive = (material.transmission ?? 0) > 0;
-            if (hookActive && !transmissive) {
-                if (material.envMap !== null) {
-                    material.envMap = null;
-                    material.needsUpdate = true;
-                }
-                suppressed++;
-                continue;
-            }
             if (material.envMap !== texture) {
                 material.envMap = texture;
                 material.needsUpdate = true;
@@ -94,7 +83,6 @@ export function installReflectionEnvironment(scene, texture) {
     scene.environment = null;
     texture.userData = texture.userData || {};
     texture.userData.eanpaReflectionMaterialCount = installed.size;
-    texture.userData.eanpaEnvSuppressedCount = suppressed;
     return texture;
 }
 
@@ -278,17 +266,14 @@ export function makeReflectionPipeline(
         }
     });
 
-    // Reflection ownership (donor eidoverse contract): when the sky installs
-    // its cloud-reflect hook, sky-in-reflections is a screen-space layer
-    // evaluated along each pixel's true reflection ray — self-gated at the
-    // horizon, with the baked-env ground band as its below-horizon fallback —
-    // and SSR composes FULLY ON TOP through its hit alpha: one reflection ray
-    // hits either local geometry or the sky layer, never both. Opaque env-IBL
-    // is suppressed at install time so the same sky is never counted twice
-    // (that double count is what made the empty below-horizon half of the
-    // cloud sky fight downward-facing SSR reflections). Transmissives keep
-    // the PMREM for refracted-through colour, and the PMREM compose remains
-    // the fallback for skies that do not provide the hook.
+    // Cloud radiance is already part of the periodically refreshed PMREM that
+    // is assigned to every PBR material. Keep it inside Three's native IBL
+    // BRDF: this is where final base/specular color, metalness, roughness,
+    // normal maps, Fresnel, multiscattering and specular occlusion belong.
+    // A screen-space cloud post layer cannot reproduce that angular filter;
+    // blurring neighbouring receiver pixels mixes unrelated reflection rays
+    // and creates the coloured oil-slick bands seen on curved/normal-mapped
+    // surfaces. SSR remains a separate local-geometry layer below.
 
     // The donor Eidoverse stack resolves edge quality with final-output FXAA.
     // Explicitly keep the four-color scene MRT single-sample: otherwise
@@ -389,15 +374,7 @@ export function makeReflectionPipeline(
             ownedRttNodes,
         )
         : sceneColor;
-    // Captured at build so a sky switch (which reinstalls the globals and
-    // rebuilds this pipeline) always binds a coherent hook pair.
-    const cloudHooks = {
-        hook: globalThis._autoEnhanceCloudReflectHook,
-        blur: globalThis._autoEnhanceCloudReflectBlurHook,
-    };
     const ssrNode = makeEidoverseSsr({
-        // SSR runs on the cloud-free beauty (donor ordering): its hit alpha
-        // below decides where the cloud layer is allowed to appear at all.
         color: aoSceneColor,
         depth: sceneDepth,
         normal: sceneNormal,
@@ -415,67 +392,15 @@ export function makeReflectionPipeline(
     );
     const ssrEdgeFade = THREE.smoothstep(0.05, 0.15, ssrEdgeDistance);
     const ssrRgb = ssrTexture.rgb.mul(ssrEdgeFade);
-    // Donor parity: the edge fade applies to the hit alpha as well, so a ray
-    // that left the screen fades out of both the reflection and the gate.
-    const ssrHitAlpha = ssrTexture.a.mul(ssrEdgeFade);
-    // Runtime-only audit gate lets the parity harness isolate the base image
-    // from the reflection layers without rebuilding the graph.
+    // Runtime-only audit gate lets the parity harness isolate Three's native
+    // PMREM/IBL result from the local SSR layer without rebuilding the graph.
     const uSsrAudit = THREE.uniform(1);
-
-    // Donor cloud-reflect layer (sky_system enableReflections hook): the sky
-    // evaluated along each pixel's true reflection ray, self-gated by ray
-    // direction with the baked-env below-horizon fallback inside. Composed as
-    // a fallback for SSR misses via (1 - hit alpha) — the donor fix: one
-    // reflection ray hits EITHER local geometry (SSR, always fully on top) OR
-    // the sky layer, never both, so the empty below-horizon half of the cloud
-    // sky can never fight downward-facing SSR reflections.
-    let cloudReflLayer = null;
-    if (typeof cloudHooks.hook === 'function') {
-        try {
-            let contrib = cloudHooks.hook(
-                aoSceneColor, sceneDepth, sceneNormal, sceneMetalrough,
-            );
-            if (contrib) {
-                contrib = convertOwnedToTexture(THREE, contrib, ownedRttNodes);
-                if (typeof cloudHooks.blur === 'function') {
-                    const blurred = cloudHooks.blur(
-                        contrib, sceneDepth, sceneNormal, sceneMetalrough,
-                    );
-                    if (blurred) {
-                        contrib = convertOwnedToTexture(THREE, blurred, ownedRttNodes);
-                    }
-                }
-                // Donor AO modulation: a concavity must not receive
-                // full-brightness sky reflection on top of AO-darkened
-                // shading. Honors the per-material acceptance mask and the
-                // runtime AO toggle through aoAcceptance.
-                if (n8aoOutput && THREE.luminance && THREE.clamp) {
-                    const aoScalar = THREE.clamp(
-                        THREE.luminance(n8aoOutput.rgb)
-                            .div(THREE.luminance(sceneColor.rgb).max(0.0001)),
-                        0, 1,
-                    );
-                    contrib = contrib.mul(
-                        THREE.mix(THREE.float(1), aoScalar, aoAcceptance),
-                    );
-                }
-                cloudReflLayer = contrib;
-            }
-        } catch (error) {
-            console.warn('[reflection-pipeline] cloud-reflect hook failed:', error);
-            cloudReflLayer = null;
-        }
-    }
-    const reflectedColor = cloudReflLayer
-        ? aoSceneColor
-            .add(ssrRgb.mul(uSsrAudit))
-            .add(cloudReflLayer.rgb.mul(
-                THREE.float(1).sub(ssrHitAlpha.mul(uSsrAudit)),
-            ))
-        : aoSceneColor
-            // No hook installed (sky without enableReflections): fall back to
-            // the native-IBL compose, SSR additive on top.
-            .add(ssrRgb.mul(uSsrAudit));
+    const reflectedColor = aoSceneColor
+        // Three's SSR is the final reflection layer. Do not use its binary
+        // hit alpha to erase native IBL: SSRNode's RGB is already weighted by
+        // the receiver's final metalness, Fresnel and hit distance, while its
+        // alpha is only a hard hit/miss bit.
+        .add(ssrRgb.mul(uSsrAudit));
 
     // Three r184's native WebGPU UnrealBloom node, matching Eidoverse's post
     // stack. It is intentionally selective: the MRT emissive attachment lets
@@ -503,37 +428,25 @@ export function makeReflectionPipeline(
     let disposed = false;
     let aoEnabled = Boolean(n8ao);
     let bloomEnabled = true;
-    const ownedGlobals = cloudHooks;
-    const hookComposed = Boolean(cloudReflLayer);
+    const ownedGlobals = {
+        hook: globalThis._autoEnhanceCloudReflectHook,
+        blur: globalThis._autoEnhanceCloudReflectBlurHook,
+    };
 
     return {
         supported: true,
-        mode: hookComposed
-            ? 'eidoverse-cloud-reflect-hook_ssr-on-top'
-            : 'native-cloud-pmrem-eidoverse-ssr',
-        reflectionCompose: hookComposed
-            ? 'ssr-hit-fully-replaces_cloud-hook-on-miss'
-            : 'native-cloud-pmrem-ibl_then-three-ssr',
-        skyRoughnessMode: hookComposed
-            ? 'hook-roughness-squared-blur-stages'
-            : 'three-pmrem-angular-prefilter',
-        cloudReflectionMaterialSource: hookComposed
-            ? 'screen-space-hook-gbuffer'
-            : 'native-material-brdf-final-maps',
-        cloudReflectionWeighting: hookComposed
-            ? 'ssrnode-parity-fresnel-metalness'
-            : 'three-pmrem-environment-brdf',
-        cloudReflectionAo: hookComposed
-            ? 'n8ao-luminance-modulated'
-            : 'native-material-ibl-occlusion',
-        cloudReflectionResolutionScale: hookComposed ? 1 : null,
-        cloudReflectionUpdate: hookComposed
-            ? 'live-per-frame-ray-evaluation'
-            : 'periodic-equirectangular-pmrem',
+        mode: 'native-cloud-pmrem-eidoverse-ssr',
+        reflectionCompose: 'native-cloud-pmrem-ibl_then-three-ssr',
+        skyRoughnessMode: 'three-pmrem-angular-prefilter',
+        cloudReflectionMaterialSource: 'native-material-brdf-final-maps',
+        cloudReflectionWeighting: 'three-pmrem-environment-brdf',
+        cloudReflectionAo: 'native-material-ibl-occlusion',
+        cloudReflectionResolutionScale: null,
+        cloudReflectionUpdate: 'periodic-equirectangular-pmrem',
         ssrImplementation: 'three/addons/tsl/display/SSRNode.js',
         aoReceiverMask: 'metalrough-b-per-material',
-        environmentSuppressedMaterials: hookComposed ? 'per-install-texture-userData' : 0,
-        nativeEnvironmentPbr: !hookComposed,
+        environmentSuppressedMaterials: 0,
+        nativeEnvironmentPbr: true,
         scenePass,
         pipeline,
         ssrNode,
