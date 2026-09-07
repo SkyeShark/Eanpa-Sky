@@ -1,0 +1,9 @@
+{
+  "seed": 509071,
+  "size": 2048,
+  "worldMeters": 18000,
+  "emitters": 94,
+  "coverage": 0.19713497161865234,
+  "meanOpacity": 0.04999779164791107,
+  "model": "Procedural optical depth from curved, sheared ice trails; periodic splats"
+}

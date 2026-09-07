@@ -318,6 +318,23 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
         weatherTex.needsUpdate = true;
         const weatherNode = T3.texture(weatherTex);
 
+        // A periodic optical-depth atlas of sheared ice trails. Hosts may
+        // supply their own linear coverage texture; the built-in asset is
+        // owned and released with this sky. One mip-filtered read replaces
+        // many analytic plumes in both the visible layer and shadow field.
+        const ownsCirrusTexture = !textures.cirrus;
+        const cirrusTex = textures.cirrus ?? await new T3.TextureLoader().loadAsync(
+            new URL('../assets/weather/cirrus_ice_trails.png', import.meta.url).href,
+        );
+        if (ownsCirrusTexture) {
+            cirrusTex.name = 'eanpa_cirrus_ice_trails';
+            cirrusTex.colorSpace = T3.NoColorSpace;
+            cirrusTex.wrapS = cirrusTex.wrapT = T3.RepeatWrapping;
+            cirrusTex.minFilter = T3.LinearMipmapLinearFilter;
+            cirrusTex.magFilter = T3.LinearFilter;
+        }
+        const cirrusNode = T3.texture(cirrusTex);
+
         const m0 = vec3(0.0, 0.8, 0.6), m1 = vec3(-0.8, 0.36, -0.48), m2 = vec3(-0.6, -0.48, 0.64);
         const applyM = (p) => vec3(dot(p, m0), dot(p, m1), dot(p, m2));
         const fbm3 = (p) => {
@@ -1103,76 +1120,12 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             const authoredSheet = smoothstep(u.wispThreshold, u.wispThreshold.add(0.24), wispN)
                 .mul(smoothstep(0.30, 0.62, wispPatch));
             const sheet = authoredSheet;
-            // Finite mares'-tail plumes. Every safely inset cell may carry one
-            // independently centered, rotated, sized and curved ice plume;
-            // many cells are empty. Because the envelope is zero well before
-            // cell borders, random per-cell parameters never form seams. This
-            // keeps recognizable feathered cirrus without either the old
-            // evenly spaced dashes or a horizon-wide anisotropic stripe field.
-            const cirrusCellP = wispAdvected.xz.mul(0.00040).add(vec2(.37,.63));
-            const cirrusId = floor(cirrusCellP);
-            const cirrusLocal = fract(cirrusCellP).sub(vec2(0.5));
-            const cirrusAngleR = hash3(vec3(cirrusId.x, cirrusId.y, 1.7));
-            const cirrusShapeR = hash3(vec3(cirrusId.x, cirrusId.y, 5.9));
-            const cirrusWidthR = hash3(vec3(cirrusId.x, cirrusId.y, 9.2));
-            const cirrusPresenceR = hash3(vec3(cirrusId.x, cirrusId.y, 13.6));
-            const cirrusCenterX = hash3(vec3(cirrusId.x, cirrusId.y, 17.3)).sub(0.5).mul(0.13);
-            const cirrusCenterY = hash3(vec3(cirrusId.x, cirrusId.y, 21.8)).sub(0.5).mul(0.13);
-            const cirrusX = cirrusLocal.x.sub(cirrusCenterX);
-            const cirrusY = cirrusLocal.y.sub(cirrusCenterY);
-            // Falling ice fibers share the prevailing shear direction. Small
-            // local variations keep plumes irregular without giving every
-            // neighbouring patch an unrelated wind direction.
+            // The atlas records irregular emitter families and their curved
+            // fall trails. Advect and orient the entire field with the wind;
+            // its phase is shared by sky radiance and cloud transmittance.
             const shear=normalize(u.skyWind.xz.add(vec2(.001)));
-            const cirrusDirX = shear.x.add(cirrusAngleR.sub(0.5).mul(.5));
-            const cirrusDirY = shear.y.add(cirrusShapeR.sub(0.5).mul(.5));
-            const cirrusDirInv = float(1).div(max(length(vec2(cirrusDirX, cirrusDirY)), 0.08));
-            const cirrusCos = cirrusDirX.mul(cirrusDirInv);
-            const cirrusSin = cirrusDirY.mul(cirrusDirInv);
-            const cirrusAlong = cirrusX.mul(cirrusCos).add(cirrusY.mul(cirrusSin));
-            const cirrusAcross0 = cirrusY.mul(cirrusCos).sub(cirrusX.mul(cirrusSin));
-            const cirrusLength = cirrusShapeR.mul(0.13).add(0.28);
-            const cirrusWidth = cirrusWidthR.mul(0.046).add(0.048);
-            const cirrusU = cirrusAlong.div(cirrusLength);
-            const cirrusBend = cirrusU.mul(cirrusAngleR.sub(0.5)).mul(cirrusWidth.mul(0.42))
-                .add(cirrusU.mul(cirrusU).mul(cirrusShapeR.sub(0.5)).mul(cirrusWidth.mul(1.55)));
-            const cirrusAcross = cirrusAcross0.sub(cirrusBend);
-            const cirrusTaper = float(1).sub(smoothstep(0.52, 1.0, abs(cirrusU)));
-            const cirrusCoreW = cirrusWidth.mul(cirrusTaper.mul(0.72).add(0.20)).mul(0.34);
-            const cirrusCore = float(1).sub(smoothstep(cirrusCoreW.mul(0.16), cirrusCoreW, abs(cirrusAcross)));
-            const cirrusBranchGate = smoothstep(-0.18, 0.72, cirrusU).mul(cirrusTaper);
-            const cirrusSep = cirrusWidth.mul(smoothstep(-0.4, 0.85, cirrusU).mul(1.05).add(0.42));
-            const cirrusUpperD = cirrusAcross.sub(cirrusSep);
-            const cirrusLowerD = cirrusAcross.add(cirrusSep.mul(0.78));
-            const cirrusUpper = float(1).sub(smoothstep(cirrusCoreW.mul(0.10), cirrusCoreW.mul(0.82), abs(cirrusUpperD)))
-                .mul(0.52).mul(cirrusBranchGate);
-            const cirrusLower = float(1).sub(smoothstep(cirrusCoreW.mul(0.08), cirrusCoreW.mul(0.72), abs(cirrusLowerD)))
-                .mul(0.36).mul(cirrusBranchGate);
-            const cirrusPlumeW = cirrusWidth.mul(2.85);
-            const cirrusPlume = float(1).sub(smoothstep(cirrusWidth.mul(0.55), cirrusPlumeW, abs(cirrusAcross)))
-                .mul(wispN.mul(0.08).add(0.12)).mul(cirrusTaper);
-            // Reuse the already evaluated warped wisp noise for feather
-            // breakup; a dedicated three-octave FBM here cost ~15 fps.
-            const cirrusBreakMask = smoothstep(0.36, 0.70, wispN).mul(0.72).add(0.28);
-            const cirrusPresence = smoothstep(0.20, 0.48, cirrusPresenceR);
-            // Fine shear-aligned strands soften the smooth analytic spine.
-            // A shared cached noise read adds ragged feathering and gaps; the
-            // finite envelope still vanishes before each cell boundary.
-            const strandNoise = fbmE(vec3(
-                cirrusAlong.mul(8).add(cirrusWidthR.mul(7)),
-                cirrusAcross.div(cirrusWidth).mul(3.8).add(cirrusAlong.mul(11)),
-                cirrusPresenceR.mul(9),
-            ));
-            const feather = exp(cirrusAcross.div(cirrusWidth.mul(1.3)).pow(2).mul(-0.7))
-                .mul(cirrusTaper)
-                .mul(smoothstep(0.25, 0.67, strandNoise));
-            const fibers = min(feather.mul(0.85)
-                .add(cirrusCore.add(cirrusUpper).add(cirrusLower).mul(0.16))
-                .add(cirrusPlume.mul(0.75)), 0.96)
-                .mul(cirrusTaper)
-                .mul(cirrusBreakMask)
-                .mul(cirrusPresence)
-                .mul(smoothstep(0.08, 0.60, wispPatch).mul(0.32).add(0.68));
+            const along=dot(wispAdvected.xz,shear),across=dot(wispAdvected.xz,vec2(shear.y.negate(),shear.x));
+            const fibers=cirrusNode.sample(vec2(along,across).div(18000).add(vec2(.24,.47))).r.mul(.82);
             // Do not execute the cirrus plume graph for ordinary cumulus,
             // stratus, Ringworld, or storm sheets. A narrow transition band
             // still crossfades both fields when weather morphs to/from High
@@ -2883,6 +2836,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                 bgMat.dispose();
                 noiseTex.dispose();
                 weatherTex.dispose();
+                if (ownsCirrusTexture) cirrusTex.dispose();
                 lightCacheTex?.dispose?.();
                 lightCacheCompute?.dispose?.();
                 sys._envTarget?.dispose?.();

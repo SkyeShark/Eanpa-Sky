@@ -17,12 +17,13 @@ try {
     const before=await resources(4);
     if(!before.clean && mode==='controlled') throw new Error(`GPU contention before capture: ${JSON.stringify(before)}`);
     await cdp.send('Emulation.setCPUThrottlingRate',{rate:Number(rate)});
+    await cdp.evaluate('_eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;');
     await new Promise(r=>setTimeout(r,4000));
     const metadata=await cdp.evaluate(`({date:new Date().toISOString(),skybox:document.getElementById('skybox').value,
         clouds:document.getElementById('cloud-type').value,weather:document.getElementById('weather').value,
         hours:document.getElementById('tod').value,quality:document.getElementById('quality').value,
         canvas:[document.getElementById('view').width,document.getElementById('view').height],
-        camera:_c.position.toArray(),look:{yaw:_look.yaw,pitch:_look.pitch},
+        camera:_c.position.toArray(),look:{yaw:_look.yaw,pitch:_look.pitch},verticalFov:_c.getEffectiveFOV(),
         ready:document.getElementById('boot').style.display==='none',pointerLocked:!!document.pointerLockElement,
         transitioning:!!(_weather?.diagnostics?.transition?.active||_sky?.cloudTransitionInfo?.active),
         gpuMemory:_reflectionPipeline?.pipeline.renderer.info.memory??null,

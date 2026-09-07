@@ -62,11 +62,21 @@ the reflected scene. Porous ground darkens moderately; metallic surfaces retain
 their conductor response. Thin wetness builds faster than puddles, and puddles
 outlast the rain instead of disappearing with the weather selector.
 
+Falling drops use independent PCG random channels and a denser near-camera
+population. Cloud coverage at the upwind emission position gates precipitation;
+the same captured surface stops the falling streak and places its impact.
+Splash crowns and ballistic beads use that surface's position and normal,
+including roofs. The surface field also produces a throttled, asynchronous
+listener-exposure sample for rain gain and shelter filtering in the standalone.
+
 The capture covers a camera-local region (72 m half-width by default), refreshed
 at a bounded rate. It is a surface approximation, not a fluid solver: moisture
 timing is shared, exposure is local, and it does not simulate runoff, trapped
 volumes or water carried by moving objects. A host that aggressively removes
 off-screen geometry must retain nearby roof/occluder geometry for this pass.
+Puddles blend the native PBR surface parameters toward water; this is not a
+separate refractive water volume or a complete optical model of two material
+layers. The surface field resolves the first obstruction along the rain ray.
 
 The GPU fixture in `qa/rain-surface-contract.js` checks open/sheltered surfaces,
 slopes, instances, skinned/deformed roofs, cutout openings, wind and state rollback.

@@ -39,3 +39,20 @@ height-weighted column approximation.
 Dispose the sky when replacing it. This releases its shadow target/material
 and restores the material lighting hooks it owns. Call wrapping before shader
 warmup, and call preparation in the same serialized frame as other GPU passes.
+
+The standalone ring also has a distant cloud sheet on the curved band. Its
+coverage is evaluated into a mipmapped cylindrical atlas at 5 Hz and shared by
+the visible sheet and the band's celestial-light attenuation. The ring owner
+calls `await ring.prepareFrame(renderer)` before rendering. Local buildings and
+props still use the ordinary world-space shadow map above; the band's near
+section receives that local field too.
+
+`opts.cloudShadowResolution`, `opts.cloudShadowExtent`, and
+`opts.cloudShadowRefreshSeconds` configure the shared map. A capture failure
+restores renderer state and retains the last complete map. No scene-wide
+material scan or cloud march runs for each receiver on each frame.
+
+Cloud visibility and the map use the same wind, extinction, celestial light
+direction, weather transition, and high-cloud field. Cirrus uses a periodic
+linear-opacity texture from `assets/weather/cirrus_ice_trails.png`; supply
+`textures.cirrus` to override it. A supplied texture remains host-owned.

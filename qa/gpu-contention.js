@@ -53,13 +53,30 @@
     }
     device.queue.writeBuffer(params,0,new Uint32Array([iterations,0,0,0]));
     const owner=_reflectionPipeline,original=owner.render;
-    let disposed=false;
+    let disposed=false,pendingMeasurement=null;
     const stop=()=>{if(disposed)return;disposed=true;if(owner.render===wrapped)owner.render=original;clearTimeout(watchdog);
-        delete globalThis.__gpuContention;return device.queue.onSubmittedWorkDone().catch(()=>{}).then(release);};
+        delete globalThis.__gpuContention;
+        return Promise.allSettled([device.queue.onSubmittedWorkDone(),pendingMeasurement]).then(release);};
     const watchdog=setTimeout(stop,180000);
-    const wrapped=async function(...args){const result=await original.apply(this,args);if(!disposed){dispatch();await device.queue.onSubmittedWorkDone();}return result;};
+    let lastMeasurement=-Infinity;
+    const runtimeSamples=[];
+    const wrapped=async function(...args){
+        const result=await original.apply(this,args);
+        if(!disposed){
+            const now=performance.now(),measure=now-lastMeasurement>1000;
+            dispatch(measure);await device.queue.onSubmittedWorkDone();
+            if(measure&&!disposed){
+                pendingMeasurement=(async()=>{
+                    await read.mapAsync(GPUMapMode.READ);const ticks=new BigUint64Array(read.getMappedRange());
+                    runtimeSamples.push({time:now,ms:Number(ticks[1]-ticks[0])/1e6});read.unmap();lastMeasurement=now;
+                })();
+                await pendingMeasurement;pendingMeasurement=null;
+            }
+        }
+        return result;
+    };
     owner.render=wrapped;installed=true;
-    const metadata={method:'Synthetic GPU memory-latency workload and per-frame completion fence',targetExtraGpuMs:targetMs,calibration,iterations,
+    const metadata={method:'Synthetic GPU memory-latency workload and per-frame completion fence',targetExtraGpuMs:targetMs,calibration,iterations,runtimeSamples,
         limitations:'Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card.'};
     globalThis.__gpuContention={stop,metadata};
     _eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;
