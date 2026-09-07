@@ -1005,6 +1005,7 @@ export async function makeVegetationScene(THREE, {
         group,
         update,
         resolveCamera,
+        walkSurfaceAt: collisionStreamer.walkSurfaceAt,
         setQuality,
         // Feed for non-vegetation hard-stop species (terrain rocks): the one
         // collision streamer resolves every registered species uniformly.

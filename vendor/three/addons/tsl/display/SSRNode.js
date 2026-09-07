@@ -148,6 +148,10 @@ class SSRNode extends TempNode {
 		 */
 		this.quality = uniform( 0.5 );
 
+		// App-selectable roughness limit. The default preserves upstream coverage;
+		// rough surfaces can use their angularly filtered environment instead.
+		this.maxRoughness = uniform( 1 );
+
 		/**
 		 * The quality of the blur. Must be an integer in the range `[1,3]`.
 		 *
@@ -472,6 +476,9 @@ class SSRNode extends TempNode {
 			// Skip pixels without a supported reflective receiver. The PBR path
 			// includes dielectric F0, so it is intentionally not metal-only.
 			receiverMask.lessThanEqual( 0.00001 ).discard();
+			if ( this.roughnessNode !== null ) {
+				float( this.roughnessNode ).greaterThanEqual( this.maxRoughness ).discard();
+			}
 
 			// compute some standard FX entities
 			const depth = sampleDepth( uvNode ).toVar();

@@ -59,7 +59,7 @@ const THUNDER_CLOSE_ONSETS = Object.freeze([0.156, 0.118, 0.274]);
 const THUNDER_BODY_CAP = 6;
 const THUNDER_CRACK_CAP = 2;
 
-export function makeAudioSystem({ camera, temple, terrain } = {}) {
+export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
     const AudioContextClass = globalThis.AudioContext || globalThis.webkitAudioContext;
     const buffers = new Map();
     const bufferLoads = new Map();
@@ -584,6 +584,8 @@ export function makeAudioSystem({ camera, temple, terrain } = {}) {
         const x = camera.position.x;
         const z = camera.position.z;
         const footY = Number(movement?.physicalEyeY) - Number(movement?.eyeHeight ?? 1.82);
+        const ground = surfaceAt?.(x, z);
+        if (ground?.kind === 'rock' && Math.abs(footY - ground.height) < 0.38) return 'stone';
         const authoredTempleSurface = temple?.walkSurfaceTypeAt?.(x, z, footY);
         if (authoredTempleSurface === 'stone' || authoredTempleSurface === 'sandstone') return 'stone';
 

@@ -419,6 +419,10 @@ const assistedStepSample = {};
 const navigationSurfaceAt = (x, z) => {
     const terrainHeight = Number(terrain?.heightAt?.(x, z) ?? 0);
     const templeSurface = temple?.walkSurfaceAt?.(x, z) ?? null;
+    const rockSurface = vegetation?.walkSurfaceAt?.(x, z,
+        movementState.physicalEyeY - movementState.eyeHeight + MAX_WALK_STEP_RISE) ?? null;
+    if (Number.isFinite(rockSurface?.height)
+        && rockSurface.height >= Math.max(terrainHeight, templeSurface?.height ?? -Infinity)) return rockSurface;
     if (Number.isFinite(templeSurface?.height)
         && templeSurface.height >= terrainHeight - 1e-5) return templeSurface;
     return { height: terrainHeight, kind: 'terrain', assistedStep: false };
@@ -995,7 +999,7 @@ const temple = await makeTempleScene(THREE, {
 scene.add(temple.group);
 globalThis._temple = temple;
 temple.setTime?.(Number(document.getElementById('tod').value));
-const audio = makeAudioSystem({ camera, temple, terrain });
+const audio = makeAudioSystem({ camera, temple, terrain, surfaceAt: navigationSurfaceAt });
 globalThis._audio = audio;
 
 document.getElementById('boot').textContent = 'dressing rock, scree, and desert scrub…';
@@ -1801,6 +1805,7 @@ function frame(now) {
     if (building || testFrameState.paused) {
         benchmark?.invalidate(building ? 'sky rebuild during capture' : 'paused during capture');
         last = now;
+        tick._p = now;
         return;
     }
     if (inFlight) return;

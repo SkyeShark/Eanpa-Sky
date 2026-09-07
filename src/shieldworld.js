@@ -76,6 +76,10 @@ export async function makeShieldworld({
     const moonMaterials = new Set();
     moon.traverse((o) => {
         if (!o.isMesh || !o.material) return;
+        // Transparent fading moves fragments out of the opaque queue. Keep
+        // every part of this distant body behind the shield (-99) and clouds
+        // (-98), including the fragments imported with default renderOrder 0.
+        o.renderOrder = -99.5;
         o.userData.noWet = true;
         o.userData.noCloudShadow = true;
         const mats = Array.isArray(o.material) ? o.material : [o.material];
@@ -108,6 +112,7 @@ export async function makeShieldworld({
             hours, clouds: cloudPreset,
             celestial: rg.celestial,
             paletteTint: rg.paletteTint,
+            moonLightColor: [1.0, 0.62, 0.35],
             skySamples: quality.skySamples,
             lightSamples: quality.lightSamples,
             cloudPasses: quality.cloudPasses,
@@ -165,6 +170,7 @@ export async function makeShieldworld({
             const th = (((curHours - 22.3) + 24) % 24) / 6.2 * Math.PI;
             moon.position.set(Math.cos(th) * 34000, Math.sin(th) * 22000 + 2000, -12000);
             moon.rotation.set(t * 0.01, t * 0.017, 0);
+            sky.setMoonDirection(moon.position);
 
             sky.update(t, camera);
             weatherAttachment.update(t);
@@ -187,16 +193,14 @@ export async function makeShieldworld({
             }
             if (sky.uniforms.skyGlow) sky.uniforms.skyGlow.value.setRGB(0.29, 0.73, 1.0).multiplyScalar(0.014 * nightK);
 
-            // moon lighting: sun direction + palette, atmospheric extinction
+            // Moon lighting: star direction/spectrum and atmospheric extinction
             // pins visibility above the lattice's horizon-fade band
             const mu = moonSys.uniforms;
             mu.sunDir.value.copy(sky.sunDir).normalize();
-            const pal = sky.state.palette;
-            mu.sunCol.value.setRGB(
-                pal.sun[0] * 1.05,
-                pal.sun[1] * 0.88,
-                pal.sun[2] * 0.70,
-            );
+            // The moon receives the star's spectrum even while the observer
+            // is on the planet's night side. The local twilight palette is
+            // atmospheric attenuation at the observer, not at the moon.
+            mu.sunCol.value.setRGB(1.0, 0.62, 0.35);
             globalThis._shieldworldMoonStats = {
                 kind: 'rocky-shattered-moon',
                 visibility: 'night-only-elevation-gated',
@@ -213,7 +217,9 @@ export async function makeShieldworld({
             moonFade.value = visibility;
             moon.visible = visibility > 0.001;
             mu.gain.value = 2.0 * extEase;
-            if (moonSys.update) moonSys.update(t);
+            // Absolute-time animation resumes in place when visible. Avoid
+            // rebuilding/uploading 7,000 debris matrices on daytime frames.
+            if (moon.visible && moonSys.update) moonSys.update(t);
             // Apply the live weather attenuation after the wrapper restores
             // red-giant/shield-specific lighting, so neither update silently
             // overwrites the other.

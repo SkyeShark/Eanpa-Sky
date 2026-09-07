@@ -371,6 +371,7 @@ function makeEidoverseSsr({
     node.thickness.value = thickness;
     node.quality.value = quality;
     node.resolutionScale = resolutionScale;
+    node.maxRoughness.value = 0.75;
     return node;
 }
 
@@ -768,8 +769,13 @@ export function makeReflectionPipeline(
     // PMREM/IBL result from the local SSR layer without rebuilding the graph.
     const uSsrAudit = THREE.uniform(1);
     const uSkyFallbackAudit = THREE.uniform(1);
+    // A single ray cannot represent a broad rough-surface reflection lobe.
+    // Fade to native angular filtering before the march's roughness cutoff.
+    // Keep this receiver-dependent weight outside the blurred hit buffer.
+    const ssrRoughnessWeight = THREE.smoothstep(0.55, 0.75, sceneMetalrough.g).oneMinus();
     const ssrConfidence = ssrTexture.a
         .mul(ssrEdgeFade)
+        .mul(ssrRoughnessWeight)
         .mul(uSsrAudit);
     const skyRemaining = THREE.float(1).sub(ssrConfidence);
     // Both sources carry receiver-independent radiance. SSR owns accepted
@@ -777,6 +783,7 @@ export function makeReflectionPipeline(
     // exact remaining coverage. There is no additive overlap to z-fight.
     const reflectionTransport = ssrTexture.rgb
         .mul(ssrEdgeFade)
+        .mul(ssrRoughnessWeight)
         .mul(uSsrAudit)
         .add(
             sceneSkyFallback

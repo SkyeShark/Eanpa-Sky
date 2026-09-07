@@ -40,15 +40,15 @@ ok(/installedWithoutWeather: true/.test(main), 'runtime diagnostics record weath
 ok(/o\.userData\.noCloudShadow = true/.test(ringSky), 'Ringworld sky structure is not treated as local shadow receiver');
 ok(/cloudBody\([\s\S]*dir, vec3\(0, 2, 0\), bopts\.cloudPasses, null, float\(0\)/.test(sky),
     'reflected clouds are sampled into the angular environment bake');
-ok(/const wispHitT = RING_R \? ringWispT : shellFar\(org, dir, sTop\.add\(1000\)\);[\s\S]*const wispRange = float\(1\)\.sub\(smoothstep\([\s\S]*wispHitT/.test(sky), 'Earth/Shield and curved Ringworld high sheets own ordered-edge distance attenuation');
+ok(/const hit = highCloudHit\(org, dir\);[\s\S]*const wispHitT = hit\.x;[\s\S]*const wispRange = float\(1\)\.sub\(smoothstep\([\s\S]*wispHitT/.test(sky), 'Earth/Shield and curved Ringworld high sheets own ordered-edge distance attenuation');
 ok(/const RING_ZFLAT\s*=\s*RING_R\s*\*\s*0\.84;[\s\S]*const RING_ZCREST\s*=\s*RING_R\s*\*\s*0\.98;[\s\S]*const RING_RISE\s*=\s*RING_R\s*\*\s*0\.07;[\s\S]*const RING_ZEND\s*=\s*RING_R\s*\*\s*0\.995;/.test(sky),
     'Ringworld wide centered profile remains stable');
-ok(/const ringWispFlatY = u\.cloudStart\.add\(u\.cloudHeight\)\.add\(1000\);[\s\S]*ringDeckY\(zq\)\.sub\(RING_BASE\)\.add\(ringWispFlatY\)/.test(sky),
+ok(/const flatY = u\.cloudStart\.add\(u\.cloudHeight\)\.add\(1000\);[\s\S]*ringDeckY\(zq\)\.sub\(RING_BASE\)\.add\(flatY\)/.test(sky),
     'Ringworld upper sheet preserves preset semantic altitude');
 ok(/const uLocalHalf = uniform\(opts\.ringLocalHalf \?\? 4000\);[\s\S]*const uWispCurveHalf = uniform\([\s\S]*\(opts\.ringLocalHalf \?\? 4000\) \* 0\.5[\s\S]*const ringWispProgress = smoothstep\([\s\S]*const ringWispHalf = mix\(uLocalHalf, uWispCurveHalf, ringWispProgress\);/.test(sky),
     'Ringworld upper sheet stays wide across the flat run and narrows only on the curved ends');
 ok(!/ring\.clouds/.test(ringSky), 'Ringworld wrapper has no duplicate cloud presentation');
-ok(/const ringWispTLo =[\s\S]*const ringWispTHi =[\s\S]*solveStep < 8[\s\S]*ringWispTLo\.assign\(ringWispTMid\)[\s\S]*ringWispTHi\.assign\(ringWispTMid\)/.test(sky),
+ok(/const lo =[\s\S]*const hi =[\s\S]*step < 8[\s\S]*lo\.assign\(mid\)[\s\S]*hi\.assign\(mid\)/.test(sky),
     'Ringworld upper sheet uses a bracketed curve intersection rather than fixed-point guesses');
 ok(/DIRECT_LIGHT_MASS_SCALE = 0\.25[\s\S]*const addDetailedLight[\s\S]*cheapDensity[\s\S]*const addMassLight[\s\S]*smoothDensity[\s\S]*sampleLightCache\(p\)[\s\S]*addMassLight\(directDen\)[\s\S]*mix\(cachedDen, directDen, clamp\(u\.lightCacheDirect, 0, 1\)\)[\s\S]*addDetailedLight\(detailedDen\)[\s\S]*addMassLight\(massDen\)[\s\S]*mix\(detailedDen, massDen, clamp\(u\.lightCacheDirect, 0, 1\)\)/.test(sky),
     'cached and cache-disabled severe weather share calibrated live cloud-mass self-shadowing');
@@ -85,7 +85,7 @@ ok(/earthMoonVisibility: textures\.moon[\s\S]*tod-elevation-cloud-occlusion/.tes
 ok(/earthMoonTone: 'neutral-cool-lunar-albedo'/.test(sky), 'Earth moon stays neutral/cool and distinct from Shieldworld');
 ok(/0xd06a3c/.test(shield), 'Shieldworld bounced moonlight is warm amber-brown');
 ok(/red-giant-warm-amber-brown/.test(shield), 'Shieldworld reports its red-giant reflected key');
-ok(/pal\.sun\[0\] \* 1\.05[\s\S]*pal\.sun\[1\] \* 0\.88[\s\S]*pal\.sun\[2\] \* 0\.70/.test(shield), 'Shieldworld rocky moon key cannot drift to the Earth moon blue balance');
+ok(/mu\.sunCol\.value\.setRGB\(1\.0, 0\.62, 0\.35\)/.test(shield), 'Shieldworld rocky moon reflects the star spectrum independently of observer twilight');
 
 const moonHash = createHash('sha256').update(moonBytes).digest('hex').toUpperCase();
 assert.equal(moonHash, 'B246064F217F8D479DF78C49C7C8595A8F5FBDA008A72FD539978D2E121E0109', 'Earth moon texture differs from Eidoverse LROC donor');

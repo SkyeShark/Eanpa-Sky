@@ -1,0 +1,8 @@
+[
+    {"name":"shield-clear-star", "sky":"shieldworld", "cloud":"clear", "aim":"star"},
+    {"name":"shield-clear-moon", "sky":"shieldworld", "cloud":"clear", "hours":1.4, "aim":"moon"},
+    {"name":"shield-cumulus-moon", "sky":"shieldworld", "cloud":"cumulus", "hours":1.4, "aim":"moon"},
+    {"name":"shield-cumulus", "sky":"shieldworld", "cloud":"cumulus"},
+    {"name":"shield-stratus", "sky":"shieldworld", "cloud":"stratus"},
+    {"name":"shield-cirrus", "sky":"shieldworld", "cloud":"cirrus"}
+]

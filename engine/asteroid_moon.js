@@ -388,7 +388,14 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
             }
             // celestial lambert: the terminator sweeps each chunk as the red
             // giant crosses the sky — real phases per fragment
-            const lit = T3.max(T3.dot(nW, uSunDir), 0).mul(0.92).add(0.08);
+            const incidence = T3.max(T3.dot(nW, uSunDir), 0);
+            const emission = T3.max(T3.dot(nW, T3.normalize(T3.cameraPosition.sub(T3.positionWorld))), 0);
+            // A Lommel-Seeliger/Lambert blend gives particulate regolith a
+            // broad illuminated face and a defined terminator. A geometric
+            // horizon guard stops mapped crater normals lighting the far side.
+            const limb = T3.smoothstep(-0.025, 0.065, T3.dot(nGeo, uSunDir));
+            const particulate = incidence.div(incidence.add(emission).max(0.05));
+            const lit = particulate.mul(0.75).add(incidence.mul(0.25)).mul(limb).add(0.018);
             m.colorNode = alb.mul(lit).mul(uSunCol).mul(uGain);
             matCache.set(src, m);
         }
@@ -568,7 +575,7 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
             // clear moat around the hero — bodies sweep their surroundings
             const moat = smoothstep(float(0.2), float(1.05), pLen.div(heroR));
             // hard edge-kill well inside the mesh shell (never print the cut)
-            const envK = smoothstep(float(1.0), float(0.80), p.length().div(RC));
+            const envK = float(1).sub(smoothstep(0.80, 1.0, p.length().div(RC)));
             let dens = streak.mul(0.10).mul(moat).mul(gate.mul(0.9).add(0.1)).mul(envK);
             // CONTACT-GAP PLUMES — the freshest, densest dust lives where
             // fragments grind past each other, not at body centers (DART)

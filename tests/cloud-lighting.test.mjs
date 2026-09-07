@@ -71,3 +71,25 @@ test('sky disposal restores its direct-light wrapper without overwriting a later
     assert.equal(other.material.setupLightingModel, laterOwner);
     assert.equal(other.roots.size, 0);
 });
+
+test('imported PBR materials carry cloud lighting through renderer node conversion and restore cleanly', () => {
+    const h = harness();
+    for (const physical of [false, true]) {
+        const material = { isMeshStandardMaterial: true, isMeshPhysicalMaterial: physical, userData: {} };
+        const nativeModel = () => ({ direct: data => data, physical });
+        const root = { traverse(cb) { cb({ isMesh: true, material, userData: {} }); } };
+        const roots = new Map();
+        const T3 = { positionWorld: {},
+            MeshStandardNodeMaterial: { prototype: { setupLightingModel: nativeModel } },
+            MeshPhysicalNodeMaterial: { prototype: { setupLightingModel: nativeModel } } };
+        makeWrapper(root, { domes: [], tslCloudShadow: () => 0.4 }, T3, h.celestial, roots,
+            { log() {} }).wrapCloudShadows(root);
+        // Match the renderer library's enumerable-property conversion.
+        const converted = Object.assign({}, material);
+        const model = converted.setupLightingModel({});
+        assert.equal(model.direct(h.data(h.celestial), { object: { userData: {} } }).lightColor, 0.4);
+        assert.equal(model.physical, physical);
+        restore(roots);
+        assert.equal(Object.hasOwn(material, 'setupLightingModel'), false);
+    }
+});

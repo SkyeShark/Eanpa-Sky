@@ -1072,6 +1072,139 @@
         // the entire point of a debug view — never cull the subject of a
         // debug. Proper any-vantage rendering is future work.
         const CLOUD_DBG = opts.cloudDebug === true;
+        // One high-cloud field drives both visible coverage and celestial
+        // transmittance. A shadow never invents a second, unrelated noise map.
+        const highCloudAlphaAt = Fn(([pC]) => {
+            // Restore the authored, domain-warped high-cloud field instead of
+            // thresholding four coarse 2D map reads into distant slabs. The
+            // optimized tiers reuse the existing filtered 3D density basis via
+            // fbmE, retaining the organic field without the former ALU lattice
+            // cost. Advect the complete domain at the same world velocity as
+            // the volume below so both sheet masses and cirrus cells visibly
+            // move rather than only changing their internal noise.
+            const wispAdvected = pC.add(vec3(
+                u.skyWind.x.mul(u.time), 0, u.skyWind.z.mul(u.time),
+            ));
+            const wispPatch = fbmE(wispAdvected.mul(0.00016).add(vec3(4.7, 1.3, -2.1)));
+            const wispWarp = fbmE(wispAdvected.mul(0.00031).add(vec3(-1.7, 3.1, 5.3))).sub(0.44);
+            const wispBend = fbmE(wispAdvected.mul(0.00009).add(vec3(8.2, -1.4, 2.7))).sub(0.44);
+            const wispP = wispAdvected.mul(u.wispStretch).mul(u.wispScale)
+                .add(vec3(
+                    wispWarp.mul(1.8).add(wispBend.mul(1.4)),
+                    wispWarp.mul(0.35),
+                    wispWarp.mul(-1.2).add(wispBend.mul(0.7)),
+                ));
+            const wispN = fbmE(wispP);
+            const authoredSheet = smoothstep(u.wispThreshold, u.wispThreshold.add(0.24), wispN)
+                .mul(smoothstep(0.30, 0.62, wispPatch));
+            const sheet = authoredSheet;
+            // Finite mares'-tail plumes. Every safely inset cell may carry one
+            // independently centered, rotated, sized and curved ice plume;
+            // many cells are empty. Because the envelope is zero well before
+            // cell borders, random per-cell parameters never form seams. This
+            // keeps recognizable feathered cirrus without either the old
+            // evenly spaced dashes or a horizon-wide anisotropic stripe field.
+            const cirrusCellP = wispAdvected.xz.mul(0.00013);
+            const cirrusId = floor(cirrusCellP);
+            const cirrusLocal = fract(cirrusCellP).sub(vec2(0.5));
+            const cirrusAngleR = hash3(vec3(cirrusId.x, cirrusId.y, 1.7));
+            const cirrusShapeR = hash3(vec3(cirrusId.x, cirrusId.y, 5.9));
+            const cirrusWidthR = hash3(vec3(cirrusId.x, cirrusId.y, 9.2));
+            const cirrusPresenceR = hash3(vec3(cirrusId.x, cirrusId.y, 13.6));
+            const cirrusCenterX = hash3(vec3(cirrusId.x, cirrusId.y, 17.3)).sub(0.5).mul(0.13);
+            const cirrusCenterY = hash3(vec3(cirrusId.x, cirrusId.y, 21.8)).sub(0.5).mul(0.13);
+            const cirrusX = cirrusLocal.x.sub(cirrusCenterX);
+            const cirrusY = cirrusLocal.y.sub(cirrusCenterY);
+            // A normalized hash vector avoids two transcendental trig calls
+            // per pixel while preserving fully varied plume orientation.
+            const cirrusDirX = cirrusAngleR.sub(0.5);
+            const cirrusDirY = cirrusShapeR.sub(0.5);
+            const cirrusDirInv = float(1).div(max(length(vec2(cirrusDirX, cirrusDirY)), 0.08));
+            const cirrusCos = cirrusDirX.mul(cirrusDirInv);
+            const cirrusSin = cirrusDirY.mul(cirrusDirInv);
+            const cirrusAlong = cirrusX.mul(cirrusCos).add(cirrusY.mul(cirrusSin));
+            const cirrusAcross0 = cirrusY.mul(cirrusCos).sub(cirrusX.mul(cirrusSin));
+            const cirrusLength = cirrusShapeR.mul(0.13).add(0.28);
+            const cirrusWidth = cirrusWidthR.mul(0.046).add(0.048);
+            const cirrusU = cirrusAlong.div(cirrusLength);
+            const cirrusBend = cirrusU.mul(cirrusAngleR.sub(0.5)).mul(cirrusWidth.mul(0.42))
+                .add(cirrusU.mul(cirrusU).mul(cirrusShapeR.sub(0.5)).mul(cirrusWidth.mul(1.55)));
+            const cirrusAcross = cirrusAcross0.sub(cirrusBend);
+            const cirrusTaper = float(1).sub(smoothstep(0.52, 1.0, abs(cirrusU)));
+            const cirrusCoreW = cirrusWidth.mul(cirrusTaper.mul(0.72).add(0.20)).mul(0.34);
+            const cirrusCore = float(1).sub(smoothstep(cirrusCoreW.mul(0.16), cirrusCoreW, abs(cirrusAcross)));
+            const cirrusBranchGate = smoothstep(-0.18, 0.72, cirrusU).mul(cirrusTaper);
+            const cirrusSep = cirrusWidth.mul(smoothstep(-0.4, 0.85, cirrusU).mul(1.05).add(0.42));
+            const cirrusUpperD = cirrusAcross.sub(cirrusSep);
+            const cirrusLowerD = cirrusAcross.add(cirrusSep.mul(0.78));
+            const cirrusUpper = float(1).sub(smoothstep(cirrusCoreW.mul(0.10), cirrusCoreW.mul(0.82), abs(cirrusUpperD)))
+                .mul(0.52).mul(cirrusBranchGate);
+            const cirrusLower = float(1).sub(smoothstep(cirrusCoreW.mul(0.08), cirrusCoreW.mul(0.72), abs(cirrusLowerD)))
+                .mul(0.36).mul(cirrusBranchGate);
+            const cirrusPlumeW = cirrusWidth.mul(2.85);
+            const cirrusPlume = float(1).sub(smoothstep(cirrusWidth.mul(0.55), cirrusPlumeW, abs(cirrusAcross)))
+                .mul(wispN.mul(0.08).add(0.12)).mul(cirrusTaper);
+            // Reuse the already evaluated warped wisp noise for feather
+            // breakup; a dedicated three-octave FBM here cost ~15 fps.
+            const cirrusBreakMask = smoothstep(0.36, 0.70, wispN).mul(0.72).add(0.28);
+            const cirrusPresence = smoothstep(0.20, 0.48, cirrusPresenceR);
+            const fibers = min(cirrusCore.add(cirrusUpper).add(cirrusLower).add(cirrusPlume), 0.96)
+                .mul(cirrusTaper)
+                .mul(cirrusBreakMask)
+                .mul(cirrusPresence)
+                .mul(smoothstep(0.08, 0.60, wispPatch).mul(0.32).add(0.68));
+            // Do not execute the cirrus plume graph for ordinary cumulus,
+            // stratus, Ringworld, or storm sheets. A narrow transition band
+            // still crossfades both fields when weather morphs to/from High
+            // Cirrus, so there is no hard visual swap. This restores the
+            // optimized tiers' budget without removing either cloud element.
+            const wispShape = float(0).toVar();
+            If(u.wispFilament.lessThan(0.55), () => {
+                wispShape.assign(sheet);
+            }).Else(() => {
+                If(u.wispFilament.greaterThan(0.85), () => {
+                    wispShape.assign(fibers);
+                }).Else(() => {
+                    wispShape.assign(mix(sheet, fibers, smoothstep(0.55, 0.85, u.wispFilament)));
+                });
+            });
+            // Severe weather needs broad coverage, not a constant-opacity card.
+            // Treat wispFloor as the strength of a second low-frequency organic
+            // canopy so Dark Storm keeps holes, folds, and soft boundaries.
+            const canopyField = smoothstep(
+                0.18, 0.56,
+                wispPatch.mul(0.72).add(wispBend.add(0.44).mul(0.28)),
+            );
+            // Keep broad severe-weather coverage while preserving internal
+            // cloud structure.  Multiplying the low-frequency canopy by the
+            // already-filtered authored noise prevents its dense interiors
+            // from reading as one flat grey card overhead.
+            const canopyDetail = smoothstep(0.20, 0.82, wispN).mul(0.45).add(0.55);
+            const canopyShape = max(wispShape, canopyField.mul(u.wispFloor).mul(canopyDetail));
+            return min(canopyShape.mul(u.wispOn).mul(u.wispStrength).mul(u.wispOpacity), 0.88);
+        });
+        const highCloudHit = Fn(([org, dir]) => {
+            const flatY = u.cloudStart.add(u.cloudHeight).add(1000);
+            if (!RING_R) return vec2(shellFar(org, dir, flatY), 1);
+            const ringWispYAt = zq => ringDeckY(zq).sub(RING_BASE).add(flatY);
+            const dy = max(dir.y, 0.008);
+            const lo = max(flatY.sub(org.y), 0).div(dy).toVar();
+            const hi = max(flatY.add(RING_RISE).sub(org.y), 0).div(dy).toVar();
+            for (let step = 0; step < 8; step++) {
+                const mid = lo.add(hi).mul(0.5);
+                const p = org.add(dir.mul(mid));
+                If(p.y.lessThan(ringWispYAt(p.z)), () => { lo.assign(mid); })
+                    .Else(() => { hi.assign(mid); });
+            }
+            const t = lo.add(hi).mul(0.5);
+            const p = org.add(dir.mul(t));
+            const ringWispProgress = smoothstep(float(RING_ZFLAT), float(RING_VISIBLE_END), p.z.abs());
+            const ringWispHalf = mix(uLocalHalf, uWispCurveHalf, ringWispProgress);
+            const width = float(1).sub(smoothstep(ringWispHalf.mul(0.72), ringWispHalf.mul(1.22), p.x.abs()));
+            const ends = float(1).sub(smoothstep(float(RING_VISIBLE_END - RING_END_FADE), float(RING_VISIBLE_END), p.z.abs()));
+            return vec2(t, width.mul(ends));
+        });
+
         const cloudBody = (
             dirIn, orgIn, passesIn, jitterOverride = null,
             transientLightScale = float(1),
@@ -1212,164 +1345,12 @@
             // cloud ceiling seen between the low volumetric masses. The gate
             // still skips all of its work whenever wispOn is zero.
             If(u.wispOn.greaterThan(0.0001), () => {
-            // High clouds share the live cloud material and weather uniforms.
-            // Earth/Shieldworld intersect the preset's upper spherical shell.
-            // Ringworld keeps that SAME semantic altitude and SAME cloud field,
-            // adding only the authored deck displacement at the curved ends.
-            // The former fixed 1550 m surface compressed Cirrus from 4630 m and
-            // clipped most of the shared upper layer out of the visible sky.
-            const ringWispFlatY = u.cloudStart.add(u.cloudHeight).add(1000);
-            const ringWispYAt = (zq) => ringDeckY(zq).sub(RING_BASE).add(ringWispFlatY);
-            const ringWispDy = max(dir.y, 0.008);
-            // The ray's flat-height hit and maximum-rise hit bracket every
-            // possible intersection with this bounded circular profile.
-            // Bisection stays stable at the near-tangent curved ends where the
-            // former two fixed-point guesses could float tens of metres off
-            // the authored surface or fabricate a shelf hit.
-            const ringWispTLo = ringWispFlatY.sub(org.y).div(ringWispDy).toVar();
-            const ringWispTHi = ringWispFlatY.add(RING_RISE).sub(org.y).div(ringWispDy).toVar();
-            for (let solveStep = 0; solveStep < 8; solveStep++) {
-                const ringWispTMid = ringWispTLo.add(ringWispTHi).mul(0.5);
-                const ringWispPMid = org.add(dir.mul(ringWispTMid));
-                If(org.y.add(ringWispDy.mul(ringWispTMid)).lessThan(ringWispYAt(ringWispPMid.z)), () => {
-                    ringWispTLo.assign(ringWispTMid);
-                }).Else(() => {
-                    ringWispTHi.assign(ringWispTMid);
-                });
-            }
-            const ringWispT = ringWispTLo.add(ringWispTHi).mul(0.5);
-            const wispHitT = RING_R ? ringWispT : shellFar(org, dir, sTop.add(1000));
-            const pC = org.add(dir.mul(wispHitT));
-            // Preserve the full open-side footprint across the complete flat
-            // middle, then contract only after the authored curve begins.
-            const ringWispProgress = smoothstep(
-                float(RING_ZFLAT), float(RING_VISIBLE_END), pC.z.abs(),
-            );
-            const ringWispHalf = mix(uLocalHalf, uWispCurveHalf, ringWispProgress);
-            const ringWispWidthMask = float(1).sub(smoothstep(
-                ringWispHalf.mul(0.72), ringWispHalf.mul(1.22), pC.x.abs(),
-            ));
-            const ringWispEndMask = float(1).sub(smoothstep(
-                float(RING_VISIBLE_END - RING_END_FADE),
-                float(RING_VISIBLE_END),
-                pC.z.abs(),
-            ));
-            const wispW = RING_R ? ringWispWidthMask.mul(ringWispEndMask) : float(1);
-            // The old sheet inherited the low deck's t0 fade. At shallow view
-            // angles t0 can still be near while this higher shell hit is tens
-            // of kilometres farther away, collapsing kilometres of texture
-            // into stretched horizon copies. Fade from the sheet's own range.
+            const hit = highCloudHit(org, dir);
+            const wispHitT = hit.x;
             const wispRange = float(1).sub(smoothstep(
                 u.fadeDist.mul(0.55), u.fadeDist.mul(1.25), wispHitT,
             ));
-            // Restore the authored, domain-warped high-cloud field instead of
-            // thresholding four coarse 2D map reads into distant slabs. The
-            // optimized tiers reuse the existing filtered 3D density basis via
-            // fbmE, retaining the organic field without the former ALU lattice
-            // cost. Advect the complete domain at the same world velocity as
-            // the volume below so both sheet masses and cirrus cells visibly
-            // move rather than only changing their internal noise.
-            const wispAdvected = pC.add(vec3(
-                u.skyWind.x.mul(u.time), 0, u.skyWind.z.mul(u.time),
-            ));
-            const wispPatch = fbmE(wispAdvected.mul(0.00016).add(vec3(4.7, 1.3, -2.1)));
-            const wispWarp = fbmE(wispAdvected.mul(0.00031).add(vec3(-1.7, 3.1, 5.3))).sub(0.44);
-            const wispBend = fbmE(wispAdvected.mul(0.00009).add(vec3(8.2, -1.4, 2.7))).sub(0.44);
-            const wispP = wispAdvected.mul(u.wispStretch).mul(u.wispScale)
-                .add(vec3(
-                    wispWarp.mul(1.8).add(wispBend.mul(1.4)),
-                    wispWarp.mul(0.35),
-                    wispWarp.mul(-1.2).add(wispBend.mul(0.7)),
-                ));
-            const wispN = fbmE(wispP);
-            const authoredSheet = smoothstep(u.wispThreshold, u.wispThreshold.add(0.24), wispN)
-                .mul(smoothstep(0.30, 0.62, wispPatch));
-            const sheet = authoredSheet;
-            // Finite mares'-tail plumes. Every safely inset cell may carry one
-            // independently centered, rotated, sized and curved ice plume;
-            // many cells are empty. Because the envelope is zero well before
-            // cell borders, random per-cell parameters never form seams. This
-            // keeps recognizable feathered cirrus without either the old
-            // evenly spaced dashes or a horizon-wide anisotropic stripe field.
-            const cirrusCellP = wispAdvected.xz.mul(0.00013);
-            const cirrusId = floor(cirrusCellP);
-            const cirrusLocal = fract(cirrusCellP).sub(vec2(0.5));
-            const cirrusAngleR = hash3(vec3(cirrusId.x, cirrusId.y, 1.7));
-            const cirrusShapeR = hash3(vec3(cirrusId.x, cirrusId.y, 5.9));
-            const cirrusWidthR = hash3(vec3(cirrusId.x, cirrusId.y, 9.2));
-            const cirrusPresenceR = hash3(vec3(cirrusId.x, cirrusId.y, 13.6));
-            const cirrusCenterX = hash3(vec3(cirrusId.x, cirrusId.y, 17.3)).sub(0.5).mul(0.13);
-            const cirrusCenterY = hash3(vec3(cirrusId.x, cirrusId.y, 21.8)).sub(0.5).mul(0.13);
-            const cirrusX = cirrusLocal.x.sub(cirrusCenterX);
-            const cirrusY = cirrusLocal.y.sub(cirrusCenterY);
-            // A normalized hash vector avoids two transcendental trig calls
-            // per pixel while preserving fully varied plume orientation.
-            const cirrusDirX = cirrusAngleR.sub(0.5);
-            const cirrusDirY = cirrusShapeR.sub(0.5);
-            const cirrusDirInv = float(1).div(max(length(vec2(cirrusDirX, cirrusDirY)), 0.08));
-            const cirrusCos = cirrusDirX.mul(cirrusDirInv);
-            const cirrusSin = cirrusDirY.mul(cirrusDirInv);
-            const cirrusAlong = cirrusX.mul(cirrusCos).add(cirrusY.mul(cirrusSin));
-            const cirrusAcross0 = cirrusY.mul(cirrusCos).sub(cirrusX.mul(cirrusSin));
-            const cirrusLength = cirrusShapeR.mul(0.13).add(0.28);
-            const cirrusWidth = cirrusWidthR.mul(0.046).add(0.048);
-            const cirrusU = cirrusAlong.div(cirrusLength);
-            const cirrusBend = cirrusU.mul(cirrusAngleR.sub(0.5)).mul(cirrusWidth.mul(0.42))
-                .add(cirrusU.mul(cirrusU).mul(cirrusShapeR.sub(0.5)).mul(cirrusWidth.mul(1.55)));
-            const cirrusAcross = cirrusAcross0.sub(cirrusBend);
-            const cirrusTaper = float(1).sub(smoothstep(0.52, 1.0, abs(cirrusU)));
-            const cirrusCoreW = cirrusWidth.mul(cirrusTaper.mul(0.72).add(0.20)).mul(0.34);
-            const cirrusCore = float(1).sub(smoothstep(cirrusCoreW.mul(0.16), cirrusCoreW, abs(cirrusAcross)));
-            const cirrusBranchGate = smoothstep(-0.18, 0.72, cirrusU).mul(cirrusTaper);
-            const cirrusSep = cirrusWidth.mul(smoothstep(-0.4, 0.85, cirrusU).mul(1.05).add(0.42));
-            const cirrusUpperD = cirrusAcross.sub(cirrusSep);
-            const cirrusLowerD = cirrusAcross.add(cirrusSep.mul(0.78));
-            const cirrusUpper = float(1).sub(smoothstep(cirrusCoreW.mul(0.10), cirrusCoreW.mul(0.82), abs(cirrusUpperD)))
-                .mul(0.52).mul(cirrusBranchGate);
-            const cirrusLower = float(1).sub(smoothstep(cirrusCoreW.mul(0.08), cirrusCoreW.mul(0.72), abs(cirrusLowerD)))
-                .mul(0.36).mul(cirrusBranchGate);
-            const cirrusPlumeW = cirrusWidth.mul(2.85);
-            const cirrusPlume = float(1).sub(smoothstep(cirrusWidth.mul(0.55), cirrusPlumeW, abs(cirrusAcross)))
-                .mul(wispN.mul(0.08).add(0.12)).mul(cirrusTaper);
-            // Reuse the already evaluated warped wisp noise for feather
-            // breakup; a dedicated three-octave FBM here cost ~15 fps.
-            const cirrusBreakMask = smoothstep(0.36, 0.70, wispN).mul(0.72).add(0.28);
-            const cirrusPresence = smoothstep(0.20, 0.48, cirrusPresenceR);
-            const fibers = min(cirrusCore.add(cirrusUpper).add(cirrusLower).add(cirrusPlume), 0.96)
-                .mul(cirrusTaper)
-                .mul(cirrusBreakMask)
-                .mul(cirrusPresence)
-                .mul(smoothstep(0.08, 0.60, wispPatch).mul(0.32).add(0.68));
-            // Do not execute the cirrus plume graph for ordinary cumulus,
-            // stratus, Ringworld, or storm sheets. A narrow transition band
-            // still crossfades both fields when weather morphs to/from High
-            // Cirrus, so there is no hard visual swap. This restores the
-            // optimized tiers' budget without removing either cloud element.
-            const wispShape = float(0).toVar();
-            If(u.wispFilament.lessThan(0.55), () => {
-                wispShape.assign(sheet);
-            }).Else(() => {
-                If(u.wispFilament.greaterThan(0.85), () => {
-                    wispShape.assign(fibers);
-                }).Else(() => {
-                    wispShape.assign(mix(sheet, fibers, smoothstep(0.55, 0.85, u.wispFilament)));
-                });
-            });
-            // Severe weather needs broad coverage, not a constant-opacity card.
-            // Treat wispFloor as the strength of a second low-frequency organic
-            // canopy so Dark Storm keeps holes, folds, and soft boundaries.
-            const canopyField = smoothstep(
-                0.18, 0.56,
-                wispPatch.mul(0.72).add(wispBend.add(0.44).mul(0.28)),
-            );
-            // Keep broad severe-weather coverage while preserving internal
-            // cloud structure.  Multiplying the low-frequency canopy by the
-            // already-filtered authored noise prevents its dense interiors
-            // from reading as one flat grey card overhead.
-            const canopyDetail = smoothstep(0.20, 0.82, wispN).mul(0.45).add(0.55);
-            const canopyShape = max(wispShape, canopyField.mul(u.wispFloor).mul(canopyDetail));
-            const wispD = canopyShape.mul(u.wispOn).mul(u.wispStrength).mul(wispW);
-            const wispAlpha = min(wispD.mul(u.wispOpacity), 0.88).mul(wispRange);
+            const wispAlpha = highCloudAlphaAt(org.add(dir.mul(wispHitT))).mul(hit.y).mul(wispRange);
             wispA.assign(wispAlpha);
             // cloudBody speaks premultiplied RGBA: multiply the straight wisp
             // radiance by its actual coverage (the old density-vs-alpha split
@@ -1926,6 +1907,21 @@
         // not stack TSL graphs and disposal can sever references to this sky's
         // uniforms/textures. Weather may restore an earlier root first, hence
         // the identity check during cleanup.
+        const updateCloudKey = () => {
+            const pal = state.palette;
+            const nightK = u.moonLightK.value;
+            const moonUp = Math.max(0, Math.min(1, sys.moonDir.y / 0.12));
+            const moonGain = 1.3 * nightK * moonUp * moonUp * (3 - 2 * moonUp);
+            const sunGain = pal.int * 7 * (opts.cloudLightScale ?? 1);
+            const moonTint = opts.moonLightColor ?? [0.45, 0.55, 0.85];
+            const tint = opts.cloudLightTint;
+            u.cloudLightColor.value.set(
+                (pal.sun[0] * sunGain * (tint?.[0] ?? 1) * (1 - nightK) + moonTint[0] * moonGain * nightK) * SKY_COLOR.cloud[0],
+                (pal.sun[1] * sunGain * (tint?.[1] ?? 1) * (1 - nightK) + moonTint[1] * moonGain * nightK) * SKY_COLOR.cloud[1],
+                (pal.sun[2] * sunGain * (tint?.[2] ?? 1) * (1 - nightK) + moonTint[2] * moonGain * nightK) * SKY_COLOR.cloud[2],
+            );
+            u.cloudLightDir.value.copy(nightK > 0.5 ? sys.moonDir : sys.sunDir);
+        };
         const cloudShadowRoots = new Map();
         let cloudShadowSun = null;
         let disposed = false;
@@ -2053,41 +2049,9 @@
                     pal.sun[2] * SKY_COLOR.sun[2]);
                 u.starFade.value = pal.star;
                 u.hdriDim.value = Math.max(0.04, Math.min(1, 0.1 + pal.int * 0.45));
-                // cloud lighting: sun by day, MOON by night (smooth handoff in twilight)
                 const nightK = Math.max(0, Math.min(1, (-elDeg - 2) / 8));
                 u.moonLightK.value = nightK;
-                // donor calibration: reference shader is HDR-native and the engine
-                // effect rescales by colorScale 0.08 for ACES (cloud bodies ~1-3,
-                // sky bg ~0.1-0.5). Baked into these coefficients.
-                // opts.cloudLightScale — scales ONLY the star-driven cloud
-                // light, leaving the ambient/skylight term (ambGrey) intact.
-                // A world under a tinted star needs its sunlit cloud radiance
-                // pulled under the ACES knee, but doing that with cloudTint
-                // scales the ambient term too and the clouds go BLACK once the
-                // star is down. This knob dims the key, not the fill.
-                // opts.cloudLightTint — PER-CHANNEL key balance, [r,g,b].
-                // A scalar dim cannot fix a tinted star and neither can
-                // desaturating toward grey (that just yields grey cloud):
-                // sunlit radiance here is ~(21, 5.9, 2.1), and ACES converges
-                // on white whenever ONE channel runs far ahead of the others.
-                // What works is REBALANCING the channels — cutting red hardest
-                // (a tint like [0.07, 0.11, 0.16], blue-weighted) so the peak
-                // lands under the knee with the ratio intact. The result
-                // tone-maps to copper with structure instead of white.
-                // Applied to the KEY only, so the ambient/skylight fill is
-                // untouched and clouds keep their form after the star sets.
-                const sunBase = V(...pal.sun);
-                const clTint = opts.cloudLightTint;
-                if (clTint) sunBase.multiply(V(clTint[0], clTint[1], clTint[2]));
-                const sunCol = sunBase.multiplyScalar(pal.int * 7 * (opts.cloudLightScale ?? 1));
-                const moonCol = V(0.45, 0.55, 0.85).multiplyScalar(1.3 * nightK);
-                // NOTE: this uniform is a Vector3, not a Color (sunCol/moonCol
-                // are built with V()). Multiplying it by a THREE.Color gives
-                // NaN on every channel — Vector3.multiply reads .x/.y/.z and a
-                // Color only carries .r/.g/.b — which renders the clouds dark.
-                u.cloudLightColor.value.copy(sunCol.lerp(moonCol, nightK))
-                    .multiply(V(...SKY_COLOR.cloud));
-                u.cloudLightDir.value.copy(nightK > 0.5 ? sys.moonDir : sys.sunDir);
+                updateCloudKey();
                 // opts.cloudAmbScale — the cloud FILL term, i.e. what lights a
                 // cloud face turned away from the star. It is derived from the
                 // zenith colour, and under a red paletteTint the red tint
@@ -2105,6 +2069,13 @@
                 // Preset tint differentiates cool stratus from warm cumulus
                 // and clean white cirrus.
                 updateWispColor();
+            },
+            setMoonDirection(direction) {
+                sys.moonDir.copy(direction).normalize();
+                u.moonDir.value.copy(sys.moonDir);
+                u.moonRight.value.set(0, 1, 0).cross(sys.moonDir).normalize();
+                u.moonUp.value.copy(sys.moonDir).cross(u.moonRight.value).normalize();
+                updateCloudKey();
             },
             setTime(hours) {
                 state.hours = hours;
@@ -2268,19 +2239,21 @@
                 if (sun) {
                     // At night this light BECOMES the moonlight: it tracks the
                     // moon and takes a cool blue-white, which is correct for
-                    // Earth — our moonlight looks blue only because Sol is
-                    // white. It is WRONG for any tinted star: a moon orbiting
-                    // a ~3200 K red giant reflects ORANGE light, and there is
-                    // no white light in such a system to make a blue moonbeam.
+                    // Earth. A companion orbiting a tinted star instead
+                    // reflects that star's warmer spectrum.
                     // opts.moonLightColor / moonLightIntensity let a world set
                     // its own; defaults are the Earth values.
                     const ml = opts.moonLightColor ?? [0.5, 0.6, 0.95];
-                    sun.color.setRGB(...pal.sun).lerp(new T3.Color(ml[0], ml[1], ml[2]), nightK)
-                    .multiply(new T3.Color(...SKY_COLOR.sun));
+                    sun.color.setRGB(
+                        (pal.sun[0] * (1 - nightK) + ml[0] * nightK) * SKY_COLOR.sun[0],
+                        (pal.sun[1] * (1 - nightK) + ml[1] * nightK) * SKY_COLOR.sun[1],
+                        (pal.sun[2] * (1 - nightK) + ml[2] * nightK) * SKY_COLOR.sun[2],
+                    );
+                    const moonUp = Math.max(0, Math.min(1, sys.moonDir.y / 0.12));
                     sun.intensity = Math.max(0.08, pal.int * 1.15) * (1 - nightK)
-                        + (opts.moonLightIntensity ?? 0.35) * nightK;
+                        + (opts.moonLightIntensity ?? 0.35) * nightK * moonUp * moonUp * (3 - 2 * moonUp);
                     const d = nightK > 0.5 ? sys.moonDir : sys.sunDir;
-                    sun.position.copy(d.clone().multiplyScalar(120));
+                    sun.position.copy(d).multiplyScalar(120);
                 }
                 if (hemi) {
                     hemi.color.setRGB(...pal.zen).multiplyScalar(2.2);
@@ -2390,13 +2363,18 @@
                         smoothstep(0.0001, 0.02, u.finalMul),
                         smoothstep(0.0001, 0.02, u.stormCanopy),
                     );
+                    const lowTransmission = float(1).sub(occ.mul(cloudMass));
+                    const iceOpacity = float(0).toVar();
+                    If(u.wispOn.greaterThan(0.0001).and(u.celestialVisibility.greaterThan(0.001))
+                        .and(u.cloudLightDir.y.greaterThan(0.02)), () => {
+                        const hit = highCloudHit(pWorld, u.cloudLightDir);
+                        iceOpacity.assign(highCloudAlphaAt(pWorld.add(u.cloudLightDir.mul(hit.x)))
+                            .mul(hit.y).mul(mix(0.22, 0.42, float(1).sub(u.wispFilament))));
+                    });
+                    const totalOcclusion = float(1).sub(lowTransmission.mul(float(1).sub(iceOpacity)));
                     // cloudShadowStrength is a live debug/isolation multiplier.
-                    return float(1).sub(
-                        occ.mul(strength)
-                            .mul(u.cloudShadowStrength)
-                            .mul(daylight)
-                            .mul(cloudMass),
-                    );
+                    return float(1).sub(totalOcclusion.mul(strength)
+                        .mul(u.cloudShadowStrength).mul(daylight));
                 })();
             },
             // Preserve native material response, including indirect sky light,
@@ -2410,17 +2388,25 @@
                     if (sys.domes.includes(o)) return;
                     const mats = Array.isArray(o.material) ? o.material : [o.material];
                     for (const m of mats) {
-                        const isPbrNode = m?.isMeshStandardNodeMaterial
+                        const isPbr = m?.isMeshStandardMaterial || m?.isMeshPhysicalMaterial
+                            || m?.isMeshStandardNodeMaterial
                             || m?.isMeshPhysicalNodeMaterial
                             || (m?.isNodeMaterial
                                 && m.roughness !== undefined
                                 && m.metalness !== undefined);
-                        if (!isPbrNode || m.userData?.keepEnv
+                        if (!isPbr || m.userData?.keepEnv
                             || done.has(m) || cloudShadowRoots.has(m)) continue;
                         done.add(m);
                         const original = m.setupLightingModel;
+                        // The renderer converts imported standard/physical
+                        // materials to node materials and copies enumerable
+                        // properties. Carry this hook into that conversion,
+                        // preserving the imported maps and native PBR model.
+                        const setup = original ?? (m.isMeshPhysicalMaterial
+                            ? T3.MeshPhysicalNodeMaterial.prototype.setupLightingModel
+                            : T3.MeshStandardNodeMaterial.prototype.setupLightingModel);
                         const wrapped = function (builder) {
-                            const model = original.call(this, builder);
+                            const model = setup.call(this, builder);
                             const direct = model.direct;
                             model.direct = function (lightData, lightBuilder) {
                                 if (lightData.lightNode?.light === cloudShadowSun
@@ -2861,7 +2847,8 @@
                 cloudTransitionInfo.active = false;
                 for (const [material, roots] of cloudShadowRoots) {
                     if (material.setupLightingModel !== roots.wrapped) continue;
-                    material.setupLightingModel = roots.original;
+                    if (roots.original === undefined) delete material.setupLightingModel;
+                    else material.setupLightingModel = roots.original;
                     material.needsUpdate = true;
                 }
                 cloudShadowRoots.clear();

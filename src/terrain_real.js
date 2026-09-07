@@ -1908,51 +1908,70 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
         coordinate.x.mul(transform.x).mul(transform.z)
             .add(coordinate.y.mul(transform.x).mul(transform.y)),
     );
-    // Obliquely fold world height into both planar axes. On flat land Y is
-    // locally constant, so this is only a harmless phase offset and preserves
-    // the accepted XZ scale. On a slope or vertical face Y changes along the
-    // surface, preventing the top-down projection from collapsing into long,
-    // obviously repeated streaks. Unlike blending absolute planar UVs, this
-    // mapping stays globally continuous and cannot draw a projection seam.
-    const heightShearedCoordinate = T3.vec2(
-        world.x.add(worldPosition.y.mul(0.61)),
-        world.y.sub(worldPosition.y.mul(0.47)),
-    );
-    const slopeProjection = T3.smoothstep(0.12, 0.30, gradeSignal)
-        .toVar('terrainSlopeProjection');
-    const slopeProjectionWarp = T3.vec2(
-        brushSamples[1].sub(0.5), brushSamples[5].sub(0.5),
-    ).mul(slopeProjection.mul(1.10));
-    const surfaceCoordinate = heightShearedCoordinate
-        .add(slopeProjectionWarp)
-        .toVar('terrainSurfaceProjectionCoordinate');
-    // Mip-footprint gradients come from the smooth UNWARPED coordinate. The
-    // warp is built from brush texture samples whose hardware derivatives
-    // jump at texel boundaries; at distance one brush texel spans hundreds
-    // of metres, so warped-coordinate gradients snapped the sampled mip
-    // level for whole regions at once as the view angle changed.
-    const surfaceGradX = heightShearedCoordinate.dFdx();
-    const surfaceGradY = heightShearedCoordinate.dFdy();
-    const projectionTangentAxis = T3.vec3(1, 0, 0);
+    // Biplanar projection (Quilez): use the strongest two geometric axes.
+    // Removing the weakest component below 1/sqrt(3) makes plane changes
+    // continuous. Flat ground takes only the first texture sample; steep
+    // faces blend actual projections, without shearing or warping the scans.
+    const absoluteNormal = T3.abs(geometricWorldNormal).toVar('terrainAbsNormal');
+    const strongestAxis = (n) => {
+        const x = n.x.greaterThanEqual(n.y).and(n.x.greaterThanEqual(n.z));
+        const y = x.not().and(n.y.greaterThanEqual(n.z));
+        return {
+            axis: x.select(T3.vec3(1, 0, 0), y.select(T3.vec3(0, 1, 0), T3.vec3(0, 0, 1))),
+            u: x.select(T3.vec3(0, 0, 1), T3.vec3(1, 0, 0)),
+            v: y.select(T3.vec3(0, 0, 1), T3.vec3(0, 1, 0)),
+        };
+    };
+    const primary = strongestAxis(absoluteNormal);
+    const secondary = strongestAxis(absoluteNormal.mul(primary.axis.oneMinus()));
+    const primaryWeight = T3.dot(absoluteNormal, primary.axis).sub(0.577350269).max(0).pow(2);
+    const secondaryWeight = T3.dot(absoluteNormal, secondary.axis).sub(0.577350269).max(0).pow(2);
+    const planeBlend = secondaryWeight.div(primaryWeight.add(secondaryWeight).max(0.000001))
+        .toVar('terrainSecondaryPlaneWeight');
+    const coordinateFor = (plane) => T3.vec2(T3.dot(worldPosition, plane.u), T3.dot(worldPosition, plane.v));
+    const primaryCoordinate = coordinateFor(primary);
+    const secondaryCoordinate = coordinateFor(secondary);
+    // Differentiate position before selecting axes. Derivatives of selected
+    // UVs would see artificial jumps at projection boundaries and choose a
+    // much blurrier mip than the actual pixel footprint.
+    const positionDx = worldPosition.dFdx(), positionDy = worldPosition.dFdy();
+    const gradientFor = (gradient, plane) => T3.vec2(T3.dot(gradient, plane.u), T3.dot(gradient, plane.v));
     const selectedSlots = selected.map((entry, slot) => {
         const transform = dynamicTransformFor(entry.layer, slot);
-        const uvNode = transformCoordinate(surfaceCoordinate, transform)
+        const uvNode = transformCoordinate(primaryCoordinate, transform)
             .toVar(`terrainTopUv${slot}`);
-        const gradX = transformCoordinate(surfaceGradX, transform)
+        const gradX = transformCoordinate(gradientFor(positionDx, primary), transform)
             .toVar(`terrainTopGradX${slot}`);
-        const gradY = transformCoordinate(surfaceGradY, transform)
+        const gradY = transformCoordinate(gradientFor(positionDy, primary), transform)
             .toVar(`terrainTopGradY${slot}`);
         const sampleArray = (key) => T3.texture(maps.surfaceArray[key], uvNode)
             .depth(entry.layer)
             .grad(gradX, gradY);
+        const secondaryUv = transformCoordinate(secondaryCoordinate, transform);
+        const secondaryDx = transformCoordinate(gradientFor(positionDx, secondary), transform);
+        const secondaryDy = transformCoordinate(gradientFor(positionDy, secondary), transform);
+        const sampleSecondary = (key) => T3.Fn(() => {
+            const dx = secondaryDx.toVar(), dy = secondaryDy.toVar();
+            const sampled = T3.vec4(0).toVar();
+            T3.If(planeBlend.greaterThan(0.0001), () => {
+                sampled.assign(T3.texture(maps.surfaceArray[key], secondaryUv)
+                    .depth(entry.layer).grad(dx, dy));
+            });
+            return sampled;
+        })();
+        const albedoPrimary = sampleArray('albedo').toVar(`terrainTopAlbedo${slot}`);
+        const packedPrimary = sampleArray('packed').toVar(`terrainTopPacked${slot}`);
+        const albedoSecondary = sampleSecondary('albedo').toVar(`terrainSideAlbedo${slot}`);
+        const packedSecondary = sampleSecondary('packed').toVar(`terrainSidePacked${slot}`);
         return {
             ...entry,
             transform,
             uvNode,
             gradX,
             gradY,
-            albedo: sampleArray('albedo').toVar(`terrainTopAlbedo${slot}`),
-            packed: sampleArray('packed').toVar(`terrainTopPacked${slot}`),
+            albedo: T3.mix(albedoPrimary, albedoSecondary, planeBlend),
+            packed: T3.mix(packedPrimary, packedSecondary, planeBlend),
+            packedPrimary, packedSecondary,
         };
     });
     const albedoSamples = selectedSlots.map((slot) => slot.albedo);
@@ -2005,13 +2024,16 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
         sample.y.mul(cosine).sub(sample.x.mul(sine)),
         sample.z,
     );
-    const normalSamples = packedSamples.map((sample, index) => (
-        alignNormalToWorldUv(
-            decodePackedNormal(sample),
-            selectedSlots[index].transform.y,
-            selectedSlots[index].transform.z,
-        )
-    ));
+    const projectedNormalToWorld = (normal, plane) => geometricWorldNormal
+        .add(plane.u.mul(normal.x)).add(plane.v.mul(normal.y))
+        .add(plane.axis.mul(T3.dot(geometricWorldNormal, plane.axis)).mul(normal.z.sub(1)));
+    const normalSamples = selectedSlots.map((slot) => {
+        const aligned = (sample) => alignNormalToWorldUv(decodePackedNormal(sample), slot.transform.y, slot.transform.z);
+        // Whiteout reorientation preserves the geometric normal for a flat
+        // normal map on either plane, including vertical faces and blends.
+        return T3.mix(projectedNormalToWorld(aligned(slot.packedPrimary), primary),
+            projectedNormalToWorld(aligned(slot.packedSecondary), secondary), planeBlend);
+    });
     const mixedNormalLinear = T3.normalize(weightedMix(normalSamples));
     // True radial camera distance. The previous view-space Z (depth along the
     // camera's forward axis) changed with pure camera ROTATION, sliding this
@@ -2026,26 +2048,7 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
         ? T3.float(0.38)
         : T3.mix(localNormalStrength, T3.float(0.38),
             T3.smoothstep(336, 376, nearBoundary));
-    // Never feed projected samples through normalMap(), whose implicit TBN
-    // uses mesh UV derivatives. Build an explicit frame around the geometric
-    // normal, then transform the resolved mapped normal to view space.
-    const tangentWorld = T3.normalize(
-        projectionTangentAxis
-            .sub(geometricWorldNormal.mul(T3.dot(
-                projectionTangentAxis, geometricWorldNormal,
-            )))
-            .add(T3.vec3(0.0001, 0, 0)),
-    );
-    const bitangentWorld = T3.normalize(T3.cross(tangentWorld, geometricWorldNormal));
-    const scaledNormalXy = mixedNormalLinear.xy.mul(normalStrength);
-    const scaledNormalZ = T3.sqrt(
-        T3.float(1).sub(T3.dot(scaledNormalXy, scaledNormalXy)).max(0.0001),
-    );
-    const mappedWorldNormal = T3.normalize(
-        tangentWorld.mul(scaledNormalXy.x)
-            .add(bitangentWorld.mul(scaledNormalXy.y))
-            .add(geometricWorldNormal.mul(scaledNormalZ)),
-    );
+    const mappedWorldNormal = T3.normalize(T3.mix(geometricWorldNormal, mixedNormalLinear, normalStrength));
     const nearRoughness = mixedPacked.b.sub(0.72).mul(1.22).add(0.72);
     const farRoughness = mixedPacked.b.sub(0.72).mul(0.86).add(0.72);
     const resolvedRoughness = far
@@ -2126,12 +2129,9 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
     material.userData.heightBlendPolicy =
         'bounded-transition-weight-bias_zero-base-remains-zero_no-displacement';
     material.userData.surfaceProjection =
-        'continuous-world-height-sheared-XZ_with-slope-organic-warp_single-sample-per-layer';
-    material.userData.surfaceProjectionHeightShear = [0.61, -0.47];
-    material.userData.slopeProjectionGradeSignal = [0.12, 0.30];
-    material.userData.slopeProjectionWarpMeters = 1.10;
+        'world-biplanar_geometric-axis-selection_conditional-secondary-sample';
     material.userData.normalBasis =
-        'height-sheared-XZ_explicit-frame_no-mesh-UV-dependency_top-left-image-normalY-inverted-once';
+        'per-projection-whiteout-world-normal_top-left-image-normalY-inverted-once';
     material.userData.sceneRepeatMeters = Object.fromEntries(
         Object.entries(SURFACE_TILE_METERS).map(([key, value]) => [key, [...value]]),
     );
@@ -2144,6 +2144,7 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
         'dense-authored-selector-islands_independent-layer-rotations_explicit-gradients';
     material.userData.topK = 5;
     material.userData.dynamicSamplesPerArray = 5;
+    material.userData.maximumDynamicSamplesPerArray = 10;
     material.userData.preHeightSelection = true;
     material.userData.topKRetainedMass = {
         samples: 37249,
@@ -2988,6 +2989,15 @@ export async function makeTerrain(T3, renderer = null) {
         };
     });
     const rockFrustum = new T3.Frustum();
+    // The collision bake uses the same bottom-centred piece-local geometry.
+    // Feed the exact rendered transform, including hillside tilt and burial.
+    terrain.rockCollisionPlacements = rockInstanceStates.map((state) => {
+        const m = state.matrix.elements, s = state.uniformScale;
+        return { id: state.index, species: `rock_${String(state.placement.piece).padStart(2, '0')}`,
+            x: m[12], y: m[13], z: m[14], scale: s,
+            rot9: [m[0]/s,m[4]/s,m[8]/s,m[1]/s,m[5]/s,m[9]/s,m[2]/s,m[6]/s,m[10]/s],
+            boundsRadius: state.radius + Math.hypot(state.visibilityCenter.x-m[12],state.visibilityCenter.z-m[14]) };
+    });
     const rockProjectionView = new T3.Matrix4();
     const rockVisibilitySphere = new T3.Sphere();
     const rockViewCenter = new T3.Vector3();
@@ -3392,7 +3402,7 @@ export async function makeTerrain(T3, renderer = null) {
         runtimeTextureSize: 2048,
         runtimeEncodedBytes: 18707644,
         decodedTextureMemoryMiB: 48,
-        physics: false,
+        physics: 'proximity-streamed-convex-hulls-with-walkable-tops',
     };
     terrain.userData.nuclearCrater = {
         center: [CRATER_X, CRATER_Z],
@@ -3416,12 +3426,11 @@ export async function makeTerrain(T3, renderer = null) {
     terrain.updateLods = (camera) => {
         if (!camera) return;
         const p = camera.position, q = camera.quaternion;
-        currentLodView.set([
-            p.x, p.y, p.z, q?.x ?? 0, q?.y ?? 0, q?.z ?? 0, q?.w ?? 1,
-            camera.projectionMatrix?.elements[0] ?? 0,
-            camera.projectionMatrix?.elements[5] ?? 0,
-            getRockViewportHeight(),
-        ]);
+        currentLodView[0]=p.x;currentLodView[1]=p.y;currentLodView[2]=p.z;
+        currentLodView[3]=q?.x??0;currentLodView[4]=q?.y??0;currentLodView[5]=q?.z??0;currentLodView[6]=q?.w??1;
+        currentLodView[7]=camera.projectionMatrix?.elements[0]??0;
+        currentLodView[8]=camera.projectionMatrix?.elements[5]??0;
+        currentLodView[9]=getRockViewportHeight();
         let viewChanged = false;
         for (let i = 0; i < currentLodView.length; i++) {
             if (currentLodView[i] !== lastLodView[i]) { viewChanged = true; break; }

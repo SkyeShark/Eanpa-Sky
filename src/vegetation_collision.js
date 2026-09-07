@@ -345,6 +345,7 @@ export function createVegetationCollisionStreamer(options = {}) {
     let resolvedContacts = 0;
     let lastResolvedContacts = 0;
     let disposed = false;
+    const visited = new Set();
 
     const registerSpecies = (species, placements = []) => {
         if (!COLLISION_TEMPLATES[species] && !HULL_LIBRARY?.[species]) return 0;
@@ -356,13 +357,22 @@ export function createVegetationCollisionStreamer(options = {}) {
                 placement,
                 x: finite(placement.x),
                 z: finite(placement.z),
+                radius: Math.max(0, finite(placement.boundsRadius)),
             };
             entries.push(entry);
-            const gx = Math.floor(entry.x / config.cellSize);
-            const gz = Math.floor(entry.z / config.cellSize);
-            const key = cellKey(gx, gz);
-            if (!grid.has(key)) grid.set(key, []);
-            grid.get(key).push(entry);
+            // Large rocks can be touched well before their pivot is nearby.
+            // Index their occupied cells so activation follows their surface.
+            const minGX = Math.floor((entry.x - entry.radius) / config.cellSize);
+            const maxGX = Math.floor((entry.x + entry.radius) / config.cellSize);
+            const minGZ = Math.floor((entry.z - entry.radius) / config.cellSize);
+            const maxGZ = Math.floor((entry.z + entry.radius) / config.cellSize);
+            for (let gx = minGX; gx <= maxGX; gx++) {
+                for (let gz = minGZ; gz <= maxGZ; gz++) {
+                    const key = cellKey(gx, gz);
+                    if (!grid.has(key)) grid.set(key, []);
+                    grid.get(key).push(entry);
+                }
+            }
             registered++;
         }
         return registered;
@@ -382,13 +392,12 @@ export function createVegetationCollisionStreamer(options = {}) {
         anchorX = x;
         anchorZ = z;
         refreshes++;
-        const releaseSq = config.releaseRadius * config.releaseRadius;
-        const activeSq = config.activeRadius * config.activeRadius;
 
         for (const [key, proxy] of active) {
             const dx = proxy.x - x;
             const dz = proxy.z - z;
-            if (dx * dx + dz * dz <= releaseSq) continue;
+            const release = config.releaseRadius + (proxy.boundsRadius ?? 0);
+            if (dx * dx + dz * dz <= release * release) continue;
             active.delete(key);
             unloadCount++;
         }
@@ -397,21 +406,26 @@ export function createVegetationCollisionStreamer(options = {}) {
         const maxGX = Math.floor((x + config.releaseRadius) / config.cellSize);
         const minGZ = Math.floor((z - config.releaseRadius) / config.cellSize);
         const maxGZ = Math.floor((z + config.releaseRadius) / config.cellSize);
+        visited.clear();
         for (let gx = minGX; gx <= maxGX; gx++) {
             for (let gz = minGZ; gz <= maxGZ; gz++) {
                 const cell = grid.get(cellKey(gx, gz));
                 if (!cell) continue;
                 for (const entry of cell) {
+                    if (visited.has(entry.key)) continue;
+                    visited.add(entry.key);
                     candidateChecks++;
                     if (active.has(entry.key)) continue;
                     const dx = entry.x - x;
                     const dz = entry.z - z;
-                    if (dx * dx + dz * dz > activeSq) continue;
+                    const activate = config.activeRadius + entry.radius;
+                    if (dx * dx + dz * dz > activate * activate) continue;
                     const proxy = makeVegetationCollisionProxy(
                         entry.species,
                         entry.placement,
                     );
                     if (!proxy) continue;
+                    proxy.boundsRadius = entry.radius;
                     active.set(entry.key, proxy);
                     loadCount++;
                 }
@@ -544,6 +558,29 @@ export function createVegetationCollisionStreamer(options = {}) {
         active.clear();
         grid.clear();
         entries.length = 0;
+        visited.clear();
+    };
+
+    const walkSurfaceAt = (x, z, maximumHeight = Infinity) => {
+        let best = null;
+        for (const proxy of active.values()) {
+            if (!proxy.species.startsWith('rock_')) continue;
+            for (const hull of proxy.hulls ?? []) {
+                const b = hull.aabb;
+                if(x<b.minX||x>b.maxX||z<b.minZ||z>b.maxZ)continue;
+                let lower=b.minY,upper=b.maxY,normalY=1,inside=true;
+                for(const [nx,ny,nz,d] of hull.planes){
+                    const side=nx*x+nz*z+d;
+                    if(Math.abs(ny)<1e-7){if(side>1e-5){inside=false;break;}continue;}
+                    const crossing=-side/ny;
+                    if(ny>0&&crossing<upper){upper=crossing;normalY=ny;}
+                    else if(ny<0)lower=Math.max(lower,crossing);
+                }
+                if(!inside||lower>upper+1e-5||upper>maximumHeight+1e-5||normalY<0.65)continue;
+                if(!best||upper>best.height)best={height:upper,kind:'rock',assistedStep:false,normalY};
+            }
+        }
+        return best;
     };
 
     return {
@@ -553,6 +590,7 @@ export function createVegetationCollisionStreamer(options = {}) {
         resolve,
         snapshot,
         activeProxies,
+        walkSurfaceAt,
         dispose,
     };
 }

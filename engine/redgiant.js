@@ -33,7 +33,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
     const uFlareBoost = uniform(Number(opts.flareBoost ?? 0)); // lookdev: force eruptions to peak
     const STAR_R = opts.angularRadius ?? 0.28;
     const SIN_R = Math.sin(STAR_R), COS_R = Math.cos(STAR_R);
-    const GRAN = opts.granScale ?? 32;   // close orbit = fine boiling cells
+    const GRAN = opts.granScale ?? 22;
 
     // flare slots: JS-authored constants so the SAME deterministic schedule
     // drives the shader prominences and the JS-side shield coupling
@@ -75,25 +75,27 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         const face = step(COS_R * 0.2, dot(dir, uStarDir));     // hemisphere guard
         const rho = length(vec2(lx, ly));
         // surface: convection granulation, slowly boiling — fine-grained
-        const p = vec2(lx, ly).mul(GRAN);
-        // boil rates ~18x the original: tuned for realtime seconds, they
-        // drifted 3% of the domain across a whole compressed day cycle and
-        // read as a fully static surface (Skye's catch)
+        const muL = sqrt(tmax(float(1).sub(rho.mul(rho)), 0));
+        // Surface coordinates foreshorten the cells toward the limb. Using
+        // screen-disc XY made the texture read as a flat animated plate.
+        const surfaceCoord = vec2(atan2f(lx, tmax(muL, 0.02)), T3.asin(clamp(ly, -1, 1)));
+        const p = surfaceCoord.mul(GRAN);
+        // Slow advection beneath a few persistent giant convection cells.
         const w = vec2(
-            fbm3(p.mul(0.55).add(uStarT.mul(0.55))),
-            fbm3(p.mul(0.55).sub(uStarT.mul(0.43)).add(41.3)),
+            fbm3(p.mul(0.55).add(uStarT.mul(0.055))),
+            fbm3(p.mul(0.55).sub(uStarT.mul(0.043)).add(41.3)),
         ).sub(0.5).mul(1.9);
-        const g = fbm3(p.add(w).add(vec2(uStarT.mul(0.22), 0))).mul(0.82)
-            .add(vn(p.mul(3.1).add(w.mul(2)).add(vec2(0, uStarT.mul(0.9)))).mul(0.18));
+        const g = fbm3(p.add(w).add(vec2(uStarT.mul(0.022), 0))).mul(0.82)
+            .add(vn(p.mul(3.1).add(w.mul(2)).add(vec2(0, uStarT.mul(0.09)))).mul(0.18));
         let sCol = mix(vec3(0.42, 0.050, 0.015), vec3(1.05, 0.32, 0.06), smoothstep(0.35, 0.75, g));
         sCol = mix(sCol, vec3(1.85, 1.05, 0.45), smoothstep(0.78, 0.95, g));
         // GIANT convection cells (Betelgeuse-class: a handful across the
         // disc, near-static — they live for months; the fine boil above
         // rides on top). Chiavassa 2010: cell size >60% R*, one cell can
         // carry ~8% of total flux.
-        const pg = vec2(lx, ly).mul(1.15);
+        const pg = surfaceCoord.mul(1.65);
         const cell = fbm3(pg.add(vec2(uStarT.mul(0.006), uStarT.mul(-0.004))));
-        sCol = sCol.mul(cell.sub(0.5).mul(0.55).add(1.0));
+        sCol = sCol.mul(cell.sub(0.5).mul(0.85).add(1.0));
         // ONE asymmetric hot patch — the signature feature of every resolved
         // red-supergiant image (ALMA/VLT); drifts imperceptibly
         const phi = atan2f(ly, lx);
@@ -105,7 +107,6 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         // limb darkening — STRONG for a cool giant (u≈0.95: edge ~5% of
         // center) and the limb REDDENS (blue darkens first; center is the
         // hotter, yellower layer — TiO haze at the rim)
-        const muL = sqrt(tmax(float(1).sub(rho.mul(rho)), 0));
         sCol = sCol.mul(muL.mul(0.95).add(0.05));
         sCol = sCol.mul(mix(vec3(1.0, 0.60, 0.42), vec3(1.0, 1.03, 1.08), muL));
         // chromosphere rim: H-ALPHA PINK (not orange — Balmer emission),
@@ -119,7 +120,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         sCol = sCol.mul(uStarTint);
         // fuzzy molecular limb (MOLsphere at 1.2-1.4 R*): the silhouette is
         // a gradient ~9% of R wide, never a crisp edge
-        const inDisc = smoothstep(1.045, 0.955, rho).mul(face);
+        const inDisc = float(1).sub(smoothstep(0.955, 1.045, rho)).mul(face);
         // corona: Baumbach-style three-term falloff — tight bright rim,
         // mid glow, huge faint halo (exponents stand in for r^-17/-7/-2.5)
         const glow = exp(rho.sub(1).mul(-16)).mul(0.50)
@@ -155,19 +156,19 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
             let band = float(0);
             for (const [rk, ak] of [[0.82, 0.5], [1.0, 1.0], [1.16, 0.4]]) {
                 const dA = abs(relLen.sub(loopR.mul(rk).add(wobble)));
-                band = band.add(smoothstep(float(0.045), float(0.008), dA).mul(ak));
+                band = band.add(float(1).sub(smoothstep(0.008, 0.045, dA)).mul(ak));
             }
             const glowA = abs(relLen.sub(loopR.add(wobble)));
-            band = band.add(smoothstep(float(0.12), float(0.02), glowA).mul(0.4));
+            band = band.add(float(1).sub(smoothstep(0.02, 0.12, glowA)).mul(0.4));
             band = band.mul(streak).mul(fil)
                 .mul(smoothstep(float(0.955), float(1.000), rho));
             // eruptive streamer at peak: a detached blob riding outward
             const blobR = env.mul(env).mul(0.42).add(0.06);
             const dBlob = length(p2.sub(c2.mul(blobR.add(1.0))));
-            const blob = smoothstep(float(0.05), float(0.012), dBlob).mul(smoothstep(0.75, 0.95, env)).mul(0.45);
+            const blob = float(1).sub(smoothstep(0.012, 0.05, dBlob)).mul(smoothstep(0.75, 0.95, env)).mul(0.45);
             flare = flare.add(band.mul(env).mul(0.7).add(blob).mul(face));
             // footpoints: the surface burns where the loop feet stand
-            const feet = smoothstep(float(0.10), float(0.02), abs(length(rel).sub(loopR)).add(abs(rho.sub(0.985)).mul(2)));
+            const feet = float(1).sub(smoothstep(0.02, 0.10, abs(length(rel).sub(loopR)).add(abs(rho.sub(0.985)).mul(2))));
             footpoint = footpoint.add(feet.mul(env).mul(0.6));
         }
         const outside = float(1).sub(inDisc).mul(face).mul(step(1.0, rho));
@@ -182,17 +183,16 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         return out;
     };
 
-    // ---- ember palette: pass to makeSkySystem opts.paletteTint. A ~3200 K
-    // photosphere emits almost NO blue — there is nothing for the air to
-    // Rayleigh-scatter into a blue sky. Deep red key, red-orange horizon,
-    // dim iron-red zenith.
+    // Warm giant illumination. A cool photosphere still has a broad visible
+    // spectrum; retain green/blue energy so materials remain readable beneath
+    // the red-orange sky rather than collapsing to a single red channel.
     // channel ceiling 1.0 (same hue ratios as the original 1.30/1.22-red
     // bands): tints >1 pushed sun-facing cloud radiance past white before
     // tone mapping — the whole forward-scatter lobe cored to a white flood
     // under the giant (a third of the sky). ACES now rolls those clouds
     // into peach/orange with white only at thin silver-lining edges.
     const paletteTint = opts.paletteTint
-        ?? { zen: [0.72, 0.20, 0.10], hor: [1.00, 0.29, 0.11], sun: [1.00, 0.28, 0.10] };
+        ?? { zen: [0.72, 0.32, 0.20], hor: [1.00, 0.42, 0.22], sun: [1.00, 0.62, 0.35] };
 
     // ---- shield (built in attach — needs the scene) ----
     // gnomonic-plane scale: cells this size read as HEXAGONS (~25 px at 720p
