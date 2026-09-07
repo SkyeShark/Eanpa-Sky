@@ -25,9 +25,8 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     history.texture.minFilter = T.LinearMipmapLinearFilter;
     history.textures[1].name = 'Reflection receiver history';
     history.depthTexture = new T.DepthTexture(1, 1, T.FloatType);
-    // r184 TextureNode.clone() recomputes updateMatrix from the source UV.
-    // Give these screen buffers explicit UVs so every ray sample stays free
-    // of per-object texture-matrix uniforms and redundant CPU updates.
+    // Explicit screen UVs avoid per-object texture-matrix uniforms. The local
+    // TextureNode.clone() patch preserves this policy through sample/LOD chains.
     const sourceColor = T.texture(history.texture,T.screenUV);
     const sourceDepth = T.texture(history.depthTexture,T.screenUV);
     const sourceIds = T.texture(history.textures[1],T.screenUV);

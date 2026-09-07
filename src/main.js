@@ -1542,12 +1542,21 @@ async function buildSkybox() {
         {
             const warmupObjects = active.weatherWarmupObjects?.() ?? [];
             const savedVisibility = warmupObjects.map((object) => object.visible);
-            for (const object of warmupObjects) object.visible = true;
             const firstFrameStarted = performance.now();
+            let rainSurfaceWarmupMs = null;
             let exactMrtCompileMs = null;
             let finalGraphRenderMs = null;
             let curtainFrameReady = false;
             try {
+                // Reflection registration and environment assignment changed
+                // source material versions after the initial rain-field bake.
+                // Resolve those final capture variants here: a dry scene skips
+                // them until first rain, which otherwise compiles 51 pipelines
+                // during play and stalls presentation on the GPU process.
+                const rainSurfaceStarted = performance.now();
+                await globalThis._weather?.prepareFrame?.(renderer, camera, { force: true });
+                rainSurfaceWarmupMs = performance.now() - rainSurfaceStarted;
+                for (const object of warmupObjects) object.visible = true;
                 reflectionPipeline.update();
                 if (typeof reflectionPipeline.compileAsync === 'function') {
                     const compileStarted = performance.now();
@@ -1563,6 +1572,9 @@ async function buildSkybox() {
                 const finalGraphStarted = performance.now();
                 try {
                     await reflectionPipeline.render();
+                    // render() submits work; completion of GPU-side pipeline
+                    // preparation must also remain behind the loading curtain.
+                    await renderer.backend.device.queue.onSubmittedWorkDone();
                     curtainFrameReady = true;
                 } finally {
                     finalGraphRenderMs = performance.now() - finalGraphStarted;
@@ -1576,6 +1588,8 @@ async function buildSkybox() {
             }
             const totalWarmupMs = performance.now() - firstFrameStarted;
             globalThis._shaderWarmupStats = {
+                rainSurfaceWarmupMs: rainSurfaceWarmupMs === null
+                    ? null : Number(rainSurfaceWarmupMs.toFixed(2)),
                 exactMrtCompileMs: exactMrtCompileMs === null
                     ? null : Number(exactMrtCompileMs.toFixed(2)),
                 finalGraphRenderMs: finalGraphRenderMs === null

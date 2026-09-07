@@ -1097,13 +1097,10 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
         // One high-cloud field drives both visible coverage and celestial
         // transmittance. A shadow never invents a second, unrelated noise map.
         const highCloudAlphaAt = Fn(([pC]) => {
-            // Restore the authored, domain-warped high-cloud field instead of
-            // thresholding four coarse 2D map reads into distant slabs. The
-            // optimized tiers reuse the existing filtered 3D density basis via
-            // fbmE, retaining the organic field without the former ALU lattice
-            // cost. Advect the complete domain at the same world velocity as
-            // the volume below so both sheet masses and cirrus cells visibly
-            // move rather than only changing their internal noise.
+            // Broad sheets retain the filtered, domain-warped 3D field.
+            // Cirrus below samples the separate mipmapped ice-trail atlas.
+            // Both advect with the common world-space wind and supply the
+            // same opacity field to visibility and celestial shadows.
             const wispAdvected = pC.add(vec3(
                 u.skyWind.x.mul(u.time), 0, u.skyWind.z.mul(u.time),
             ));

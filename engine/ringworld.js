@@ -3,15 +3,16 @@
 //   · WALLS: fresh cylindrical-planar UVs (arc-length u, radial v, in
 //     panel-tile units, per-triangle seam unwrap) + tiled solar-panel PBR —
 //     the authored wall UVs were smeared band UVs
-//   · TERRAIN: authored geometry/normals/map untouched; landmask-gated
-//     ANIMATED WATER (dark reflective color, scrolling shimmer on
-//     color/roughness) — water = the mask's BLACK blobs (ground truth from
-//     the authored Blender render: majority terrain, reflective lakes)
+//   · TERRAIN: stitched displacement from the eroded height/normal field,
+//     with closed shore skirts and a blend into the local playable patch.
+//     The authored water mask and animated water response are retained:
+//     the mask's BLACK blobs identify reflective lakes.
 //
 //   const ring = await globalThis.makeRingworld({ glbBytes: ASSETS.ring,
 //       textures: { landmask, solarColor, solarNormal, solarRough, solarMetal },
 //       opts: { panelTile: 60 } });
-//   scene.add(ring.group);   // per frame: ring.update(t)
+//   scene.add(ring.group);
+//   // Per serialized frame: ring.update(t); await ring.prepareFrame(renderer);
 import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
 import { makeRingCloudField } from './ring_cloud_field.js';
 
