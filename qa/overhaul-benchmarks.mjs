@@ -20,7 +20,22 @@ try{
     await mkdir('artifacts/overhaul/benchmarks',{recursive:true});
     for(const [quality,weathers]of [['balanced',['none','rain','cyclone']],['performance',['rain']],['high',['none']]]){
         console.log(`Loading ${sky} / ${quality}`);
-        await command('load-scene',sky,'10.5',quality,'none');
+        if(quality==='balanced')await command('load-scene',sky,'10.5',quality,'none');
+        else{
+            // Exercise the real quality rebuild while retaining the same
+            // terrain and architecture, instead of decoding every asset again.
+            await c.evaluate(`(()=>{
+                _eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;
+                document.getElementById('weather').value='none';
+                const e=document.getElementById('quality');e.value=${JSON.stringify(quality)};
+                e.dispatchEvent(new Event('change',{bubbles:true}));
+            })()`);
+            const deadline=Date.now()+240000;
+            while(await c.evaluate("document.getElementById('boot').style.display!=='none'")){
+                if(Date.now()>deadline)throw new Error('Quality rebuild timed out');
+                await new Promise(r=>setTimeout(r,1000));
+            }
+        }
         for(const weather of weathers){
             const stem=`${prefix}-${sky}-${quality}-${weather}`;
             await command('review-view',stem,'cumulus',weather,'10.5','wide');
