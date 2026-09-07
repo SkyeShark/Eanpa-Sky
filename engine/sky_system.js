@@ -1927,6 +1927,7 @@
         // uniforms/textures. Weather may restore an earlier root first, hence
         // the identity check during cleanup.
         const cloudShadowRoots = new Map();
+        let cloudShadowSun = null;
         let disposed = false;
         const sys = {
             uniforms: u, state, cloudTransitionInfo,
@@ -2261,6 +2262,7 @@
                 return true;
             },
             applyToLights({ sun, hemi, fog } = {}) {
+                if (sun) cloudShadowSun = sun;
                 const pal = state.palette;
                 const nightK = u.moonLightK.value;
                 if (sun) {
@@ -2321,9 +2323,9 @@
                           + (rAt(x0, y1) * (1 - fx) + rAt(x1, y1) * fx) * fy;
                 return Math.max(0, Math.min(2, (val - u.largeT.value) * u.largeA.value));
             },
-            // Cloud-shadow factor for an arbitrary world position (multiply
-            // into a material's colorNode). It traces from that receiver toward
-            // the actual sun through the same moving density field as the sky.
+            // Transmittance toward the active celestial key, evaluated through
+            // the same moving density field as the visible clouds. Apply this
+            // to direct light, never to the material's albedo or ambient light.
             // The fixed quality tier controls only N_CLOUD_SHADOW.
             // cheapDensity includes the first erosion octave from the visible
             // cloud mass. The erosion-free shaft proxy has a ~20 km footprint
@@ -2331,10 +2333,14 @@
             // stable for godrays but cannot draw travelling ground patches.
             tslCloudShadow(pWorld, strength = 0.55) {
                 return Fn(() => {
-                    const dy = max(u.sunDir.y, 0.08);
+                    const dy = max(u.cloudLightDir.y, 0.08);
                     const stormK = clamp(u.stormCanopy, 0, 1);
-                    const shadowBottom = mix(u.cloudStart, stormLayerBottom(), stormK);
-                    const shadowDepth = mix(u.cloudHeight, stormLayerDepth(), stormK);
+                    const ordinaryBottom = RING_R ? ringDeckY(pWorld.z) : u.cloudStart;
+                    const stormBottom = RING_R
+                        ? ringDeckY(pWorld.z).sub(RING_BASE).add(stormLayerBottom())
+                        : stormLayerBottom();
+                    const shadowBottom = mix(ordinaryBottom, stormBottom, stormK);
+                    const shadowDepth = mix(RING_R ? float(RING_THICK) : u.cloudHeight, stormLayerDepth(), stormK);
                     const hEnter = max(shadowBottom.sub(pWorld.y), 0).div(dy);
                     const segL = shadowDepth.div(dy);
                     // Distant receivers sample the animated FBM at world+time
@@ -2357,7 +2363,7 @@
                     If(u.celestialVisibility.greaterThan(0.001), () => {
                         for (let j = 0; j < N_CLOUD_SHADOW; j++) {
                             const along = hEnter.add(segL.mul((j + 0.5) / N_CLOUD_SHADOW));
-                            const sampleP = pWorld.add(u.sunDir.mul(along));
+                            const sampleP = pWorld.add(u.cloudLightDir.mul(along));
                             const ordinaryExtinction = float(0).toVar();
                             const stormExtinction = float(0).toVar();
                             If(stormK.lessThan(0.999), () => {
@@ -2378,7 +2384,7 @@
                     // moving material shadow as the visible Beer volume.
                     const opticalDepth = od.mul(segL.div(N_CLOUD_SHADOW));
                     const occ = float(1).sub(exp(opticalDepth.negate()));
-                    const daylight = smoothstep(0.02, 0.16, u.sunDir.y)
+                    const daylight = smoothstep(0.02, 0.16, u.cloudLightDir.y)
                         .mul(clamp(u.celestialVisibility, 0, 1));
                     const cloudMass = max(
                         smoothstep(0.0001, 0.02, u.finalMul),
@@ -2393,8 +2399,9 @@
                     );
                 })();
             },
-            // wrap scene materials with cloud shadowing (composes with other
-            // colorNode wrappers, e.g. the weather system's wetness)
+            // Preserve native material response, including indirect sky light,
+            // emissive, wetness and alpha tests. Only the scene's celestial key
+            // receives cloud attenuation; flashlights and temple lights remain local.
             wrapCloudShadows(sceneRoot, strength = 0.55) {
                 const done = new Set();
                 let n = 0;
@@ -2411,15 +2418,22 @@
                         if (!isPbrNode || m.userData?.keepEnv
                             || done.has(m) || cloudShadowRoots.has(m)) continue;
                         done.add(m);
-                        const original = m.colorNode;
-                        // Shade RGB only. Multiplying the complete RGBA root
-                        // raises alpha-test cutoffs under clouds and can erase
-                        // thin foliage long before its lighting changes.
-                        const baseColor4 = T3.vec4(original ?? T3.materialColor);
-                        const shade = sys.tslCloudShadow(T3.positionWorld, strength);
-                        const wrapped = T3.vec4(baseColor4.rgb.mul(shade), baseColor4.a);
+                        const original = m.setupLightingModel;
+                        const wrapped = function (builder) {
+                            const model = original.call(this, builder);
+                            const direct = model.direct;
+                            model.direct = function (lightData, lightBuilder) {
+                                if (lightData.lightNode?.light === cloudShadowSun
+                                    && !lightBuilder.object?.userData?.noCloudShadow) {
+                                    const shade = sys.tslCloudShadow(T3.positionWorld, strength);
+                                    lightData = { ...lightData, lightColor: lightData.lightColor.mul(shade) };
+                                }
+                                return direct.call(this, lightData, lightBuilder);
+                            };
+                            return model;
+                        };
                         cloudShadowRoots.set(m, { original, wrapped });
-                        m.colorNode = wrapped;
+                        m.setupLightingModel = wrapped;
                         m.needsUpdate = true;
                         n++;
                     }
@@ -2846,8 +2860,8 @@
                 sys._cloudTransition = null;
                 cloudTransitionInfo.active = false;
                 for (const [material, roots] of cloudShadowRoots) {
-                    if (material.colorNode !== roots.wrapped) continue;
-                    material.colorNode = roots.original ?? null;
+                    if (material.setupLightingModel !== roots.wrapped) continue;
+                    material.setupLightingModel = roots.original;
                     material.needsUpdate = true;
                 }
                 cloudShadowRoots.clear();

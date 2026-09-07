@@ -12,6 +12,7 @@
 import { N8AONode } from './vendor/n8ao/N8AONode.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { ssr as makeSsrNode } from 'three/addons/tsl/display/SSRNode.js';
+import { createConvexReceiverIds } from './reflection_receiver_id.js';
 
 // Keep the donor's thin, full-resolution hit domain, scaled only far enough for
 // Eanpa's dais/temple contact reflections. Every tier deliberately marches each
@@ -195,6 +196,19 @@ function makeResolvedMaterialAoNode(THREE) {
     }();
 }
 
+function makeReceiverIdAlphaNode(THREE, auxiliaryAlpha) {
+    const receiverId = createConvexReceiverIds();
+    const perObjectId = THREE.uniform(1).onObjectUpdate(({ object }) => receiverId(object));
+    return new class extends THREE.Node {
+        constructor() { super('float'); }
+        setup(builder) {
+            // Transparent attachments retain their material blending contract,
+            // including sampled opacity on alpha-tested foliage.
+            return builder.material.transparent ? auxiliaryAlpha : perObjectId;
+        }
+    }();
+}
+
 /**
  * Install a baked sky only on PBR materials, never as scene.environment.
  *
@@ -340,11 +354,11 @@ function disposeOwnedRttNodes(nodes) {
 }
 
 function makeEidoverseSsr({
-    color, depth, normal, metalrough, response, camera,
+    color, depth, normal, objectId, metalrough, response, camera,
     maxDistance, thickness, quality, resolutionScale,
 }) {
-    // This is the exact Three r184 SSRNode used by Eidoverse's auto-enhance
-    // path. Its perspective-correct reciprocal-Z march, adaptive pixel count,
+    // Based on the Three r184 SSRNode used by Eidoverse's auto-enhance
+    // path, with receiver rejection guards. Its reciprocal-Z march, adaptive pixel count,
     // neighbor-derived thickness and plane-distance validation are essential:
     // the old fixed-step linear interpolation almost never produced a valid
     // local-geometry hit in this hundreds-of-metres scene.
@@ -352,6 +366,7 @@ function makeEidoverseSsr({
         color, depth, normal, metalrough.r, metalrough.g, camera,
     );
     node.specularResponseNode = response;
+    node.objectIdNode = objectId;
     node.maxDistance.value = maxDistance;
     node.thickness.value = thickness;
     node.quality.value = quality;
@@ -459,7 +474,8 @@ export function makeReflectionPipeline(
     const materialAo = makeResolvedMaterialAoNode(THREE);
     const sceneOutputs = {
         output: THREE.output,
-        normal: THREE.vec4(THREE.directionToColor(THREE.normalView), auxiliaryAlpha),
+        normal: THREE.vec4(THREE.directionToColor(THREE.normalView),
+            makeReceiverIdAlphaNode(THREE, auxiliaryAlpha)),
         // B stores the N8AO receiver acceptance weight. SSR consumes only R/G,
         // so thin materials can reduce or reject cavity darkening without a
         // fifth color attachment (which exceeds WebGPU's byte budget).
@@ -729,6 +745,11 @@ export function makeReflectionPipeline(
         color: ssrSourceColor,
         depth: sceneDepth,
         normal: sceneNormal,
+        // IDs must come from the same single pixel as depth. Filtered IDs at
+        // silhouettes can alias an unrelated group after interpolation.
+        objectId: THREE.sample((coord) => packedNormal.load(
+            coord.mul(THREE.textureSize(packedNormal)).floor(),
+        ).a),
         metalrough: sceneMetalrough,
         response: sceneSsrResponse,
         camera,

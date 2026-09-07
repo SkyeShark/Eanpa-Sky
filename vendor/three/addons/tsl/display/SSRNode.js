@@ -89,6 +89,10 @@ class SSRNode extends TempNode {
 		 */
 		this.specularResponseNode = null;
 
+		// Optional exact convex-receiver group IDs. IDs > 1 exclude self hits;
+		// ordinary/concave geometry keeps 0/1 and the upstream tracing behavior.
+		this.objectIdNode = null;
+
 		/**
 		 * The resolution scale. Valid values are in the range
 		 * `[0,1]`. `1` means best quality but also results in
@@ -474,12 +478,28 @@ class SSRNode extends TempNode {
 			depth.greaterThanEqual( 0.999999 ).discard();
 			const viewPosition = getViewPosition( uvNode, depth, this._cameraProjectionMatrixInverse ).toVar();
 			const viewNormal = this.normalNode.rgb.normalize().toVar();
+			const receiverId = this.objectIdNode !== null
+				? this.objectIdNode.sample( uvNode ).toVar() : null;
+			// Depth derivatives describe the actual receiving surface. A mapped
+			// normal may point into that surface, especially on engraved metals;
+			// using it as the hit plane accepts neighbouring pixels of the same
+			// object and makes the sky/local boundary crawl as the object rotates.
+			const receiverDx = viewPosition.dFdx().toVar();
+			const receiverDy = viewPosition.dFdy().toVar();
+			const receiverPlane = normalize( cross( receiverDx, receiverDy ) ).toVar();
+			If( dot( receiverPlane, viewPosition ).greaterThan( 0 ), () => {
+				receiverPlane.mulAssign( - 1 );
+			} );
+			const minHitSeparation = max( this.thickness.mul( 0.25 ), max( receiverDx.length(), receiverDy.length() ).mul( 0.5 ) ).toVar();
 
 			// compute the direction from the position in view space to the camera
 			const viewIncidentDir = ( ( this.camera.isPerspectiveCamera ) ? normalize( viewPosition ) : vec3( 0, 0, - 1 ) ).toVar();
 
 			// compute the direction in which the light is reflected on the surface
 			const viewReflectDir = reflect( viewIncidentDir, viewNormal ).toVar();
+			// A normal-map ray below the real surface has no resolvable outgoing
+			// screen-space path. Let the material's filtered environment handle it.
+			dot( viewReflectDir, receiverPlane ).lessThanEqual( 0.001 ).discard();
 
 			// adapt maximum distance to the local geometry (see https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 			const maxReflectRayLen = this.maxDistance.div( max( dot( viewIncidentDir.negate(), viewNormal ), 0.05 ) ).toVar();
@@ -592,6 +612,18 @@ class SSRNode extends TempNode {
 					const tk = max( minThickness, this.thickness ).toVar();
 
 					If( away.lessThanEqual( tk ), () => { // hit
+						if ( receiverId !== null ) {
+							const hitId = this.objectIdNode.sample( uvNode );
+							If( receiverId.greaterThan( 1.5 ).and( abs( hitId.sub( receiverId ) ).lessThan( 0.25 ) ), () => {
+								Continue();
+							} );
+						}
+						// A real reflected object must lie outside the receiving
+						// geometric plane. This rejects coplanar and convex self hits
+						// without confusing normal-map bumps with independent geometry.
+						If( dot( vP.sub( viewPosition ), receiverPlane ).lessThanEqual( minHitSeparation ), () => {
+							Continue();
+						} );
 
 						const vN = this.normalNode.sample( uvNode ).rgb.normalize().toVar();
 

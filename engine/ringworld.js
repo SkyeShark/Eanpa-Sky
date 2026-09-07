@@ -344,9 +344,8 @@
                     uvNode: uvF,
                     scale: Number(opts.pomScale ?? 0.03),
                     // the band covers a huge screen area at a grazing angle, so
-                    // the step count matters for cost; the relief is broad and
-                    // smooth (plateaus and swells, no high-frequency detail) and
-                    // does not need a deep march to resolve.
+                    // The offline relief bake keeps fine drainage in its
+                    // normal field; the bounded march resolves larger ridges.
                     minLayers: Number(opts.pomMinLayers ?? 10),
                     maxLayers: Number(opts.pomMaxLayers ?? 28),
                     silhouette: false,
@@ -452,7 +451,8 @@
             if (textures.bandAO) {
                 textures.bandAO.wrapS = textures.bandAO.wrapT = T3.RepeatWrapping;
                 textures.bandAO.colorSpace = T3.NoColorSpace;
-                const aoS = texture(textures.bandAO, uvF).r;
+                const aoSample = texture(textures.bandAO, uvF);
+                const aoS = opts.bandAOPackedNormal ? aoSample.a : aoSample.r;
                 // THE cue that survives face-on light. When the star sits along a
                 // segment's normal, N.L is uniform there and every light-dependent
                 // term — Lambert, normal map, cast shadow — goes flat together, so

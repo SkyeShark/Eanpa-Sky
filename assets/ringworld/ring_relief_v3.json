@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "width": 2172,
+  "height": 724,
+  "source": "ring_band_height.png",
+  "seed": "0x6ea9f371",
+  "droplets": 283055,
+  "pomScale": 0.03,
+  "heightFormat": "r16float",
+  "normalAoFormat": "rgba8unorm",
+  "rowOrder": "bottom-to-top",
+  "normalConvention": "(-dH/dU,+dH/dV,1); green flipped by band tangent frame",
+  "compressedBytes": 6277959,
+  "decodedBytes": 9435184,
+  "sha256": "6026e6221f6be522e7b6f9c2fcb73da2ba4513c586ba17d4a581278f65266ecd",
+  "rmsHeightChange": 0.026867785748685796,
+  "rmsSlopeRatio": 1.0378953957064634,
+  "maxQuantizationError": 0.0004882216453552246
+}

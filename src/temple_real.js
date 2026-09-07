@@ -927,6 +927,9 @@ export async function makeTempleScene(THREE, {
     };
     orbPivot.traverse((object) => {
         if (!object.isMesh) return;
+        // This convex shell cannot reflect its own silhouette. Its engraved
+        // normal map used to create false SSR hits on other shell pixels.
+        object.userData.ssrConvexGroup = orbPivot.uuid;
         object.castShadow = true;
         object.receiveShadow = false;
         object.userData.noWet = true;

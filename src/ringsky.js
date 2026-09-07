@@ -4,6 +4,7 @@
 // wiring with browser-safe per-material baked reflections (never a global
 // scene.environment, which kills the Basic-family domes).
 import { makeLazyWeatherAttachment } from './weathersky.js';
+import { loadRingRelief } from './ring_relief.js';
 
 function disposeObject(root) {
     const geometries = new Set(), materials = new Set();
@@ -85,30 +86,27 @@ export async function makeRingworld({
 
     try {
 
-    const glbBytes = new Uint8Array(await (await fetch('./assets/ringworld/RINGWORLDskyelement.glb')).arrayBuffer());
+    const [glbBuffer, landmask, solarColor, solarNormal, solarRough, solarMetal, relief] = await Promise.all([
+        fetch('./assets/ringworld/RINGWORLDskyelement.glb').then(response => response.arrayBuffer()),
+        load('./assets/ringworld/ringworldlandmask.png', {}),
+        load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Color.jpg', { srgb: true }),
+        load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_NormalGL.jpg', {}),
+        load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Roughness.jpg', {}),
+        load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Metalness.jpg', {}),
+        loadRingRelief(THREE),
+    ]);
+    const glbBytes = new Uint8Array(glbBuffer);
     ring = await globalThis.makeRingworld({
         glbBytes,
         textures: {
-            landmask: await load('./assets/ringworld/ringworldlandmask.png', {}),
-            solarColor: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Color.jpg', { srgb: true }),
-            solarNormal: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_NormalGL.jpg', {}),
-            solarRough: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Roughness.jpg', {}),
-            solarMetal: await load('./assets/ringworld/solarpanel/SolarPanel001_1K-JPG_Metalness.jpg', {}),
-            // The same filtered normal drives terrain relief plus two cheap,
-            // scrolling water reads. Mips keep the distant arc from aliasing.
-            // EXACT eidoverse parity: readTex loads this WITHOUT mips
-            // (LinearFilter only). The mipmapped variant sampled differently
-            // under SPOM's displaced UVs and warped the band's relief.
-            bandNormal: await load('./assets/ringworld/ring_band_normal_v2.png', {}),
-            bandAO: await load('./assets/ringworld/ring_band_ao.png', {}),
-            // No mips: the SPOM march samples with explicit textureLevel(0),
-            // matching the prealpha's readTex(..., false).
-            bandHeight: await load('./assets/ringworld/ring_band_height.png', {}),
+            landmask, solarColor, solarNormal, solarRough, solarMetal,
+            ...relief,
         },
         // Preserve animated water/glint identically in every sky quality. This
         // path uses two existing-normal reads, not the full procedural ALU field.
         // planetShineColor states the engine default explicitly (prealpha parity).
-        opts: { waves: 'lightweight', planetShineColor: [1.00, 0.92, 0.82] },
+        opts: { waves: 'lightweight', planetShineColor: [1.00, 0.92, 0.82],
+            bandNormalScale: 1, bandAOPackedNormal: true },
     });
     globalThis._ringworld = ring;
     // authored placement: band rises from the horizon, crests ~9.8 km overhead

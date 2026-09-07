@@ -32,7 +32,26 @@ are authorized until the user's final review.
   contact, and multiple frame rates.
 - SSR skips its receiving pixel and clear-depth receivers, rejects subpixel
   projected rays, and guards grazing-angle and step-count denominators.
-  Runtime shader and motion validation remain pending.
+  Earth and Ringworld compiled and rendered with these guards. Isolated raw
+  SSR captures still show the Inanna shell's engraved pattern in its own hit
+  buffer. A further candidate fix gives explicitly convex groups exact IDs in
+  opaque normal-buffer alpha and rejects hits on the same group. Concave meshes
+  and instances retain self reflections. This candidate still needs runtime,
+  motion, and positive-control checks; the reflection issue is not accepted as fixed.
+- Cloud shadows now attenuate the celestial direct light through the native
+  lighting model, preserving indirect light, emissive, alpha tests, and local
+  lamps. Earth shaders compiled with this path. Tests cover light isolation,
+  shared-material exclusions, and repeated wrapping. Ring shadow integration
+  now uses the visible deck height/depth, and the active moon/sun direction is
+  shared with the volume. Cross-sky/weather visual acceptance is still pending.
+- Ring relief now has an offline deterministic uplift/erosion bake, with
+  normals and directional-horizon AO derived from the same height field.
+  `node qa/bake-ring-relief.mjs` regenerates the asset and its hash manifest.
+  Float height storage bypasses the old canvas loader's reduction of the
+  original 16-bit height PNG to 8-bit. Normal/AO share one texture. Numerical
+  tests verify finite data, unit normals, storage orientation, and unchanged
+  shore/water elevations. The diagnostic plot is at
+  `artifacts/overhaul/ring-relief-data.png`; in-engine visual acceptance is pending.
 - The frame scheduler now includes callbacks skipped during an in-flight
   render in the next simulation delta. Previously walking/falling slowed down
   when rendering missed display frames. Pauses and sky rebuilds discard elapsed
@@ -53,8 +72,7 @@ are authorized until the user's final review.
   plateaus. Height, normals, AO, sampling, and tangent conventions need to agree.
 - Local terrain projection/material placement, rocks and player collisions.
 - Consistent sun/ambient/environment lighting across all skies and weather.
-  Existing cloud shadows multiply base color and therefore also alter ambient
-  illumination; examine a direct-light attenuation path.
+  Validate the new direct-light cloud attenuation across day/night and weather.
 - Cloud forms/shadows, shattered moon, red giant, sound and interaction feel.
 - Clean reduced-resource and unrestricted local GPU runs, repeatable capture
   routes, frame-time percentiles, error logs, and screenshots for final review.
