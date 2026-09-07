@@ -98,7 +98,7 @@ import { makeRingCloudField } from './ring_cloud_field.js';
         if(textures.bandHeight && opts.geometryRelief !== false){
             const originalGeometry=terrain.geometry;
             terrain.geometry=makeRingTerrainGeometry(T3,originalGeometry,textures.bandHeight,{
-                heightMeters:opts.terrainHeightMeters??180,
+                heightMeters:opts.terrainHeightMeters??85,
                 repeat:origMat.map?.repeat.x??8,
                 localReliefBlend:opts.localReliefBlend,
             });
@@ -392,13 +392,19 @@ import { makeRingCloudField } from './ring_cloud_field.js';
                 .add(mAt(sx, sy).add(mAt(sx.negate(), sy))
                     .add(mAt(sx, sy.negate())).add(mAt(sx.negate(), sy.negate())).mul(0.05));
             const mSel = opts.waterWhite ? mSoft : float(1).sub(mSoft);
-            const k = smoothstep(0.30, 0.70, mSel);
+            // Material masks cannot keep water level on displaced triangles.
+            // Geometry relief has a separate sea cylinder in the same draw;
+            // its land intersections define the shoreline through depth.
+            const levelSea=!!terrain.geometry.getAttribute('ringWater');
+            const k = levelSea ? T3.attribute('ringWater','float') : smoothstep(0.30, 0.70, mSel);
             // WET SHORE — peaks ON the waterline and falls to zero in open water
             // and inland. A real shoreline is not just a blend of two materials:
             // the land right at the edge is wet, so it darkens and takes a
             // sharper specular. Without this the widened blend reads as a soft
             // but flat smear instead of a beach.
-            const shore = T3.clamp(float(1).sub(k.sub(0.5).abs().mul(2)), float(0), float(1));
+            const shore = levelSea
+                ? float(1).sub(smoothstep(0,1.8,T3.attribute('ringElevation','float').max(0))).mul(float(1).sub(k))
+                : T3.clamp(float(1).sub(k.sub(0.5).abs().mul(2)), float(0), float(1));
             // canonical sin-free hash21 (Hoskins) — the simple fract-product
             // hash correlates at large lattice coords (giant pseudo-tiling)
             const h2 = (p) => {
@@ -490,7 +496,7 @@ import { makeRingCloudField } from './ring_cloud_field.js';
                 const nGeo = rHat.negate();                                        // inner-surface normal
                 const tAround = T3.normalize(T3.cross(vec3(1, 0, 0), rHat));       // +u around the ring
                 const nmS = texture(textures.bandNormal, uvF).xyz.mul(2).sub(1);
-                const pertN = T3.normalize(tAround.mul(nmS.x).add(vec3(1, 0, 0).mul(nmS.y)).add(nGeo.mul(nmS.z)));
+                const pertN = T3.normalize(tAround.mul(nmS.x.negate()).add(vec3(1, 0, 0).mul(nmS.y.negate())).add(nGeo.mul(nmS.z)));
                 // LIT-side face-on flatness — the mirror of the night problem
                 // solved below. dot(N, sunDir) loses ALL slope response when
                 // the star sits face-on to a segment, and that is exactly the
@@ -820,11 +826,11 @@ import { makeRingCloudField } from './ring_cloud_field.js';
                     ? T3.normalLocal
                     : T3.normalize(vec3(float(0), posL.y, posL.z)).negate();
                 const landVr = landTS.mul(2).sub(1);
-                // bandNormal is sampled with v flipped relative to the analytic
-                // frame, so its green channel points the other way; and the slopes
-                // need real amplitude to shape light that arrives near face-on.
+                // Both texture axes oppose this analytic frame: +u follows
+                // decreasing cylinder angle and the height texture flips v.
+                // Match actual slopes instead of inverting the along-ring relief.
                 const landV = textures.bandNormal
-                    ? vec3(landVr.x.mul(NSC), landVr.y.negate().mul(NSC), landVr.z)
+                    ? vec3(landVr.x.negate().mul(NSC), landVr.y.negate().mul(NSC), landVr.z)
                     : landVr;
                 let landN = T3.normalize(Tn.mul(landV.x).add(Bn.mul(landV.y)).add(Nn.mul(landV.z)));
                 const localBlend=opts.localReliefBlend??[0,0];
@@ -1060,7 +1066,9 @@ import { makeRingCloudField } from './ring_cloud_field.js';
         // the export frames the ring lifted into the sky (mesh translation) —
         // recenter on the ring axis so scenes place it explicitly via the
         // group; the local wall-UV math (atan2 in geometry space) is unaffected
-        const ctr = new T3.Box3().setFromObject(group).getCenter(new T3.Vector3());
+        // The structural walls define the axis. Displaced mountains must not
+        // shift the sea or the cloud field when their bounding box changes.
+        const ctr = new T3.Box3().setFromObject(walls).getCenter(new T3.Vector3());
         for (const m of [terrain, walls]) m.position.sub(ctr);
         if (fogWall) {
             // group sits at the ring center (~y 4940); the wall belongs at the

@@ -2,7 +2,7 @@
   "version": 1,
   "width": 4344,
   "height": 1448,
-  "heightMeters": 180.0,
+  "heightMeters": 85.0,
   "tileMeters": 3926.9908169872415,
   "widthMeters": 966.0,
   "seed": 50906,
@@ -11,8 +11,16 @@
   "heightFormat": "r16float",
   "normalAoFormat": "rgba8unorm",
   "rowOrder": "bottom-to-top",
-  "sha256": "d984252a9af8a19da86bf82a7ae2d6204e1ce613a2a01a2b0bcf02ca2df0ed80",
+  "sha256": "6d79c0886d6d869e699bb711244dd0a861d77c3d6b8bbd1cfa080bf935eb4c56",
   "decodedBytes": 37740688,
   "source": "ring_band_height.png + authored ring GLB albedo/coast mask",
-  "erosionRmsMeters": 6.257261276245117
+  "slopeLimitRiseRun": 0.65,
+  "slopeLimitSweeps": 8,
+  "peakHeightMeters": 75.94511413574219,
+  "slopeDegreesP50P95P99": [
+    32.285011291503906,
+    36.05975341796875,
+    36.05976486206055
+  ],
+  "erosionRmsMeters": 15.620763778686523
 }

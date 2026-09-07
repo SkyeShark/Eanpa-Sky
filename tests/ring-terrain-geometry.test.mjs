@@ -20,15 +20,39 @@ test('new ring atlas has four times the source samples and bounded height/normal
     }
 });
 
-test('displaced ring is a continuous inward-facing surface with closed angular seam and level water',()=>{
+test('baked mountain slopes are bounded at their actual metre scale',()=>{
+    const {width:W,height:H,heightData:h}=relief;
+    const at=(x,y)=>T.DataUtils.fromHalfFloat(h[((y+H)%H)*W+(x+W)%W])*manifest.heightMeters;
+    let slopes=0;
+    for(let y=1;y<H-1;y+=7)for(let x=1;x<W-1;x+=7){
+        const dx=(at(x+1,y)-at(x-1,y))/(2*manifest.tileMeters/W);
+        const dy=(at(x,y+1)-at(x,y-1))/(2*manifest.widthMeters/H);
+        assert.ok(Math.hypot(dx,dy)<.85,'no vertical one-texel coastal cliffs or needles');
+        if(Math.hypot(dx,dy)>.2)slopes++;
+    }
+    assert.ok(slopes>1000,'the slope constraint retains actual relief');
+});
+
+test('displaced ring closes its seam and renders water only on independent level triangles',()=>{
     const source=new T.BufferGeometry();source.setAttribute('position',new T.Float32BufferAttribute([0,-5000,0,0,5000,0],3));
     source.setAttribute('uv',new T.Float32BufferAttribute([0,0,.5,1],2));
     const texture=new T.DataTexture(relief.heightData,relief.width,relief.height,T.RedFormat,T.HalfFloatType);
     const geometry=makeRingTerrainGeometry(T,source,texture,{around:256,across:64});
     const p=geometry.getAttribute('position'),info=geometry.userData.ringRelief,first=info.rows[0],last=info.rows.at(-1);
     for(let j=0;j<=first.segments;j++)for(let a=0;a<3;a++)assert.ok(Math.abs(p.array[j*3+a]-p.array[(last.offset+j)*3+a])<.001);
-    let water=0;for(let i=0;i<p.count;i++){const radius=Math.hypot(p.getY(i),p.getZ(i));assert.ok(radius<=5000.001&&radius>=4820);if(Math.abs(radius-5000)<.001)water++;}
-    assert.ok(water>1000,'water remains on the authored cylinder');
+    const water=geometry.getAttribute('ringWater');
+    let seaVertices=0,submerged=0;
+    for(let i=0;i<p.count;i++){
+        const radius=Math.hypot(p.getY(i),p.getZ(i));
+        if(water.getX(i)){assert.ok(Math.abs(radius-5000)<.001,'every water vertex remains at sea level');seaVertices++;}
+        else{assert.ok(radius<=5002.001&&radius>=4915);if(radius>5001.9)submerged++;}
+    }
+    assert.equal(seaVertices,514);assert.ok(submerged>1000,'land closes under the independent sea');
+    for(let i=0;i<geometry.index.count;i+=3){
+        const a=water.getX(geometry.index.array[i]);
+        assert.equal(water.getX(geometry.index.array[i+1]),a);
+        assert.equal(water.getX(geometry.index.array[i+2]),a,'no water shading can interpolate onto a mountain triangle');
+    }
     const a=new T.Vector3(),b=new T.Vector3(),c=new T.Vector3(),inward=new T.Vector3();
     for(let i=0;i<geometry.index.count;i+=81){
         a.fromBufferAttribute(p,geometry.index.array[i]);b.fromBufferAttribute(p,geometry.index.array[i+1]);c.fromBufferAttribute(p,geometry.index.array[i+2]);
@@ -50,9 +74,9 @@ test('standalone relief transition leaves the playable patch clear and preserves
     for(const row of geometry.userData.ringRelief.rows){
         const y=p.getY(row.offset),z=p.getZ(row.offset),r=Math.hypot(y,z);
         const distance=Math.abs(Math.atan2(z,-y))*5000;
-        if(distance<700){assert.ok(Math.abs(r-5000)<.001);near++;}
-        else if(distance>2000){assert.ok(Math.abs(r-4820)<.001);far++;}
-        else{assert.ok(r>=4820&&r<=5000);transition++;}
+        if(distance<700){assert.ok(Math.abs(r-5002)<.001);near++;}
+        else if(distance>2000){assert.ok(Math.abs(r-4917)<.001);far++;}
+        else{assert.ok(r>=4917&&r<=5002.001);transition++;}
     }
     assert.ok(near>0&&far>0&&transition>0);
     geometry.dispose();source.dispose();texture.dispose();

@@ -12,7 +12,7 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
 ASSETS=ROOT/'assets/ringworld'
 W,H=4344,1448
-HEIGHT_METERS=180.0
+HEIGHT_METERS=85.0
 TILE_METERS=2*math.pi*5000/8
 WIDTH_METERS=966.0
 
@@ -107,6 +107,26 @@ def erode(field,mask,count):
         deposit(field,x,y,sediment)
     return flow
 
+@njit
+def limit_slopes(field):
+    # Erode unsupported needles and abrupt mask cliffs in physical metres.
+    # An eight-neighbour lower envelope retains drainage detail while limiting
+    # steepness to a 0.65 rise/run budget (about 33 degrees).
+    sx=TILE_METERS/W;sy=WIDTH_METERS/H
+    for iteration in range(4):
+        for direction in (1,-1):
+            for yy in range(H):
+                y=yy if direction==1 else H-1-yy
+                for xx in range(W):
+                    x=xx if direction==1 else W-1-xx
+                    value=field[y,x]
+                    for oy in range(-1,2):
+                        for ox in range(-1,2):
+                            if ox==0 and oy==0:continue
+                            limit=field[(y+oy)%H,(x+ox)%W]+math.hypot(ox*sx,oy*sy)*.65/HEIGHT_METERS
+                            value=min(value,limit)
+                    field[y,x]=value
+
 print('Building 4K uplift field',flush=True)
 height=uplift(base,mask)
 before=height.copy()
@@ -114,6 +134,8 @@ droplets=W*H//2
 print(f'Simulating {droplets:,} hydraulic paths',flush=True)
 flow=erode(height,mask,droplets)
 height=np.clip(height,0,.995);height[mask<.40]=0
+print('Removing coastal cliffs and unsupported peaks in metre space',flush=True)
+limit_slopes(height)
 dx=(np.roll(height,-1,1)-np.roll(height,1,1))*(HEIGHT_METERS*W/TILE_METERS/2)
 dy=(np.roll(height,-1,0)-np.roll(height,1,0))*(HEIGHT_METERS*H/WIDTH_METERS/2)
 inv=1/np.sqrt(1+dx*dx+dy*dy)
@@ -143,6 +165,9 @@ manifest={'version':1,'width':W,'height':H,'heightMeters':HEIGHT_METERS,'tileMet
     'seed':50906,'droplets':droplets,'maxDropletSteps':90,'heightFormat':'r16float','normalAoFormat':'rgba8unorm',
     'rowOrder':'bottom-to-top','sha256':hashlib.sha256(payload).hexdigest(),'decodedBytes':len(payload),
     'source':'ring_band_height.png + authored ring GLB albedo/coast mask',
+    'slopeLimitRiseRun':.65,'slopeLimitSweeps':8,
+    'peakHeightMeters':float(np.max(height)*HEIGHT_METERS),
+    'slopeDegreesP50P95P99':np.percentile(np.degrees(np.arctan(np.hypot(dx,dy))),[50,95,99]).tolist(),
     'erosionRmsMeters':float(np.sqrt(np.mean((height-before)**2))*HEIGHT_METERS)}
 (ASSETS/'ring_relief_v4.json').write_text(json.dumps(manifest,indent=2)+'\n')
 preview=Image.fromarray(np.rint(height*255).astype(np.uint8));preview.thumbnail((1448,483));preview.save(ROOT/'artifacts/overhaul/ring-height-v4.png')
