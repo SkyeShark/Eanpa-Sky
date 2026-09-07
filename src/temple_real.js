@@ -1217,6 +1217,15 @@ export async function makeTempleScene(THREE, {
         stripMaterials[1].emissiveIntensity = nightLevel * 6.0 * (1.96 - pulse);
         summitLights[0].intensity = nightLevel * 52000 * pulse;
         summitLights[1].intensity = nightLevel * 48000 * (1.96 - pulse);
+        // Three still renders a shadow map for a zero-intensity spotlight.
+        // Keep these lights in the stable light list, but sleep their shadow
+        // captures during daylight and refresh immediately when they light up.
+        for (const light of summitLights) {
+            const active = light.intensity > 0.001;
+            if (active && !light.shadow.autoUpdate) light.shadow.needsUpdate=true;
+            if (!active) light.shadow.needsUpdate=false;
+            light.shadow.autoUpdate=active;
+        }
         // Day/night is carried ONLY by intensity. Toggling light `visible` at
         // the nightLevel threshold changed the scene's light list at every
         // dusk and dawn, and a light-list change invalidates every pipeline

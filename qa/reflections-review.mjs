@@ -13,12 +13,15 @@ try {
         if(globalThis.__reflectionFixture)__reflectionFixture.visible=false;
         _reflectionPipeline.setAuditContributions();
         _reflectionPipeline.localProbe.configure({sampleGroundHeight:(x,z)=>_temple.walkSurfaceAt(x,z)?.height??_terrain.heightAt(x,z)});
-        for(let i=0;i<12;i++)await _reflectionPipeline.render();
+        for(let i=0;i<12;i++){
+            await new Promise(requestAnimationFrame);
+            await _reflectionPipeline.render();
+        }
     })()`);
     await capture('orb-combined');
     for(const [name,settings]of [['orb-sky',{ssr:false,sky:true,probe:false}],
         ['orb-local-probe',{ssr:false,sky:false,probe:true}],['orb-ssr',{ssr:true,sky:false,probe:false}]]) {
-        await c.evaluate(`(async()=>{_reflectionPipeline.setAuditContributions(${JSON.stringify(settings)});await _reflectionPipeline.render()})()`);
+        await c.evaluate(`(async()=>{_reflectionPipeline.setAuditContributions(${JSON.stringify(settings)});await new Promise(requestAnimationFrame);await _reflectionPipeline.render()})()`);
         await capture(name);
     }
     await c.evaluate('_reflectionPipeline.setAuditContributions();');
@@ -28,6 +31,7 @@ try {
             _c.position.set(${.7*Math.sin(phase)},${24.5+.3*Math.cos(phase)},${-66.8+.2*Math.cos(phase)});
             _c.rotation.set(${.17+.03*Math.cos(phase)},${.06*Math.sin(phase)},0);_c.updateMatrixWorld(true);
             const orb=_c.parent.getObjectByName('authored_inanna_orb_pivot');orb.rotation.y=${-.7+i*.035};orb.updateMatrixWorld(true);
+            await new Promise(requestAnimationFrame);
             await _reflectionPipeline.render();
         })()`);
         if(i%4===0||i===15)await capture(`orb-motion-${String(i).padStart(2,'0')}`);

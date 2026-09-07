@@ -389,7 +389,9 @@ export function makeReflectionPipeline(
     THREE, renderer, scene, camera, sky, quality = 'balanced',
     fxaaFactory = null, environmentTexture = null,
 ) {
-    if (new URLSearchParams(globalThis.location?.search ?? '').has('native_reflections')) {
+    // Keep the former composite available for controlled regression captures.
+    // Ordinary launches use native material lighting with local radiance.
+    if (!new URLSearchParams(globalThis.location?.search ?? '').has('legacy_reflections')) {
         return makeNativeReflectionPipeline(THREE, renderer, scene, camera, sky, quality, fxaaFactory);
     }
     const required = [
