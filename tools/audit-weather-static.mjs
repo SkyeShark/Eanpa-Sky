@@ -335,9 +335,9 @@ ok(/sky\.uniforms\.precipK\.value = w\.rain \* k \* \(w\.dense \?\? 1\)/.test(we
 // Wetness wraps every eligible node material and evaluates shape/up-facing
 // eligibility from the fragment's world position/normal, not a terrain-only
 // projection or object-name allowlist.
-ok(/incidence = clamp\(dot\(normalWorld, surfaceField\.uniforms\.sourceDirection\)/.test(weatherSource)
+ok(/incidence = clamp\(dot\(normalWorldGeometry, surfaceField\.uniforms\.sourceDirection\)/.test(weatherSource)
     && /wetAmount = incidence[\s\S]*mul\(u\.wetness\)\.mul\(wetGate\)\.mul\(exposure\)/.test(weatherSource),
-    'wetness uses world normals, incoming rain direction, and surface shelter');
+    'wetness uses geometric world normals, incoming rain direction, and surface shelter');
 ok(/vnoise2\(positionWorld\.xz/.test(weatherSource), 'puddles use per-fragment world position');
 ok(/if \(!o\.isMesh \|\| o\.userData\.noWet\) return;[\s\S]*wrapMaterial\(m, o\)/.test(weatherSource), 'all eligible scene meshes enter arbitrary-geometry wetness wrapping');
 ok(/supportsArbitraryUpwardGeometry: true/.test(weatherSource), 'runtime wetness diagnostics expose arbitrary upward receiver support');

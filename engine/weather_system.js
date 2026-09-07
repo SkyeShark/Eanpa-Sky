@@ -41,7 +41,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
     const {
         uniform, Fn, vec2, vec3, vec4, float, instanceIndex, positionLocal,
         uv, fract, floor, mix, clamp, smoothstep, dot, normalize, max, min,
-        pow, abs, exp, sin, cos, length, cameraPosition, normalWorld, positionWorld,
+        pow, abs, exp, sin, cos, length, cameraPosition, normalWorldGeometry, positionWorld,
         materialColor, materialRoughness, materialMetalness,
     } = T3;
     const atan2w = T3.atan2 || T3.atan;
@@ -1304,11 +1304,14 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
                     : Math.max(0, Math.min(1, object.userData.wetnessFactor ?? 1)));
             const puddleGate = uniform(1).onObjectUpdate(({ object }) =>
                 object.userData.noPuddles || mat.userData?.noPuddles ? 0 : 1);
-            const incidence = clamp(dot(normalWorld, surfaceField.uniforms.sourceDirection), 0, 1);
+            // Exposure and pooling use the mesh slope, before its mapped/wet
+            // normal. Using normalWorld here recursively asks normalNode for
+            // the same puddle mask and leaves dry receivers with a zero normal.
+            const incidence = clamp(dot(normalWorldGeometry, surfaceField.uniforms.sourceDirection), 0, 1);
             const exposure = surfaceField.visibilityAt(positionWorld,
                 float(0.06).add(float(1).sub(incidence).mul(0.28)));
             const wetAmount = incidence.pow(0.75).mul(u.wetness).mul(wetGate).mul(exposure);
-            const flat = smoothstep(0.985, 0.998, normalWorld.y);
+            const flat = smoothstep(0.985, 0.998, normalWorldGeometry.y);
             // puddle mask: threshold value noise near its MIDDLE, never its
             // max — near-max iso-contours of value noise are blobs centered
             // on the lattice points in a grid arrangement (square puddles,
@@ -1347,6 +1350,9 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             const puddleAmount = pShape.mul(smoothstep(0.06, 0.42, u.surfaceWater))
                 .mul(float(1).sub(baseMetal));
             const wetMasks = Fn(() => {
+                // Keep shared geometric-normal evaluation outside the dry
+                // branch, including derivative normals on flat-shaded meshes.
+                normalWorldGeometry.toVar();
                 const masks = vec2(0).toVar();
                 T3.If(u.wetness.greaterThan(0.001).or(u.surfaceWater.greaterThan(0.06)), () => {
                     masks.assign(vec2(wetAmount, puddleAmount));
