@@ -1148,7 +1148,20 @@
             // breakup; a dedicated three-octave FBM here cost ~15 fps.
             const cirrusBreakMask = smoothstep(0.36, 0.70, wispN).mul(0.72).add(0.28);
             const cirrusPresence = smoothstep(0.20, 0.48, cirrusPresenceR);
-            const fibers = min(cirrusCore.add(cirrusUpper).add(cirrusLower).add(cirrusPlume), 0.96)
+            // Fine shear-aligned strands soften the smooth analytic spine.
+            // A shared cached noise read adds ragged feathering and gaps; the
+            // finite envelope still vanishes before each cell boundary.
+            const strandNoise = fbmE(vec3(
+                cirrusAlong.mul(8).add(cirrusWidthR.mul(7)),
+                cirrusAcross.div(cirrusWidth).mul(3.8).add(cirrusAlong.mul(11)),
+                cirrusPresenceR.mul(9),
+            ));
+            const feather = exp(cirrusAcross.div(cirrusWidth.mul(1.3)).pow(2).mul(-0.7))
+                .mul(cirrusTaper)
+                .mul(smoothstep(0.25, 0.67, strandNoise));
+            const fibers = min(feather.mul(0.85)
+                .add(cirrusCore.add(cirrusUpper).add(cirrusLower).mul(0.16))
+                .add(cirrusPlume.mul(0.75)), 0.96)
                 .mul(cirrusTaper)
                 .mul(cirrusBreakMask)
                 .mul(cirrusPresence)

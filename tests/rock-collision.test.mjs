@@ -48,5 +48,11 @@ test('tilted hull planes retain a walkable slope and exact height under rotation
     const support=s.walkSurfaceAt(0,0,3);
     assert.ok(Math.abs(support.height-1/c)<1e-6);
     assert.ok(Math.abs(support.normalY-c)<1e-6);
+    for (const clearance of [0, 0.03, 0.1]) {
+        const standing = { x: 0, y: support.height + 1.82 + clearance, z: 0 };
+        s.resolve(standing, { ...standing }, 0, 1.82);
+        assert.equal(standing.x, 0, 'approaching a sloped top from above does not cause a lateral ejection');
+        assert.equal(standing.z, 0);
+    }
     s.dispose();
 });

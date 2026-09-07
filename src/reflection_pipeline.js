@@ -372,6 +372,7 @@ function makeEidoverseSsr({
     node.quality.value = quality;
     node.resolutionScale = resolutionScale;
     node.maxRoughness.value = 0.75;
+    node.roughnessBlurScale.value = 2.5;
     return node;
 }
 

@@ -152,6 +152,10 @@ class SSRNode extends TempNode {
 		// rough surfaces can use their angularly filtered environment instead.
 		this.maxRoughness = uniform( 1 );
 
+		// Optional angular footprint adjustment for the application's pixel
+		// density. Keep the upstream default for other users of this addon.
+		this.roughnessBlurScale = uniform( 1 );
+
 		/**
 		 * The quality of the blur. Must be an integer in the range `[1,3]`.
 		 *
@@ -298,7 +302,7 @@ class SSRNode extends TempNode {
 
 			const mips = this._blurRenderTarget.texture.mipmaps.length - 1;
 			const r = float( this.roughnessNode );
-			const lod = r.mul( r ).mul( mips ).clamp( 0, mips );
+			const lod = r.mul( r ).mul( mips ).mul( this.roughnessBlurScale ).clamp( 0, mips );
 
 			blurredTextureNode = passTexture( this, this._blurRenderTarget.texture ).level( lod );
 

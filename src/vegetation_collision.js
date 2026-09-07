@@ -207,9 +207,29 @@ const deterministicNormal = (key) => {
 // Three heights sample the segment; the deepest sample's least-separating
 // face gives the push direction. Faces pointing mostly up/down are never
 // pushed from — standing on a rock top must not eject the player sideways.
+// Intersect a vertical line with the convex half-spaces. The upper
+// boundary is a support only when its plane is walkable and reachable.
+const walkableHullTop = (hull, x, z, maximumHeight = Infinity) => {
+    const b = hull.aabb;
+    if (x < b.minX || x > b.maxX || z < b.minZ || z > b.maxZ) return null;
+    let lower = b.minY, upper = b.maxY, normalY = 1;
+    for (const [nx, ny, nz, d] of hull.planes) {
+        const side = nx * x + nz * z + d;
+        if (Math.abs(ny) < 1e-7) {
+            if (side > 1e-5) return null;
+            continue;
+        }
+        const crossing = -side / ny;
+        if (ny > 0 && crossing < upper) { upper = crossing; normalY = ny; }
+        else if (ny < 0) lower = Math.max(lower, crossing);
+    }
+    if (lower > upper + 1e-5 || upper > maximumHeight + 1e-5 || normalY < 0.65) return null;
+    return { height: upper, kind: 'rock', assistedStep: false, normalY };
+};
+
 const HULL_SAMPLE_FRACTIONS = [0.15, 0.55, 1.0];
 const HULL_MAX_PUSH = 0.6;
-const resolveHull = (position, hull, eyeHeight, config) => {
+const resolveHull = (position, hull, eyeHeight, config, supportsStanding = false) => {
     const clearance = config.playerRadius;
     const feetY = position.y - eyeHeight;
     const headY = position.y + config.playerHeadMargin;
@@ -217,6 +237,11 @@ const resolveHull = (position, hull, eyeHeight, config) => {
     if (position.x < box.minX - clearance || position.x > box.maxX + clearance
         || position.z < box.minZ - clearance || position.z > box.maxZ + clearance
         || headY < box.minY || feetY > box.maxY + clearance) return false;
+    // Vertical landing owns a walkable top. Expanding slanted top planes by
+    // the body radius here used to eject the player sideways just before
+    // their feet landed, even though a simple horizontal-box test passed.
+    const support = supportsStanding ? walkableHullTop(hull, position.x, position.z) : null;
+    if (support && feetY >= support.height - 1e-4) return false;
     let deepest = Infinity;
     let pushX = 0;
     let pushZ = 0;
@@ -496,6 +521,7 @@ export function createVegetationCollisionStreamer(options = {}) {
                                 hull,
                                 finite(eyeHeight, 1.82),
                                 config,
+                                proxy.species.startsWith('rock_'),
                             )) continue;
                             lastResolvedContacts++;
                             resolvedContacts++;
@@ -566,18 +592,8 @@ export function createVegetationCollisionStreamer(options = {}) {
         for (const proxy of active.values()) {
             if (!proxy.species.startsWith('rock_')) continue;
             for (const hull of proxy.hulls ?? []) {
-                const b = hull.aabb;
-                if(x<b.minX||x>b.maxX||z<b.minZ||z>b.maxZ)continue;
-                let lower=b.minY,upper=b.maxY,normalY=1,inside=true;
-                for(const [nx,ny,nz,d] of hull.planes){
-                    const side=nx*x+nz*z+d;
-                    if(Math.abs(ny)<1e-7){if(side>1e-5){inside=false;break;}continue;}
-                    const crossing=-side/ny;
-                    if(ny>0&&crossing<upper){upper=crossing;normalY=ny;}
-                    else if(ny<0)lower=Math.max(lower,crossing);
-                }
-                if(!inside||lower>upper+1e-5||upper>maximumHeight+1e-5||normalY<0.65)continue;
-                if(!best||upper>best.height)best={height:upper,kind:'rock',assistedStep:false,normalY};
+                const top = walkableHullTop(hull, x, z, maximumHeight);
+                if (top && (!best || top.height > best.height)) best = top;
             }
         }
         return best;

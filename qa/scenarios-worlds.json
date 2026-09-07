@@ -1,0 +1,158 @@
+[
+  {
+    "name": "earth-cumulus",
+    "sky": "earth",
+    "cloud": "cumulus",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-stratus",
+    "sky": "earth",
+    "cloud": "stratus",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-cirrus",
+    "sky": "earth",
+    "cloud": "cirrus",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-clear",
+    "sky": "earth",
+    "cloud": "clear",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-fair",
+    "sky": "earth",
+    "weather": "fair",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-sunshower",
+    "sky": "earth",
+    "weather": "sunshower",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-overcast",
+    "sky": "earth",
+    "weather": "overcast",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-rain",
+    "sky": "earth",
+    "weather": "rain",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-storm",
+    "sky": "earth",
+    "weather": "storm",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-cyclone",
+    "sky": "earth",
+    "weather": "cyclone",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-darkstorm",
+    "sky": "earth",
+    "weather": "darkstorm",
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-time-18.6",
+    "sky": "earth",
+    "hours": 18.6,
+    "pitch": 0.16
+  },
+  {
+    "name": "earth-time-1.4",
+    "sky": "earth",
+    "hours": 1.4,
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-cumulus",
+    "sky": "ringworld",
+    "cloud": "cumulus",
+    "pitch": 0.22
+  },
+  {
+    "name": "ringworld-stratus",
+    "sky": "ringworld",
+    "cloud": "stratus",
+    "pitch": 0.22
+  },
+  {
+    "name": "ringworld-cirrus",
+    "sky": "ringworld",
+    "cloud": "cirrus",
+    "pitch": 0.22
+  },
+  {
+    "name": "ringworld-clear",
+    "sky": "ringworld",
+    "cloud": "clear",
+    "pitch": 0.22
+  },
+  {
+    "name": "ringworld-fair",
+    "sky": "ringworld",
+    "weather": "fair",
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-sunshower",
+    "sky": "ringworld",
+    "weather": "sunshower",
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-overcast",
+    "sky": "ringworld",
+    "weather": "overcast",
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-rain",
+    "sky": "ringworld",
+    "weather": "rain",
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-storm",
+    "sky": "ringworld",
+    "weather": "storm",
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-cyclone",
+    "sky": "ringworld",
+    "weather": "cyclone",
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-darkstorm",
+    "sky": "ringworld",
+    "weather": "darkstorm",
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-time-18.6",
+    "sky": "ringworld",
+    "hours": 18.6,
+    "pitch": 0.16
+  },
+  {
+    "name": "ringworld-time-1.4",
+    "sky": "ringworld",
+    "hours": 1.4,
+    "pitch": 0.16
+  }
+]

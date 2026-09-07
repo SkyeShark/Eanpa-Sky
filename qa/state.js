@@ -15,7 +15,7 @@
     transition: globalThis._sky?.cloudTransitionInfo,
     weather: globalThis._weather?.diagnostics?.transition,
     rocks: globalThis._terrain?.rockCollisionPlacements?.length,
-    collision: globalThis._vegetationStats?.collision,
+    collision: globalThis._vegetation?.diagnostics.collision.state,
     sunDir: globalThis._sky?.sunDir.toArray(),
     moonDir: globalThis._sky?.moonDir.toArray(),
     cloudLightDir: globalThis._sky?.uniforms.cloudLightDir.value.toArray(),
