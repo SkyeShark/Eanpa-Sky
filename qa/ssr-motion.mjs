@@ -17,12 +17,12 @@ try{
         if(i%3===0){
             const r=await cdp.evaluate(trace);records.push({pose:i,x,yaw,...r});
             if(r.selfHits)throw new Error(`Convex self reflection at pose ${i}`);
-            console.log(`Pose ${i}: ${r.convexHits} orb → scene hits, ${r.hitsOnConvex} scene → orb hits, ${r.selfHits} self hits`);
+            console.log(`Pose ${i}: ${r.convexHits} orb â†’ scene hits, ${r.hitsOnConvex} scene â†’ orb hits, ${r.selfHits} self hits`);
         }
     }
     // Dry masonry can be entirely outside the SSR roughness cutoff. The orb
     // itself is the reflective positive control; wet runs additionally record
-    // floor-to-orb hits without requiring dry stone to act as a mirror.
+    // scene-to-orb hits without requiring dry stone to act as a mirror.
     if(!records.some(r=>r.convexHits>100))throw new Error('Missing positive reflection control');
     await writeFile(`artifacts/overhaul/ssr-motion/${prefix}.json`,JSON.stringify(records,null,2));
 }finally{await cdp.evaluate('_eanpaTest.paused=false').catch(()=>{});cdp.close();}

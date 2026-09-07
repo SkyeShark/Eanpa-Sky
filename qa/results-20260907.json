@@ -1,0 +1,1480 @@
+{
+  "route": [
+    {
+      "sky": "earth",
+      "tier": "balanced",
+      "weather": "none",
+      "cpuSlowdown": 4,
+      "metadata": {
+        "date": "2026-09-07T08:52:04.253Z",
+        "skybox": "earth",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 117,
+          "textures": 149,
+          "attributes": 383,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 373,
+          "renderTargets": 35,
+          "total": 1282773926,
+          "texturesSize": 1209780543,
+          "attributesSize": 51128124,
+          "indexAttributesSize": 12356160,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 9509099
+        },
+        "wetness": 0,
+        "surfaceWater": 0,
+        "cpuThrottleRate": 4,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "4x CDP CPU slowdown; local GPU unchanged"
+      },
+      "samples": 639,
+      "fps": 21.312219005563197,
+      "frameIntervalMs": {
+        "mean": 46.921439749608744,
+        "median": 45.800000000046566,
+        "p95": 54.20000000001164,
+        "p99": 66.59999999997672,
+        "max": 70.79999999998836
+      },
+      "gpuPassMs": null,
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "earth",
+      "tier": "balanced",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T08:52:46.680Z",
+        "skybox": "earth",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 117,
+          "textures": 149,
+          "attributes": 383,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 373,
+          "renderTargets": 35,
+          "total": 1282773926,
+          "texturesSize": 1209780543,
+          "attributesSize": 51128124,
+          "indexAttributesSize": 12356160,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 9509099
+        },
+        "wetness": 0,
+        "surfaceWater": 0,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 3793,
+      "fps": 126.43501913358855,
+      "frameIntervalMs": {
+        "mean": 7.909201160031631,
+        "median": 8.299999999988358,
+        "p95": 12.5,
+        "p99": 12.599999999976717,
+        "max": 16.800000000046566
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 6.243651999999996,
+        "medianMs": 6.159232,
+        "p95Ms": 6.745184000000002,
+        "maxMs": 7.142463999999999
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "earth",
+      "tier": "high",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T08:54:19.313Z",
+        "skybox": "earth",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "high",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 127,
+          "textures": 153,
+          "attributes": 441,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 522,
+          "renderTargets": 37,
+          "total": 1337375556,
+          "texturesSize": 1241290047,
+          "attributesSize": 67925244,
+          "indexAttributesSize": 12356160,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 15804105
+        },
+        "wetness": 0,
+        "surfaceWater": 0,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 1827,
+      "fps": 60.91786924164408,
+      "frameIntervalMs": {
+        "mean": 16.415544608648094,
+        "median": 16.699999999953434,
+        "p95": 20.699999999953434,
+        "p99": 20.900000000023283,
+        "max": 29.20000000006985
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 14.050854399999995,
+        "medianMs": 13.976735999999999,
+        "p95Ms": 15.152352,
+        "maxMs": 16.0584
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "earth",
+      "tier": "performance",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T08:55:43.387Z",
+        "skybox": "earth",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "performance",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 136,
+          "textures": 157,
+          "attributes": 484,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 657,
+          "renderTargets": 39,
+          "total": 1315670457,
+          "texturesSize": 1208437183,
+          "attributesSize": 74276700,
+          "indexAttributesSize": 12356160,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 20600414
+        },
+        "wetness": 0,
+        "surfaceWater": 0,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 4660,
+      "fps": 155.31366026969891,
+      "frameIntervalMs": {
+        "mean": 6.438583690987135,
+        "median": 8.199999999953434,
+        "p95": 8.400000000023283,
+        "p99": 12.5,
+        "max": 16.70000000006985
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 4.705676800000001,
+        "medianMs": 4.667616,
+        "p95Ms": 5.068799999999999,
+        "maxMs": 5.308416000000001
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "earth",
+      "tier": "balanced",
+      "weather": "cyclone",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T08:58:56.106Z",
+        "skybox": "earth",
+        "clouds": "cumulus",
+        "weather": "cyclone",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 145,
+          "textures": 161,
+          "attributes": 535,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 791,
+          "renderTargets": 41,
+          "total": 1346810232,
+          "texturesSize": 1218627903,
+          "attributesSize": 89219516,
+          "indexAttributesSize": 12356160,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 26606653
+        },
+        "wetness": 0.9974893540284613,
+        "surfaceWater": 0.8652927231100309,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 3434,
+      "fps": 114.40488802713173,
+      "frameIntervalMs": {
+        "mean": 8.74088526499711,
+        "median": 8.300000000046566,
+        "p95": 12.5,
+        "p99": 12.600000000093132,
+        "max": 16.800000000046566
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 6.523430933333334,
+        "medianMs": 6.436672,
+        "p95Ms": 7.043008000000002,
+        "maxMs": 7.363776000000001
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "ringworld",
+      "tier": "balanced",
+      "weather": "none",
+      "cpuSlowdown": 4,
+      "metadata": {
+        "date": "2026-09-07T09:01:15.623Z",
+        "skybox": "ringworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 153,
+          "textures": 172,
+          "attributes": 571,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 914,
+          "renderTargets": 42,
+          "total": 1402338738,
+          "texturesSize": 1263155062,
+          "attributesSize": 93304764,
+          "indexAttributesSize": 12365232,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 33513680
+        },
+        "cpuThrottleRate": 4,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "4x CDP CPU slowdown; local GPU unchanged"
+      },
+      "samples": 685,
+      "fps": 22.85275817778445,
+      "frameIntervalMs": {
+        "mean": 43.75839416058394,
+        "median": 41.70000000006985,
+        "p95": 50.09999999997672,
+        "p99": 54.300000000046566,
+        "max": 87.5
+      },
+      "gpuPassMs": null,
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "ringworld",
+      "tier": "balanced",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:01:58.062Z",
+        "skybox": "ringworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 153,
+          "textures": 172,
+          "attributes": 571,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 914,
+          "renderTargets": 42,
+          "total": 1402338738,
+          "texturesSize": 1263155062,
+          "attributesSize": 93304764,
+          "indexAttributesSize": 12365232,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 33513680
+        },
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 3512,
+      "fps": 117.0198587231774,
+      "frameIntervalMs": {
+        "mean": 8.545558086560364,
+        "median": 8.300000000046566,
+        "p95": 12.5,
+        "p99": 12.600000000093132,
+        "max": 20.800000000046566
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 6.766391466666662,
+        "medianMs": 6.699775999999997,
+        "p95Ms": 7.250719999999999,
+        "maxMs": 8.161695999999997
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "ringworld",
+      "tier": "high",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:03:38.183Z",
+        "skybox": "ringworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "high",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 163,
+          "textures": 176,
+          "attributes": 609,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1048,
+          "renderTargets": 44,
+          "total": 1441151704,
+          "texturesSize": 1290994550,
+          "attributesSize": 97644924,
+          "indexAttributesSize": 12365232,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 40146998
+        },
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 1572,
+      "fps": 52.42988503446981,
+      "frameIntervalMs": {
+        "mean": 19.073091603053374,
+        "median": 20.799999999813735,
+        "p95": 20.9000000001397,
+        "p99": 21,
+        "max": 37.5
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 16.690537866666666,
+        "medianMs": 16.58428799999999,
+        "p95Ms": 17.962976000000005,
+        "maxMs": 18.727904000000006
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "ringworld",
+      "tier": "performance",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:05:06.867Z",
+        "skybox": "ringworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "performance",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 172,
+          "textures": 180,
+          "attributes": 644,
+          "indexAttributes": 93,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1182,
+          "renderTargets": 46,
+          "total": 1423652046,
+          "texturesSize": 1264433142,
+          "attributesSize": 101984220,
+          "indexAttributesSize": 12365232,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 44869452
+        },
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 4503,
+      "fps": 150.1025017083618,
+      "frameIntervalMs": {
+        "mean": 6.6621141461248055,
+        "median": 8.299999999813735,
+        "p95": 8.400000000139698,
+        "p99": 12.5,
+        "max": 33.300000000046566
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 4.982810133333336,
+        "medianMs": 4.903904000000001,
+        "p95Ms": 5.497728000000001,
+        "maxMs": 5.771519999999998
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "ringworld",
+      "tier": "balanced",
+      "weather": "cyclone",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:08:56.073Z",
+        "skybox": "ringworld",
+        "clouds": "cumulus",
+        "weather": "cyclone",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 183,
+          "textures": 186,
+          "attributes": 705,
+          "indexAttributes": 95,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1398,
+          "renderTargets": 49,
+          "total": 1459614159,
+          "texturesSize": 1276721014,
+          "attributesSize": 117941052,
+          "indexAttributesSize": 12365280,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 52586813
+        },
+        "wetness": 0.9974924114923639,
+        "surfaceWater": 0.8647996462725656,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 3158,
+      "fps": 105.25368537880344,
+      "frameIntervalMs": {
+        "mean": 9.500854971500935,
+        "median": 8.399999999906868,
+        "p95": 12.599999999860302,
+        "p99": 16.5999999998603,
+        "max": 25
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 7.375866133333333,
+        "medianMs": 7.2666879999999985,
+        "p95Ms": 7.897760000000001,
+        "maxMs": 8.50544
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "shieldworld",
+      "tier": "balanced",
+      "weather": "none",
+      "cpuSlowdown": 4,
+      "metadata": {
+        "date": "2026-09-07T09:11:07.587Z",
+        "skybox": "shieldworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 186,
+          "textures": 187,
+          "attributes": 720,
+          "indexAttributes": 90,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1491,
+          "renderTargets": 50,
+          "total": 1456767869,
+          "texturesSize": 1265682087,
+          "attributesSize": 121784340,
+          "indexAttributesSize": 12400272,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 56901170
+        },
+        "cpuThrottleRate": 4,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "4x CDP CPU slowdown; local GPU unchanged"
+      },
+      "samples": 638,
+      "fps": 21.28468770225451,
+      "frameIntervalMs": {
+        "mean": 46.98213166144215,
+        "median": 45.800000000046566,
+        "p95": 58.300000000046566,
+        "p99": 66.5999999998603,
+        "max": 70.9000000001397
+      },
+      "gpuPassMs": null,
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "shieldworld",
+      "tier": "balanced",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:11:49.937Z",
+        "skybox": "shieldworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 186,
+          "textures": 187,
+          "attributes": 720,
+          "indexAttributes": 90,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1491,
+          "renderTargets": 50,
+          "total": 1456767869,
+          "texturesSize": 1265682087,
+          "attributesSize": 121784340,
+          "indexAttributesSize": 12400272,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 56901170
+        },
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 3652,
+      "fps": 121.73495646608585,
+      "frameIntervalMs": {
+        "mean": 8.214567360350518,
+        "median": 8.300000000046566,
+        "p95": 12.5,
+        "p99": 12.600000000093132,
+        "max": 29.200000000186265
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 6.551281866666669,
+        "medianMs": 6.457024,
+        "p95Ms": 7.130655999999999,
+        "maxMs": 7.500127999999998
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "shieldworld",
+      "tier": "high",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:13:16.245Z",
+        "skybox": "shieldworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "high",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 196,
+          "textures": 191,
+          "attributes": 758,
+          "indexAttributes": 90,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1625,
+          "renderTargets": 52,
+          "total": 1494482191,
+          "texturesSize": 1293521575,
+          "attributesSize": 126124500,
+          "indexAttributesSize": 12400272,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 62435844
+        },
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 1715,
+      "fps": 57.167428899052254,
+      "frameIntervalMs": {
+        "mean": 17.492478134110705,
+        "median": 16.699999999953434,
+        "p95": 20.899999999906868,
+        "p99": 20.9000000001397,
+        "max": 33.300000000046566
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 14.88754186666666,
+        "medianMs": 14.769855999999995,
+        "p95Ms": 15.86448000000001,
+        "maxMs": 17.328768
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "shieldworld",
+      "tier": "performance",
+      "weather": "none",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:14:36.615Z",
+        "skybox": "shieldworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "performance",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 205,
+          "textures": 195,
+          "attributes": 793,
+          "indexAttributes": 90,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1759,
+          "renderTargets": 54,
+          "total": 1476417554,
+          "texturesSize": 1266960167,
+          "attributesSize": 130463796,
+          "indexAttributesSize": 12400272,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 66593319
+        },
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 4658,
+      "fps": 155.24803690223914,
+      "frameIntervalMs": {
+        "mean": 6.441305281236552,
+        "median": 8.199999999953434,
+        "p95": 8.400000000139698,
+        "p99": 12.5,
+        "max": 29.200000000186265
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 4.791367733333333,
+        "medianMs": 4.7429440000000005,
+        "p95Ms": 5.180191999999998,
+        "maxMs": 5.842912
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "sky": "shieldworld",
+      "tier": "balanced",
+      "weather": "cyclone",
+      "cpuSlowdown": 1,
+      "metadata": {
+        "date": "2026-09-07T09:18:16.033Z",
+        "skybox": "shieldworld",
+        "clouds": "cumulus",
+        "weather": "cyclone",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 216,
+          "textures": 201,
+          "attributes": 854,
+          "indexAttributes": 92,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 1969,
+          "renderTargets": 57,
+          "total": 1511163660,
+          "texturesSize": 1279248039,
+          "attributesSize": 146420628,
+          "indexAttributesSize": 12400320,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 73094673
+        },
+        "wetness": 0.9975650372174086,
+        "surfaceWater": 0.866198340589882,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "16ab2c987e9d3530f97e73060210998daadeb4bb",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "samples": 3144,
+      "fps": 104.75844581649231,
+      "frameIntervalMs": {
+        "mean": 9.545769720101825,
+        "median": 8.399999999906868,
+        "p95": 12.600000000093132,
+        "p99": 20.9000000001397,
+        "max": 50.200000000186265
+      },
+      "gpuPassMs": {
+        "samples": 120,
+        "meanMs": 6.6681109333333355,
+        "medianMs": 6.598848000000001,
+        "p95Ms": 7.181887999999997,
+        "maxMs": 7.372832000000003
+      },
+      "cleanGpuWindow": true
+    }
+  ],
+  "environmentIdentity": {
+    "sourceSize": [
+      384,
+      192
+    ],
+    "outputSize": [
+      336,
+      256
+    ],
+    "stats": {
+      "bakes": 1,
+      "replacements": 0
+    },
+    "identicalPNG": true
+  },
+  "shadowIdentity": {
+    "identicalPNG": true,
+    "stats": {
+      "variants": 56,
+      "sourcesReleased": 0
+    }
+  },
+  "rebuildIdentity": {
+    "memoryBefore": {
+      "geometries": 111,
+      "textures": 149,
+      "attributes": 360,
+      "indexAttributes": 87,
+      "storageAttributes": 0,
+      "indirectStorageAttributes": 0,
+      "readbackBuffers": 0,
+      "programs": 303,
+      "renderTargets": 35,
+      "total": 1278747819,
+      "texturesSize": 1209780543,
+      "attributesSize": 48462108,
+      "indexAttributesSize": 12160380,
+      "storageAttributesSize": 0,
+      "indirectStorageAttributesSize": 0,
+      "readbackBuffersSize": 0,
+      "programsSize": 8344788
+    },
+    "memoryAfter": {
+      "geometries": 111,
+      "textures": 149,
+      "attributes": 340,
+      "indexAttributes": 87,
+      "storageAttributes": 0,
+      "indirectStorageAttributes": 0,
+      "readbackBuffers": 0,
+      "programs": 163,
+      "renderTargets": 35,
+      "total": 1264933970,
+      "texturesSize": 1209780543,
+      "attributesSize": 36450588,
+      "indexAttributesSize": 12160380,
+      "storageAttributesSize": 0,
+      "indirectStorageAttributesSize": 0,
+      "readbackBuffersSize": 0,
+      "programsSize": 6542459
+    },
+    "stats": {
+      "clears": 8,
+      "retiredDraws": 3453,
+      "releasedAttributes": 184
+    },
+    "identicalPNG": true
+  },
+  "rebuildMemory": {
+    "pass": true,
+    "records": [
+      {
+        "quality": "balanced",
+        "memory": {
+          "geometries": 111,
+          "textures": 149,
+          "attributes": 360,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 307,
+          "renderTargets": 35,
+          "total": 1279452803,
+          "texturesSize": 1209780543,
+          "attributesSize": 48462108,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 9049772
+        },
+        "environment": {
+          "bakes": 1,
+          "replacements": 0
+        },
+        "rebuildResources": {
+          "clears": 1,
+          "retiredDraws": 5,
+          "releasedAttributes": 0
+        },
+        "errors": "",
+        "pointerLocked": false
+      },
+      {
+        "quality": "high",
+        "memory": {
+          "geometries": 112,
+          "textures": 149,
+          "attributes": 371,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 302,
+          "renderTargets": 35,
+          "total": 1313753536,
+          "texturesSize": 1239225663,
+          "attributesSize": 53634172,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 8733321
+        },
+        "environment": {
+          "bakes": 2,
+          "replacements": 1
+        },
+        "rebuildResources": {
+          "clears": 2,
+          "retiredDraws": 515,
+          "releasedAttributes": 24
+        },
+        "errors": "",
+        "pointerLocked": false
+      },
+      {
+        "quality": "balanced",
+        "memory": {
+          "geometries": 111,
+          "textures": 149,
+          "attributes": 360,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 303,
+          "renderTargets": 35,
+          "total": 1278743566,
+          "texturesSize": 1209780543,
+          "attributesSize": 48462108,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 8340535
+        },
+        "environment": {
+          "bakes": 3,
+          "replacements": 2
+        },
+        "rebuildResources": {
+          "clears": 3,
+          "retiredDraws": 1006,
+          "releasedAttributes": 56
+        },
+        "errors": "",
+        "pointerLocked": false
+      },
+      {
+        "quality": "performance",
+        "memory": {
+          "geometries": 111,
+          "textures": 149,
+          "attributes": 360,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 303,
+          "renderTargets": 35,
+          "total": 1266482271,
+          "texturesSize": 1201654207,
+          "attributesSize": 45006108,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 7661576
+        },
+        "environment": {
+          "bakes": 4,
+          "replacements": 2
+        },
+        "rebuildResources": {
+          "clears": 4,
+          "retiredDraws": 1496,
+          "releasedAttributes": 80
+        },
+        "errors": "",
+        "pointerLocked": false
+      },
+      {
+        "quality": "balanced",
+        "memory": {
+          "geometries": 111,
+          "textures": 149,
+          "attributes": 360,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 303,
+          "renderTargets": 35,
+          "total": 1278743566,
+          "texturesSize": 1209780543,
+          "attributesSize": 48462108,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 8340535
+        },
+        "environment": {
+          "bakes": 5,
+          "replacements": 2
+        },
+        "rebuildResources": {
+          "clears": 5,
+          "retiredDraws": 1986,
+          "releasedAttributes": 104
+        },
+        "errors": "",
+        "pointerLocked": false
+      },
+      {
+        "quality": "high",
+        "memory": {
+          "geometries": 112,
+          "textures": 149,
+          "attributes": 371,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 302,
+          "renderTargets": 35,
+          "total": 1313755403,
+          "texturesSize": 1239225663,
+          "attributesSize": 53634172,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 8735188
+        },
+        "environment": {
+          "bakes": 6,
+          "replacements": 3
+        },
+        "rebuildResources": {
+          "clears": 6,
+          "retiredDraws": 2476,
+          "releasedAttributes": 128
+        },
+        "errors": "",
+        "pointerLocked": false
+      },
+      {
+        "quality": "balanced",
+        "memory": {
+          "geometries": 111,
+          "textures": 149,
+          "attributes": 360,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 303,
+          "renderTargets": 35,
+          "total": 1278747819,
+          "texturesSize": 1209780543,
+          "attributesSize": 48462108,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 8344788
+        },
+        "environment": {
+          "bakes": 7,
+          "replacements": 4
+        },
+        "rebuildResources": {
+          "clears": 7,
+          "retiredDraws": 2967,
+          "releasedAttributes": 160
+        },
+        "errors": "",
+        "pointerLocked": false
+      }
+    ]
+  },
+  "shadowBenchmark": [
+    {
+      "cached": false,
+      "metadata": {
+        "date": "2026-09-07T09:34:58.321Z",
+        "skybox": "earth",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 111,
+          "textures": 149,
+          "attributes": 340,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 209,
+          "renderTargets": 35,
+          "total": 1266300653,
+          "texturesSize": 1209780543,
+          "attributesSize": 36450588,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 7909142
+        },
+        "wetness": 0,
+        "surfaceWater": 0,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "3ad13ebe6f30ce1b70f644d5ccd81e9671dfbeae",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "valid": true,
+      "fps": 93.3682228037134,
+      "frameIntervalMs": {
+        "mean": 10.710282042127812,
+        "median": 12.400000000023283,
+        "p95": 12.600000000034925,
+        "p99": 16.600000000034925,
+        "max": 21
+      },
+      "cleanGpuWindow": true
+    },
+    {
+      "cached": true,
+      "metadata": {
+        "date": "2026-09-07T09:35:40.972Z",
+        "skybox": "earth",
+        "clouds": "cumulus",
+        "weather": "none",
+        "hours": "10.5",
+        "quality": "balanced",
+        "canvas": [
+          1600,
+          900
+        ],
+        "camera": [
+          0,
+          1.82,
+          96
+        ],
+        "look": {
+          "yaw": 0,
+          "pitch": 0.035
+        },
+        "ready": true,
+        "pointerLocked": false,
+        "transitioning": false,
+        "gpuMemory": {
+          "geometries": 111,
+          "textures": 149,
+          "attributes": 340,
+          "indexAttributes": 87,
+          "storageAttributes": 0,
+          "indirectStorageAttributes": 0,
+          "readbackBuffers": 0,
+          "programs": 209,
+          "renderTargets": 35,
+          "total": 1266300653,
+          "texturesSize": 1209780543,
+          "attributesSize": 36450588,
+          "indexAttributesSize": 12160380,
+          "storageAttributesSize": 0,
+          "indirectStorageAttributesSize": 0,
+          "readbackBuffersSize": 0,
+          "programsSize": 7909142
+        },
+        "wetness": 0,
+        "surfaceWater": 0,
+        "cpuThrottleRate": 1,
+        "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+        "revision": "3ad13ebe6f30ce1b70f644d5ccd81e9671dfbeae",
+        "constraint": "Unthrottled browser CPU; local GPU unchanged"
+      },
+      "valid": true,
+      "fps": 123.83539725662095,
+      "frameIntervalMs": {
+        "mean": 8.075235531628532,
+        "median": 8.299999999988358,
+        "p95": 12.5,
+        "p99": 12.599999999976717,
+        "max": 20.900000000023283
+      },
+      "cleanGpuWindow": true
+    }
+  ]
+}

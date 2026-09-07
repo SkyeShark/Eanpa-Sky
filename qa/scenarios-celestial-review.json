@@ -1,0 +1,10 @@
+[
+    {"name":"shield-cirrus-review", "sky":"shieldworld", "cloud":"cirrus", "pitch":0.3},
+    {"name":"shield-star-review", "sky":"shieldworld", "cloud":"clear", "aim":"star"},
+    {"name":"shield-moon-review", "sky":"shieldworld", "cloud":"clear", "hours":1.4, "aim":"moon"},
+    {"name":"shield-fair-review", "sky":"shieldworld", "weather":"fair"},
+    {"name":"shield-sunshower-review", "sky":"shieldworld", "weather":"sunshower"},
+    {"name":"shield-overcast-review", "sky":"shieldworld", "weather":"overcast"},
+    {"name":"shield-storm-review", "sky":"shieldworld", "weather":"storm"},
+    {"name":"shield-darkstorm-review", "sky":"shieldworld", "weather":"darkstorm"}
+]
