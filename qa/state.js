@@ -14,6 +14,12 @@
     cloudShadows: globalThis._cloudShadowStats,
     transition: globalThis._sky?.cloudTransitionInfo,
     weather: globalThis._weather?.diagnostics?.transition,
+    rainSurface: globalThis._weather?.diagnostics?.surfaceCapture,
+    wetness: globalThis._weather?.uniforms && {
+        wetness: _weather.uniforms.wetness?.value,
+        surfaceWater: _weather.uniforms.surfaceWater?.value,
+        target: _weather.uniforms.wetTarget?.value,
+    },
     rocks: globalThis._terrain?.rockCollisionPlacements?.length,
     collision: globalThis._vegetation?.diagnostics.collision.state,
     sunDir: globalThis._sky?.sunDir.toArray(),

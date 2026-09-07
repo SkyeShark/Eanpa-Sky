@@ -71,6 +71,52 @@ if (action === 'start') {
         for (const child of owned.reverse()) child.kill();
         throw error;
     }
+} else if (action === 'review') {
+    const state = JSON.parse(await readFile(stateFile, 'utf8'));
+    if (!await listening(serverPort) || !await listening(cdpPort)) {
+        throw new Error('Review handoff requires the existing owned browser and server. Nothing launched.');
+    }
+    const targets = await fetch(`http://127.0.0.1:${cdpPort}/json/list`).then(r => r.json());
+    if (!targets.some(t => t.type === 'page' && t.url.startsWith(`http://127.0.0.1:${serverPort}/`))) {
+        throw new Error('Owned preview identity does not match; nothing closed or launched.');
+    }
+    const version = await fetch(`http://127.0.0.1:${cdpPort}/json/version`).then(r => r.json());
+    const socket = new WebSocket(version.webSocketDebuggerUrl);
+    await new Promise((done, reject) => {
+        socket.addEventListener('open', done, { once: true });
+        socket.addEventListener('error', reject, { once: true });
+    });
+    socket.send(JSON.stringify({ id: 1, method: 'Browser.close' }));
+    await new Promise(done => {
+        socket.addEventListener('close', done, { once: true });
+        setTimeout(() => { socket.close(); done(); }, 2000);
+    });
+    const alive = pid => { try { process.kill(pid, 0); return true; } catch (error) {
+        if (error.code === 'ESRCH') return false; throw error;
+    } };
+    for (let i = 0; i < 60 && (alive(state.browserPid) || await listening(cdpPort)); i++) await sleep(250);
+    if (alive(state.browserPid) || await listening(cdpPort)) {
+        throw new Error('The owned headless browser has not exited. No second browser launched.');
+    }
+    const stdout = await open(resolve(directory, 'chrome-review.out.log'), 'a');
+    const stderr = await open(resolve(directory, 'chrome-review.err.log'), 'a');
+    let browser;
+    try {
+        // The user explicitly requested a visible, interactable review window.
+        // Reuse our dedicated profile and the original server; remove only the
+        // automation flag that intentionally prevents mouse capture in QA.
+        browser = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+            `--remote-debugging-port=${cdpPort}`, '--remote-debugging-address=127.0.0.1',
+            `--user-data-dir=${state.profile}`, '--no-first-run', '--no-default-browser-check',
+            '--disable-background-networking', '--enable-unsafe-webgpu', '--window-size=1600,1000',
+            `http://127.0.0.1:${serverPort}/?benchmark=1`,
+        ], { cwd: root, windowsHide: false, detached: true, stdio: ['ignore', stdout.fd, stderr.fd] });
+        await new Promise((done, reject) => { browser.once('spawn', done); browser.once('error', reject); });
+        browser.unref();
+        Object.assign(state, { browserPid: browser.pid, headless: false, reviewStarted: new Date().toISOString() });
+        await writeFile(stateFile, JSON.stringify(state, null, 2));
+    } finally { await stdout.close(); await stderr.close(); }
+    console.log(JSON.stringify(state, null, 2));
 } else if (action === 'stop') {
     const state = JSON.parse(await readFile(stateFile, 'utf8'));
     if (await listening(cdpPort)) {
@@ -95,4 +141,4 @@ if (action === 'start') {
 } else if (action === 'status') {
     console.log(JSON.stringify({ server: await listening(serverPort), browser: await listening(cdpPort),
         state: JSON.parse(await readFile(stateFile, 'utf8').catch(() => 'null')) }, null, 2));
-} else throw new Error('Use start, status, or stop');
+} else throw new Error('Use start, status, review, or stop');

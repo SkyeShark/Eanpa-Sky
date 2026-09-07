@@ -11,6 +11,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { fxaa as requiredFxaaFactory } from 'three/addons/tsl/display/FXAANode.js';
 import { makeAudioSystem } from './audio_system.js';
 import { FrameMetrics } from './frame_metrics.js';
+import { installShadowMaterialCache } from './shadow_material_cache.js';
 import { makeFirstPersonViewmodel } from './first_person_viewmodel.js?v=20260722-armlight-isolation';
 import {
     MAX_WALK_STEP_RISE,
@@ -257,6 +258,8 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 renderer.shadowMap.enabled = true;
+const shadowMaterialCache = installShadowMaterialCache(renderer);
+globalThis._shadowMaterialCache = shadowMaterialCache;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 await renderer.init();
 
@@ -1273,7 +1276,7 @@ const QUALITY = {
         skySamples: 60, lightSamples: 18, cloudPasses: 5, cloudDiv: 1,
         reflectionBake: { width: 512, height: 256, cloudPasses: 4 },
         cloudReflectionRefreshSeconds: 10,
-        weather: { rainCount: 16000, splashCount: 1100, transitionSeconds: 45 },
+        weather: { rainCount: 16000, splashCount: 1100, transitionSeconds: 45, surfaceResolution: 1024, surfaceRefreshHz: 12 },
         ...optimizedCaches([160, 40, 160], 0.12),
     },
     balanced: {
@@ -1281,7 +1284,7 @@ const QUALITY = {
         skySamples: 44, lightSamples: 14, cloudPasses: 3, cloudDiv: 2,
         reflectionBake: { width: 384, height: 192, cloudPasses: 3 },
         cloudReflectionRefreshSeconds: 16,
-        weather: { rainCount: 10000, splashCount: 700, transitionSeconds: 45 },
+        weather: { rainCount: 10000, splashCount: 700, transitionSeconds: 45, surfaceResolution: 768, surfaceRefreshHz: 8 },
         ...optimizedCaches([112, 28, 112], 0.22),
     },
     performance: {
@@ -1289,7 +1292,7 @@ const QUALITY = {
         skySamples: 20, lightSamples: 6, cloudPasses: 2, cloudDiv: 3,
         reflectionBake: { width: 256, height: 128, cloudPasses: 2 },
         cloudReflectionRefreshSeconds: 24,
-        weather: { rainCount: 5500, splashCount: 320, transitionSeconds: 45 },
+        weather: { rainCount: 5500, splashCount: 320, transitionSeconds: 45, surfaceResolution: 512, surfaceRefreshHz: 6 },
         ...optimizedCaches([72, 20, 72], 0.33),
     },
 };
@@ -1434,6 +1437,7 @@ async function buildSkybox() {
         // Shieldworld synchronizes the red giant and hides its placeholder sun
         // in update(); initialize that state before baking the first reflection.
         active.update?.(0, 0);
+        await globalThis._weather?.prepareFrame?.(renderer, camera, { force: true });
         // Project the active sky's moving cloud field onto every local PBR
         // receiver independently of weather activation. Previously this was a
         // side effect of lazily constructing weather, so the default None state
@@ -1755,6 +1759,8 @@ async function tick(now, dt) {
         && performance.now() - reflectionLastBake
             >= currentQuality.cloudReflectionRefreshSeconds * 1000;
     if (movingCloudReflectionDue) reflectionDirty = true;
+    globalThis._frameStage = 'rain-surface';
+    await globalThis._weather?.prepareFrame?.(renderer, camera);
     if (reflectionBakedWeatherSig !== weatherBakeSignature()) reflectionDirty = true;
     if (reflectionDirty && performance.now() - reflectionLastBake >= 1500) {
         globalThis._frameStage = 'reflection-bake';
@@ -1854,6 +1860,7 @@ addEventListener('beforeunload', () => {
     probePedestal.geometry.dispose();
     probePedestalMat.dispose();
     for (const texturePromise of imageTextureCache.values()) texturePromise.then((texture) => texture.dispose()).catch(() => {});
+    shadowMaterialCache.dispose();
     renderer.dispose();
     globalThis._temple = null;
     globalThis._vegetation = null;

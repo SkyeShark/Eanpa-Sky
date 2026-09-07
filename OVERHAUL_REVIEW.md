@@ -99,3 +99,32 @@ References for these changes:
 - [USGS photometric models](https://isis.astrogeology.usgs.gov/8.3.0/Application/presentation/PrinterFriendly/photemplate/photemplate.html) give Lommel-Seeliger/Lambert particulate reflectance; the moon shader is an artistic blend, not calibrated photometry.
 - [ALMA observations of Betelgeuse](https://www.almaobservatory.org/en/audiences/alma-reveals-long-lived-hotspots-on-betelgeuses-bubbling-surface/) inform large, slowly evolving convection and persistent hot regions.
 - [Lagarde and Harduin: The Art and Rendering of Remember Me](https://seblagarde.wordpress.com/wp-content/uploads/2013/08/gdce13_lagarde_harduin_light.pdf) covers wet material response, rain and surface water.
+
+## Rain and CPU profiling checkpoint
+
+- Rain now shares a bounded local depth/normal capture with wetness and splashes.
+  The GPU contract passes 14 surface cases, two wind cases, and renderer/material
+  rollback after an injected failure. Cases include skinned/vertex-deformed roofs,
+  instances, slopes and alpha-cutout openings. Tangent-plane reconstruction reduced
+  the tilted fixture's height error from 3.9 cm to 0.05 cm. Integration and limits
+  are documented in `engine/RAIN.md`.
+- Thin streaks use two continuous integrated fall phases and a stable pixel
+  footprint. Splash crowns land on captured surfaces. Puddles flatten the mapped
+  normal, use water F0, and receive small normal ripples. Wetness and surface water
+  build/dry at different rates; the weather selector changes their target supply.
+  Dry materials skip wet-mask sampling. This is not a runoff/fluid simulation.
+- Earth wet-orb motion retained 4,071–4,800 orb-to-scene SSR hits in the five
+  sampled poses, with zero same-convex-group hits. Dry stone may correctly have
+  zero floor-to-orb hits because its roughness exceeds the SSR cutoff.
+- A CPU profile found shared shadow override alpha-test changes repeatedly
+  invalidating all casters' material keys. Stable variants per source material
+  remove this churn while retaining the renderer's native shadow implementation.
+  The paused before/after engine screenshots are byte-identical. Three executable
+  tests cover mixed opaque/cutout casters, invalidation and disposal/rollback.
+- Before the shadow-cache change, a clean Earth Balanced run at 1600×900 measured
+  101.2 FPS (p95 interval 12.6 ms); separate GPU timestamps averaged 4.24 ms.
+  The first 4× CPU-slowdown result is **invalid** under the contamination gate:
+  Windows Terminal reached 5.45% GPU usage. Raw data is retained; it is not a clean
+  constrained-performance claim. Final comparisons are being rerun.
+- Source audits: weather/audio 503, reflection 95, sky lifecycle 69 and terrain
+  TSL 89 passed. The audio gait audit still passes all 17 checks.

@@ -290,6 +290,9 @@ export async function makeLazyWeatherAttachment({
         update(t) {
             weather.update(t, camera);
         },
+        prepareFrame(renderer, viewCamera = camera, options) {
+            return weather.prepareFrame?.(renderer, viewCamera, options) ?? false;
+        },
         sunDim() {
             return weather.sunDim();
         },

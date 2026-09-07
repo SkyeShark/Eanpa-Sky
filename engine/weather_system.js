@@ -34,6 +34,8 @@
 //   sunColor     [r,g,b]  the star's light + disc
 //   shieldColor  [r,g,b]  red giant shieldworld's hex shield
 // Omit any of them to keep the state's authored colour.
+import { makeRainSurfaceField } from './rain_surface_field.js';
+
 (function () {
     const T3 = globalThis.THREE;
     const {
@@ -308,7 +310,6 @@
         const RAD = opts.rainRadius ?? 45;     // world tile half-extent (m)
         const HGT = opts.rainHeight ?? 24;     // vertical recycle height (m)
         const N_SPLASH = opts.splashCount ?? 1200;
-        const GROUND_Y = opts.groundY ?? 0;
         const P = RAD * 2;
 
         const u = {
@@ -317,7 +318,7 @@
             camRight: uniform(V(1, 0, 0)),
             camUp: uniform(V(0, 1, 0)),
             rainK: uniform(0),
-            fallSpeed: uniform(opts.fallSpeed ?? 11),
+            fallSpeed: uniform(opts.fallSpeed ?? 9),
             fallMul: uniform(1),
             windVec: uniform(V(0, 0, 0)),        // horizontal wind (m/s), state-driven
             // Integrated motion phases keep velocity changes continuous.
@@ -325,6 +326,7 @@
             // d(time*speed)/dt reverse when a storm weakens, which was the
             // visible upward/backward rain suction during weather morphs.
             fallPhase: uniform(0),
+            fallPhaseSmall: uniform(0),
             windOffset: uniform(V(0, 0, 0)),
             streakLen: uniform(0.4),
             streakW: uniform(0.014),
@@ -332,12 +334,21 @@
             rainColor: uniform(V(0.72, 0.78, 0.86)),   // alien rains recolor this
             rainLight: uniform(1),
             wetness: uniform(0),
+            wetTarget: uniform(0),
+            surfaceWater: uniform(0),
+            pixelWorldScale: uniform(0.001),
             wetTint: uniform(V(1, 1, 1)),
             puddleK: uniform(opts.puddles ?? 1),
             cellLo: uniform(0.9),
             cellHi: uniform(1.45),
             denseA: uniform(1),
         };
+        const surfaceField = makeRainSurfaceField(T3, scene, {
+            radius: Math.max(72, RAD * 1.6),
+            resolution: opts.surfaceResolution ?? 768,
+            refreshHz: opts.surfaceRefreshHz ?? 8,
+            getMaterialRoots: (material) => wrappedRoots.get(material)?.before ?? material,
+        });
 
         // ---------------- world-space rain (instanced streaks) ----------------
         // deterministic: every streak's world position is a pure function of
@@ -361,14 +372,18 @@
         const rainMat = noGBuffer(new T3.MeshBasicNodeMaterial({ transparent: true, depthWrite: false, fog: false, side: T3.DoubleSide }));
         {
             const h1 = hashI(instanceIndex, 1), h2 = hashI(instanceIndex, 2), h3 = hashI(instanceIndex, 3), h4 = hashI(instanceIndex, 4);
-            const fall = u.fallSpeed.mul(u.fallMul);
+            // Two bounded integrated phases retain continuous falling motion
+            // through wind/speed transitions and each vertical tile recycle.
+            const small = h4.lessThan(0.65);
+            const fall = u.fallSpeed.mul(u.fallMul).mul(small.select(0.72, 1));
             // world-tiled coordinates: streak lives at hash*P + k*P (+ wind drift),
             // rendered in the tile containing the camera
             const wtX = u.windOffset.x;
             const wtZ = u.windOffset.z;
             const px = u.camPos.x.add(fract(h1.add(wtX.sub(u.camPos.x).div(P))).sub(0.5).mul(P));
             const pz = u.camPos.z.add(fract(h2.add(wtZ.sub(u.camPos.z).div(P))).sub(0.5).mul(P));
-            const py = u.camPos.y.add(fract(h3.sub(u.fallPhase.div(HGT)).sub(u.camPos.y.div(HGT))).sub(0.35).mul(HGT));
+            const fallPhase = small.select(u.fallPhaseSmall, u.fallPhase);
+            const py = u.camPos.y.add(fract(h3.sub(fallPhase.div(HGT)).sub(u.camPos.y.div(HGT))).sub(0.35).mul(HGT));
             const base = vec3(px, py, pz);
             // streak axis = velocity direction (wind shear tilts it)
             const streakDir = normalize(vec3(u.windVec.x, fall.negate(), u.windVec.z));
@@ -385,13 +400,17 @@
             // Express the inward feather as one-minus a conventional ramp so
             // every backend produces the same circular, block-free boundary.
             const fieldFade = float(1).sub(smoothstep(RAD * 0.70, RAD, fieldDistance));
-            // real rain is a POPULATION: drop sizes span small drizzle to fat
-            // streaks (h1 skewed small via square), widths follow loosely
-            const lenI = u.streakLen.mul(h1.mul(h1).mul(1.1).add(0.45));
-            // width follows length at the drop texture's 1:8 aspect
-            const wThick = lenI.mul(0.125).mul(h2.mul(0.8).add(0.55)).mul(float(1).add(dist.mul(0.012)));
+            const lenI = u.streakLen.mul(h1.mul(h1).mul(0.65).add(0.35)).mul(small.select(0.72, 1));
+            // Millimetre drops leave long exposure streaks, not centimetre-wide
+            // glass needles. A subpixel footprint keeps distant rain stable.
+            const diameter = h2.mul(h2).mul(0.0035).add(0.002);
+            const wThick = max(diameter, dist.mul(u.pixelWorldScale).mul(1.1));
+            const viewDir = normalize(base.sub(cameraPosition));
+            const crossRight = T3.cross(streakDir, viewDir);
+            const streakRight = normalize(mix(u.camRight, crossRight,
+                smoothstep(0.001, 0.02, dot(crossRight, crossRight))));
             const wp = base
-                .add(u.camRight.mul(positionLocal.x.mul(wThick)))
+                .add(streakRight.mul(positionLocal.x.mul(wThick)))
                 .add(streakDir.mul(positionLocal.y.mul(lenI)));
             rainMat.positionNode = wp;
             // WATER DROP texture (user-supplied): glassy teardrop with trailing
@@ -404,12 +423,11 @@
             const endFade = smoothstep(0.0, 0.18, uv().y)
                 .mul(float(1).sub(smoothstep(0.72, 1.0, uv().y)));
             const shapeA = texC ? texC.a : xProf.mul(endFade);
-            const viewDir = normalize(base.sub(cameraPosition));
             const stormRainCover = sky
                 ? clamp(sky.uniforms.stormCanopy, 0, 1)
                 : float(0);
             const rawSunGlint = sky
-                ? pow(max(dot(viewDir, sky.uniforms.sunDir), 0), 6).mul(1.6).add(0.6)
+                ? pow(max(dot(viewDir, sky.uniforms.cloudLightDir ?? sky.uniforms.sunDir), 0), 6).mul(1.6).add(0.6)
                 : float(1);
             // A sealed canopy has no direct sun glint. Lightning/TOD still
             // reaches the drops through the bounded rainLight uniform.
@@ -428,15 +446,15 @@
             // color comes from the lit rainColor alone
             // per-drop brightness: catchlights vary drop to drop (big slow
             // drops flare, fine drizzle nearly vanishes) — h4 spans 0.5-1.5×
-            rainMat.colorNode = u.rainColor.mul(u.rainLight).mul(sunGlint).mul(h4.add(0.5)).mul(1.08);
+            rainMat.colorNode = u.rainColor.mul(u.rainLight).mul(sunGlint).mul(h4.add(0.5)).mul(1.4);
             const stormRainVisibility = sky
                 ? clamp(sky.uniforms.stormCanopy, 0, 1).mul(clamp(u.rainK, 0, 1))
                 : float(0);
             const stormOpacityBoost = mix(float(1), float(1.28), stormRainVisibility);
             rainMat.opacityNode = clamp(shapeA.mul(nearFade).mul(fieldFade).mul(cellGate)
-                .mul(float(0.075).add(h3.mul(0.125)).mul(u.denseA))
+                .mul(float(0.14).add(h3.mul(0.26)).mul(u.denseA))
                 .mul(countGate).mul(clamp(u.rainK.mul(2), 0, 1))
-                .mul(stormOpacityBoost), 0, 0.72);
+                .mul(stormOpacityBoost).mul(surfaceField.visibilityAt(positionWorld, float(0.025))), 0, 0.72);
         }
         const rainInst = new T3.InstancedMesh(rainGeo, rainMat, N_RAIN);
         rainInst.frustumCulled = false;
@@ -446,9 +464,8 @@
         scene.add(rainInst);
 
         // ---------------- ground splashes (the world-anchor cue) ----------------
-        // expanding rings at ground level, tiled in world space like the streaks;
-        // each instance cycles ring-out on its own hash phase. Flat-ground v1
-        // (opts.groundY) — terrain scenes can disable via splashCount: 0.
+        // Surface-aligned impact crowns. Puddle ripples are normal perturbations
+        // in the water shader; these short-lived droplets also work on dry roofs.
         const SP = RAD;   // splash tile half-extent (tighter than rain)
         const splashGeo = new T3.PlaneGeometry(1, 1);
         splashGeo.rotateX(-Math.PI / 2);
@@ -458,9 +475,16 @@
             const px = u.camPos.x.add(fract(s1.sub(u.camPos.x.div(SP * 2))).sub(0.5).mul(SP * 2));
             const pz = u.camPos.z.add(fract(s2.sub(u.camPos.z.div(SP * 2))).sub(0.5).mul(SP * 2));
             const phase = fract(s3.mul(9.7).add(u.time.mul(2.4)));
-            const ringR = phase.mul(0.13).add(0.015);
-            splashMat.positionNode = vec3(px, GROUND_Y + 0.015, pz)
-                .add(positionLocal.mul(vec3(ringR.mul(2), 1, ringR.mul(2))));
+            const ringR = phase.mul(0.07).add(0.008);
+            const seed = vec3(px, u.camPos.y, pz);
+            const hit = surfaceField.impactAt(seed);
+            const hitNormal = surfaceField.normalAt(seed);
+            const axis = abs(hitNormal.y).lessThan(0.95).select(vec3(0, 1, 0), vec3(1, 0, 0));
+            const tangent = normalize(T3.cross(axis, hitNormal));
+            const bitangent = T3.cross(hitNormal, tangent);
+            splashMat.positionNode = hit.xyz.add(hitNormal.mul(float(0.008).add(sin(phase.mul(Math.PI)).mul(0.026))))
+                .add(tangent.mul(positionLocal.x.mul(ringR.mul(2))))
+                .add(bitangent.mul(positionLocal.z.mul(ringR.mul(2))));
             const rr = uv().sub(0.5).length().mul(2);
             const ring = smoothstep(0.55, 0.8, rr)
                 .mul(float(1).sub(smoothstep(0.85, 1.0, rr)));
@@ -477,8 +501,12 @@
             const countGate = smoothstep(s1, s1.add(0.001), u.rainK);
             const fieldDistance = vec2(px.sub(u.camPos.x), pz.sub(u.camPos.z)).length();
             const fieldFade = float(1).sub(smoothstep(SP * 0.70, SP, fieldDistance));
-            splashMat.colorNode = u.rainColor.mul(1.15);
-            splashMat.opacityNode = ring.mul(float(1).sub(phase)).mul(0.30).mul(fieldFade).mul(cellGateS).mul(countGate).mul(clamp(u.rainK.mul(2), 0, 1));
+            const angle = atan2w(uv().y.sub(0.5), uv().x.sub(0.5));
+            const crown = smoothstep(0.35, 0.75, sin(angle.mul(7).add(s3.mul(19))));
+            splashMat.colorNode = u.rainColor.mul(u.rainLight).mul(1.15);
+            splashMat.opacityNode = ring.mul(crown).mul(float(1).sub(phase).pow(2)).mul(0.24)
+                .mul(fieldFade).mul(cellGateS).mul(countGate).mul(clamp(u.rainK.mul(2), 0, 1))
+                .mul(hit.w).mul(clamp(hitNormal.y, 0, 1));
         }
         const splashInst = new T3.InstancedMesh(splashGeo, splashMat, N_SPLASH);
         splashInst.frustumCulled = false;
@@ -1257,23 +1285,29 @@
             wetnessStats.receiverMeshes = receiverMeshes.size;
         };
         const wrapMaterial = (mat, receiver = null) => {
-            if (!mat || !mat.isNodeMaterial) return false;
+            if (!mat || !(mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial
+                || mat.isMeshStandardNodeMaterial || mat.isMeshPhysicalNodeMaterial)) return false;
             registerReceiver(receiver);
             if (wrapped.has(mat)) return false;
             wrapped.add(mat);
-            wrappedRoots.set(mat, {
+            const before = {
                 colorNode: mat.colorNode,
                 roughnessNode: mat.roughnessNode,
                 metalnessNode: mat.metalnessNode,
-            });
-            const upMask = clamp(normalWorld.y, 0, 1).pow(2).mul(u.wetness);
-            // Crossed-card foliage deliberately carries upward normals for
-            // soft clump lighting, so normalWorld.y cannot identify ground by
-            // itself. Keep the wet sheen but let receivers opt out of the
-            // ground-only puddle replacement path.
-            const puddleGate = (mat.userData?.noPuddles || receiver?.userData?.noPuddles)
-                ? float(0)
-                : float(1);
+                normalNode: mat.normalNode,
+                setupVariants: mat.setupVariants,
+            };
+            // A shared material may be used on a roof, a sheltered floor, and
+            // foliage. Receiver flags must follow the draw, not the first mesh.
+            const wetGate = uniform(1).onObjectUpdate(({ object }) =>
+                object.userData.noWet || mat.userData?.noWet ? 0
+                    : Math.max(0, Math.min(1, object.userData.wetnessFactor ?? 1)));
+            const puddleGate = uniform(1).onObjectUpdate(({ object }) =>
+                object.userData.noPuddles || mat.userData?.noPuddles ? 0 : 1);
+            const incidence = clamp(dot(normalWorld, surfaceField.uniforms.sourceDirection), 0, 1);
+            const exposure = surfaceField.visibilityAt(positionWorld,
+                float(0.06).add(float(1).sub(incidence).mul(0.28)));
+            const wetAmount = incidence.pow(0.75).mul(u.wetness).mul(wetGate).mul(exposure);
             const flat = smoothstep(0.985, 0.998, normalWorld.y);
             // puddle mask: threshold value noise near its MIDDLE, never its
             // max — near-max iso-contours of value noise are blobs centered
@@ -1294,9 +1328,13 @@
             // its own (crisp water edges), wetness then gates how much of
             // it applies. Sharpening AFTER the wetness multiply zeroes all
             // puddles in any state below full wet — shape × gate, always.
-            const pShape = smoothstep(0.97, 1.13, pn).mul(flat).mul(u.puddleK).mul(puddleGate)
+            // Authored cavity masks can replace the procedural fallback on
+            // arbitrary assets; 1 marks a depression that fills first.
+            const cavity = mat.userData?.puddleMaskNode ?? clamp(pn.div(1.6), 0, 1);
+            const fillLevel = mix(float(0.79), float(0.56), u.surfaceWater);
+            const pShape = smoothstep(fillLevel, fillLevel.add(0.055), cavity)
+                .mul(flat).mul(u.puddleK).mul(puddleGate).mul(wetGate).mul(exposure)
                 .mul(float(1).sub(smoothstep(160, 450, pDist)));
-            const puddle = smoothstep(0.25, 0.6, pShape).mul(smoothstep(0.35, 0.9, u.wetness));
             // Normalize color roots to RGBA once. TSL supplies alpha=1 for a
             // vec3 root and retains atlas alpha for a vec4 root, so every wet
             // color operation can remain RGB without accidentally promoting a
@@ -1304,16 +1342,29 @@
             const baseColor4 = vec4(mat.colorNode ?? materialColor);
             const baseRgb = baseColor4.rgb;
             const baseRough = mat.roughnessNode ?? materialRoughness;
-            // wetness reads through GLOSS/reflection, not blackness — mild
-            // darkening only (heavy albedo crush made black splotches)
-            const darkened = baseRgb.mul(mix(float(1), float(0.68), upMask.mul(0.85)));
+            const baseMetal = mat.metalnessNode ?? materialMetalness;
+            const baseNormal = mat.normalNode ?? T3.materialNormal;
+            const puddleAmount = pShape.mul(smoothstep(0.06, 0.42, u.surfaceWater))
+                .mul(float(1).sub(baseMetal));
+            const wetMasks = Fn(() => {
+                const masks = vec2(0).toVar();
+                T3.If(u.wetness.greaterThan(0.001).or(u.surfaceWater.greaterThan(0.06)), () => {
+                    masks.assign(vec2(wetAmount, puddleAmount));
+                });
+                return masks;
+            })();
+            const upMask = wetMasks.x, puddle = wetMasks.y;
+            // Porous dielectric surfaces darken when filled with water. Metal
+            // keeps its authored conductor response; it does not turn black.
+            const porosity = Math.max(0, Math.min(1, mat.userData?.wetPorosity ?? 0.65));
+            const darkened = baseRgb.mul(float(1).sub(upMask.mul(porosity * 0.32).mul(float(1).sub(baseMetal))));
             const wetCol = darkened.mul(mix(vec3(1, 1, 1), u.wetTint, upMask.mul(0.6)));
             // Puddles receive sky through Three's native cloud PMREM/IBL and
             // local geometry through SSR. The metalness/roughness TSL
             // registers carry the final mapped values into the shared scene
             // G-buffer without a per-material override. Water is a dielectric:
             // Schlick fresnel
-            // (F0≈0.06) makes it a mirror only toward grazing. Top-down, a
+            // (F0≈0.0204 for IOR 1.333) makes it a mirror toward grazing. Top-down, a
             // puddle is shallow water over the ground: albedo shows the
             // water-deepened wet ground (the "see-through" read), reflection
             // fades to a sheen. Distant ground is inherently grazing, so far
@@ -1322,22 +1373,51 @@
             // dielectric BRDF already supplies angle-dependent PMREM/SSR.
             // The former near-white injection plus metalness=fresnel could
             // saturate broad wet terrain during a lightning flash.
-            // pseudo-depth from the shape mask: shallow rims barely change
-            // the ground, centers deepen + cool — the see-through read
-            // survives top-down views and flat-colored ground
-            const pDepth = smoothstep(0.3, 1.0, pShape);
-            const waterFloor = wetCol.mul(mix(float(0.96), float(0.62), pDepth))
-                .mul(mix(vec3(1, 1, 1), vec3(0.84, 0.91, 1.0), pDepth.mul(0.7)));
+            const pDepth = smoothstep(0.3, 1.0, puddle);
+            const waterFloor = wetCol.mul(mix(float(0.99), float(0.91), pDepth));
             const finalWetRgb = mix(wetCol, waterFloor, puddle);
             // Weather color must not replace the alpha channel used by
             // foliage/decals for cutout silhouettes. Losing it turns distant
             // crossed cards into solid rectangular planes.
             mat.colorNode = vec4(finalWetRgb, baseColor4.a);
-            mat.roughnessNode = mix(mix(baseRough, float(0.10), upMask.mul(0.8)), float(0.045), puddle);
+            mat.roughnessNode = mix(mix(baseRough, max(float(0.045), baseRough.mul(0.48)), upMask),
+                float(0.045).add(u.rainK.mul(0.025)), puddle);
             // Water remains dielectric; low roughness provides its native
             // Fresnel reflection without a metallic or white-albedo shortcut.
-            const baseMetal = mat.metalnessNode ?? materialMetalness;
             mat.metalnessNode = mix(baseMetal, float(0), puddle);
+            // Sparse expanding capillary rings perturb the water normal, so
+            // the reflected scene breaks up naturally without white painted
+            // rings. Fade subpixel ripples before they can shimmer at distance.
+            const rippleSlope = Fn(([worldXZ]) => {
+                const result = vec2(0).toVar();
+                T3.If(u.rainK.greaterThan(0.001).and(u.surfaceWater.greaterThan(0.06)), () => {
+                    for (const offset of [0, 0.537]) {
+                        const p = worldXZ.div(1.1).add(offset);
+                        const cell = floor(p);
+                        const phase = fract(u.time.mul(1.7).add(hash2(cell.add(19.3))));
+                        const center = vec2(hash2(cell), hash2(cell.add(47.1))).mul(0.3).add(0.35);
+                        const delta = fract(p).sub(center).mul(1.1);
+                        const radius = length(delta).add(0.0001);
+                        const wave = radius.sub(phase.mul(0.33).add(0.012));
+                        const envelope = exp(wave.mul(wave).mul(-900))
+                            .mul(smoothstep(0.02, 0.12, phase)).mul(float(1).sub(phase).pow(2));
+                        result.addAssign(delta.div(radius).mul(cos(wave.mul(110)))
+                            .mul(envelope).mul(0.075));
+                    }
+                });
+                return result;
+            })(positionWorld.xz).mul(u.rainK).mul(float(1).sub(smoothstep(8, 35, pDist)));
+            const waterWorldNormal = normalize(vec3(rippleSlope.x.negate(), 1, rippleSlope.y.negate()));
+            const waterViewNormal = T3.cameraViewMatrix.mul(vec4(waterWorldNormal, 0)).xyz;
+            mat.normalNode = normalize(mix(baseNormal, waterViewNormal, puddle));
+            const setupVariants = before.setupVariants
+                ?? (mat.isMeshPhysicalMaterial ? T3.MeshPhysicalNodeMaterial : T3.MeshStandardNodeMaterial).prototype.setupVariants;
+            mat.setupVariants = function (builder) {
+                setupVariants.call(this, builder);
+                T3.specularColor.assign(mix(T3.specularColor, vec3(0.02037), puddle));
+            };
+            const after = Object.fromEntries(Object.keys(before).map(key => [key, mat[key]]));
+            wrappedRoots.set(mat, { before, after });
             mat.needsUpdate = true;
             wetnessStats.wrappedMaterials = wrapped.size;
             return true;
@@ -1405,6 +1485,7 @@
         let lastMotionT = null;
         let totalFallDistance = 0;
         const totalWindDistance = V(0, 0, 0);
+        const drawingBufferSize = new T3.Vector2();
         const diagnostics = {
             version: 'weather-acceptance-v3',
             transition: {
@@ -1432,7 +1513,7 @@
                 volumetricCurtains: true,
                 featherInnerRadius: RAD * 0.70,
                 featherOuterRadius: RAD,
-                opacityBaseRange: [0.075, 0.20],
+                opacityBaseRange: [0.14, 0.40],
                 sceneLightResponsive: true,
                 rainPopulation: N_RAIN,
                 splashPopulation: N_SPLASH,
@@ -1481,12 +1562,13 @@
                 },
             },
             wetness: wetnessStats,
+            surfaceCapture: surfaceField.stats,
         };
         // ---- smooth weather transitions: lerp every uniform setWeather touches
         // plus a BLENDED live state.def, so per-frame readers (palette greying,
         // lightning probability, ring-cloud coverage) ease instead of popping
         const _transScalars = () => {
-            const s = [u.rainK, u.wetness, u.denseA, u.streakLen, u.fallMul, u.dashK, u.cellLo, u.cellHi];
+            const s = [u.rainK, u.wetTarget, u.denseA, u.streakLen, u.fallMul, u.dashK, u.cellLo, u.cellHi];
             if (sky) s.push(sky.uniforms.cloudDim, sky.uniforms.cloudRadiance, sky.uniforms.sunDiscI, sky.uniforms.precipK, sky.uniforms.precipLo, sky.uniforms.precipHi,
                 sky.uniforms.largeT, sky.uniforms.largeA, sky.uniforms.weatherT, sky.uniforms.finalMul,
                 sky.uniforms.wScale, sky.uniforms.dScale, sky.uniforms.cloudStart, sky.uniforms.cloudHeight, sky.uniforms.lightK,
@@ -1647,7 +1729,7 @@
                     sky.uniforms.precipK.value = w.rain * k * (w.dense ?? 1);   // world rain curtains under dense cells
                 }
                 u.rainK.value = w.rain * k;
-                u.wetness.value = w.wet * k;
+                u.wetTarget.value = w.wet * k;
                 u.windVec.value.set(1.0, 0, 0.22).normalize().multiplyScalar(w.windK * 3.2);
                 u.denseA.value = w.dense ?? 1;
                 if (sky && sky.uniforms.skyWind) {
@@ -1697,6 +1779,21 @@
                 return Math.max(0.08, 1 - (1 - target) * state.k);
             },
             wrapMaterial, wrapScene,
+            surfaceField,
+            async prepareFrame(renderer, camera, captureOptions = {}) {
+                if (disposed) return false;
+                renderer.getDrawingBufferSize(drawingBufferSize);
+                u.pixelWorldScale.value = camera.isPerspectiveCamera
+                    ? 2 * Math.tan(camera.getEffectiveFOV() * Math.PI / 360) / Math.max(1, drawingBufferSize.y)
+                    : (camera.top - camera.bottom) / Math.max(1, drawingBufferSize.y);
+                return surfaceField.prepareFrame(renderer, camera, {
+                    time: u.time.value,
+                    active: u.rainK.value > 0.001 || u.wetness.value > 0.001 || u.surfaceWater.value > 0.06,
+                    wind: u.windVec.value,
+                    fallSpeed: u.fallSpeed.value * u.fallMul.value,
+                    ...captureOptions,
+                });
+            },
             // Every pooled weather mesh, for boot-time pipeline warmup. These
             // spawn invisible, and compileAsync skips invisible objects — so
             // their pipelines compiled mid-switch (a multi-second stall) or
@@ -1755,6 +1852,13 @@
                     ? 0
                     : Math.max(0, Math.min(finiteT - lastMotionT, 0.1));
                 lastMotionT = finiteT;
+                // A weather front changes the supply of water. Thin wetness
+                // arrives first; puddles fill later and outlast the rain.
+                const wetTau = u.wetTarget.value > u.wetness.value ? 7 : 70;
+                u.wetness.value += (u.wetTarget.value - u.wetness.value) * -Math.expm1(-motionDt / wetTau);
+                const waterTarget = Math.pow(Math.max(0, u.wetTarget.value), 1.8);
+                const waterTau = waterTarget > u.surfaceWater.value ? 32 : 150;
+                u.surfaceWater.value += (waterTarget - u.surfaceWater.value) * -Math.expm1(-motionDt / waterTau);
                 const fallVelocity = Math.max(
                     0.05,
                     Number(u.fallSpeed.value) * Math.max(0.05, Number(u.fallMul.value)),
@@ -1763,6 +1867,7 @@
                 totalWindDistance.x += u.windVec.value.x * motionDt;
                 totalWindDistance.z += u.windVec.value.z * motionDt;
                 u.fallPhase.value = totalFallDistance % HGT;
+                u.fallPhaseSmall.value = (totalFallDistance * 0.72) % HGT;
                 u.windOffset.value.x = (
                     totalWindDistance.x % P + P
                 ) % P;
@@ -2175,6 +2280,8 @@
                 diagnostics.precipitation.rainVisible = rainInst.visible;
                 diagnostics.precipitation.intensity = Number(u.rainK.value);
                 wetnessStats.wetness = Number(u.wetness.value);
+                wetnessStats.surfaceWater = Number(u.surfaceWater.value);
+                wetnessStats.targetWetness = Number(u.wetTarget.value);
                 return true;
             },
             dispose() {
@@ -2184,12 +2291,15 @@
                 sys._trans = null;
                 // Terrain and the reflection probe survive skybox rebuilds;
                 // restore their original roots so wrappers cannot stack.
-                for (const [mat, roots] of wrappedRoots) {
-                    mat.colorNode = roots.colorNode ?? null;
-                    mat.roughnessNode = roots.roughnessNode ?? null;
-                    mat.metalnessNode = roots.metalnessNode ?? null;
+                for (const [mat, { before, after }] of wrappedRoots) {
+                    for (const key of Object.keys(before)) {
+                        if (mat[key] !== after[key]) continue;
+                        if (before[key] === undefined) delete mat[key];
+                        else mat[key] = before[key];
+                    }
                     mat.needsUpdate = true;
                 }
+                surfaceField.dispose();
                 wrapped.clear();
                 // drop any outstanding wrap queue too, so a disposed system
                 // stops holding references to the scene's materials
