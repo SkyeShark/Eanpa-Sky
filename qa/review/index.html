@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eanpa overhaul review</title>
+<style>
+  :root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#10151b;color:#dbe7ef}
+  body{max-width:1500px;margin:auto;padding:24px}
+  h1{font-size:28px;margin:0 0 8px}h2{font-size:20px;margin:28px 0 12px}
+  p{color:#aebfcc;max-width:90ch}a{color:#8fcdf2}
+  nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:22px 0 12px}
+  select,button{font:inherit;color:inherit;background:#202c37;border:1px solid #405364;border-radius:6px;padding:9px 12px}
+  select{min-width:280px;max-width:100%}button{cursor:pointer}button:focus-visible,select:focus-visible{outline:2px solid #8fcdf2}
+  figure{margin:0}img{width:100%;height:auto;display:block;background:#080c10;border-radius:8px}
+  figcaption{padding:10px 0;min-height:3em;color:#aebfcc}
+  table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+  th,td{text-align:right;padding:8px 10px;border-bottom:1px solid #2b3b49}
+  th:first-child,td:first-child{text-align:left}th{color:#8fcdf2}
+  .table-wrap{overflow:auto}.muted{color:#94a8b8}.warning{color:#ffd39c}
+</style>
+<h1>Eanpa standalone overhaul</h1>
+<p>Recorded engine views for the local review. Use the adjacent off/on cloud-shadow
+  views to compare the same camera and cloud time. Moon motion views use the same
+  camera at different animation times.</p>
+<p><a href="../../?benchmark=1">Open the interactive engine</a> ·
+  <a href="../../OVERHAUL_REVIEW.md">Detailed changes and limits</a> ·
+  <a href="../results-20260907.json">Recorded measurements and checks</a></p>
+<nav aria-label="Captured view">
+  <button id="previous" type="button" aria-label="Previous captured view">← Previous</button>
+  <label for="views">View</label><select id="views"></select>
+  <button id="next" type="button" aria-label="Next captured view">Next →</button>
+</nav>
+<figure><img id="capture" alt="Loading engine capture"><figcaption id="caption" aria-live="polite"></figcaption></figure>
+<h2>Performance</h2>
+<p id="revision" class="muted"></p>
+<p>1600 × 900, 62° vertical FOV, fixed ground-level camera, complete local scene.
+  Reduced runs combine 4× browser CPU slowdown with an 8 ms target GPU workload;
+  they retain the 5090's architecture and memory. Actual workload durations are
+  recorded in the result file. Unrestricted runs remove both constraints.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Scene / tier / weather</th><th>Unrestricted FPS</th><th>p95 ms</th><th>Reduced FPS</th><th>p95 ms</th><th>GPU mean ms</th></tr></thead>
+  <tbody id="results"></tbody>
+</table></div>
+<p class="muted">* A marked capture exceeded the recorded external GPU activity gate.
+  The original sweep did not measure CPU activity. GPU pass times are separate
+  timestamp measurements, not frame throughput.</p>
+<p id="final-receiver" class="muted"></p>
+<script type="module">
+  const views=document.getElementById('views'),capture=document.getElementById('capture'),caption=document.getElementById('caption');
+  try{
+    const manifest=await fetch('./manifest.json').then(r=>{if(!r.ok)throw new Error('Capture manifest unavailable');return r.json()});
+    for(const [index,item]of manifest.entries()){const option=new Option(item.title,String(index));views.add(option)}
+    const show=()=>{const item=manifest[Number(views.value)];capture.src='./'+item.file;capture.alt=item.title;caption.textContent=item.note;};
+    views.addEventListener('change',show);
+    document.getElementById('previous').onclick=()=>{views.selectedIndex=(views.selectedIndex+manifest.length-1)%manifest.length;show()};
+    document.getElementById('next').onclick=()=>{views.selectedIndex=(views.selectedIndex+1)%manifest.length;show()};show();
+    const data=await fetch('./summary.json').then(r=>r.json());
+    document.getElementById('revision').textContent='Measured rendering revision: '+data.revision.slice(0,7);
+    const final=data.finalReceiver;
+    document.getElementById('final-receiver').textContent='Final receiver correction ('+final.revision.slice(0,7)+
+      '), Ringworld / Balanced / Rain: '+final.fullFps.toFixed(1)+' FPS unrestricted, '+final.reducedFps.toFixed(1)+
+      ' FPS constrained; GPU pass mean '+final.gpuMeanMs.toFixed(2)+' ms. '+(final.cpuIsolated
+      ?'The unrestricted run passed the CPU and GPU activity gates.'
+      :'The unrestricted run exceeded the CPU activity gate and is not a CPU-idle baseline.');
+    const format=r=>r?r.fps.toFixed(1)+(r.isolated?'':'*'):'—';
+    for(const full of data.captures.filter(r=>r.cpuSlowdown===1)){
+      const reduced=data.captures.find(r=>r.cpuSlowdown>1&&r.world===full.world&&r.quality===full.quality&&r.weather===full.weather);
+      const row=document.createElement('tr');
+      for(const value of [full.world+' / '+full.quality+' / '+full.weather,format(full),full.p95.toFixed(1),format(reduced),reduced?.p95.toFixed(1)??'—',full.gpu.meanMs.toFixed(2)]){
+        const cell=document.createElement('td');cell.textContent=value;row.append(cell);
+      }document.getElementById('results').append(row);
+    }
+  }catch(error){caption.textContent=error.message;caption.className='warning';}
+</script>
+</html>

@@ -16,7 +16,24 @@ do {
     }
 } while ($added -gt 0)
 $gpuBefore = & nvidia-smi --query-gpu=name,driver_version,memory.total,memory.used,utilization.gpu,temperature.gpu,clocks.current.graphics,power.draw,enforced.power.limit --format=csv,noheader,nounits
+$taskCpuBefore = @{}
+foreach ($process in Get-Process -ErrorAction SilentlyContinue) {
+    if ($null -ne $process.CPU) { $taskCpuBefore[$process.Id] = [double] $process.CPU }
+}
+$taskCpuClock = [System.Diagnostics.Stopwatch]::StartNew()
 $samples = @(Get-Counter '\GPU Engine(*)\Utilization Percentage' -SampleInterval 1 -MaxSamples $SampleCount -ErrorAction SilentlyContinue)
+$taskCpuAfter = @(Get-Process -ErrorAction SilentlyContinue)
+$taskCpuSeconds = $taskCpuClock.Elapsed.TotalSeconds
+$taskLogicalProcessors = [Environment]::ProcessorCount
+$taskCpuRows = @(foreach ($process in $taskCpuAfter) {
+    if (-not $taskCpuBefore.ContainsKey($process.Id) -or $null -eq $process.CPU) { continue }
+    $cores = [math]::Max([double]0, ([double] $process.CPU - $taskCpuBefore[$process.Id]) / [math]::Max(0.001, $taskCpuSeconds))
+    if ($cores -lt 0.02) { continue }
+    [pscustomobject]@{ processId = $process.Id; process = $process.ProcessName
+        meanCores = [math]::Round($cores, 3); meanPercent = [math]::Round($cores / $taskLogicalProcessors * 100, 2)
+        owned = $allowed.Contains($process.Id); measurementProcess = ($process.Id -eq $PID) }
+})
+$taskExternalCpu = ($taskCpuRows | Where-Object { -not $_.owned -and -not $_.measurementProcess } | Measure-Object meanPercent -Sum).Sum
 $validSamples = @($samples.CounterSamples | Where-Object { $_.Status -eq 0 })
 $rows = foreach ($sample in $validSamples) {
     if ($sample.InstanceName -notmatch 'pid_(\d+).*engtype_([^_]+)$') { continue }
@@ -45,4 +62,8 @@ $gpuAfter = & nvidia-smi --query-gpu=name,driver_version,memory.total,memory.use
     busy = $busy; engines = @($summary | Sort-Object peakPercent -Descending)
     gpuCsvColumns = 'name, driver, totalMiB, usedMiB, utilizationPercent, temperatureC, graphicsMHz, powerW, limitW'
     gpuBefore = $gpuBefore; gpuAfter = $gpuAfter
+    cpu = [pscustomobject]@{ measuredSeconds = $taskCpuSeconds; logicalProcessors = $taskLogicalProcessors
+        method = 'Process CPU-time deltas; processes present at both endpoints. meanCores may exceed one.'
+        externalMeanPercent = $taskExternalCpu; thresholdPercent = 20; clean = ($taskExternalCpu -lt 20)
+        processes = @($taskCpuRows | Sort-Object meanCores -Descending) }
 } | ConvertTo-Json -Depth 6 -Compress

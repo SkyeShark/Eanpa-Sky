@@ -15,14 +15,24 @@ running at high frame rates with a complete playable scene underneath.
 Serve the folder with any static file server and open it in a
 WebGPU-capable browser (Chrome/Edge), e.g.:
 
+```sh
+python qa/dev-server.py 8378
 ```
-npx serve .
-```
+
+Open http://127.0.0.1:8378/. The included server binds to loopback and supplies
+JavaScript/WASM content types explicitly. If the review server is already
+running, reuse it. The first load warms the WebGPU pipelines before revealing
+the world.
+
+Local overhaul details and retained measurements are in
+[OVERHAUL_REVIEW.md](OVERHAUL_REVIEW.md). The selected capture gallery is at
+[qa/review/index.html](qa/review/index.html). These local changes have not been
+pushed to the hosted demo.
 
 ## What to try
 
-- **Skybox**: Earth / Orbital Halo (with parallax-mapped megastructure band,
-  eclipse and underground-sun lighting) / Red Giant far-future Earth
+- **Skybox**: Earth / Orbital Halo (with displaced, eroded terrain, eclipse and
+  band lighting) / Shieldworld with its red giant and shattered moon
 - **Weather**: eight states from clear to Dark Storm — sealed volumetric
   storm canopy, forced lightning strikes (⚡ button), burn scorch decals
 - **Time of day** slider and day/night cycle; the moon is NASA LROC imagery
@@ -30,6 +40,10 @@ npx serve .
   touch response, a climbable ziggurat temple
 
 Controls are on-screen. Quality tiers in the panel; Balanced targets 60+ FPS.
+
+Cloud shadows work on scene PBR geometry without a terrain callback; see
+[the integration guide](docs/SKY_SYSTEM_INTEGRATION.md). Rain shelter, impacts,
+wetness and puddles use nearby surface geometry; see [engine/RAIN.md](engine/RAIN.md).
 
 ## State of the project
 

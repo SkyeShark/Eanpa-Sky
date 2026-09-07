@@ -45,9 +45,13 @@ try {
     result.endingCamera=await cdp.evaluate('_c.position.toArray()');
     result.resources={before,during:await duringPromise};
     result.cleanGpuWindow=result.resources.before.clean&&result.resources.during.clean;
+    result.cleanCpuWindow=result.resources.before.cpu.clean&&result.resources.during.cpu.clean;
     result.errors=await cdp.evaluate(`[...document.body.children].find(e=>e.style?.zIndex==='99')?.textContent`);
     if(!result.cleanGpuWindow){
         result.valid=false;result.invalidReasons.push('External GPU activity exceeded the 5% gate during capture');
+    }
+    if(!result.cleanCpuWindow){
+        result.valid=false;result.invalidReasons.push('External CPU activity exceeded the 20% gate during capture');
     }
     if(result.errors){result.valid=false;result.invalidReasons.push('Browser reported a render error');}
     await mkdir('artifacts/overhaul/benchmarks',{recursive:true});

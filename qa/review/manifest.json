@@ -1,0 +1,156 @@
+[
+  {
+    "file": "reflections.png",
+    "source": "reflection-review/ringworld-final-receivers/orb-combined.png",
+    "title": "Reflections — close underside",
+    "note": "The reported failure angle on Ringworld after native-radiance repair and the final cloud-shadow receiver correction.",
+    "sha256": "1ec84450330b94cba2eab6588f821760f3afee85d014ffe751b90cc30aa5df0d"
+  },
+  {
+    "file": "native-materials.png",
+    "source": "native-materials-earth-final.png",
+    "title": "Native PBR materials",
+    "note": "Local red-emitter and sky reflections on four native Physical materials.",
+    "sha256": "d966f7fc1877b188f38f68fa2a721dfc74d41bd8f29224ea8e9cfb4a217ab2d5"
+  },
+  {
+    "file": "cloud-earth-off.png",
+    "source": "shadows/earth-roof-205-final-0.png",
+    "title": "Earth cloud shadows — off",
+    "note": "Matched camera, weather and cloud time; only cloud-shadow strength changes.",
+    "sha256": "b6062c03d12df57baf88feed13e65b90928b179ded4a7bdbecb7e52c1076e6b7"
+  },
+  {
+    "file": "cloud-earth-on.png",
+    "source": "shadows/earth-roof-205-final-1.png",
+    "title": "Earth cloud shadows — on",
+    "note": "Roofs, walls, vegetation and terrain receive the same projected cloud field.",
+    "sha256": "91aa71bccf1e5dd868f0a8529d94a6bfcf317419126e3fe2eb1fe25a61f29dc3"
+  },
+  {
+    "file": "cloud-ring-off.png",
+    "source": "shadows/ring-roof-205-0.png",
+    "title": "Ringworld cloud shadows — off",
+    "note": "Matched shadow comparison on the local architecture.",
+    "sha256": "49985bbfc9b8f10fa09baa52fd43f6515204c6958ca63d51dd32c40aeb27083f"
+  },
+  {
+    "file": "cloud-ring-on.png",
+    "source": "shadows/ring-roof-205-1.png",
+    "title": "Ringworld cloud shadows — on",
+    "note": "The building participates without a terrain callback.",
+    "sha256": "0b7e4aae25c1fe0de2f336b85d885bf4126be7f36e8ac1cf179fea65b773cb08"
+  },
+  {
+    "file": "cloud-shield-off.png",
+    "source": "shadows/shield-roof-205-0.png",
+    "title": "Shieldworld cloud shadows — off",
+    "note": "Matched shadow comparison under the red giant.",
+    "sha256": "5d200ff789c9c526bf4b86b5a11cf6650e777d17bd0bbaa33057b75cd34b3c6e"
+  },
+  {
+    "file": "cloud-shield-on.png",
+    "source": "shadows/shield-roof-205-1.png",
+    "title": "Shieldworld cloud shadows — on",
+    "note": "Cloud attenuation preserves the active stellar spectrum.",
+    "sha256": "a04203b78f54a6716f044d5a0e25afcd71b28b9b2a1acf2ead0c61478cd7bc8e"
+  },
+  {
+    "file": "cloud-orb-off.png",
+    "source": "shadows/orb-final-0.png",
+    "title": "Local metal cloud shadows — off",
+    "note": "The orb after removing its legacy receiver exclusion.",
+    "sha256": "941ffb4f7cecd8d7e8ad3f48bf84a2d31ae7948eaf32b2ad4d2bb0d7a8e57942"
+  },
+  {
+    "file": "cloud-orb-on.png",
+    "source": "shadows/orb-final-1.png",
+    "title": "Local metal cloud shadows — on",
+    "note": "Clouds attenuate its direct PBR lighting, with native emission and indirect reflections preserved.",
+    "sha256": "0a09bc59c75a2a2a3094215f2cffbb6e681d2e3aa648749a96d3009756442ffe"
+  },
+  {
+    "file": "ring-relief.png",
+    "source": "look-review/ring-cumulus-final.png",
+    "title": "Ring terrain and clouds",
+    "note": "Displaced, stitched terrain with the local relief transition.",
+    "sha256": "957a28463136693cc49f612164b796517633b5fbf862b22afc25c637468e30d8"
+  },
+  {
+    "file": "ring-reverse.png",
+    "source": "look-review/ring-clear-reverse-final.png",
+    "title": "Ring terrain — reverse horizon",
+    "note": "Actual mountain silhouettes and closed shoreline geometry; original water retained.",
+    "sha256": "744238929322b2ff414edaff86f6ec44a4420ca55abf63ba89e5a4f17c75e87a"
+  },
+  {
+    "file": "terrain-steep.png",
+    "source": "terrain-steep-final.png",
+    "title": "Local terrain — steep surface",
+    "note": "World-space material projections on the authored height field.",
+    "sha256": "ee5f5dc15b3ba9fc24ddc7f6b15fe78fd6021b420a6fc4254f38816ffad2e891"
+  },
+  {
+    "file": "rain-puddles.png",
+    "source": "look-review/ring-rain-roof-production-final.png",
+    "title": "Rain on the temple roof",
+    "note": "Production wetness, pooled water, surface impacts and falling streaks.",
+    "sha256": "ad4f57cd8f50850b9071af9ab81cf82c102214dbb79ab67bc1a7bfa93656bc8b"
+  },
+  {
+    "file": "rain-impact-a.png",
+    "source": "rain-roof-motion-0.png",
+    "title": "Roof impacts — motion A",
+    "note": "Surface-aligned crown and bead motion; captured before the final cloud-radiance adjustment.",
+    "sha256": "d7fce88b7eec8c793ee6bf3a31edac0c2fe15cc8a5fb3782560992c26363f4f8"
+  },
+  {
+    "file": "rain-impact-b.png",
+    "source": "rain-roof-motion-4.png",
+    "title": "Roof impacts — motion B",
+    "note": "A later animation frame on the same roof.",
+    "sha256": "1b64e7e4935896e1f9e0cef5f65bf5767d81a08d6796f3243b85dde5d7b72184"
+  },
+  {
+    "file": "shattered-moon.png",
+    "source": "celestial-renewed/moon-gpu-debris.png",
+    "title": "Shattered moon",
+    "note": "Separated solid fragments, GPU-driven small debris and depth-aware dust.",
+    "sha256": "d76dda4c9384b9180d467e56e46d69bec6fefe9a19ddad8d74bfc34a3ed1507e"
+  },
+  {
+    "file": "moon-motion-a.png",
+    "source": "look-review/moon-motion-0.png",
+    "title": "Moon motion — first pose",
+    "note": "Fixed camera; fragment motion preserves clearance.",
+    "sha256": "19208aaf165b516e75ec07d84ec4989a241bdd1d31ce751a3f4df636bf0418f7"
+  },
+  {
+    "file": "moon-motion-b.png",
+    "source": "look-review/moon-motion-240.png",
+    "title": "Moon motion — 240 seconds later",
+    "note": "A later pose from the same motion review.",
+    "sha256": "c706a210518a7edf351cb75e513f5054a948a14cd8854f0def7e89403bc678cb"
+  },
+  {
+    "file": "red-giant.png",
+    "source": "look-review/red-giant.png",
+    "title": "Red giant",
+    "note": "Broad convection features, warm variation and a softer limb.",
+    "sha256": "546cf14d30b50bd3f3b9a2a2d643d2c302c7f5139f2d15122c42eb1bd6cc9258"
+  },
+  {
+    "file": "cirrus.png",
+    "source": "look-review/earth-cirrus-overhead-final.png",
+    "title": "High cirrus",
+    "note": "Irregular, curved ice-trail field shared by visible cirrus and cloud shadows.",
+    "sha256": "7fc28e982d0e827ca107984a76ea74a6801cbd93b09091702a3bc35595e703ae"
+  },
+  {
+    "file": "cirrus-shield.png",
+    "source": "look-review/shield-cirrus-final.png",
+    "title": "Cirrus under the red giant",
+    "note": "The same ice-trail field under Shieldworld illumination; High quality in this capture.",
+    "sha256": "83ed43d5b22392bb91a338dfb2d4531fcfce2e0ba9b6f15abf94bf483d4c7995"
+  }
+]

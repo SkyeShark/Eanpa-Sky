@@ -60,7 +60,7 @@ if (action === 'start' || action === 'preview') {
     const owned = [];
     try {
         const server = existing ? { pid: existing.serverPid }
-            : await start('C:/Python314/python.exe', ['tools/dev-server.py', String(serverPort)], 'server');
+            : await start('C:/Python314/python.exe', ['qa/dev-server.py', String(serverPort)], 'server');
         if (!existing) owned.push(server);
         const browser = await start('C:/Program Files/Google/Chrome/Application/chrome.exe', [
             '--headless=new', `--remote-debugging-port=${cdpPort}`,

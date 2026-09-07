@@ -1,240 +1,282 @@
-# Standalone overhaul review
+﻿# Standalone overhaul review
 
-**Reopened after the September 7 visual review.** The first pass did not meet
-the requested visual or performance standard. The reflection artifact remains
-reproducible, ring relief and cloud shadows were not convincingly improved,
-moon fragments intersect during animation, and rain still needs visible falling
-drops, impacts and puddles on arbitrary exposed geometry. The sections below
-record the first pass; they are not acceptance evidence for the revised work.
-The CPU-throttled runs did not simulate a weaker GPU, and the shadow-cache A/B
-comparison did not establish a speedup over the original engine.
+This is the revised pass after the September 7 feedback. The earlier report and
+CPU-only measurements did not establish that the requested overhaul was complete.
+The current work replaces the reflection path, adds shared cloud shadows and
+geometry-aware rain, rebuilds the ring relief, and corrects the moon's motion.
 
-The work is on local branch `overhaul/2026-09-06`. Starting checkpoint `e2e6496`
-preserves the 15 files already modified when this overhaul began. Subsequent
-commits preserve the rendering, terrain, weather, physics, audio and validation
-changes. Nothing has been pushed to a remote. Eidoverse integration is a later
-stage; the standalone and its reusable weather interface are the current scope.
+Everything is on local branch `overhaul/2026-09-06`. Checkpoint `e2e6496`
+preserves the 15 files already modified when work began. The implementation is
+saved in subsequent local commits; nothing has been pushed. Eidoverse porting
+remains a later task.
 
-The review browser uses the existing server at **http://127.0.0.1:8378/**.
-`node qa/browser-session.mjs review` replaces the one owned headless browser
-with one visible browser using its dedicated profile. It waits for the old
-process and debugging port to exit before launching the review window.
-The process record is `.artifacts/overhaul-20260906/processes.json`.
+## Reflections
 
-## What changed
+The default pipeline injects local reflected radiance into Three's native PBR
+lighting model before its BRDF is evaluated. It preserves material roughness,
+metalness, Fresnel/IOR, clearcoat, anisotropy, iridescence, and the native indirect
+diffuse response. It no longer composites a second shaded reflection over an
+already completed material.
 
-**Reflections.** Local SSR and the directional sky reflection now share a
-single coverage budget. The sampled local scene holds out its native directional
-environment lobe, avoiding a second, differently mapped sky reflection at the
-hit. Grazing rays, background depth, receiving pixels and subpixel rays have
-explicit guards. Only explicitly convex groups reject their own hits; concave
-objects and instances retain legitimate self-reflection behavior. Rough surfaces
-fade to filtered PMREM, with a wider roughness blur on accepted local reflections.
-The orb has been inspected from multiple moving-camera poses in all three skies.
+The screen-space trace uses continuous nearest/bilinear depth crossings,
+bounded refinement, receiver separation, first-occluder termination, and explicit
+convex-group rejection. Reprojected history provides local scene radiance.
+A local cubemap publishes only after all six faces have completed, and filtered
+sky radiance remains the fallback. Rough lobes use mip filtering.
 
-**Ring terrain.** The new deterministic erosion bake preserves the original
-shoreline and water level while adding drainage and ridge detail. Half-float
-height storage avoids the former 16-bit PNG to 8-bit canvas conversion. Normals
-and directional horizon occlusion derive from that same height field and share
-one packed texture. The compressed asset adds about 6.3 MB to the repository.
-Regenerate it with `node qa/bake-ring-relief.mjs`; its manifest records the hash.
+A conservative nearest-depth gate skips the four interpolation reads on march
+steps that cannot cross a surface. Off/on images on wet ground, the roof, and the
+orb were byte-identical. An off/on/off 150-frame rain profile measured total GPU
+pass means of 7.11 / 5.57 / 7.03 ms in that view. Throughput results below are
+reported separately; this profile does not imply the same FPS gain in every view.
 
-**Local terrain.** Two dominant world projections replace the stretched mapping
-on steep slopes, with explicit texture gradients and correctly reoriented normals.
-Stationary rock/cliff LODs reuse their instance data, and size thresholds use the
-actual drawing buffer. All 711 authored rock transforms now feed the convex-hull
-collision streamer, including bounds-aware activation for large boulders.
+The close underside view from the reported gold-orb failure has been checked in
+Earth, Ringworld, and Shieldworld, including camera/orb motion and isolated
+sky/probe/SSR contributions. A four-material fixture shows a local red emitter
+and sky on silver, water-IOR clearcoat, anisotropic gold, and iridescent metal.
+See the selected [reflection view](qa/review/reflections.png) and
+[native-material comparison](qa/review/native-materials.png).
 
-**Sky and lighting.** Cloud shadows modulate the celestial direct light through
-the native PBR light model. Ambient/environment light, emissive materials and
-local lamps retain their own response. Imported Standard/Physical materials
-participate too. Visible high clouds and their shadows share the same feathered
-wisp field and the appropriate spherical or curved-ring intersection. Low ring
-cloud shadows use the visible cloud deck. Clouds, the scene key and the visible
-moon share their active light direction and spectrum through weather changes.
+This remains a real-time screen-space/probe approximation: hidden geometry,
+newly exposed pixels, and multiple reflection bounces are not ray-traced.
+The material response uses the native PBR implementation; that does not make
+the scene's approximate reflection visibility an exact transport solution.
 
-**Shieldworld.** The shattered moon has a particulate reflectance blend, a
-controlled terminator, consistent fragment/dust fading, and correct ordering
-behind the shield and clouds. Hidden moon debris avoids 7,000 instance-matrix
-updates. The red giant has larger, slower convection cells, spherical edge
-foreshortening and a broader warm palette. These remain artistic celestial
-shaders rather than calibrated astronomical simulations.
+## Cloud shadows and lighting
 
-**Rain and water.** A local depth/normal capture follows incoming rain and supplies
-shelter, impact positions and material exposure on arbitrary geometry. It handles
-ordinary, instanced, skinned, vertex-deformed and alpha-cutout meshes. Thin rain
-streaks use two continuous fall-speed populations and a stable pixel footprint;
-small splash crowns orient to the captured surface. Wetness darkens porous
-surfaces moderately. Puddles use water reflectance, flatter normals and expanding
-normal ripples. Dampness and accumulated water build and dry at different rates.
-Dry materials skip the wet-mask sampling work.
+Buildings, roofs, props, imported meshes, and ground all use the same shadow
+path. The sky needs no terrain name, height callback, or knowledge of the temple.
+A host wraps its scene's Standard/Physical materials once, registers later-loaded
+objects, and prepares the shared map in its serialized frame.
+The standalone's old opt-outs on the orb, PBR light fixtures, and light strips
+are removed too. Their native emission is preserved separately from direct light.
 
-A GPU inspection caught and fixed a circular normal dependency in this new
-wetness path: pooling now uses the geometric slope, so dry mapped materials
-never inherit a zero normal. This also keeps normal-map bumps from incorrectly
-deciding where a level puddle can form. See [engine/RAIN.md](engine/RAIN.md) for
-the host render-loop integration, receiver flags and geometry exclusions.
+A 384² map integrates the actual cloud extinction at 10 Hz over a 6,144 m region.
+Each receiver projects its world position along the celestial light direction
+and reads the filtered map. Elevated roofs therefore sample their own cloud
+column. Only celestial direct light is attenuated; sky light, local lamps,
+and emissive materials retain their respective lighting response.
+The map fades at its border and uses a height-weighted approximation within
+the cloud deck.
 
-**Physics and audio.** The simulation delta includes display callbacks skipped
-while GPU work is in flight, preserving walking/falling speed under load.
-Wall contacts retain their incoming normal velocity for the brace animation.
-Walkable sloped rock tops support landing without pulling players through tall
-sides; rock footsteps use the supporting surface height. Rain and wind recordings
-receive a short seam blend at decode time while retaining one looping voice.
-All 38 runtime audio assets decode with finite samples and runtime-trimmed
-sample peaks below 0 dBFS.
+The distant ring sheet has a separate cylindrical coverage atlas shared by its
+visible clouds and band shadows. Its near section also receives the local map.
+The atlas refreshes at 5 Hz instead of evaluating nine procedural octaves for
+every visible cloud-sheet pixel. The panel walls retain their authored emissive
+appearance.
 
-**Resource lifetime.** The standalone now owns one filtered environment target
-and reuses it across matching bake sizes. A paused before/after comparison
-produced identical pixels. At a complete sky rebuild, an adapter for the pinned
-Three r184 renderer retires obsolete draw contexts and generated instance buffers
-while preserving the local scene geometry. This addresses the growth found
-during repeated quality changes. Seven tier selections returned to 111 geometries,
-149 textures, 35 render targets and 360 vertex attributes at each Balanced
-checkpoint (48,462,108 tracked vertex-buffer bytes). Cached shader programs
-settled at 303. The adapter does not replace Three with a new version.
+Matched cloud-shadow-off/on images show broad attenuation across temple roofs,
+walls, vegetation, and terrain in all three skies. A Ringworld rain GPU profile
+at revision `77274ba` measured 0.195 ms per cloud-map capture, or 0.030 ms per
+application frame over 90 frames. This is the capture cost; receiver sampling
+is included in the scene pass. All GPU passes summed to 6.24 ms on average in
+that separate timestamp profile.
 
-**CPU cost.** The shared Three r184 shadow override switched between opaque and
-alpha-tested states, repeatedly invalidating casters' material cache keys. Stable
-variants per source material remove that churn while preserving Three's shadow
-rendering. The helper handles source changes, custom shadow roots, disposal and
-failed draws. A paused before/after capture verified unchanged pixels.
+Clouds, environment lighting, and hemisphere fill now use weathered colors and
+the active celestial spectrum. Overcast and rainy cloud radiance is controlled
+separately from direct sunlight, retaining readable gray Earth clouds and the
+Shieldworld star's warm illumination. Cirrus uses irregular curved ice trails
+from a deterministic, mipmapped opacity field shared with its shadows.
 
-## Performance evidence
+Integration: [docs/SKY_SYSTEM_INTEGRATION.md](docs/SKY_SYSTEM_INTEGRATION.md).
+Cloud-shape provenance: [assets/weather/README.md](assets/weather/README.md).
 
-Hardware: **NVIDIA GeForce RTX 5090 Laptop GPU, 24 GB**, driver 610.88.
-All reported scene comparisons use a **1600 x 900** drawing buffer at DPR 1,
-the same camera at `[0, 1.82, 96]`, cumulus at 10.5 h, and the complete local
-scene. A quality tier changes sky/cloud/reflection-bake and rain-capture budgets;
-the benchmark does not hide architecture, terrain or vegetation.
+## Terrain and celestial appearance
 
-Each throughput capture lasts 30 seconds. CPU frame-start intervals, p95/p99,
-raw samples, camera/quality/weather metadata and process/GPU activity are retained.
-Frame intervals use successful-frame rAF timestamps. The retained `renderTaskMs`
-field includes callback scheduling delay as well as CPU work before completion;
-it is not an isolated CPU or GPU execution duration.
-Separate 120-frame WebGPU timestamp runs measure render/compute pass execution;
-they exclude queue idle time and are not the throughput measurement. Samples
-with external GPU activity above the 5% gate are marked invalid and retained.
+The ring uses a new 4,344 × 1,448 erosion bake with 3,145,056 hydraulic droplets.
+Height, normals, and terrain shading derive from the same field. Adaptive,
+stitched geometry contains 626,565 vertices and 1,228,416 triangles, with a
+closed angular seam and skirts that close the sides beneath displaced peaks.
+Relief blends into the local playable patch between 700 and 2,000 m, avoiding
+mountains intersecting the foreground terrain.
 
-The reduced-resource case uses **4x CDP CPU slowdown with the same GPU**.
-It is a CPU constraint, not an emulation of a weaker graphics card.
+Both horizon directions and the overhead band have been inspected. The original
+water mask and water shader are retained. The new terrain payload is approximately
+37.7 MB uncompressed; compressed height/normal data and albedo are approximately
+32.9 MB. This is a deliberate asset/detail increase, not a free resolution gain.
+Regenerate it with [qa/bake-ring-terrain.py](qa/bake-ring-terrain.py).
 
-<!-- FINAL_BENCHMARK_TABLE -->
-Final quality/weather sweep: revision `16ab2c9`. All 15 throughput captures
-passed the activity and render-error gates. GPU pass times are from separate
-120-frame runs immediately following each unrestricted throughput capture.
+Local ground has less repetitive world-space material sampling, broader natural
+variation, softer material-family transitions, and two correctly oriented
+projections on steep slopes. Zero-weight material families skip sampling.
+The steep authored height-field view has been checked for stretched mapping.
 
-| World | Quality | Mean FPS | Frame p95 (ms) | GPU mean / p95 (ms) |
-| --- | --- | ---: | ---: | ---: |
-| Earth | balanced | 126.4 | 12.5 | 6.24 / 6.75 |
-| Earth | high | 60.9 | 20.7 | 14.05 / 15.15 |
-| Earth | performance | 155.3 | 8.4 | 4.71 / 5.07 |
-| Ringworld | balanced | 117.0 | 12.5 | 6.77 / 7.25 |
-| Ringworld | high | 52.4 | 20.9 | 16.69 / 17.96 |
-| Ringworld | performance | 150.1 | 8.4 | 4.98 / 5.50 |
-| Shieldworld | balanced | 121.7 | 12.5 | 6.55 / 7.13 |
-| Shieldworld | high | 57.2 | 20.9 | 14.89 / 15.86 |
-| Shieldworld | performance | 155.2 | 8.4 | 4.79 / 5.18 |
+The shattered moon accounts for each fragment's off-center geometry and swept
+motion envelope. The deterministic motion checks preserve positive clearance
+through 1,200 sampled times, and several widely spaced animation poses have been
+visually reviewed. Its 7,000 smaller fragments now move in the GPU shader from
+16 parent transforms. Dust uses depth-aware ordering with the solid fragments.
+The red giant has larger, slower convection features, warmer internal variation,
+and a softer limb. These are artistic celestial models.
 
-| World, Balanced | 4x CPU slowdown FPS | Cyclone FPS | Cyclone GPU mean (ms) |
-| --- | ---: | ---: | ---: |
-| Earth | 21.3 | 114.4 | 6.52 |
-| Ringworld | 22.9 | 105.3 | 7.38 |
-| Shieldworld | 21.3 | 104.8 | 6.67 |
+## Rain, puddles, physics, and sound
 
-The later environment-ownership cleanup was compared against the automatic
-path using an identical paused frame. Its resource-cycle check and the final
-shadow-cache comparison are recorded separately in [qa/results-20260907.json](qa/results-20260907.json).
-<!-- END_FINAL_BENCHMARK_TABLE -->
+A rain-aligned depth/normal field captures arbitrary nearby geometry. It supplies
+shelter, falling-drop termination, surface-aligned splash crowns and beads,
+wetness exposure, and puddle eligibility. Temple roofs participate without a
+terrain callback. Instances, skinning, vertex deformation, alpha-cutout openings,
+and wind projection have been checked in an actual GPU fixture.
 
-On the final resource-cleanup revision `3ad13eb`, an additional paired Earth /
-Balanced check measured **93.4 FPS with the shadow cache disabled and 123.8 FPS
-with it enabled**, a 32.6% throughput improvement in that view. Both 30-second
-captures passed the GPU activity gate; their paused-frame comparison was pixel
-identical. This isolates the shadow-cache change and is not a claimed speedup
-for the entire overhaul against the original repository.
+Rain uses independent PCG placement channels and a denser near-camera population.
+Coverage at the upwind cloud location gates precipitation. Thin wetness builds
+before pooled water; drying takes longer. Porous materials darken, level puddles
+flatten normals and use water reflectance, and falling rain produces expanding
+ripples and surface impacts. The native PBR reflection path supplies local and
+sky reflections on those surfaces.
 
-## Inspection and checks
+The field covers a camera-local 72 m half-width by default at 8 Hz in Balanced.
+It resolves the first surface along the rain ray. This is not runoff, trapped
+water-volume simulation, or a separate refractive water layer. Wetness timing is
+shared while exposure is local. See [engine/RAIN.md](engine/RAIN.md) for integration
+and receiver controls.
 
-- Four cloud types, all weather selections, and day/night or twilight views were
-  rendered across Earth, Ringworld and Shieldworld. Shieldworld has close star
-  and shattered-moon views. The final quality route repeats the three skies,
-  dry/wet/cyclone states, and all three quality tiers after the wet-normal fix.
-- SSR motion readbacks preserve thousands of orb-to-scene hits while reporting
-  zero same-convex-group hits. Native-only and local-only captures support visual
-  inspection of the handoff. These checks do not claim that screen-space
-  reflections can see geometry outside the image.
-- The rain GPU fixture passes 14 surface cases, two slanted-wind cases, renderer
-  rollback after an injected failure, and capture-material disposal/recreation.
-  A second GPU fixture checks unit normals through dry/wet/dry transitions on
-  native, mapped, custom-normal and flat-shaded materials.
-- The actual player controller climbed the temple stairs and settled on the
-  upper support surface. A separate in-engine drop lands on an authored rock.
-  Executable tests cover swept contacts, sliding, large hull bounds and slopes.
-- 38 executable unit tests pass. Supplemental audits cover weather/audio (503),
-  reflection topology (95), terrain TSL compilation (89), sky resource lifecycle
-  (69), state-axis behavior (328), input (33), sky stability (34), and audio gait
-  (17). Source checks supplement the engine captures rather than replacing them.
-- Audio decoding and level/seam checks passed through Web Audio. Listening and
-  subjective movement feel should be part of the interactive review. No audio
-  listening acceptance is claimed; ffmpeg/ffprobe are not installed on PATH.
+The final rain-capture variants now warm after reflection material registration.
+Previously, first rain rebuilt 51 capture pipelines after their source versions
+changed, producing a measured 1.19-second presentation gap in a cold trace.
+The boot curtain now also waits for GPU completion. Cold-start and quality
+replacement compilation can still take tens of seconds; this change removes
+first-use work from play rather than eliminating the compilation cost.
 
-Six representative captures are preserved in version control:
+Player movement and falling retain elapsed time when a GPU frame is skipped.
+Wall impacts preserve incoming normal velocity; slope/rock support avoids pulling
+players through tall rock sides. The actual temple stair flight and an authored
+convex rock landing passed live checks without penetration.
 
-| View | Capture |
-| --- | --- |
-| Ring terrain, High tier | [Relief](qa/review/ring-relief.png) |
-| Steep local terrain | [Surface mapping](qa/review/terrain-steep.png) |
-| SSR and sky handoff | [Reflective orb](qa/review/reflections.png) |
-| Rain on local ground | [Wetness and puddles](qa/review/rain-puddles.png) |
-| Red giant | [Convection](qa/review/red-giant.png) |
-| Shattered moon | [Fragments and dust](qa/review/shattered-moon.png) |
+Rain audio follows a throttled asynchronous shelter/exposure sample. Shelter
+reduces gain and high frequencies; ambience loop seams are blended, and thunder
+pitch variation no longer repeats the same index. All 38 runtime assets decoded
+with finite samples and trimmed sample peaks below 0 dBFS. Audio has been analyzed
+numerically; listening quality is reserved for the interactive review.
 
-Additional local evidence paths:
+## Performance measurements
 
-- `artifacts/overhaul/quality/`: final quality/weather screenshots and route data.
-- `artifacts/overhaul/benchmarks/`: throughput and separate GPU timestamp reports.
-- `artifacts/overhaul/shadows/`: paused cloud-shadow isolation pairs.
-- `artifacts/overhaul/ssr-motion/`: orb camera sweeps and hit readbacks.
-- `artifacts/overhaul/matrix/`: the wider cloud/weather/day-night inspection matrix.
-- `artifacts/overhaul/terrain-steep.png` and `ring-relief.png`: terrain detail views.
-- `artifacts/overhaul/wet-normal-contract.json`, `rain-surface-contract.json`,
-  `player-stairs.json`, `rock-interaction.json`, and `audio-levels.json`.
+Hardware: NVIDIA GeForce RTX 5090 **Laptop** GPU, 24 GB, driver 610.88.
+The paired sweep uses 1600 × 900 at DPR 1, 62° vertical FOV, camera
+`[0, 1.82, 96]`, cumulus at 10.5 h, and the complete authored local scene.
+Surface wetness and pooled water are set to each preset's steady-state targets
+before the pair. Clouds continue to move; start simulation time is recorded.
 
-Code, generated terrain assets, representative screenshots and QA tools are
-committed locally. Large transient
-captures and raw measurements stay in the ignored local `artifacts` directory;
-the compact final measurements are preserved with this review document.
+Each pair measures 20 seconds with **4× CDP CPU slowdown plus a calibrated
+synthetic GPU workload**, then 20 seconds with unrestricted CPU/GPU settings.
+The GPU workload targets 8 ms and retains actual timestamp samples across its
+warmup and capture. It adds a completion fence, retains this GPU's architecture
+and VRAM, and does not predict performance on a named lower-power card. A hardware power cap
+was also attempted earlier; this laptop driver did not support it, so no capped
+run is claimed.
 
-## Practical limits and review controls
+Separate 90-frame GPU timestamp captures sum render and compute pass execution.
+Their readback overhead makes them separate from throughput measurements.
+Throughput uses completed-frame start intervals and retains raw samples,
+p95/p99, camera, quality, weather, commit, source-diff hash, and process counters.
 
-Rain capture covers a camera-local region, 72 m half-width by default. Moisture
-timing is shared; this implementation does not simulate runoff, trapped water
-volumes or water transported by moving objects. Hosts must retain nearby roofs
-even when those roofs are outside the main camera frustum. Transparent roofs
-can explicitly opt into rain obstruction.
+Windows Terminal was using the GPU during some measurement windows. Captures above
+the 5% external-activity gate are explicitly marked as observed, non-isolated
+results. The final sweep also found clean windows, identified per capture below.
+This gate measures GPU activity. Those original 27 captures did not record
+process CPU-time deltas and do not establish CPU isolation. The later receiver
+check adds CPU measurements after a slowdown coincided with multiple busy
+Blender processes despite a passing GPU gate.
+The earlier CPU-only sweep is preserved as historical first-pass evidence, not as a weaker
+GPU simulation or a valid same-view comparison with this implementation.
 
-SSR still needs a filtered sky fallback at image boundaries and disocclusions.
-The celestial palette, giant shield and moon debris remain authored art. The
-performance figures describe the recorded views and hardware, not every possible
-camera position or another GPU. The Performance tier has visibly coarser cloud
-edges than Balanced and High.
+<!-- OVERHAUL_BENCHMARK_TABLE -->
+Rendering revision: `c0a87a0`. 19 of 27 captures passed the external-GPU-activity gate.
+An asterisk marks an observed capture that exceeded that gate. Actual GPU
+competition times, background processes and raw frame intervals are retained
+in [qa/results-20260907.json](qa/results-20260907.json).
 
-In the review window: WASD moves, Shift runs, Space jumps, F toggles the flashlight,
-and the wheel changes the field of view. A real click captures look; Escape
-releases it. Automated QA pages use `?automated=1` to deny pointer capture. The
-earlier reported desktop mouse confinement was not conclusively attributed to
-the preview, and QA does not focus the page or synthesize trusted clicks.
+| World | Quality / weather | Full FPS | Full p95 ms | Reduced FPS | Reduced p95 ms | GPU mean ms |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| Earth | balanced / none | 165.4 | 6.1 | 16.3* | 78.0 | 4.72 |
+| Earth | balanced / rain | 163.1 | 6.1 | 14.1* | 95.5 | 4.75 |
+| Earth | balanced / cyclone | 164.0 | 6.1 | 14.6* | 89.0 | 4.56 |
+| Earth | performance / rain | 160.5 | 6.2 | 14.0* | 95.6 | 4.21 |
+| Earth | high / none | 65.9 | 18.1 | — | — | 13.00 |
+| Ringworld | balanced / none | 132.4 | 12.4 | 14.9 | 83.3 | 5.48 |
+| Ringworld | balanced / rain | 140.1 | 8.4 | 13.1 | 99.8 | 6.90 |
+| Ringworld | balanced / cyclone | 145.1 | 8.4 | 13.3 | 96.0 | 5.48 |
+| Ringworld | performance / rain | 135.0 | 8.5 | 12.5 | 104.1 | 4.64 |
+| Ringworld | high / none | 56.0 | 20.9 | — | — | 15.46 |
+| Shieldworld | balanced / none | 162.5 | 6.1 | 15.3* | 81.8 | 4.80 |
+| Shieldworld | balanced / rain | 163.9 | 6.1 | 12.8* | 106.5 | 4.85 |
+| Shieldworld | balanced / cyclone | 160.8 | 6.1 | 9.4* | 173.1 | 4.82 |
+| Shieldworld | performance / rain | 161.2 | 6.1 | 13.6* | 101.1 | 4.16 |
+| Shieldworld | high / none | 66.6 | 18.1 | — | — | 13.09 |
+<!-- END_OVERHAUL_BENCHMARK_TABLE -->
 
-## Technical references
+The subsequent startup-only fix in `4de3a57` changes preparation order and waits
+for GPU completion behind the loading curtain; it does not change steady-state
+shaders or per-frame rendering work. `f921f0a` then removes the standalone's old
+cloud-shadow opt-outs on the orb, PBR emitters, light strips, and debug sphere.
+The table predates that final receiver-registration correction; a further
+Ringworld rain pair records its performance separately below. Cold-transition
+checks record their own revision.
+The contended Shieldworld cyclone measurement was repeated before that change:
+115.3 FPS with Blender activity, then 160.8 FPS in a clean window. Both records
+are retained; the table uses the clean repeat.
 
-- [Three: draw-object resource ownership](https://github.com/mrdoob/three.js/issues/32409)
-- [McGuire and Mara: Efficient GPU Screen-Space Ray Tracing](https://jcgt.org/published/0003/04/04/)
-- [Hillaire: Physically Based Sky, Atmosphere and Cloud Rendering](https://blog.selfshadow.com/publications/s2016-shading-course/)
-- [Hill: Blending in Detail](https://blog.selfshadow.com/publications/blending-in-detail/)
-- [Epic: Screen Space Reflections](https://dev.epicgames.com/documentation/en-us/unreal-engine/screen-space-reflections-in-unreal-engine)
-- [USGS: Photometric models](https://isis.astrogeology.usgs.gov/8.3.0/Application/presentation/PrinterFriendly/photemplate/photemplate.html)
-- [ALMA: Long-lived hotspots on Betelgeuse](https://www.almaobservatory.org/en/audiences/alma-reveals-long-lived-hotspots-on-betelgeuses-bubbling-surface/)
-- [Lagarde: Observe a rainy world](https://seblagarde.wordpress.com/2012/12/10/observe-rainy-world/)
-- [Lagarde and Harduin: The Art and Rendering of Remember Me](https://seblagarde.wordpress.com/wp-content/uploads/2013/08/gdce13_lagarde_harduin_light.pdf)
+<!-- FINAL_RECEIVER_BENCHMARK -->
+Final receiver revision `f921f0a`, Ringworld / Balanced / Rain:
+64.7 FPS unrestricted (p95 30.1 ms),
+5.1 FPS with CPU+GPU constraints (p95 383.6 ms).
+Separate GPU pass mean: 5.76 ms.
+External mean CPU usage during the unrestricted capture: 33.6%.
+The unrestricted capture exceeded the CPU-activity gate. It is a contended observation, not a CPU-idle throughput baseline.
+The earlier 61.0 FPS receiver capture preceded CPU instrumentation and is retained as well.
+<!-- END_FINAL_RECEIVER_BENCHMARK -->
+
+Performance changes include shared cloud fields, bounded light/shadow updates,
+stable shadow-material variants, filtered-environment target reuse, GPU-driven
+moon debris, and skipped zero-weight terrain layers. These changes are described
+by their mechanism; no percentage speedup over an unmatched historical view is
+claimed.
+
+## Validation and review
+
+- `npm.cmd test`: 52 tests passed, covering reflection ownership/visibility,
+  fragment motion, ring seams and relief, cloud-map rollback, material wrapping,
+  wet-related texture policy, resource retirement, and player/input behavior.
+- GPU rain fixture: exposed/sheltered geometry, elevated surfaces, slopes,
+  instances, skinning, displacement, cutouts, wind, listener exposure, and
+  failed-capture state restoration.
+- GPU material checks: valid normals across dry/wet transitions and native
+  reflected radiance on the physical-material fixture.
+- Visual review: every weather preset, all three skies, daylight/night/dusk,
+  close orb motion, both ring horizons, moon motion, stellar surface, steep
+  terrain, roof puddles, falling rain, and impact motion.
+- Seven Ringworld quality selections returned to the same Balanced counts:
+  130 geometries, 162 textures, 37 render targets, and 73,432,300 vertex-attribute
+  bytes. Shader program storage gained about 5.6 KB once, then stabilized.
+  No render errors or pointer capture occurred in the rebuild checks.
+- Real 45-second weather-transition checks are recorded separately from
+  steady-state benchmarks, including the longest frame and rain-capture cost.
+  Fresh-load None → Rain completed with no new render pipelines in all three
+  skies. Maximum frame intervals were 47.6 ms (Earth), 53.5 ms (Shieldworld),
+  and 83.5 ms (Ringworld), versus 1,193.7 ms in the instrumented pre-fix trace.
+
+The one owned review browser uses **http://127.0.0.1:8378/**.
+`node qa/browser-session.mjs review` replaces the owned headless browser with
+one visible browser and waits for the old debugging port to close. Automated
+pages cannot capture the mouse. In the visible review, click the world to look,
+Esc releases the mouse, WASD moves, Shift runs, Space jumps, and F toggles the
+flashlight. No remote publication or push is part of this review.
+
+## References
+
+The reflection changes follow continuous-depth ray intersection and radiance
+fallback ideas in [Stachowiak's depth ray marcher](https://gist.github.com/h3r2tic/9c8356bdaefbe80b1a22ae0aaee192db),
+[AMD's SSSR description](https://gpuopen.com/manuals/fidelityfx_sdk/techniques/stochastic-screen-space-reflections/),
+and [Three's SSR implementation](https://threejs.org/docs/pages/SSRNode.html).
+
+Shared cloud extinction and amortized shadow integration were compared with
+[Unreal's volumetric-cloud system](https://dev.epicgames.com/documentation/unreal-engine/volumetric-cloud-component-in-unreal-engine?lang=en-US)
+and the [Nubis presentation](https://advances.realtimerendering.com/s2017/index.html).
+Cirrus and stratus morphology were checked against the
+[WMO Cloud Atlas](https://cloudatlas.wmo.int/en/explanatory-remarks-and-special-clouds-cirrus.html).
+
+Wet-surface parameters draw on [Lagarde's wet-surface discussion](https://seblagarde.wordpress.com/2013/04/14/water-drop-3b-physically-based-wet-surfaces/);
+rain appearance on [Garg and Nayar's rain rendering work](https://cave.cs.columbia.edu/old/projects/rain_ren/pipeline_algorithm.html).
+Terrain projections use explicit-gradient principles discussed by
+[Ryan DowlingSoka](https://ryandowlingsoka.com/unreal/triplanar-dither-biplanar/).
+The star's larger convection structures were compared with
+[ESO's observations of R Doradus](https://www.hq.eso.org/public/news/eso2412/).

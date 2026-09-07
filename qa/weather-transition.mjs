@@ -70,7 +70,9 @@ try{
     await writeFile(`artifacts/overhaul/transitions/${sky}-rain${label?'-'+label:''}.json`,JSON.stringify({pass,responsivenessPass,
         responsivenessBudgetMs:{max:250,p99:50},initial,samples,frames,rainCapture,costs},null,2));
     const costSummary=Object.fromEntries(Object.entries(costs).map(([key,value])=>[key,value.builds
-        ?{calls:value.calls,slowest:value.builds.toSorted((a,b)=>b.ms-a.ms).slice(0,4)}:value]));
+        ?{calls:value.calls,slowest:value.builds.toSorted((a,b)=>b.ms-a.ms).slice(0,4)}
+        :{calls:value.calls,maxMs:value.maxMs,slowCount:value.slowCalls.length,
+            slowest:value.slowCalls.toSorted((a,b)=>b.ms-a.ms).slice(0,3)}]));
     console.log(JSON.stringify({sky,pass,responsivenessPass,last,frameIntervalMs:frames.frameIntervalMs,costs:costSummary}));
     if(!pass)process.exitCode=1;
 }finally{
