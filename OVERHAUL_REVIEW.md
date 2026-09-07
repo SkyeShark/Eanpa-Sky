@@ -136,6 +136,8 @@ changed, producing a measured 1.19-second presentation gap in a cold trace.
 The boot curtain now also waits for GPU completion. Cold-start and quality
 replacement compilation can still take tens of seconds; this change removes
 first-use work from play rather than eliminating the compilation cost.
+Startup paint yields also have a bounded fallback: a covered or minimized
+window must not hang initialization waiting for suspended animation callbacks.
 
 Player movement and falling retain elapsed time when a GPU frame is skipped.
 Wall impacts preserve incoming normal velocity; slope/rock support avoids pulling

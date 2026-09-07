@@ -1372,6 +1372,21 @@ const testFrameState = globalThis._eanpaTest = {
     reflectionProbe: showReflectionProbe ? ball : null,
 };
 
+function yieldForBootPaint() {
+    return new Promise((resolve) => {
+        let frameId = null;
+        const finish = () => {
+            if (frameId !== null) cancelAnimationFrame(frameId);
+            clearTimeout(timer);
+            resolve();
+        };
+        // Covered/minimized windows can stop rAF completely. Prefer two paint
+        // opportunities, but never make initialization depend on visibility.
+        const timer = setTimeout(finish, 200);
+        frameId = requestAnimationFrame(() => { frameId = requestAnimationFrame(finish); });
+    });
+}
+
 async function buildSkybox() {
     if (building) {
         rebuildQueued = true;
@@ -1383,7 +1398,7 @@ async function buildSkybox() {
     // Two rAF yields let the browser actually PAINT the overlay before the
     // heavy synchronous build/compile work blocks the thread — without them a
     // skybox change read as a raw freeze with no loading feedback at all.
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await yieldForBootPaint();
     // Kept outside the try so a preset that rejects before attachment cannot
     // strand its two offscreen render targets/materials/geometries.
     let spatialCandidate = null;
@@ -1460,7 +1475,7 @@ async function buildSkybox() {
             // BEFORE anything compiles ("no graph surgery after first
             // compile") — a light or graph change later regenerates pipelines.
             document.getElementById('boot').textContent = 'loading weather engine…';
-            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+            await yieldForBootPaint();
             await active.preloadWeather();
             document.getElementById('boot').textContent = 'building skybox…';
         }
