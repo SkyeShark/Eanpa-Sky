@@ -471,6 +471,7 @@ class SSRNode extends TempNode {
 
 			// compute some standard FX entities
 			const depth = sampleDepth( uvNode ).toVar();
+			depth.greaterThanEqual( 0.999999 ).discard();
 			const viewPosition = getViewPosition( uvNode, depth, this._cameraProjectionMatrixInverse ).toVar();
 			const viewNormal = this.normalNode.rgb.normalize().toVar();
 
@@ -481,7 +482,7 @@ class SSRNode extends TempNode {
 			const viewReflectDir = reflect( viewIncidentDir, viewNormal ).toVar();
 
 			// adapt maximum distance to the local geometry (see https://www.mathsisfun.com/algebra/vectors-dot-product.html)
-			const maxReflectRayLen = this.maxDistance.div( dot( viewIncidentDir.negate(), viewNormal ) ).toVar();
+			const maxReflectRayLen = this.maxDistance.div( max( dot( viewIncidentDir.negate(), viewNormal ), 0.05 ) ).toVar();
 
 			// compute the maximum point of the reflection ray in view space
 			const d1viewPosition = viewPosition.add( viewReflectDir.mul( maxReflectRayLen ) ).toVar();
@@ -504,6 +505,9 @@ class SSRNode extends TempNode {
 
 			// total length of the ray
 			const totalLen = d1.sub( d0 ).length().toVar();
+			// A subpixel ray has no independent scene sample. Avoid zero steps
+			// and division by zero when the reflection points into the camera.
+			totalLen.lessThan( 1 ).discard();
 
 			// offset in x and y direction
 			const xLen = d1.x.sub( d0.x ).toVar();
@@ -512,7 +516,7 @@ class SSRNode extends TempNode {
 			// determine the larger delta
 			// The larger difference will help to determine how much to travel in the X and Y direction each iteration and
 			// how many iterations are needed to travel the entire ray
-			const totalStep = int( max( abs( xLen ), abs( yLen ) ).mul( this.quality.clamp() ) ).toConst();
+			const totalStep = int( max( max( abs( xLen ), abs( yLen ) ).mul( this.quality.clamp() ), 1 ) ).toConst();
 
 			// step sizes in the x and y directions
 			const xSpan = xLen.div( totalStep ).toVar();
@@ -526,7 +530,10 @@ class SSRNode extends TempNode {
 			Loop( totalStep, ( { i } ) => {
 
 				// advance on the ray by computing a new position in screen coordinates
-				const xy = vec2( d0.x.add( xSpan.mul( float( i ) ) ), d0.y.add( ySpan.mul( float( i ) ) ) ).toVar();
+				// The receiver's own depth is not a hit. Starting at zero makes
+				// quantized normals/depth alternately accept and reject that pixel.
+				const rayStep = float( i ).add( 1 );
+				const xy = vec2( d0.x.add( xSpan.mul( rayStep ) ), d0.y.add( ySpan.mul( rayStep ) ) ).toVar();
 
 				// stop processing if the new position lies outside of the screen
 				If( xy.x.lessThan( 0 ).or( xy.x.greaterThan( this._resolution.x ) ).or( xy.y.lessThan( 0 ) ).or( xy.y.greaterThan( this._resolution.y ) ), () => {
@@ -579,7 +586,7 @@ class SSRNode extends TempNode {
 					const xyNeighbor = vec2( xy.x.add( 1 ), xy.y ).toVar(); // move one pixel
 					const uvNeighbor = xyNeighbor.div( this._resolution );
 					const vPNeighbor = getViewPosition( uvNeighbor, d, this._cameraProjectionMatrixInverse ).toVar();
-					const minThickness = vPNeighbor.x.sub( vP.x ).toVar();
+					const minThickness = abs( vPNeighbor.x.sub( vP.x ) ).toVar();
 					minThickness.mulAssign( 3 ); // expand a bit to avoid errors
 
 					const tk = max( minThickness, this.thickness ).toVar();

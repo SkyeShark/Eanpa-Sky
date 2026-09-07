@@ -10,6 +10,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 // construction; antialias:false can never silently continue without edge AA.
 import { fxaa as requiredFxaaFactory } from 'three/addons/tsl/display/FXAANode.js';
 import { makeAudioSystem } from './audio_system.js';
+import { FrameMetrics } from './frame_metrics.js';
 import { makeFirstPersonViewmodel } from './first_person_viewmodel.js?v=20260722-armlight-isolation';
 import {
     MAX_WALK_STEP_RISE,
@@ -30,6 +31,7 @@ errBox.style.cssText = 'position:fixed;right:12px;top:12px;z-index:99;max-width:
 document.body.appendChild(errBox);
 const errSeen = new Map();
 const errLog = (...a) => {
+    globalThis._benchmark?.invalidate('browser or shader error during capture');
     errBox.style.display = 'block';
     const line = a.map((x) => (x?.stack || x?.message || String(x))).join(' ');
     const n = (errSeen.get(line) || 0) + 1;
@@ -397,6 +399,7 @@ const movementState = {
     contactSerial: 0,
     contactSide: 0,
     contactStrength: 0,
+    contactImpactSpeed: 0,
     contactKind: 'none',
     contactNormalX: 0,
     contactNormalZ: 0,
@@ -725,6 +728,12 @@ const controls = {
                 movementState.contactSerial++;
                 movementState.contactSide = side;
                 movementState.contactStrength = strength;
+                // Capture the incoming normal velocity before collision removes
+                // it. Post-solve horizontalSpeed describes sliding, not impact.
+                movementState.contactImpactSpeed = frameDt > 0 ? Math.max(0,
+                    -((attemptedX - movementStart.x) * normalX
+                        + (attemptedZ - movementStart.z) * normalZ) / frameDt,
+                ) : 0;
                 movementState.contactKind = highSurfaceBlocked
                     ? 'high-surface'
                     : templeContact?.collided
@@ -1687,6 +1696,12 @@ await buildSkybox();
 // pass interleaving with the main render corrupts render-target state
 // (black skies, vanished layers — found the hard way)
 let last = performance.now(), emaMs = 16.7, t = 0;
+const benchmark = new URLSearchParams(location.search).get('benchmark') === '1'
+    ? new FrameMetrics() : null;
+if (benchmark) globalThis._benchmark = benchmark;
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) benchmark?.invalidate('page hidden during capture');
+});
 async function tick(now, dt) {
     globalThis._frameStage = 'controls';
     controls.update(dt);
@@ -1750,6 +1765,7 @@ async function tick(now, dt) {
         await renderer.renderAsync(scene, camera);
     }
     globalThis._frameStage = 'complete';
+    benchmark?.record(now, performance.now(), !document.hidden);
     emaMs = emaMs * 0.95 + (now - (tick._p ?? now)) * 0.05;
     tick._p = now;
     if ((tick._n = (tick._n ?? 0) + 1) % 15 === 0) {
@@ -1774,16 +1790,28 @@ async function tick(now, dt) {
 }
 function frame(now) {
     requestAnimationFrame(frame);
+    // Pauses/rebuilds do not accumulate player motion. GPU work does: callbacks
+    // skipped while a render is in flight belong to the next simulation step.
+    // Updating `last` before the inFlight check slowed walking and falling in
+    // proportion to GPU load (30 rendered FPS on a 60 Hz display ran at half speed).
+    if (building || testFrameState.paused) {
+        benchmark?.invalidate(building ? 'sky rebuild during capture' : 'paused during capture');
+        last = now;
+        return;
+    }
+    if (inFlight) return;
     const dt = Math.min((now - last) / 1000, 0.1);
     last = now;
     t += dt;
-    if (inFlight || building || testFrameState.paused) return;
     inFlight = true;
-    tick(now, dt).catch((e) => {
+    tick(now, dt).then(() => {
+        testFrameState.completedFrames++;
+    }).catch((e) => {
+        benchmark?.invalidate('render task failed');
+        testFrameState.failedFrames = (testFrameState.failedFrames ?? 0) + 1;
         if (!frame._err) { frame._err = true; console.error('[frame]', e); }
     }).finally(() => {
         inFlight = false;
-        testFrameState.completedFrames++;
         if (testFrameState.pauseAfterFrame) {
             testFrameState.pauseAfterFrame = false;
             testFrameState.paused = true;

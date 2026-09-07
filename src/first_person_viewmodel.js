@@ -269,7 +269,8 @@ export async function makeFirstPersonViewmodel(
                 // Off-axis impacts keep their single-hand push; only a slow
                 // frontal touch remains the small recoil flinch.
                 const frontal = Math.abs(contactSide) <= 0.25;
-                const bracing = frontal && horizontalSpeed > 3.0;
+                const impactSpeed = Math.max(0, Number(movement?.contactImpactSpeed) || 0);
+                const bracing = frontal && impactSpeed > 3.0;
                 contactClip = bracing || contactSide > 0.25
                     ? 'PushRight'
                     : contactSide < -0.25

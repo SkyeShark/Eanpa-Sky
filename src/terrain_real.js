@@ -3019,16 +3019,23 @@ export async function makeTerrain(T3, renderer = null) {
         subpixelCulled: 0,
         viewportHeightPixels: 0,
     };
+    const rockViewportSize = new T3.Vector2();
+    const getRockViewportHeight = () => {
+        if (renderer?.getDrawingBufferSize) {
+            renderer.getDrawingBufferSize(rockViewportSize);
+            return Math.max(1, rockViewportSize.y);
+        }
+        return Math.max(1, globalThis.innerHeight ?? 1080);
+    };
     const updateRockInstances = (camera) => {
         if (!camera?.position) return;
         for (const batch of rockBatches.values()) batch.count = 0;
         const useProjection = Boolean(
             camera.projectionMatrix && camera.matrixWorldInverse,
         );
-        const viewportHeightPixels = Math.max(
-            1,
-            (globalThis.innerHeight ?? 1080) * (globalThis.devicePixelRatio ?? 1),
-        );
+        // LOD tracks rendered pixels. This renderer deliberately uses DPR 1;
+        // display DPR previously selected unnecessarily dense rocks on HiDPI.
+        const viewportHeightPixels = getRockViewportHeight();
         const projectionScaleY = useProjection
             ? Math.abs(camera.projectionMatrix.elements[5])
             : 0;
@@ -3404,8 +3411,25 @@ export async function makeTerrain(T3, renderer = null) {
         cliffBatches.forEach((batch) => { batch.visible = batch.count > 0; });
         rockBatches.forEach((batch) => { batch.visible = batch.count > 0; });
     };
+    const lastLodView = new Float64Array(10).fill(NaN);
+    const currentLodView = new Float64Array(10);
     terrain.updateLods = (camera) => {
         if (!camera) return;
+        const p = camera.position, q = camera.quaternion;
+        currentLodView.set([
+            p.x, p.y, p.z, q?.x ?? 0, q?.y ?? 0, q?.z ?? 0, q?.w ?? 1,
+            camera.projectionMatrix?.elements[0] ?? 0,
+            camera.projectionMatrix?.elements[5] ?? 0,
+            getRockViewportHeight(),
+        ]);
+        let viewChanged = false;
+        for (let i = 0; i < currentLodView.length; i++) {
+            if (currentLodView[i] !== lastLodView[i]) { viewChanged = true; break; }
+        }
+        if (!viewChanged) return;
+        lastLodView.set(currentLodView);
+        // These rocks/cliffs are static. A stationary view needs no recull,
+        // matrix repacking, GPU instance upload, or telemetry allocation.
         updateCliffInstances(camera);
         updateRockInstances(camera);
         terrain.userData.cliffGeometry.activeInstancesByBatch = Object.fromEntries(
