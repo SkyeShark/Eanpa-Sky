@@ -343,6 +343,9 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             cellHi: uniform(1.45),
             denseA: uniform(1),
         };
+        // Weather is updated once by the simulation, then shared by every wet
+        // receiver, streak and surface capture in that frame.
+        if (T3.frameGroup) for (const node of Object.values(u)) node.setGroup(T3.frameGroup);
         const surfaceField = makeRainSurfaceField(T3, scene, {
             radius: Math.max(72, RAD * 1.6),
             resolution: opts.surfaceResolution ?? 768,

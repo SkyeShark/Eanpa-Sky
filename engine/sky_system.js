@@ -245,6 +245,11 @@
             projInv: uniform(new T3.Matrix4()),
             camWorld: uniform(new T3.Matrix4()),
         };
+        // Shared atmospheric state is identical for every material in a frame.
+        // Camera matrices remain render-scoped because sky captures change view.
+        if (T3.frameGroup) for (const [name, node] of Object.entries(u)) {
+            if (name !== 'projInv' && name !== 'camWorld') node.setGroup(T3.frameGroup);
+        }
 
         // ---------------- shared noise (donor pattern: data-texture value noise) ----------------
         const NSZ = 256;

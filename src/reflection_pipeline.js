@@ -13,6 +13,7 @@ import { N8AONode } from './vendor/n8ao/N8AONode.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { ssr as makeSsrNode } from 'three/addons/tsl/display/SSRNode.js';
 import { createConvexReceiverIds } from './reflection_receiver_id.js';
+import { makeNativeReflectionPipeline } from './native_reflection_pipeline.js';
 
 // Keep the donor's thin, full-resolution hit domain, scaled only far enough for
 // Eanpa's dais/temple contact reflections. Every tier deliberately marches each
@@ -388,6 +389,9 @@ export function makeReflectionPipeline(
     THREE, renderer, scene, camera, sky, quality = 'balanced',
     fxaaFactory = null, environmentTexture = null,
 ) {
+    if (new URLSearchParams(globalThis.location?.search ?? '').has('native_reflections')) {
+        return makeNativeReflectionPipeline(THREE, renderer, scene, camera, sky, quality, fxaaFactory);
+    }
     const required = [
         'RenderPipeline', 'pass', 'mrt', 'output', 'normalView',
         'directionToColor', 'colorToDirection', 'metalness', 'roughness',

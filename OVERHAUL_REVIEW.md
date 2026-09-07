@@ -1,5 +1,14 @@
 # Standalone overhaul review
 
+**Reopened after the September 7 visual review.** The first pass did not meet
+the requested visual or performance standard. The reflection artifact remains
+reproducible, ring relief and cloud shadows were not convincingly improved,
+moon fragments intersect during animation, and rain still needs visible falling
+drops, impacts and puddles on arbitrary exposed geometry. The sections below
+record the first pass; they are not acceptance evidence for the revised work.
+The CPU-throttled runs did not simulate a weaker GPU, and the shadow-cache A/B
+comparison did not establish a speedup over the original engine.
+
 The work is on local branch `overhaul/2026-09-06`. Starting checkpoint `e2e6496`
 preserves the 15 files already modified when this overhaul began. Subsequent
 commits preserve the rendering, terrain, weather, physics, audio and validation
