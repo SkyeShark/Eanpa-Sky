@@ -357,11 +357,9 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
         // deterministic: every streak's world position is a pure function of
         // (instanceIndex, time, wind) tiled around the camera — same frame in,
         // same pixels out, and the field does NOT translate with the camera.
-        const hashI = (n, k) => {
-            const q = fract(float(n).mul(0.1031).add(k * 0.61803));
-            const q2 = q.mul(q.add(33.33));
-            return fract(q2.mul(q2.add(q)));
-        };
+        // Independent integer PCG channels avoid the correlated curves made
+        // by offsetting one fractional float seed for X/Y/Z and population.
+        const hashI = (n,k) => T3.hash(T3.uint(n).add(T3.uint(Math.imul(k,0x9e3779b9)>>>0)));
         // ALL weather quads stay OUT of the auto-enhance G-buffer: alpha-blended
         // billboards smear garbage normals/metalrough over their footprint and
         // GTAO/SSR stamp hard dark marks on them (the task-#18 smoke-square
@@ -383,8 +381,13 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             // rendered in the tile containing the camera
             const wtX = u.windOffset.x;
             const wtZ = u.windOffset.z;
-            const px = u.camPos.x.add(fract(h1.add(wtX.sub(u.camPos.x).div(P))).sub(0.5).mul(P));
-            const pz = u.camPos.z.add(fract(h2.add(wtZ.sub(u.camPos.z).div(P))).sub(0.5).mul(P));
+            // Spend most samples in the near volume. A uniform 90 m square
+            // left ordinary rain almost invisible around the player. Nested
+            // world tiles retain distant depth without increasing draw count.
+            const nearLayer=hashI(instanceIndex,5).lessThan(.72);
+            const layerRadius=nearLayer.select(RAD/3,RAD),period=layerRadius.mul(2);
+            const px = u.camPos.x.add(fract(h1.add(wtX.sub(u.camPos.x).div(period))).sub(0.5).mul(period));
+            const pz = u.camPos.z.add(fract(h2.add(wtZ.sub(u.camPos.z).div(period))).sub(0.5).mul(period));
             const fallPhase = small.select(u.fallPhaseSmall, u.fallPhase);
             const py = u.camPos.y.add(fract(h3.sub(fallPhase.div(HGT)).sub(u.camPos.y.div(HGT))).sub(0.35).mul(HGT));
             const base = vec3(px, py, pz);
@@ -402,8 +405,8 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             // GLSL/WGSL leave smoothstep undefined when edge0 >= edge1.
             // Express the inward feather as one-minus a conventional ramp so
             // every backend produces the same circular, block-free boundary.
-            const fieldFade = float(1).sub(smoothstep(RAD * 0.70, RAD, fieldDistance));
-            const lenI = u.streakLen.mul(h1.mul(h1).mul(0.65).add(0.35)).mul(small.select(0.72, 1));
+            const fieldFade = float(1).sub(smoothstep(layerRadius.mul(.70), layerRadius, fieldDistance));
+            const lenI = u.streakLen.mul(h1.mul(0.35).add(0.65)).mul(small.select(0.72, 1));
             // Millimetre drops leave long exposure streaks, not centimetre-wide
             // glass needles. A subpixel footprint keeps distant rain stable.
             const diameter = h2.mul(h2).mul(0.0035).add(0.002);
@@ -425,7 +428,10 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             const xProf = pow(max(float(1).sub(abs(uv().x.mul(2).sub(1))), 0), 1.6);
             const endFade = smoothstep(0.0, 0.18, uv().y)
                 .mul(float(1).sub(smoothstep(0.72, 1.0, uv().y)));
-            const shapeA = texC ? texC.a : xProf.mul(endFade);
+            // Integrate a narrow drop through the exposure rather than
+            // stretching its entire teardrop silhouette into a glass needle.
+            const highlight=texC?mix(float(.72),texC.a,.28):float(1);
+            const shapeA = xProf.mul(endFade).mul(highlight);
             const stormRainCover = sky
                 ? clamp(sky.uniforms.stormCanopy, 0, 1)
                 : float(0);
@@ -439,11 +445,13 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             // this cell is raining — walk out from under the cell and the rain
             // stops around you while the far curtains keep falling on the cells
             const ordinaryCellGate = sky
-                ? smoothstep(u.cellLo, u.cellHi, sky.tslCoverage(vec2(px, pz)))
+                ? smoothstep(u.cellLo, u.cellHi, sky.tslCoverage(vec2(px,pz).sub(u.windVec.xz
+                    .mul(max(sky.uniforms.cloudStart.sub(py),0).div(fall)))))
                 : float(1);
             const stormCellGate = h4.mul(0.18).add(0.82);
             const cellGate = mix(ordinaryCellGate, stormCellGate, stormRainCover);
-            const countGate = smoothstep(h1, h1.add(0.001), u.rainK);
+            const population=hashI(instanceIndex,6);
+            const countGate = smoothstep(population, population.add(0.001), u.rainK);
             // texture ALPHA is the shape; RGB under transparent pixels is black
             // (premultiplied-style) and drags dark fringes in if multiplied —
             // color comes from the lit rainColor alone
@@ -455,7 +463,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
                 : float(0);
             const stormOpacityBoost = mix(float(1), float(1.28), stormRainVisibility);
             rainMat.opacityNode = clamp(shapeA.mul(nearFade).mul(fieldFade).mul(cellGate)
-                .mul(float(0.14).add(h3.mul(0.26)).mul(u.denseA))
+                .mul(float(0.24).add(h3.mul(0.32)).mul(u.denseA))
                 .mul(countGate).mul(clamp(u.rainK.mul(2), 0, 1))
                 .mul(stormOpacityBoost).mul(surfaceField.visibilityAt(positionWorld, float(0.025))), 0, 0.72);
         }
@@ -469,30 +477,55 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
         // ---------------- ground splashes (the world-anchor cue) ----------------
         // Surface-aligned impact crowns. Puddle ripples are normal perturbations
         // in the water shader; these short-lived droplets also work on dry roofs.
-        const SP = RAD;   // splash tile half-extent (tighter than rain)
-        const splashGeo = new T3.PlaneGeometry(1, 1);
-        splashGeo.rotateX(-Math.PI / 2);
-        const splashMat = noGBuffer(new T3.MeshBasicNodeMaterial({ transparent: true, depthWrite: false, fog: false }));
+        const SP = Math.min(9,RAD/3);
+        // A shallow crown with individual ballistic droplets. Each impact is
+        // one instance; its ring and eight bead quads share a single draw.
+        const splashPositions=[],splashUV=[],splashParts=[],splashIndices=[];
+        const addQuad=(positions,part)=>{
+            const first=splashParts.length;splashPositions.push(...positions);
+            splashUV.push(0,0,1,0,1,1,0,1);splashParts.push(part,part,part,part);
+            splashIndices.push(first,first+1,first+2,first,first+2,first+3);
+        };
+        addQuad([-.5,0,-.5,.5,0,-.5,.5,0,.5,-.5,0,.5],0);
+        for(let bead=1;bead<=8;bead++)addQuad([-.5,-.5,0,.5,-.5,0,.5,.5,0,-.5,.5,0],bead);
+        const splashGeo=new T3.BufferGeometry();
+        splashGeo.setAttribute('position',new T3.Float32BufferAttribute(splashPositions,3));
+        splashGeo.setAttribute('uv',new T3.Float32BufferAttribute(splashUV,2));
+        splashGeo.setAttribute('impactPart',new T3.Float32BufferAttribute(splashParts,1));
+        splashGeo.setIndex(splashIndices);
+        const splashMat = noGBuffer(new T3.MeshBasicNodeMaterial({ transparent: true, depthWrite: false, fog: false,side:T3.DoubleSide }));
         {
             const s1 = hashI(instanceIndex, 11), s2 = hashI(instanceIndex, 12), s3 = hashI(instanceIndex, 13);
             const px = u.camPos.x.add(fract(s1.sub(u.camPos.x.div(SP * 2))).sub(0.5).mul(SP * 2));
             const pz = u.camPos.z.add(fract(s2.sub(u.camPos.z.div(SP * 2))).sub(0.5).mul(SP * 2));
-            const phase = fract(s3.mul(9.7).add(u.time.mul(2.4)));
-            const ringR = phase.mul(0.07).add(0.008);
+            const phase = fract(s3.mul(9.7).add(u.time.mul(2.8)));
+            const ringR = phase.mul(0.075).add(0.012);
             const seed = vec3(px, u.camPos.y, pz);
             const hit = surfaceField.impactAt(seed);
             const hitNormal = surfaceField.normalAt(seed);
             const axis = abs(hitNormal.y).lessThan(0.95).select(vec3(0, 1, 0), vec3(1, 0, 0));
             const tangent = normalize(T3.cross(axis, hitNormal));
             const bitangent = T3.cross(hitNormal, tangent);
-            splashMat.positionNode = hit.xyz.add(hitNormal.mul(float(0.008).add(sin(phase.mul(Math.PI)).mul(0.026))))
+            const part=T3.attribute('impactPart','float');
+            const crownPosition = hit.xyz.add(hitNormal.mul(float(0.006).add(sin(phase.mul(Math.PI)).mul(0.012))))
                 .add(tangent.mul(positionLocal.x.mul(ringR.mul(2))))
                 .add(bitangent.mul(positionLocal.z.mul(ringR.mul(2))));
+            const beadAngle=part.mul(Math.PI/4).add(s3.mul(6.283185));
+            const flight=phase.mul(.28),beadRadius=flight.mul(.26);
+            const beadHeight=max(flight.mul(.82).sub(flight.mul(flight).mul(4.905)),0);
+            const beadCenter=hit.xyz.add(hitNormal.mul(beadHeight.add(.006)))
+                .add(tangent.mul(cos(beadAngle).mul(beadRadius)))
+                .add(bitangent.mul(sin(beadAngle).mul(beadRadius)));
+            const beadSize=max(float(.0025),length(hit.xyz.sub(cameraPosition)).mul(u.pixelWorldScale).mul(.8));
+            const beadPosition=beadCenter.add(u.camRight.mul(positionLocal.x.mul(beadSize)))
+                .add(u.camUp.mul(positionLocal.y.mul(beadSize).mul(1.8)));
+            splashMat.positionNode=part.greaterThan(.5).select(beadPosition,crownPosition);
             const rr = uv().sub(0.5).length().mul(2);
             const ring = smoothstep(0.55, 0.8, rr)
                 .mul(float(1).sub(smoothstep(0.85, 1.0, rr)));
             const ordinaryCellGateS = sky
-                ? smoothstep(u.cellLo, u.cellHi, sky.tslCoverage(vec2(px, pz)))
+                ? smoothstep(u.cellLo, u.cellHi, sky.tslCoverage(hit.xz.sub(u.windVec.xz
+                    .mul(max(sky.uniforms.cloudStart.sub(hit.y),0).div(u.fallSpeed.mul(u.fallMul))))))
                 : float(1);
             const stormSplashCover = sky
                 ? clamp(sky.uniforms.stormCanopy, 0, 1)
@@ -501,13 +534,17 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             const cellGateS = mix(
                 ordinaryCellGateS, stormCellGateS, stormSplashCover,
             );
-            const countGate = smoothstep(s1, s1.add(0.001), u.rainK);
+            const population=hashI(instanceIndex,14);
+            const countGate = smoothstep(population, population.add(0.001), u.rainK);
             const fieldDistance = vec2(px.sub(u.camPos.x), pz.sub(u.camPos.z)).length();
             const fieldFade = float(1).sub(smoothstep(SP * 0.70, SP, fieldDistance));
             const angle = atan2w(uv().y.sub(0.5), uv().x.sub(0.5));
             const crown = smoothstep(0.35, 0.75, sin(angle.mul(7).add(s3.mul(19))));
-            splashMat.colorNode = u.rainColor.mul(u.rainLight).mul(1.15);
-            splashMat.opacityNode = ring.mul(crown).mul(float(1).sub(phase).pow(2)).mul(0.24)
+            splashMat.colorNode = u.rainColor.mul(u.rainLight).mul(2.6);
+            const beadAlpha=exp(uv().sub(.5).mul(2).dot(uv().sub(.5).mul(2)).mul(-3.5))
+                .mul(float(1).sub(smoothstep(.48,.62,phase)));
+            const shape=part.greaterThan(.5).select(beadAlpha,ring.mul(crown).mul(float(1).sub(phase).pow(2)));
+            splashMat.opacityNode = shape.mul(.68)
                 .mul(fieldFade).mul(cellGateS).mul(countGate).mul(clamp(u.rainK.mul(2), 0, 1))
                 .mul(hit.w).mul(clamp(hitNormal.y, 0, 1));
         }
@@ -1421,12 +1458,17 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             mat.normalNode = normalize(mix(baseNormal, waterViewNormal, puddle));
             const setupVariants = before.setupVariants
                 ?? (mat.isMeshPhysicalMaterial ? T3.MeshPhysicalNodeMaterial : T3.MeshStandardNodeMaterial).prototype.setupVariants;
+            // Pinned Three r184 keeps its direct-light F0 register internal.
+            // Address the same named TSL property so direct and IBL water
+            // share IOR 1.333 instead of leaving direct light at dry F0=.04.
+            const blendedSpecular=T3.property('color','SpecularColorBlended');
             mat.setupVariants = function (builder) {
                 setupVariants.call(this, builder);
                 T3.specularColor.assign(mix(T3.specularColor, vec3(0.02037), puddle));
+                blendedSpecular.assign(mix(blendedSpecular, vec3(0.02037), puddle));
             };
             const after = Object.fromEntries(Object.keys(before).map(key => [key, mat[key]]));
-            wrappedRoots.set(mat, { before, after });
+            wrappedRoots.set(mat, { before, after, response:{wetness:upMask,puddle,exposure} });
             mat.needsUpdate = true;
             wetnessStats.wrappedMaterials = wrapped.size;
             return true;
@@ -1631,7 +1673,8 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             return out;
         };
         const sys = {
-            uniforms: u, state, rain: rainInst, bolt, WEATHER, diagnostics,
+            uniforms: u, state, rain: rainInst, splashes:splashInst, bolt, WEATHER, diagnostics,
+            getSurfaceNodes(material){return wrappedRoots.get(material)?.response??null;},
             lightningProfile: globalThis.EANPA_LIGHTNING_PROFILE,
             // Debug/inspection: the next lightning event becomes a forced
             // close forward strike (34-58 m ahead), bypassing chance and

@@ -67,8 +67,26 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
     };
     const fbm3 = (p) => vn(p).mul(0.55).add(vn(p.mul(2.3).add(19.7)).mul(0.28)).add(vn(p.mul(5.1).add(7.3)).mul(0.17));
 
+    // Unequal convective cells carry the structure seen in resolved cool giants.
+    // https://www.eso.org/public/videos/eso2412a/
+    const convection=T3.Fn(([p])=>{
+        const cell=floor(p),f=fract(p),first=float(9).toVar(),second=float(9).toVar();
+        const heat=float(0).toVar(),weightSum=float(0).toVar();
+        for(let y=-1;y<=1;y++)for(let x=-1;x<=1;x++){
+            const offset=vec2(x,y),seed=h21(cell.add(offset)).toVar();
+            const center=vec2(.5).add(T3.sin(vec2(seed.mul(31.7),seed.mul(53.3))
+                .add(uStarT.mul(.004))).mul(.27));
+            const delta=offset.add(center).sub(f),d=dot(delta,delta).toVar();
+            const weight=float(1).div(d.add(.12).pow(3));
+            heat.addAssign(seed.mul(weight));weightSum.addAssign(weight);
+            T3.If(d.lessThan(first),()=>{second.assign(first);first.assign(d);})
+                .Else(()=>{second.assign(T3.min(second,d));});
+        }
+        return vec3(heat.div(weightSum),sqrt(second).sub(sqrt(first)),sqrt(first));
+    });
+
     // ---- the celestial node: pass to makeSkySystem opts.celestial ----
-    const celestial = (dir, col) => {
+    const shadeStar = (dir, col) => {
         // disc-local frame (right/up fed from JS so the star can ride the sun)
         const lx = dot(dir, uStarRight).div(SIN_R);
         const ly = dot(dir, uStarUp).div(SIN_R);
@@ -87,17 +105,15 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         ).sub(0.5).mul(1.9);
         const g = fbm3(p.add(w).add(vec2(uStarT.mul(0.022), 0))).mul(0.82)
             .add(vn(p.mul(3.1).add(w.mul(2)).add(vec2(0, uStarT.mul(0.09)))).mul(0.18));
-        let sCol = mix(vec3(0.42, 0.050, 0.015), vec3(1.05, 0.32, 0.06), smoothstep(0.35, 0.75, g));
-        sCol = mix(sCol, vec3(1.85, 1.05, 0.45), smoothstep(0.78, 0.95, g));
-        // GIANT convection cells (Betelgeuse-class: a handful across the
-        // disc, near-static — they live for months; the fine boil above
-        // rides on top). Chiavassa 2010: cell size >60% R*, one cell can
-        // carry ~8% of total flux.
-        const pg = surfaceCoord.mul(1.65);
-        const cell = fbm3(pg.add(vec2(uStarT.mul(0.006), uStarT.mul(-0.004))));
-        sCol = sCol.mul(cell.sub(0.5).mul(0.85).add(1.0));
-        // ONE asymmetric hot patch — the signature feature of every resolved
-        // red-supergiant image (ALMA/VLT); drifts imperceptibly
+        const cells=convection(surfaceCoord.mul(1.8).add(w.mul(.14))).toVar();
+        const interior=smoothstep(0,.30,cells.y);
+        const temperature=clamp(cells.x.mul(.62).add(interior.mul(.08)).add(g.mul(.23)).add(.08),0,1);
+        let sCol=mix(vec3(.38,.045,.009),vec3(2.05,.83,.24),temperature);
+        // Cooler downflow lanes surround broad hot interiors. Fine granulation
+        // remains secondary and the structure survives the normal field of view.
+        sCol=sCol.mul(interior.mul(.08).add(.92));
+        sCol=mix(sCol,vec3(2.5,1.24,.49),smoothstep(.76,.98,temperature).mul(.65));
+        // A persistent asymmetric hot region breaks the disc's symmetry.
         const phi = atan2f(ly, lx);
         const p2h = vec2(lx, ly);
         const hpD = p2h.sub(vec2(0.34, -0.18));
@@ -112,7 +128,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         // chromosphere rim: H-ALPHA PINK (not orange — Balmer emission),
         // patchy around the limb like the ALMA asymmetric chromosphere
         const rimPatch = vn(vec2(phi.mul(2.2), uStarT.mul(0.11))).mul(0.6).add(0.55);
-        sCol = sCol.add(vec3(1.35, 0.32, 0.38).mul(pow(float(1).sub(muL), 6).mul(1.8)).mul(rimPatch));
+        sCol = sCol.add(vec3(1.35, 0.32, 0.38).mul(pow(float(1).sub(muL), 6).mul(.18)).mul(rimPatch));
         // COLOUR OVERRIDE, applied once the authored ramp is fully assembled:
         // granulation, convection cells, hot patch, limb darkening/reddening
         // and the chromospheric rim all keep their relative structure and only
@@ -173,7 +189,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         }
         const outside = float(1).sub(inDisc).mul(face).mul(step(1.0, rho));
         let out = mix(col, sCol, inDisc);                        // opaque body replaces sky (and stars)
-        out = out.add(vec3(0.95, 0.22, 0.05).mul(glow).mul(outside).mul(0.55));
+        out = out.add(vec3(0.95, 0.22, 0.05).mul(glow).mul(outside).mul(0.18));
         // flares erupt FROM the surface: the old outside-only mask clipped
         // them at the silhouette (eclipse-prominence look). The limb-crossing
         // mask lets the roots burn on the disc and the arcs run past it.
@@ -182,6 +198,13 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         out = out.add(vec3(2.3, 0.85, 0.25).mul(footpoint).mul(inDisc));
         return out;
     };
+
+    const celestial=(dir,col)=>T3.Fn(()=>{
+        const result=col.toVar();
+        // Skip expensive convection and prominence noise away from the star.
+        T3.If(dot(dir,uStarDir).greaterThan(Math.cos(STAR_R*3.5)),()=>{result.assign(shadeStar(dir,col));});
+        return result;
+    })();
 
     // Warm giant illumination. A cool photosphere still has a broad visible
     // spectrum; retain green/blue energy so materials remain readable beneath

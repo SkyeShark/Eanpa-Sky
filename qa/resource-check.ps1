@@ -15,7 +15,7 @@ do {
         if ($allowed.Contains([int] $process.ParentProcessId) -and $allowed.Add([int] $process.ProcessId)) { $added++ }
     }
 } while ($added -gt 0)
-$gpuBefore = & nvidia-smi --query-gpu=name,driver_version,memory.total,memory.used,utilization.gpu,temperature.gpu,clocks.current.graphics,power.draw,power.limit --format=csv,noheader,nounits
+$gpuBefore = & nvidia-smi --query-gpu=name,driver_version,memory.total,memory.used,utilization.gpu,temperature.gpu,clocks.current.graphics,power.draw,enforced.power.limit --format=csv,noheader,nounits
 $samples = @(Get-Counter '\GPU Engine(*)\Utilization Percentage' -SampleInterval 1 -MaxSamples $SampleCount -ErrorAction SilentlyContinue)
 $validSamples = @($samples.CounterSamples | Where-Object { $_.Status -eq 0 })
 $rows = foreach ($sample in $validSamples) {
@@ -38,7 +38,7 @@ $summary = @(foreach ($group in ($rows | Group-Object ProcessId, Engine)) {
     }
 })
 $busy = @($summary | Where-Object { -not $_.owned -and $_.peakPercent -ge $BusyThresholdPercent })
-$gpuAfter = & nvidia-smi --query-gpu=name,driver_version,memory.total,memory.used,utilization.gpu,temperature.gpu,clocks.current.graphics,power.draw,power.limit --format=csv,noheader,nounits
+$gpuAfter = & nvidia-smi --query-gpu=name,driver_version,memory.total,memory.used,utilization.gpu,temperature.gpu,clocks.current.graphics,power.draw,enforced.power.limit --format=csv,noheader,nounits
 [pscustomobject]@{
     date = [DateTime]::UtcNow.ToString('o'); sampleCount = $samples.Count; validCounterSamples = $validSamples.Count
     clean = ($validSamples.Count -gt 0 -and $busy.Count -eq 0); thresholdPercent = $BusyThresholdPercent

@@ -26,8 +26,8 @@ export function makeRainSurfaceField(T3, scene, options = {}) {
         depthBias: uniform(0.06 / span),
         depthScale: uniform(span),
     };
-    const depth = texture(target.depthTexture);
-    const normals = texture(target.texture);
+    const depth = texture(target.depthTexture,T3.screenUV);
+    const normals = texture(target.texture,T3.screenUV);
     const project = Fn(([world]) => {
         const clip = u.viewProjection.mul(vec4(world, 1));
         return vec3(clip.x.mul(0.5).add(0.5), float(0.5).sub(clip.y.mul(0.5)), clip.z);

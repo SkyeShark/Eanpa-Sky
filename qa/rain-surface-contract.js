@@ -1,4 +1,5 @@
 (async () => {
+    const wasPaused=_eanpaTest.paused;
     _eanpaTest.paused = false;
     _eanpaTest.pauseAfterFrame = true;
     while (!_eanpaTest.paused) await new Promise(r => setTimeout(r, 10));
@@ -126,6 +127,6 @@
         instances.dispose();
         skinned.skeleton.dispose();
         for (const resource of resources) resource.dispose();
-        _eanpaTest.paused = false;
+        _eanpaTest.paused = wasPaused;
     }
 })()

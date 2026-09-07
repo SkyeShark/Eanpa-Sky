@@ -508,7 +508,7 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
         const sq = sqrt(discq);
         const t0 = max(bq.negate().sub(sq), 0.0);
         const t1 = max(bq.negate().add(sq), 0.0);
-        const stepLen = t1.sub(t0).div(32);
+        const stepLen = t1.sub(t0).div(40);
         // phase is per-ray (mu constant along the ray): isotropic base +
         // forward-scatter lobe — backlit dust flares, comet-coma style
         const mu = dot(rd, uSunL);
@@ -517,9 +517,12 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
         const cAcc = vec3(0, 0, 0).toVar();
         const aAcc = float(0).toVar();
         // house march pattern: no iterator — advance a toVar point manually
-        const jitr = fract(dot(T3.positionLocal, vec3(0.754877, 0.569840, 0.398875)).mul(419.71));
+        // A linear fractional hash formed visible parallel marching bands.
+        // Stable pixel PCG decorrelates adjacent rays without animated fizz.
+        const pixel=T3.screenCoordinate;
+        const jitr=T3.hash(T3.uint(pixel.x).add(T3.uint(pixel.y).mul(T3.uint(65537))));
         const p = ro.add(rd.mul(t0)).add(rd.mul(stepLen).mul(jitr.mul(0.9).add(0.05))).toVar();
-        Loop({ start: 0, end: 32, type: 'int' }, () => {
+        Loop({ start: 0, end: 40, type: 'int' }, () => {
             // clumpy irregular wisps — ~half the volume near-zero (ref:
             // F-ring kinks, beta Pic one-sided clumps; never a smooth fog).
             // Sign-safe squares: WGSL pow(negative, 2) is NaN.
@@ -593,12 +596,14 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
             const lit = mix(powdered, float(1.0), clamp(denL.mul(0.25), 0.0, 1.0));
             const litI = beers.mul(phaseF).mul(lit);
             const scol = vec3(0.36, 0.33, 0.28).mul(uSunCol).mul(uGain).mul(litI);
-            const w = dens.mul(stepLen.div(RC)).mul(float(1).sub(aAcc)).mul(8.5);
+            const sampleAlpha=float(1).sub(exp(dens.mul(stepLen.div(RC)).mul(-8.5)));
+            const w = sampleAlpha.mul(float(1).sub(aAcc));
             cAcc.addAssign(scol.mul(w));
             aAcc.addAssign(w);
             p.addAssign(rd.mul(stepLen));
         });
-        return T3.vec4(cAcc, min(aAcc, 0.38));
+        const opacity=min(aAcc,.38);
+        return T3.vec4(cAcc.mul(opacity.div(max(aAcc,1e-6))),opacity);
         });
         // the cloud dome's output wiring, verbatim: one march, two roots
         const o = marchFn();
@@ -618,16 +623,14 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
     // bright and dark side; the volumetric march underneath supplies the
     // smoke pockets between boulders.
     const SPECK_N = 7000;
-    const speckGeo = new T3.OctahedronGeometry(1, 0);
+    const speckBase = new T3.OctahedronGeometry(1, 0);
+    const speckGeo = new T3.InstancedBufferGeometry();
+    speckGeo.setIndex(speckBase.index);
+    for(const [name,attribute]of Object.entries(speckBase.attributes))speckGeo.setAttribute(name,attribute);
+    speckBase.dispose();
+    speckGeo.instanceCount=SPECK_N;
     const speckMat = new T3.MeshBasicNodeMaterial({ fog: false });
-    {
-        const nW = T3.normalize(T3.normalWorld);   // EANPA: transformedNormalWorld deprecated in this three
-        const lit = T3.max(T3.dot(nW, uSunDir), 0).mul(0.92).add(0.08);
-        // same albedo + wrap as the fragments' fallback rock material —
-        // the grains ARE the rocks, ground fine (Skye)
-        speckMat.colorNode = T3.vec3(0.42, 0.38, 0.34).mul(lit).mul(uSunCol).mul(uGain);
-    }
-    const specks = new T3.InstancedMesh(speckGeo, speckMat, SPECK_N);
+    const specks = new T3.Mesh(speckGeo, speckMat);
     specks.userData.noSupportCheck = true; specks.userData.noWet = true;
     specks.renderOrder = -99.5;
     specks.frustumCulled = false;
@@ -652,13 +655,41 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
             orbW: 0.02 + h(i, 54) * 0.05,
         });
     }
-    const skM = new T3.Matrix4(), skQ = new T3.Quaternion(), skP = new T3.Vector3(), skS = new T3.Vector3();
     const skAxis = new T3.Vector3(0.42, 0.75, 0.51).normalize();
     const SPAN = arcXJ * 1.3;
+    const speckParents=pieces.map(p=>p.position.clone());
+    const uSpeckParents=T3.uniformArray(speckParents,'vec3');
+    for(const [name,keys]of Object.entries({speckA:['x0','lanePh','yOff','zOff'],
+        speckB:['s','v','wob','spin'],speckC:['nearPiece','orbR','orbPh','orbW']})){
+        const values=new Float32Array(SPECK_N*4);
+        for(let i=0;i<SPECK_N;i++)for(let k=0;k<4;k++)values[i*4+k]=skSeeds[i][keys[k]];
+        speckGeo.setAttribute(name,new T3.InstancedBufferAttribute(values,4));
+    }
+    const a=T3.attribute('speckA','vec4'),b=T3.attribute('speckB','vec4'),c=T3.attribute('speckC','vec4');
+    const axis=T3.vec3(skAxis),angle=b.z.add(uDustT.mul(b.w));
+    const rotate=v=>v.mul(T3.cos(angle)).add(T3.cross(axis,v).mul(T3.sin(angle)))
+        .add(axis.mul(T3.dot(axis,v)).mul(T3.float(1).sub(T3.cos(angle))));
+    speckMat.positionNode=T3.Fn(()=>{
+        const center=T3.vec3(0).toVar();
+        T3.If(c.x.greaterThanEqual(0),()=>{
+            const parent=uSpeckParents.element(T3.uint(c.x));
+            const th=c.z.add(uDustT.mul(c.w));
+            center.assign(parent.add(T3.vec3(T3.cos(th).mul(c.y),
+                T3.sin(th.mul(.7).add(b.z)).mul(c.y).mul(.45),T3.sin(th).mul(c.y).mul(.6))));
+        }).Else(()=>{
+            const x=T3.mod(a.x.add(b.y.mul(uDustT)).add(SPAN),SPAN*2).sub(SPAN);
+            center.assign(T3.vec3(x,T3.sin(x.mul(.9/heroR).add(a.y)).mul(heroR*.45).add(a.z),
+                T3.sin(x.mul(.6/heroR).add(a.y.mul(1.7))).mul(heroR*.5).add(a.w)));
+        });
+        return center.add(rotate(T3.positionLocal).mul(b.x));
+    })();
+    const speckNormal=T3.normalize(T3.modelWorldMatrix.mul(T3.vec4(rotate(T3.normalLocal),0)).xyz);
+    const speckLight=T3.max(T3.dot(speckNormal,uSunDir),0).mul(.92).add(.08);
+    speckMat.colorNode=T3.vec3(.42,.38,.34).mul(speckLight).mul(uSunCol).mul(uGain);
 
     let texturesDisposed = false;
     return {
-        group, pieces, dust, motionInfo: fragmentMotion.stats,
+        group, pieces, dust, specks, motionInfo: fragmentMotion.stats,
         uniforms: { sunDir: uSunDir, sunCol: uSunCol, gain: uGain },
         disposeTextures() {
             if (texturesDisposed) return;
@@ -692,33 +723,9 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
                         .multiplyScalar(0.5).sub(hp);
                 }
             }
-            // debris-river specks: stream along the line in braided lanes,
-            // wrap at the span ends; 30% ride near a parent fragment
-            for (let i = 0; i < SPECK_N; i++) {
-                const k = skSeeds[i];
-                if (k.nearPiece >= 0) {
-                    const pp = pieces[k.nearPiece].position;
-                    const th = k.orbPh + t * k.orbW;
-                    skP.set(
-                        pp.x + Math.cos(th) * k.orbR,
-                        pp.y + Math.sin(th * 0.7 + k.wob) * k.orbR * 0.45,
-                        pp.z + Math.sin(th) * k.orbR * 0.6,
-                    );
-                } else {
-                    let x = k.x0 + k.v * t;
-                    x = ((x + SPAN) % (2 * SPAN) + 2 * SPAN) % (2 * SPAN) - SPAN;
-                    skP.set(
-                        x,
-                        Math.sin(x * (0.9 / heroR) + k.lanePh) * heroR * 0.45 + k.yOff,
-                        Math.sin(x * (0.6 / heroR) + k.lanePh * 1.7) * heroR * 0.5 + k.zOff,
-                    );
-                }
-                skQ.setFromAxisAngle(skAxis, k.wob + t * k.spin);
-                skS.setScalar(k.s);
-                skM.compose(skP, skQ, skS);
-                specks.setMatrixAt(i, skM);
-            }
-            specks.instanceMatrix.needsUpdate = true;
+            // The vertex shader streams and rotates all 7,000 grains. Only
+            // the sixteen parent positions and time change on the CPU.
+            for(let i=0;i<pieces.length;i++)speckParents[i].copy(pieces[i].position);
         },
     };
 };

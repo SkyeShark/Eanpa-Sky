@@ -12,6 +12,7 @@ import { fxaa as requiredFxaaFactory } from 'three/addons/tsl/display/FXAANode.j
 import { makeAudioSystem } from './audio_system.js';
 import { FrameMetrics } from './frame_metrics.js';
 import { installShadowMaterialCache } from './shadow_material_cache.js';
+import { makeShadowRefreshPolicy } from './shadow_refresh.js';
 import { makeReflectionEnvironment } from './reflection_environment.js';
 import { installRebuildResourceCache } from './rebuild_resource_cache.js';
 import { makeFirstPersonViewmodel } from './first_person_viewmodel.js?v=20260722-armlight-isolation';
@@ -903,6 +904,8 @@ sun.shadow.normalBias = 0.06;
 // shadow camera sees the authored LOD3-card proxies that preserve a cheap
 // silhouette shadow when dense vegetation switches to LOD2.
 sun.shadow.camera.layers.enable(3);
+const sunShadowRefresh=makeShadowRefreshPolicy(THREE,sun);
+globalThis._sunShadowRefresh=sunShadowRefresh.stats;
 scene.add(sun, sun.target, hemi);
 scene.fog = new THREE.FogExp2(0xb2a18d, 0.00105);
 // FogExp2's node path measures depth along the camera's FORWARD axis, so pure
@@ -1762,6 +1765,8 @@ async function tick(now, dt) {
         if (dh >= 0.35) reflectionDirty = true;
     }
     if (active) active.update(t, dt);
+    const shadowHz={high:60,balanced:30,performance:20}[document.getElementById('quality').value]??30;
+    sunShadowRefresh.update(t,shadowHz);
     updateWeatherStatus();
     if (scene.fog) {
         fogColorUniform.value = scene.fog.color;

@@ -114,7 +114,7 @@ export async function makeTempleScene(THREE, {
     const makeStoneMaterial = (name, tint) => {
         const material = new StandardMaterial({ color: 0xffffff, roughness: 0.92, metalness: 0 });
         material.name = name;
-        material.envMapIntensity = 0.42;
+        material.envMapIntensity = 1;
         ownedMaterials.add(material);
 
         const nodeCapable = maps.albedo && maps.normal && maps.roughness
@@ -127,7 +127,9 @@ export async function makeTempleScene(THREE, {
             return material;
         }
 
-        const { positionWorld, normalWorld, cameraViewMatrix } = T3;
+        // Projection weights must follow the geometry. Using the final
+        // perturbed normal makes textures move when a water film flattens it.
+        const { positionWorld, normalWorldGeometry:normalWorld, cameraViewMatrix } = T3;
         const scale = 0.22;
         const absNormal = T3.abs(normalWorld);
         const weightPower = absNormal.mul(absNormal).mul(absNormal);
