@@ -21,6 +21,8 @@
 //   sky.setClouds('cumulus');     // cumulus | stratus | cirrus | clear
 //   sky.applyToLights({ sun, hemi, fog: scene.fog });
 //   // per frame: sky.update(t, camera)
+import { makeCloudShadowMap } from './cloud_shadow_map.js';
+
 (function () {
     const T3 = globalThis.THREE;
     const {
@@ -151,13 +153,10 @@
         const N_STORM_STEPS = Math.max(4, Math.round(Number(
             opts.stormSamples ?? 12)));
         const N_STORM_PASSES = 2;
-        // Cloud shadows are a sky-budget item, but 2-6 taps integrated a
-        // fine erosion-bearing density so coarsely that a drifting cloud
-        // edge SNAPPED whole flat surfaces between shaded and unshaded.
-        // A 12-tap floor keeps the travelling patches while their edges
-        // sweep smoothly; each tap is one cheapDensity fbm evaluation.
-        const N_CLOUD_SHADOW = Math.max(12, Math.min(16,
-            Math.round(opts.cloudShadowSamples ?? (N_MARCH / 3))));
+        // Integrate the visible density once into the shared ground shadow
+        // field. A dynamic loop can terminate an already opaque column early.
+        const N_CLOUD_SHADOW = Math.max(32, Math.min(64,
+            Math.round(opts.cloudShadowSamples ?? N_MARCH)));
         // The old animated interleaved-gradient output dither becomes visible
         // as diagonal line grain after the optimized pass is downsampled and
         // enlarged. These domes render in HDR (including the offscreen cloud
@@ -1941,6 +1940,7 @@
             u.cloudLightDir.value.copy(nightK > 0.5 ? sys.moonDir : sys.sunDir);
         };
         const cloudShadowRoots = new Map();
+        let cloudShadowMap = null;
         let cloudShadowSun = null;
         let disposed = false;
         const sys = {
@@ -1970,12 +1970,12 @@
                 } : null,
             },
             cloudShadowInfo: {
-                mode: 'world-space-sun-column',
+                mode: 'cached-world-space-sun-column',
                 samples: N_CLOUD_SHADOW,
                 followsCloudWind: true,
                 arbitraryGeometry: true,
                 qualityAffectsBudgetOnly: true,
-                densityField: 'first-erosion-visible-cloud-mass',
+                densityField: 'same-extinction-as-visible-clouds',
             },
             reflectionInfo: {
                 mode: 'native-equirectangular-pmrem',
@@ -2317,12 +2317,9 @@
             // Transmittance toward the active celestial key, evaluated through
             // the same moving density field as the visible clouds. Apply this
             // to direct light, never to the material's albedo or ambient light.
-            // The fixed quality tier controls only N_CLOUD_SHADOW.
-            // cheapDensity includes the first erosion octave from the visible
-            // cloud mass. The erosion-free shaft proxy has a ~20 km footprint
-            // and merely pulses the whole local scene darker/brighter; it is
-            // stable for godrays but cannot draw travelling ground patches.
-            tslCloudShadow(pWorld, strength = 0.55) {
+            // This same-density reference is used by the cached shadow pass
+            // and the numerical height/projection review.
+            tslCloudTransmittance(pWorld) {
                 return Fn(() => {
                     const dy = max(u.cloudLightDir.y, 0.08);
                     const stormK = clamp(u.stormCanopy, 0, 1);
@@ -2334,17 +2331,6 @@
                     const shadowDepth = mix(RING_R ? float(RING_THICK) : u.cloudHeight, stormLayerDepth(), stormK);
                     const hEnter = max(shadowBottom.sub(pWorld.y), 0).div(dy);
                     const segL = shadowDepth.div(dy);
-                    // Distant receivers sample the animated FBM at world+time
-                    // coordinates where float precision breaks down, so their
-                    // shadow patches pop bright/dark. Blend the noisy density
-                    // toward a stable coverage-mean extinction with receiver
-                    // distance: near ground keeps travelling patches, far
-                    // ground keeps steady weather-correct dimming.
-                    const farK = smoothstep(
-                        float(1800), float(5200),
-                        length(pWorld.sub(cameraPosition)),
-                    );
-                    const meanExtinction = clamp(u.finalMul, 0, 1).mul(0.030);
                     const od = float(0).toVar();
                     // Once a settled canopy has made celestial visibility zero,
                     // the real scene key is already exactly zero; skip every
@@ -2352,31 +2338,26 @@
                     // that cannot contribute. During the transition, this same
                     // field continuously occludes the remaining key.
                     If(u.celestialVisibility.greaterThan(0.001), () => {
-                        for (let j = 0; j < N_CLOUD_SHADOW; j++) {
-                            const along = hEnter.add(segL.mul((j + 0.5) / N_CLOUD_SHADOW));
+                        Loop({ start: 0, end: N_CLOUD_SHADOW, type: 'int' }, ({i}) => {
+                            If(od.mul(segL.div(N_CLOUD_SHADOW)).greaterThan(9), () => Break());
+                            const along = hEnter.add(segL.mul(float(i).add(0.5).div(N_CLOUD_SHADOW)));
                             const sampleP = pWorld.add(u.cloudLightDir.mul(along));
                             const ordinaryExtinction = float(0).toVar();
                             const stormExtinction = float(0).toVar();
                             If(stormK.lessThan(0.999), () => {
-                                ordinaryExtinction.assign(mix(
-                                    cheapDensity(sampleP).mul(0.018),
-                                    meanExtinction,
-                                    farK,
-                                ));
+                                ordinaryExtinction.assign(cloudsAt(sampleP).density);
                             });
                             If(stormK.greaterThan(0.001), () => {
                                 stormExtinction.assign(stormShadowExtinctionAt(sampleP));
                             });
                             od.addAssign(mix(ordinaryExtinction, stormExtinction, stormK));
-                        }
+                        });
                     });
                     // Both paths are converted to extinction per metre before
                     // integration, so storm core/scud casts the same continuous
                     // moving material shadow as the visible Beer volume.
                     const opticalDepth = od.mul(segL.div(N_CLOUD_SHADOW));
                     const occ = float(1).sub(exp(opticalDepth.negate()));
-                    const daylight = smoothstep(0.02, 0.16, u.cloudLightDir.y)
-                        .mul(clamp(u.celestialVisibility, 0, 1));
                     const cloudMass = max(
                         smoothstep(0.0001, 0.02, u.finalMul),
                         smoothstep(0.0001, 0.02, u.stormCanopy),
@@ -2389,16 +2370,25 @@
                         iceOpacity.assign(highCloudAlphaAt(pWorld.add(u.cloudLightDir.mul(hit.x)))
                             .mul(hit.y).mul(mix(0.22, 0.42, float(1).sub(u.wispFilament))));
                     });
-                    const totalOcclusion = float(1).sub(lowTransmission.mul(float(1).sub(iceOpacity)));
-                    // cloudShadowStrength is a live debug/isolation multiplier.
-                    return float(1).sub(totalOcclusion.mul(strength)
-                        .mul(u.cloudShadowStrength).mul(daylight));
+                    return lowTransmission.mul(float(1).sub(iceOpacity));
                 })();
+            },
+            tslCloudShadow(pWorld, strength = 1) {
+                const transmittance = cloudShadowMap.sample(pWorld);
+                const daylight = smoothstep(0.02, 0.16, u.cloudLightDir.y)
+                    .mul(clamp(u.celestialVisibility, 0, 1));
+                const belowDeck = float(1).sub(smoothstep(u.cloudStart,
+                    u.cloudStart.add(u.cloudHeight), atmoHeight(pWorld)));
+                return float(1).sub(float(1).sub(transmittance).mul(strength)
+                    .mul(u.cloudShadowStrength).mul(daylight).mul(belowDeck));
+            },
+            async prepareCloudShadows(renderer, camera, force = false) {
+                return cloudShadowMap.prepare(renderer, camera, force);
             },
             // Preserve native material response, including indirect sky light,
             // emissive, wetness and alpha tests. Only the scene's celestial key
             // receives cloud attenuation; flashlights and temple lights remain local.
-            wrapCloudShadows(sceneRoot, strength = 0.55) {
+            wrapCloudShadows(sceneRoot, strength = 1) {
                 const done = new Set();
                 let n = 0;
                 (sceneRoot || scene).traverse((o) => {
@@ -2870,6 +2860,7 @@
                     material.needsUpdate = true;
                 }
                 cloudShadowRoots.clear();
+                cloudShadowMap.dispose();
                 scene.remove(bgDome, cloudDome);
                 cloudDome.geometry.dispose();
                 bgDome.geometry.dispose();
@@ -2886,6 +2877,15 @@
                 sys._envRingworld = null;
             },
         };
+        cloudShadowMap = makeCloudShadowMap(T3, {
+            transmittance: p => sys.tslCloudTransmittance(p),
+            lightDirection: u.cloudLightDir, time: u.time,
+            resolution: opts.cloudShadowResolution ?? 384,
+            extent: opts.cloudShadowExtent ?? 6144,
+            refreshSeconds: opts.cloudShadowRefreshSeconds ?? .1,
+        });
+        sys.cloudShadowInfo.map = cloudShadowMap.stats;
+        sys.cloudShadowMap = cloudShadowMap;
         sys.setClouds(opts.clouds ?? 'cumulus');
         sys.setTime(opts.hours ?? 12);
         return sys;

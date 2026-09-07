@@ -12,6 +12,8 @@
 //       textures: { landmask, solarColor, solarNormal, solarRough, solarMetal },
 //       opts: { panelTile: 60 } });
 //   scene.add(ring.group);   // per frame: ring.update(t)
+import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
+
 (function () {
     const T3 = globalThis.THREE;
 
@@ -91,6 +93,14 @@
         });
         if (!walls || !terrain) throw new Error(`[ringworld] expected "walls" + "terrain" meshes, got walls=${!!walls} terrain=${!!terrain}`);
         const origMat = Array.isArray(terrain.material) ? terrain.material[0] : terrain.material;
+        if(textures.bandHeight && opts.geometryRelief !== false){
+            const originalGeometry=terrain.geometry;
+            terrain.geometry=makeRingTerrainGeometry(T3,originalGeometry,textures.bandHeight,{
+                heightMeters:opts.terrainHeightMeters??180,
+                repeat:origMat.map?.repeat.x??8,
+            });
+            originalGeometry.dispose();
+        }
         console.log(`[ringworld] walls=${walls.geometry.getAttribute('position').count}v terrain=${terrain.geometry.getAttribute('position').count}v`);
         // SPOM marches in TANGENT space, so the terrain needs tangents. Computing
         // them needs an index plus uv and normal. Without them a relief normal
@@ -336,7 +346,7 @@
             const POM_ON = textures.bandHeight
                 && !!globalThis.parallaxOcclusionUV
                 && bandTangents
-                && opts.pomEnabled !== false;
+                && opts.pomEnabled === true;
             if (POM_ON) {
                 textures.bandHeight.wrapS = textures.bandHeight.wrapT = T3.RepeatWrapping;
                 textures.bandHeight.colorSpace = T3.NoColorSpace;
@@ -409,7 +419,7 @@
             const camDist = T3.length(T3.positionWorld.sub(T3.cameraPosition));
             const farK = smoothstep(float(2500), float(9000), camDist);
             const shim = mix(shimRaw, float(0.5), farK);
-            const land = texture(origMat.map, uvP).rgb;
+            const land = textures.bandColor ? texture(textures.bandColor, uvF).rgb : texture(origMat.map, uvP).rgb;
             // dark low-saturation water — the silvery authored look comes from
             // REFLECTION (low roughness + env/sun), not albedo blue
             const deep = vec3(0.020, 0.042, 0.055), shallow = vec3(0.055, 0.10, 0.115);
@@ -1417,6 +1427,7 @@
                 maskTex: textures.landmask,
                 waterWaveMode,
                 waterWavesActive,
+                geometryRelief: terrain.geometry.userData.ringRelief ?? null,
                 sourceTextures: [...sourceTextures],
             },
             // 0 = light fully eclipsed by the band, 1 = clear. Analytic ray vs

@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "width": 4344,
+  "height": 1448,
+  "heightMeters": 180.0,
+  "tileMeters": 3926.9908169872415,
+  "widthMeters": 966.0,
+  "seed": 50906,
+  "droplets": 3145056,
+  "maxDropletSteps": 90,
+  "heightFormat": "r16float",
+  "normalAoFormat": "rgba8unorm",
+  "rowOrder": "bottom-to-top",
+  "sha256": "d984252a9af8a19da86bf82a7ae2d6204e1ce613a2a01a2b0bcf02ca2df0ed80",
+  "decodedBytes": 37740688,
+  "source": "ring_band_height.png + authored ring GLB albedo/coast mask",
+  "erosionRmsMeters": 6.257261276245117
+}

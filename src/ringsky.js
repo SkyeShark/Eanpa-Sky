@@ -64,7 +64,7 @@ export async function makeRingworld({
         },
     });
     globalThis._sky = sky;
-    sky.wrapCloudShadows?.(scene, 0.42);
+    sky.wrapCloudShadows?.(scene);
 
     let ring = null;
     let weatherAttachment = null;
@@ -121,6 +121,7 @@ export async function makeRingworld({
         for (const m of mats) if (m) m.depthWrite = false;
     });
     scene.add(ring.group);
+    sky.depthLayers = [{objects:[ring.band,ring.walls],renderOrder:-99}];
 
     // The band lights itself. The engine owns a real directional "underground
     // sun" plus planetshine that track the sky's TRUE sun vector, so the arc

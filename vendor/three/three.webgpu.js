@@ -44382,6 +44382,13 @@ class ShadowNode extends ShadowBaseNode {
 
 		//
 
+		// EANPA: initialize attachments before materials bind their depth view.
+		// A sleeping zero-intensity light can be sampled long before its first
+		// shadow render. Late target initialization replaces that depth texture
+		// and leaves previously compiled capture bind groups referring to a
+		// destroyed GPU view when the light wakes at night.
+		renderer.initRenderTarget( shadowMap );
+
 		const shadowIntensity = reference( 'intensity', 'float', shadow ).setGroup( renderGroup );
 		const normalBias = reference( 'normalBias', 'float', shadow ).setGroup( renderGroup );
 

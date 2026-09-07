@@ -86,15 +86,9 @@ export async function makeShieldworld({
         for (const material of mats) {
             if (!material || moonMaterials.has(material)) continue;
             moonMaterials.add(material);
-            if (o === moonSys.dust) {
-                material.colorNode = material.colorNode.mul(moonFade);
-                material.opacityNode = material.opacityNode.mul(moonFade);
-            } else {
-                const baseOpacity = material.opacityNode ?? THREE.float(material.opacity ?? 1);
-                material.opacityNode = baseOpacity.mul(moonFade);
-                material.transparent = true;
-                material.depthWrite = false;
-            }
+            // Fade the completed celestial layer once. Individual solid
+            // fragments keep opaque coverage and their own depth buffer.
+            if (o !== moonSys.dust) { material.transparent=false;material.depthWrite=true; }
             material.needsUpdate = true;
         }
     });
@@ -124,13 +118,14 @@ export async function makeShieldworld({
         },
     });
     globalThis._sky = sky;
+    sky.depthLayers = [{objects:[moon],renderOrder:-99.5,opacity:moonFade}];
     rgSys = rg.attach({ scene, sky });
     rgSys?.shield?.traverse?.((o) => {
         if (!o.isMesh) return;
         o.userData.noWet = true;
         o.userData.noCloudShadow = true;
     });
-    sky.wrapCloudShadows?.(scene, 0.42);
+    sky.wrapCloudShadows?.(scene);
 
     // faint diffuse night fills: cyan shield light pollution + orange
     // moonlight when the cluster is up (pure diffuse — no fake speculars)

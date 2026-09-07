@@ -19,7 +19,7 @@ export function decodeRingRelief(buffer) {
 let pendingTextures = null;
 export function loadRingRelief(THREE) {
     if (!pendingTextures) pendingTextures = (async () => {
-        const response = await fetch(new URL('../assets/ringworld/ring_relief_v3.bin.gz', import.meta.url));
+        const response = await fetch(new URL('../assets/ringworld/ring_relief_v4.bin.gz', import.meta.url));
         if (!response.ok) throw new Error(`Ring relief fetch failed: ${response.status}`);
         const compressed = await response.arrayBuffer();
         const bytes = new Uint8Array(compressed);
@@ -32,13 +32,16 @@ export function loadRingRelief(THREE) {
         for (const texture of [bandHeight, bandNormal]) {
             texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
             texture.colorSpace = THREE.NoColorSpace;
-            texture.minFilter = texture.magFilter = THREE.LinearFilter;
-            texture.generateMipmaps = false;
+            texture.minFilter = THREE.LinearMipmapLinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.generateMipmaps = true;
             texture.needsUpdate = true;
         }
-        bandHeight.name = 'ring_relief_v3_height';
-        bandNormal.name = 'ring_relief_v3_normal_ao';
-        return { bandHeight, bandNormal, bandAO: bandNormal };
+        bandHeight.name = 'ring_relief_v4_height';
+        bandNormal.name = 'ring_relief_v4_normal_ao';
+        const bandColor = await globalThis.loadImageTexture('./assets/ringworld/ring_albedo_v4.png', {srgb:true,mipmaps:true});
+        bandColor.wrapS = bandColor.wrapT = THREE.RepeatWrapping;
+        return { bandHeight, bandNormal, bandAO: bandNormal, bandColor };
     })().catch(error => { pendingTextures = null; throw error; });
     return pendingTextures;
 }

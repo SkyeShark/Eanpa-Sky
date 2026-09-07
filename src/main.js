@@ -25,6 +25,18 @@ import {
     cancelAssistedStep,
 } from './movement_step.js';
 
+// Reproducible scene links also let visual QA open the requested sky directly
+// instead of compiling Earth first and immediately rebuilding the whole scene.
+const launchSettings = new URLSearchParams(location.search);
+for (const id of ['skybox','cloud-type','weather','quality']) {
+    const control=document.getElementById(id),value=launchSettings.get(id);
+    if(value&&[...control.options].some(option=>option.value===value))control.value=value;
+}
+if(launchSettings.has('tod')){
+    const hours=Number(launchSettings.get('tod'));
+    if(Number.isFinite(hours)&&hours>=0&&hours<=24)document.getElementById('tod').value=String(hours);
+}
+
 // ---- on-page error console: WebGPU pipeline failures are SILENT no-draws,
 // so every error path gets surfaced visibly (no devtools needed) ----
 const errBox = document.createElement('div');
@@ -1455,7 +1467,8 @@ async function buildSkybox() {
         // receiver independently of weather activation. Previously this was a
         // side effect of lazily constructing weather, so the default None state
         // had no cloud shadows at all.
-        const cloudShadowMaterials = active.sky?.wrapCloudShadows?.(scene, 0.42) ?? 0;
+        const cloudShadowMaterials = active.sky?.wrapCloudShadows?.(scene) ?? 0;
+        await active.sky?.prepareCloudShadows?.(renderer, camera, true);
         globalThis._cloudShadowStats = {
             ...(active.sky?.cloudShadowInfo ?? {}),
             materials: cloudShadowMaterials,
@@ -1775,6 +1788,7 @@ async function tick(now, dt) {
     if (movingCloudReflectionDue) reflectionDirty = true;
     globalThis._frameStage = 'rain-surface';
     await globalThis._weather?.prepareFrame?.(renderer, camera);
+    await active?.sky?.prepareCloudShadows?.(renderer, camera);
     if (reflectionBakedWeatherSig !== weatherBakeSignature()) reflectionDirty = true;
     if (reflectionDirty && performance.now() - reflectionLastBake >= 1500) {
         globalThis._frameStage = 'reflection-bake';

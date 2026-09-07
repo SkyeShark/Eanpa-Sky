@@ -1471,7 +1471,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
                 wetPending = queue;
                 console.log(`[weather] wetness wrapping ${queue.length} materials at ${budget}/frame`);
             }
-            if (sky && sky.wrapCloudShadows) sky.wrapCloudShadows(scene, 0.5);
+            if (sky && sky.wrapCloudShadows) sky.wrapCloudShadows(scene);
             return wetWrappedCount;
         };
 

@@ -1,3 +1,5 @@
+import { makeFragmentMotion } from './fragment_motion.js';
+
 // ASTEROID MOON — bake-once asset pipeline + thin runtime loader.
 // Recipe (Skye): subdivided irregular chunk → tileable height + MATCHING
 // albedo (AI-generated) → TESSELLATED HIGH-POLY (analytic potato evaluated
@@ -408,51 +410,21 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
     for (const material of sourceMaterials) material.dispose?.();
     group.userData.noSupportCheck = true; group.userData.noWet = true;
     const h = (i, k) => { const v = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return v - Math.floor(v); };
-    // debris spread: the crumble has drifted apart width-wise since the
-    // breakup — positions stretch along the streak axis, sizes don't
-    const basePos = pieces.map((p) => {
-        p.position.x *= spread;
-        return p.position.clone();
-    });
-    // CHAOTIC n-body look (Skye: the neat epicycles read as static across
-    // the day cycle): each piece rides THREE superposed ellipses with
-    // unrelated periods and random orientations — quasi-periodic = visibly
-    // chaotic, but bounded and deterministic. Amplitudes reach half the
-    // local spacing so near-misses happen on camera. Tumble is a compound
-    // two-axis precession, not a single-axis spin.
-    const heroIndex = pieces.reduce((best, p, i) => {
-        const r = p.geometry.boundingSphere ? p.geometry.boundingSphere.radius : 0;
-        return r > (pieces[best].geometry.boundingSphere?.radius ?? 0) ? i : best;
-    }, 0);
-    const unitFrom = (a, b) => new T3.Vector3(a - 0.5, b - 0.5, (a * b) % 1 - 0.5).normalize();
-    const tumbleA = pieces.map((_, i) => ({ axis: unitFrom(h(i, 1), h(i, 2)), rate: 0.05 + h(i, 3) * 0.12 }));
-    const tumbleB = pieces.map((_, i) => ({ axis: unitFrom(h(i, 4), h(i, 5)), rate: 0.03 + h(i, 6) * 0.09 }));
-    const modes = pieces.map((_, i) => {
-        const isHero = i === heroIndex;
-        const list = [];
-        for (let k = 0; k < 3; k++) {
-            const u = unitFrom(h(i, 10 + k * 4), h(i, 11 + k * 4));
-            const v = new T3.Vector3().crossVectors(u, unitFrom(h(i, 12 + k * 4), h(i, 13 + k * 4))).normalize();
-            list.push({
-                u, v,
-                amp: (isHero ? 0.05 : 0.14 + h(i, 14 + k * 4) * 0.30) / (k + 1),
-                w: (Math.PI * 2) / (38 + h(i, 15 + k * 4) * 100 + k * 23),
-                ph: h(i, 16 + k * 4) * Math.PI * 2,
-            });
-        }
-        return list;
-    });
+    const fragmentMotion = makeFragmentMotion(T3, pieces, {spread});
+    const basePos = fragmentMotion.basePositions;
+    const heroIndex = fragmentMotion.heroIndex;
+    fragmentMotion.update(0);
 
     // VOLUMETRIC accretion dust (Skye: not specks, not a ring — a soft
     // raymarched cloud, vaguely toroidal, that FOLLOWS the chaotic motion:
     // every fragment drags a cling-blob of dust via per-piece uniforms).
-    const heroR = pieces[heroIndex].geometry.boundingSphere?.radius ?? 0.5;
+    const heroR = fragmentMotion.radii[heroIndex];
     // the sphere must cover the WHOLE fragment streak (Skye: dust read as a
     // blob centered on the hero — the old 2.3*heroR shell never even reached
     // the outer fragments, so their halos/streamers were clipped to nothing)
     const heroBaseJ = basePos[heroIndex];
     const arcXJ = Math.max(...basePos.map((b) => Math.abs(b.x - heroBaseJ.x)), heroR);
-    const pieceRJ = pieces.map((pc) => pc.geometry.boundingSphere?.radius ?? heroR * 0.2);
+    const pieceRJ = fragmentMotion.radii;
     const RC = Math.max(heroR * 2.3, arcXJ * 1.2);
     // streak centroid (envelope center — NOT the hero: ref) in hero-space
     const centJ = basePos.reduce((a, b) => a.add(b), new T3.Vector3()).multiplyScalar(1 / basePos.length).sub(heroBaseJ);
@@ -663,7 +635,7 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
     const skSeeds = [];
     for (let i = 0; i < SPECK_N; i++) {
         const a = h(i, 41), b = h(i, 42), c = h(i, 43), d = h(i, 44), e = h(i, 45);
-        const nearPiece = h(i, 46) < 0.30 ? Math.floor(h(i, 47) * 16) : -1;
+        const nearPiece = h(i, 46) < 0.30 ? Math.floor(h(i, 47) * pieces.length) : -1;
         skSeeds.push({
             x0: (a * 2 - 1) * arcXJ * 1.15,
             lanePh: Math.floor(b * 3) * 2.1 + h(i, 48) * 0.6,
@@ -684,10 +656,9 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
     const skAxis = new T3.Vector3(0.42, 0.75, 0.51).normalize();
     const SPAN = arcXJ * 1.3;
 
-    const qA = new T3.Quaternion(), qB = new T3.Quaternion();
     let texturesDisposed = false;
     return {
-        group, pieces, dust,
+        group, pieces, dust, motionInfo: fragmentMotion.stats,
         uniforms: { sunDir: uSunDir, sunCol: uSunCol, gain: uGain },
         disposeTextures() {
             if (texturesDisposed) return;
@@ -696,20 +667,7 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
             sourceTextures.clear();
         },
         update(t) {
-            for (let i = 0; i < pieces.length; i++) {
-                qA.setFromAxisAngle(tumbleA[i].axis, t * tumbleA[i].rate);
-                qB.setFromAxisAngle(tumbleB[i].axis, t * tumbleB[i].rate);
-                pieces[i].quaternion.copy(qA).multiply(qB);
-                const p = pieces[i].position;
-                p.copy(basePos[i]);
-                for (const m of modes[i]) {
-                    const c = Math.cos(m.w * t + m.ph) * m.amp;
-                    const s = Math.sin(m.w * t + m.ph) * m.amp * 0.6;
-                    p.x += m.u.x * c + m.v.x * s;
-                    p.y += m.u.y * c + m.v.y * s;
-                    p.z += m.u.z * c + m.v.z * s;
-                }
-            }
+            fragmentMotion.update(t);
             const hp = pieces[heroIndex].position;
             dust.position.copy(hp);
             uDustT.value = t;

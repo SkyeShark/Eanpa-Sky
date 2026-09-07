@@ -376,7 +376,7 @@ export async function makeWeatherSky({
         },
     });
     globalThis._sky = sky;
-    sky.wrapCloudShadows?.(scene, 0.42);
+    sky.wrapCloudShadows?.(scene);
 
     let attachment = null;
     let disposed = false;
