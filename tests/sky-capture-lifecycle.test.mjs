@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as WebGPU from '../vendor/three/three.webgpu.js';
 import {makeSkyGeometryLayer} from '../src/sky_geometry_layer.js';
 import {makeCloudShadowMap} from '../engine/cloud_shadow_map.js';
+import {makeRingCloudField} from '../engine/ring_cloud_field.js';
 
 function fixture(){
     const uniforms=[];
@@ -51,4 +52,20 @@ test('cloud-map refresh is amortized and a failed refresh retains the previous w
     renderer.draw=null;assert.equal(await map.prepare(renderer,camera),true);assert.equal(map.stats.captures,2);
     let disposed=0;map.target.addEventListener('dispose',()=>disposed++);map.dispose();map.dispose();assert.equal(disposed,1);
     assert.equal(await map.prepare(renderer,camera,true),false);
+});
+
+test('ring cloud atlas shares captures, restores renderer state after failure and disposes once',async()=>{
+    const {T,renderer}=fixture();
+    const u={wind:T.uniform(new T.Vector2()),cover:T.uniform(.5),grey:T.uniform(0),dens:T.uniform(1)};
+    const field=makeRingCloudField(T,u,T.uniform(0)),context=renderer.contextNode;
+    assert.equal(await field.prepare(renderer,0),true);
+    assert.equal(await field.prepare(renderer,.05),false);
+    renderer.draw=()=>{throw new Error('atlas failed')};
+    await assert.rejects(field.prepare(renderer,1),/atlas failed/);
+    assert.equal(field.stats.captures,1);assert.equal(field.stats.lastTime,0);
+    assert.equal(renderer.target,null);assert.equal(renderer.contextNode,context);
+    renderer.draw=null;assert.equal(await field.prepare(renderer,1),true);
+    let disposals=0;field.target.addEventListener('dispose',()=>disposals++);
+    field.dispose();field.dispose();assert.equal(disposals,1);
+    assert.equal(await field.prepare(renderer,2),false);
 });

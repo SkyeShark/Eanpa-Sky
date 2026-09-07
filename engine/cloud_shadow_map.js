@@ -33,6 +33,7 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
         },
         async prepare(renderer,camera,force=false){
             if(disposed||!camera)return false;
+            if(typeof force==='object')force=force?.force===true;
             const light=lightDirection.value,t=time.value;
             camera.getWorldPosition(cameraWorld);
             const x=Math.floor((cameraWorld.x-light.x*cameraWorld.y/Math.max(light.y,.02))/texel)*texel;

@@ -159,6 +159,8 @@ export async function makeShieldworld({
         setWeather(state, onTransitionStart) {
             return weatherAttachment.setWeather(state, onTransitionStart);
         },
+        preloadWeather(){return weatherAttachment.preloadWeather();},
+        weatherWarmupObjects(){return weatherAttachment.weatherWarmupObjects();},
         update(t) {
             // moon rides its celestial arc OUTSIDE the 21k shield at every
             // point; rises 22.3h, transits in 6.2h

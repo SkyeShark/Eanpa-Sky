@@ -8,7 +8,9 @@ try {
     original = await cdp.evaluate(`(async () => {
         if(!_eanpaTest.paused){_eanpaTest.pauseAfterFrame=true;
             while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,20));}
+        _sky.update(_sky.uniforms.time.value,_c);
         await _sky.prepareCloudShadows(_reflectionPipeline.pipeline.renderer,_c,{force:true});
+        await _spatialClouds?.render();
         return _sky.uniforms.cloudShadowStrength.value;
     })()`);
     await mkdir('artifacts/overhaul/shadows', { recursive: true });

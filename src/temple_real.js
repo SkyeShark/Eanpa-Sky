@@ -115,6 +115,7 @@ export async function makeTempleScene(THREE, {
         const material = new StandardMaterial({ color: 0xffffff, roughness: 0.92, metalness: 0 });
         material.name = name;
         material.envMapIntensity = 1;
+        material.userData.wetPorosity = .88;
         ownedMaterials.add(material);
 
         const nodeCapable = maps.albedo && maps.normal && maps.roughness

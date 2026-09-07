@@ -102,6 +102,8 @@ export async function makeRingworld({
         // path uses two existing-normal reads, not the full procedural ALU field.
         // planetShineColor states the engine default explicitly (prealpha parity).
         opts: { waves: 'lightweight', planetShineColor: [1.00, 0.92, 0.82],
+            localReliefBlend:[700,2000],
+            cloudAtlas: quality.name==='high'?{width:4096,height:128}:{width:2048,height:64},
             bandNormalScale: 1, bandAOPackedNormal: true },
     });
     globalThis._ringworld = ring;
@@ -171,6 +173,9 @@ export async function makeRingworld({
         setWeather(state, onTransitionStart) {
             return weatherAttachment.setWeather(state, onTransitionStart);
         },
+        preloadWeather(){return weatherAttachment.preloadWeather();},
+        weatherWarmupObjects(){return weatherAttachment.weatherWarmupObjects();},
+        prepareFrame(renderer){return ring.prepareFrame(renderer);},
         update(t) {
             sky.update(t, camera);
             weatherAttachment.update(t);

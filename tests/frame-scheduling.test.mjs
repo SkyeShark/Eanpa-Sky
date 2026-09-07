@@ -59,3 +59,10 @@ test('a failed render is recorded as failure and releases the frame lock', async
     harness.frame(32); await settle();
     assert.equal(harness.state.completedFrames, 1);
 });
+
+test('a stale first display timestamp cannot rewind simulation',async()=>{
+    const deltas=[];
+    const harness=compile(async(now,dt)=>{deltas.push(dt);},()=>{},console);
+    harness.frame(-2000);await settle();
+    assert.equal(harness.time,0);assert.deepEqual(deltas,[0]);
+});

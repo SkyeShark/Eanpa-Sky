@@ -10,7 +10,7 @@
     const quad=new T.QuadMesh(material),saved={target:r.getRenderTarget(),mrt:r.getMRT(),context:r.contextNode};
     const results=[];
     try{
-        await _sky.prepareCloudShadows(r,_c,true);
+        await _sky.prepareCloudShadows(r,_c,{force:true});
         r.setMRT(null);r.contextNode=T.context({});r.setRenderTarget(target);
         for(const y of [0,25,200,1400]){
             height.value=y;await new Promise(requestAnimationFrame);await quad.renderAsync(r);

@@ -204,6 +204,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             cloudTint: uniform(V(1, 1, 1)),
             cloudDim: uniform(1),      // weather-system hook for rain, shafts, and Ringworld reflection response
             cloudRadiance: uniform(1), // cloud-form readability; severe weather may lift this without brightening rain/shafts/ring
+            cloudWeatherGrey: uniform(0),
             // WORLD-level cloud exposure, multiplied on top of cloudRadiance.
             // The weather system owns cloudRadiance (it rewrites it per state),
             // so a scene that needs a permanent exposure offset — an alien
@@ -1108,7 +1109,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             // cell borders, random per-cell parameters never form seams. This
             // keeps recognizable feathered cirrus without either the old
             // evenly spaced dashes or a horizon-wide anisotropic stripe field.
-            const cirrusCellP = wispAdvected.xz.mul(0.00013);
+            const cirrusCellP = wispAdvected.xz.mul(0.00040).add(vec2(.37,.63));
             const cirrusId = floor(cirrusCellP);
             const cirrusLocal = fract(cirrusCellP).sub(vec2(0.5));
             const cirrusAngleR = hash3(vec3(cirrusId.x, cirrusId.y, 1.7));
@@ -1119,10 +1120,12 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             const cirrusCenterY = hash3(vec3(cirrusId.x, cirrusId.y, 21.8)).sub(0.5).mul(0.13);
             const cirrusX = cirrusLocal.x.sub(cirrusCenterX);
             const cirrusY = cirrusLocal.y.sub(cirrusCenterY);
-            // A normalized hash vector avoids two transcendental trig calls
-            // per pixel while preserving fully varied plume orientation.
-            const cirrusDirX = cirrusAngleR.sub(0.5);
-            const cirrusDirY = cirrusShapeR.sub(0.5);
+            // Falling ice fibers share the prevailing shear direction. Small
+            // local variations keep plumes irregular without giving every
+            // neighbouring patch an unrelated wind direction.
+            const shear=normalize(u.skyWind.xz.add(vec2(.001)));
+            const cirrusDirX = shear.x.add(cirrusAngleR.sub(0.5).mul(.5));
+            const cirrusDirY = shear.y.add(cirrusShapeR.sub(0.5).mul(.5));
             const cirrusDirInv = float(1).div(max(length(vec2(cirrusDirX, cirrusDirY)), 0.08));
             const cirrusCos = cirrusDirX.mul(cirrusDirInv);
             const cirrusSin = cirrusDirY.mul(cirrusDirInv);
@@ -1314,8 +1317,13 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                         const s = cloudsAt(p);
                         If(s.density.greaterThan(0.0), () => {
                             const intensity = lightRay(p, phaseF, s.density, mu, s.ch, fract(fract(baseJit.mul(73.1063)).add(k * 0.6180339887)));
-                            const amb = u.cloudAmbSky.mul(float(0.5).add(s.ch.mul(0.6)))
+                            const clearAmb = u.cloudAmbSky.mul(float(0.5).add(s.ch.mul(0.6)))
                                 .add(u.cloudAmbGround.mul(max(float(1).sub(s.ch.mul(2)), 0)));
+                            // A closed wet deck receives diffuse multiple
+                            // scattering, rather than the clear blue fill.
+                            // Keep the active star/moon spectrum on alien skies.
+                            const keyChroma=u.cloudLightColor.div(max(max(u.cloudLightColor.x,u.cloudLightColor.y),u.cloudLightColor.z).max(.0001));
+                            const amb=mix(clearAmb,vec3(dot(clearAmb,vec3(.2126,.7152,.0722))).mul(keyChroma),u.cloudWeatherGrey);
                             // A sealed cumulonimbus canopy removes direct sun
                             // from everything beneath it. The underlayer keeps
                             // its shape readable via a dim top-weighted canopy
@@ -1372,7 +1380,9 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             // cloudBody speaks premultiplied RGBA: multiply the straight wisp
             // radiance by its actual coverage (the old density-vs-alpha split
             // made every thin sheet intrinsically dark grey).
-            col.addAssign(Tr.mul(u.wispColor).mul(wispAlpha).mul(u.cloudRadiance).mul(u.cloudRadianceScale));
+            const wispKeyChroma=u.cloudLightColor.div(max(max(u.cloudLightColor.x,u.cloudLightColor.y),u.cloudLightColor.z).max(.0001));
+            const wispRadiance=mix(u.wispColor,vec3(dot(u.wispColor,vec3(.2126,.7152,.0722))).mul(wispKeyChroma),u.cloudWeatherGrey);
+            col.addAssign(Tr.mul(wispRadiance).mul(wispAlpha).mul(u.cloudRadiance).mul(u.cloudRadianceScale));
             });
 
             // SEALED LOW CUMULONIMBUS VOLUME. The semantic storm can be roughly
@@ -2274,8 +2284,12 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                     sun.position.copy(d).multiplyScalar(120);
                 }
                 if (hemi) {
-                    hemi.color.setRGB(...pal.zen).multiplyScalar(2.2);
-                    hemi.groundColor.setRGB(pal.hor[0] * 0.25, pal.hor[1] * 0.2, pal.hor[2] * 0.18);
+                    // Match the weathered sky used by the view and IBL bake.
+                    // A clear blue fill under grey rain lit buildings with a
+                    // different spectrum from the clouds and reflected sky.
+                    const zen=u.zenith.value,hor=u.horizon.value;
+                    hemi.color.setRGB(zen.x,zen.y,zen.z).multiplyScalar(2.2);
+                    hemi.groundColor.setRGB(hor.x * 0.25, hor.y * 0.2, hor.z * 0.18);
                     hemi.intensity = 0.25 + pal.int * 0.25 + nightK * 0.06;
                 }
                 // FOG FOLLOWS THE WEATHERED SKY, not the clean TOD palette.

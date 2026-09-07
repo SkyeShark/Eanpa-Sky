@@ -1,7 +1,7 @@
 // A continuous height-displaced inner cylinder. Water texels stay on the same
 // base cylinder; triangles connect every shoreline with no discarded fragments.
 export function makeRingTerrainGeometry(T, source, heightTexture, {
-    radius=5000,halfWidth=483,heightMeters=180,around=4096,across=512,repeat=8,
+    radius=5000,halfWidth=483,heightMeters=180,around=4096,across=512,repeat=8,localReliefBlend=[0,0],
 }={}) {
     around=Math.max(16,Math.round(around));
     across=Math.max(8,Math.round(across/8)*8);
@@ -36,9 +36,16 @@ export function makeRingTerrainGeometry(T, source, heightTexture, {
     let minHeight=Infinity,maxHeight=-Infinity;
     for(let i=0;i<=around;i++){
         const row=rows[i],{u,angle,segments,offset}=row,cy=Math.cos(angle),cz=Math.sin(angle);
+        // The standalone's local terrain owns the nearby playable patch.
+        // Ease the sky ring's relief into it without overlapping the
+        // player with 180-metre foreground peaks. Sea level is unchanged.
+        const arcDistance=Math.abs(Math.atan2(cz,-cy))*radius;
+        let reliefWeight=localReliefBlend[1]>localReliefBlend[0]
+            ? Math.max(0,Math.min(1,(arcDistance-localReliefBlend[0])/(localReliefBlend[1]-localReliefBlend[0]))) : 1;
+        reliefWeight=reliefWeight*reliefWeight*(3-2*reliefWeight);
         for(let j=0;j<=segments;j++){
             const v=j/segments,index=offset+j;
-            const h=sample(u*repeat,1-v)*heightMeters;
+            const h=sample(u*repeat,1-v)*heightMeters*reliefWeight;
             minHeight=Math.min(minHeight,h);maxHeight=Math.max(maxHeight,h);
             positions.set([(v-.5)*halfWidth*2,(radius-h)*cy,(radius-h)*cz],index*3);
             // The matching normal map carries the full height gradient. Use
@@ -77,7 +84,7 @@ export function makeRingTerrainGeometry(T, source, heightTexture, {
     geometry.setAttribute('ringSkirt',new T.BufferAttribute(skirt,1));
     geometry.setIndex(new T.BufferAttribute(indices,1));
     geometry.computeBoundingBox();geometry.computeBoundingSphere();
-    geometry.userData.ringRelief={around,across,vertices:count,triangles:indices.length/3,heightMeters,minHeight,maxHeight,phase,
+    geometry.userData.ringRelief={around,across,vertices:count,triangles:indices.length/3,heightMeters,minHeight,maxHeight,phase,localReliefBlend,
         rows:rows.map(row=>({offset:row.offset,segments:row.segments})),surfaceVertices:surfaceCount};
     return geometry;
 }

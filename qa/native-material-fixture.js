@@ -42,6 +42,7 @@
     _c.lookAt(0,41.6,61.8);
     _c.updateMatrixWorld(true);
     await _reflectionPipeline.compileAsync();
-    for(let i=0;i<4;i++) await _reflectionPipeline.render();
+    _sky.update(_sky.uniforms.time.value,_c);await _spatialClouds?.render();
+    for(let i=0;i<14;i++) {await new Promise(requestAnimationFrame);await _reflectionPipeline.render();}
     return {materials:properties,camera:_c.position.toArray()};
 })()

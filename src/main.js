@@ -1468,6 +1468,7 @@ async function buildSkybox() {
         // Shieldworld synchronizes the red giant and hides its placeholder sun
         // in update(); initialize that state before baking the first reflection.
         active.update?.(0, 0);
+        await active.prepareFrame?.(renderer,camera);
         await globalThis._weather?.prepareFrame?.(renderer, camera, { force: true });
         // Project the active sky's moving cloud field onto every local PBR
         // receiver independently of weather activation. Previously this was a
@@ -1795,6 +1796,7 @@ async function tick(now, dt) {
             >= currentQuality.cloudReflectionRefreshSeconds * 1000;
     if (movingCloudReflectionDue) reflectionDirty = true;
     globalThis._frameStage = 'rain-surface';
+    await active?.prepareFrame?.(renderer,camera);
     await globalThis._weather?.prepareFrame?.(renderer, camera);
     await active?.sky?.prepareCloudShadows?.(renderer, camera);
     if (reflectionBakedWeatherSig !== weatherBakeSignature()) reflectionDirty = true;
@@ -1851,7 +1853,9 @@ function frame(now) {
         return;
     }
     if (inFlight) return;
-    const dt = Math.min((now - last) / 1000, 0.1);
+    // A queued rAF timestamp can precede the performance.now() used during
+    // boot. Never rewind weather, particle motion or player integration.
+    const dt = Math.max(0, Math.min((now - last) / 1000, 0.1));
     last = now;
     t += dt;
     inFlight = true;

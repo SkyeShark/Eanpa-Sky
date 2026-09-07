@@ -19,7 +19,9 @@ try {
         const records=[];let index=0, labels=[],failure=null;
         function descriptor(input,kind) {
             if(index>=2048) throw new Error('GPU profile query capacity exceeded');
-            labels.push(kind+':'+(input.label??'unnamed'));
+            const target=pipeline.pipeline.renderer.getRenderTarget();
+            const targetName=target?.texture?.name|| (target ? target.width+'x'+target.height : 'screen');
+            labels.push(kind+':'+targetName+(target?'#'+target.texture.id+'@'+target.width+'x'+target.height:'')+':'+globalThis._frameStage);
             const timestampWrites={querySet:queries,beginningOfPassWriteIndex:index++,endOfPassWriteIndex:index++};
             return {...input,timestampWrites};
         }

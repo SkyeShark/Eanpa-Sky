@@ -249,6 +249,10 @@ export async function makeLazyWeatherAttachment({
                     // must stay responsive. wrapMaterial is idempotent, so
                     // re-invoking over the queued set is safe.
                     readyWeather?.wrapScene?.({ budget: Infinity });
+                    // Preload runs behind the boot curtain. None should open
+                    // with the selected cloud preset already settled, rather
+                    // than advertise an artificial 45-second weather morph.
+                    if(requestedWeatherState==='none')readyWeather?.setWeather?.('none',1);
                     return Boolean(readyWeather);
                 })
                 .catch((error) => {

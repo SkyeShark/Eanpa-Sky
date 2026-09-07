@@ -258,13 +258,13 @@ import { makeWeatherListener } from './weather_listener.js';
         // slate filaments.  All of these fields lerp with the volume below.
         sunshower: { clouds: 'cumulus', over: { largeT: 0.50, weatherT: 0.34, wispOn: 0.16, wispThreshold: 0.58, wispStrength: 0.42, wispOpacity: 1.10, wispFilament: 0.20, wispStretch: [0.70, 0.32, 1.72], wispTint: [1.04, 0.99, 0.91] }, sunDim: 0.92, grey: 0.05, dark: 1.00, greyTint: [1, 1, 1], rain: 0.45, wet: 0.55, windK: 0.5, len: 0.2, fall: 0.9, dash: 0.0, lightning: 0.00, cellLo: 0.85, cellHi: 1.25 },
         fair:      { clouds: 'cumulus', over: { largeT: 0.58, largeA: 3.2, weatherT: 0.26, finalMul: 0.24, wispOn: 0.13, wispThreshold: 0.62, wispStrength: 0.38, wispOpacity: 1.06, wispFilament: 0.18, wispStretch: [0.72, 0.33, 1.66], wispTint: [1.02, 0.99, 0.94] }, sunDim: 0.88, grey: 0.15, dark: 1.00, greyTint: [1, 1, 1], rain: 0.00, wet: 0.00, windK: 0.5, len: 0.3, fall: 1.0, dash: 0.0, lightning: 0.00 },
-        overcast:  { clouds: 'stratus', over: { largeT: 0.05, finalMul: 0.20, wispOn: 0.90, wispThreshold: 0.30, wispStrength: 0.90, wispOpacity: 0.96, wispFilament: 0.05, wispStretch: [0.92, 0.24, 1.18], wispTint: [0.66, 0.74, 0.84] }, sunDim: 0.45, grey: 0.60, dark: 0.75, greyTint: [1, 1, 1], rain: 0.00, wet: 0.15, windK: 0.4, len: 0.3, fall: 1.0, dash: 0.0, lightning: 0.00, horMul: 0.85, cellLo: 0.5, cellHi: 0.9, celestialVisibility: 0.30 },
-        rain:      { clouds: 'stratus', over: { largeT: 0.02, finalMul: 0.26, height: 320, wispOn: 0.94, wispScale: 0.00092, wispThreshold: 0.27, wispStrength: 0.96, wispOpacity: 1.00, wispFilament: 0.12, wispStretch: [0.66, 0.22, 1.65], wispTint: [0.57, 0.66, 0.78] }, sunDim: 0.30, grey: 0.75, dark: 0.55, greyTint: [1, 1, 1], rain: 0.70, wet: 0.85, windK: 1.0, len: 0.22, fall: 1.0, dash: 0.0, lightning: 0.00, horMul: 0.75, cellLo: 0.5, cellHi: 0.85, celestialVisibility: 0.15 },
-        storm:     { clouds: 'cumulus', over: { largeT: 0.12, largeA: 4.0, finalMul: 0.34, start: 550, height: 950, wispOn: 0.52, wispScale: 0.00096, wispThreshold: 0.36, wispStrength: 0.88, wispOpacity: 1.05, wispFilament: 0.32, wispStretch: [0.40, 0.20, 2.18], wispTint: [0.53, 0.60, 0.70] }, sunDim: 0.18, grey: 0.80, dark: 0.42, greyTint: [1, 1, 1], rain: 1.00, wet: 1.00, windK: 2.2, len: 0.3, fall: 1.2, dash: 0.0, lightning: 0.30, lightningPalette: 'standard', localStrikeChance: 0.018, horMul: 0.6, cellLo: 1.0, cellHi: 1.45, distant: 0.5, celestialVisibility: 0.10 },
+        overcast:  { clouds: 'stratus', over: { largeT: 0.05, finalMul: 0.20, wispOn: 0.90, wispThreshold: 0.30, wispStrength: 0.90, wispOpacity: 0.96, wispFilament: 0.05, wispStretch: [0.92, 0.24, 1.18], wispTint: [0.66, 0.74, 0.84] }, sunDim: 0.45, cloudRadiance: 0.80, grey: 0.60, dark: 0.75, greyTint: [1, 1, 1], rain: 0.00, wet: 0.15, windK: 0.4, len: 0.3, fall: 1.0, dash: 0.0, lightning: 0.00, horMul: 0.85, cellLo: 0.5, cellHi: 0.9, celestialVisibility: 0.30 },
+        rain:      { clouds: 'stratus', over: { largeT: 0.02, finalMul: 0.26, height: 320, wispOn: 0.94, wispScale: 0.00092, wispThreshold: 0.27, wispStrength: 0.96, wispOpacity: 1.00, wispFilament: 0.12, wispStretch: [0.66, 0.22, 1.65], wispTint: [0.57, 0.66, 0.78] }, sunDim: 0.30, cloudRadiance: 0.65, grey: 0.75, dark: 0.55, greyTint: [1, 1, 1], rain: 0.70, wet: 0.85, windK: 1.0, len: 0.22, fall: 1.0, dash: 0.0, lightning: 0.00, horMul: 0.75, cellLo: 0.5, cellHi: 0.85, celestialVisibility: 0.15 },
+        storm:     { clouds: 'cumulus', over: { largeT: 0.12, largeA: 4.0, finalMul: 0.34, start: 550, height: 950, wispOn: 0.52, wispScale: 0.00096, wispThreshold: 0.36, wispStrength: 0.88, wispOpacity: 1.05, wispFilament: 0.32, wispStretch: [0.40, 0.20, 2.18], wispTint: [0.53, 0.60, 0.70] }, sunDim: 0.18, cloudRadiance: 0.45, grey: 0.80, dark: 0.42, greyTint: [1, 1, 1], rain: 1.00, wet: 1.00, windK: 2.2, len: 0.3, fall: 1.2, dash: 0.0, lightning: 0.30, lightningPalette: 'standard', localStrikeChance: 0.018, horMul: 0.6, cellLo: 1.0, cellHi: 1.45, distant: 0.5, celestialVisibility: 0.10 },
         // Cyclone's upper sheet uses moderate anisotropy: the old
         // [0.14, 0.15, 3.30] stretch drew 20:1 straight streaks instead of
         // wind-torn cloud masses.
-        cyclone:   { clouds: 'stratus', over: { largeT: 0.00, largeA: 2.2, finalMul: 0.50, start: 240, height: 400, wispOn: 1.00, wispScale: 0.00100, wispThreshold: 0.22, wispStrength: 1.00, wispOpacity: 1.12, wispFilament: 0.22, wispStretch: [0.46, 0.24, 1.95], wispTint: [0.45, 0.56, 0.72] }, sunDim: 0.10, grey: 0.95, dark: 0.26, greyTint: [0.92, 0.97, 1.06], rain: 1.00, wet: 1.00, windK: 6.5, len: 0.60, fall: 1.6, dash: 0.0, lightning: 0.05, lightningPalette: 'standard', localStrikeChance: 0.010, horMul: 0.5, cellLo: 0.10, cellHi: 0.35, dense: 1.9, distant: 0.15, celestialVisibility: 0.06 },
+        cyclone:   { clouds: 'stratus', over: { largeT: 0.00, largeA: 2.2, finalMul: 0.50, start: 240, height: 400, wispOn: 1.00, wispScale: 0.00100, wispThreshold: 0.22, wispStrength: 1.00, wispOpacity: 1.12, wispFilament: 0.22, wispStretch: [0.46, 0.24, 1.95], wispTint: [0.45, 0.56, 0.72] }, sunDim: 0.10, cloudRadiance: 0.32, grey: 0.95, dark: 0.26, greyTint: [0.92, 0.97, 1.06], rain: 1.00, wet: 1.00, windK: 6.5, len: 0.60, fall: 1.6, dash: 0.0, lightning: 0.05, lightningPalette: 'standard', localStrikeChance: 0.010, horMul: 0.5, cellLo: 0.10, cellHi: 0.35, dense: 1.9, distant: 0.15, celestialVisibility: 0.06 },
         // ~19.3 km cumulonimbus system represented by its only visible part:
         // a shallow sealed 3D underside plus a running ordinary volumetric
         // underlayer, with the dark-tinted canopy sheet as the textured cloud
@@ -1636,7 +1636,7 @@ import { makeWeatherListener } from './weather_listener.js';
                 sky.uniforms.wispOn, sky.uniforms.wispScale, sky.uniforms.wispThreshold,
                 sky.uniforms.wispStrength, sky.uniforms.wispOpacity, sky.uniforms.wispFloor,
                 sky.uniforms.wispFilament, sky.uniforms.lightCacheDirect, sky.uniforms.stormCanopy,
-                sky.uniforms.celestialVisibility);
+                sky.uniforms.celestialVisibility,sky.uniforms.cloudWeatherGrey);
             return s;
         };
         const _transVecs = () => {
@@ -1786,6 +1786,7 @@ import { makeWeatherListener } from './weather_listener.js';
                     sky.uniforms.cloudDim.value = Math.max(0.1, 1 - (1 - w.sunDim) * k);
                     const authoredCloudRadiance = w.cloudRadiance ?? w.sunDim;
                     sky.uniforms.cloudRadiance.value = Math.max(0.1, 1 - (1 - authoredCloudRadiance) * k);
+                    if(sky.uniforms.cloudWeatherGrey)sky.uniforms.cloudWeatherGrey.value=w.grey*k;
                     sky.uniforms.sunDiscI.value = 48 * Math.max(0.02, 1 - w.grey * k * 0.98);
                     sky.uniforms.celestialVisibility.value = 1 - (1 - (w.celestialVisibility ?? 1)) * k;
                     sky.uniforms.precipK.value = w.rain * k * (w.dense ?? 1);   // world rain curtains under dense cells
@@ -2321,6 +2322,7 @@ import { makeWeatherListener } from './weather_listener.js';
                     diagnostics.precipitation.sceneLight = Number(u.rainLight.value);
                     diagnostics.precipitation.sceneColor = [...litRain];
                     const g = w.grey * k, d = 1 - (1 - w.dark) * k;
+                    if(sky.uniforms.cloudWeatherGrey)sky.uniforms.cloudWeatherGrey.value=g;
                     // the grey target sits IN the tinted atmosphere: setColors'
                     // `sky` channel covers everything that reads the horizon
                     // (fog, haze), and the greyed sky under weather still does —

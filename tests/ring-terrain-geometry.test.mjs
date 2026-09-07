@@ -38,3 +38,22 @@ test('displaced ring is a continuous inward-facing surface with closed angular s
     assert.ok(geometry.index.count<256*64*6,'distant rows retain less geometry');
     geometry.dispose();source.dispose();texture.dispose();
 });
+
+test('standalone relief transition leaves the playable patch clear and preserves distant mountains',()=>{
+    const source=new T.BufferGeometry();
+    source.setAttribute('position',new T.Float32BufferAttribute([0,-5000,0,0,5000,0],3));
+    source.setAttribute('uv',new T.Float32BufferAttribute([0,0,.5,1],2));
+    const data=new Uint16Array(16).fill(T.DataUtils.toHalfFloat(1));
+    const texture=new T.DataTexture(data,4,4,T.RedFormat,T.HalfFloatType);
+    const geometry=makeRingTerrainGeometry(T,source,texture,{around:256,across:8,localReliefBlend:[700,2000]});
+    const p=geometry.getAttribute('position');let near=0,far=0,transition=0;
+    for(const row of geometry.userData.ringRelief.rows){
+        const y=p.getY(row.offset),z=p.getZ(row.offset),r=Math.hypot(y,z);
+        const distance=Math.abs(Math.atan2(z,-y))*5000;
+        if(distance<700){assert.ok(Math.abs(r-5000)<.001);near++;}
+        else if(distance>2000){assert.ok(Math.abs(r-4820)<.001);far++;}
+        else{assert.ok(r>=4820&&r<=5000);transition++;}
+    }
+    assert.ok(near>0&&far>0&&transition>0);
+    geometry.dispose();source.dispose();texture.dispose();
+});

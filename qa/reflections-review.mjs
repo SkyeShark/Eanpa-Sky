@@ -1,7 +1,9 @@
 import {connect} from './cdp.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 
-const c=await connect(),directory='artifacts/overhaul/reflection-review';
+const suffix=process.argv[2]??'';
+if(suffix&&!/^[a-z0-9_-]+$/i.test(suffix))throw new Error('Invalid review name');
+const c=await connect(),directory='artifacts/overhaul/reflection-review'+(suffix?'/'+suffix:'');
 await mkdir(directory,{recursive:true});
 const capture=async name=>{
     const shot=await c.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
@@ -12,6 +14,7 @@ try {
     await c.evaluate(`(async()=>{
         if(globalThis.__reflectionFixture)__reflectionFixture.visible=false;
         _reflectionPipeline.setAuditContributions();
+        _sky.update(_sky.uniforms.time.value,_c);await _spatialClouds?.render();
         _reflectionPipeline.localProbe.configure({sampleGroundHeight:(x,z)=>_temple.walkSurfaceAt(x,z)?.height??_terrain.heightAt(x,z)});
         for(let i=0;i<12;i++){
             await new Promise(requestAnimationFrame);
@@ -32,6 +35,7 @@ try {
             _c.rotation.set(${.17+.03*Math.cos(phase)},${.06*Math.sin(phase)},0);_c.updateMatrixWorld(true);
             const orb=_c.parent.getObjectByName('authored_inanna_orb_pivot');orb.rotation.y=${-.7+i*.035};orb.updateMatrixWorld(true);
             await new Promise(requestAnimationFrame);
+            _sky.update(_sky.uniforms.time.value,_c);await _spatialClouds?.render();
             await _reflectionPipeline.render();
         })()`);
         if(i%4===0||i===15)await capture(`orb-motion-${String(i).padStart(2,'0')}`);

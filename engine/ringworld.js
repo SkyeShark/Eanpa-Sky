@@ -13,6 +13,7 @@
 //       opts: { panelTile: 60 } });
 //   scene.add(ring.group);   // per frame: ring.update(t)
 import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
+import { makeRingCloudField } from './ring_cloud_field.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -98,6 +99,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             terrain.geometry=makeRingTerrainGeometry(T3,originalGeometry,textures.bandHeight,{
                 heightMeters:opts.terrainHeightMeters??180,
                 repeat:origMat.map?.repeat.x??8,
+                localReliefBlend:opts.localReliefBlend,
             });
             originalGeometry.dispose();
         }
@@ -823,7 +825,12 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
                 const landV = textures.bandNormal
                     ? vec3(landVr.x.mul(NSC), landVr.y.negate().mul(NSC), landVr.z)
                     : landVr;
-                const landN = T3.normalize(Tn.mul(landV.x).add(Bn.mul(landV.y)).add(Nn.mul(landV.z)));
+                let landN = T3.normalize(Tn.mul(landV.x).add(Bn.mul(landV.y)).add(Nn.mul(landV.z)));
+                const localBlend=opts.localReliefBlend??[0,0];
+                if(localBlend[1]>localBlend[0]){
+                    const arcDistance=T3.abs(T3.atan(posL.z,posL.y.negate())).mul(R_REF);
+                    landN=T3.normalize(mix(Nn,landN,smoothstep(localBlend[0],localBlend[1],arcDistance)));
+                }
                 let waveSlope;
                 if (waterWaveMode === 'lightweight') {
                     // Two scrolling reads of the existing filtered normal map.
@@ -920,6 +927,9 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             tintAmb: uniform(new T3.Vector3(0.72, 0.78, 0.9)),
             wind: uniform(new T3.Vector2(0.0035, 0.0008)),
         };
+        const cloudField=makeRingCloudField(T3,cu,tU,opts.cloudAtlas);
+        const worldToRing=uniform(new T3.Matrix4()).setGroup(T3.renderGroup);
+        const cloudShadowStrength=uniform(1).setGroup(T3.renderGroup);
         const cloudGeo = new T3.CylinderGeometry(R_REF - cloudH, R_REF - cloudH, 940, 256, 1, true);
         cloudGeo.rotateZ(Math.PI / 2);  // cylinder axis Y → ring axis X
         // Standard-family, NOT Basic: with shadow maps enabled, a Basic sheet's
@@ -935,44 +945,8 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             // orbit — km-scale masses, domain-warped filament detail,
             // isotropic cells (v cells = u cells / 33.4, the band's aspect).
             const cuv = uv();
-            const h2c = (pp) => {                     // sin-free hash21 (Hoskins)
-                const a = fract(vec3(pp.x, pp.y, pp.x).mul(0.1031));
-                const d = T3.dot(a, vec3(a.y, a.z, a.x).add(33.33));
-                const b = a.add(d);
-                return fract(b.x.add(b.y).mul(b.z));
-            };
-            const vnc = (pp, rep) => {                // wrap-safe: lattice mod rep
-                const i = T3.mod(floor(pp), rep), i1 = T3.mod(floor(pp).add(vec2(1, 0)), rep);
-                const i2 = T3.mod(floor(pp).add(vec2(0, 1)), rep), i3 = T3.mod(floor(pp).add(vec2(1, 1)), rep);
-                const f = fract(pp);
-                const s = f.mul(f).mul(float(3).sub(f.mul(2)));
-                return mix(mix(h2c(i), h2c(i1), s.x), mix(h2c(i2), h2c(i3), s.x), s.y);
-            };
-            const drift = cu.wind.mul(tU);
-            // octave sampler: N integer cells around (exact cylinder wrap),
-            // isotropic v, wind drift, optional warp offset
-            const oct = (N, w, dir, warpOff) => {
-                const sc = vec2(N, N / 33.4);
-                let pp = cuv.add(drift.mul(dir)).mul(sc);
-                if (warpOff) pp = pp.add(warpOff.mul(N * 0.012));
-                return vnc(pp, vec2(N, 1e6)).mul(w);
-            };
-            // macro weather systems (~5 km) + a coarse vec2 warp field that
-            // swirls the filament octaves (the satellite-swirl look)
-            const sysM = oct(6, 1, 1);
-            const wX = oct(10, 1, 0.6).sub(0.5), wY = oct(10, 1, -0.7).sub(0.5);
-            const warp = vec2(wX, wY);
-            const fil = oct(40, 0.38, 1, warp).add(oct(80, 0.26, -0.8, warp))
-                .add(oct(160, 0.19, 1.3, warp)).add(oct(320, 0.12, -1.1, warp))
-                .add(oct(640, 0.07, 0.9, warp));
-            const field = sysM.mul(0.62).add(fil.mul(0.55));   // macro systems lead — READABLE cloud masses
-            // threshold rides coverage so low-cover states leave most of the
-            // band clear (distinct systems), high-cover states close over.
-            // Field distribution: mean ~0.59, realistic max ~0.94.
-            const th = float(0.88).sub(cu.cover.mul(0.55));
-            const cov = smoothstep(th, th.add(0.15), field);   // tight window: defined masses, not gauze
-            // soft edges at the strip borders so clouds never touch the walls
-            const edge = smoothstep(0.02, 0.15, cuv.y).mul(smoothstep(0.98, 0.85, cuv.y));
+            const cloudSample=cloudField.sample(cuv);
+            const cov=cloudSample.x,field=cloudSample.y;
             const bright = mix(cu.tintSun, cu.tintAmb, smoothstep(0.2, 0.9, field)); // dense cores shade toward ambient
             cloudMat.colorNode = vec3(0);   // no lit response — self-coloured via emissive
             // ring clouds follow the ARC's day/night + air: night-side systems
@@ -997,10 +971,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             // cu.dens carries the volumetric field's own density (finalMul), so
             // a thin overcast sheet and a dense cyclone deck read differently
             // here rather than at one fixed opacity.
-            cloudMat.opacityNode = cov.mul(edge)
-                .mul(smoothstep(float(3500), float(7000), sheetDist))
-                .mul(float(0.85).sub(cu.grey.mul(0.12)))
-                .mul(cu.dens).clamp(0, 1);
+            cloudMat.opacityNode = cov.mul(smoothstep(float(3500), float(7000), sheetDist));
         }
         // No G-buffer wrap needed: the engine's pass MRT weights aux
         // attachments by material alpha, so this sheet's invisible near
@@ -1209,6 +1180,43 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             } else {
                 console.warn('[ringworld] TSL lights() unavailable — band falls back to scene lighting');
             }
+            const originalLighting=bandMat.setupLightingModel;
+            bandMat.setupLightingModel=function(builder){
+                const model=originalLighting.call(this,builder),direct=model.direct;
+                model.direct=function(data,b){
+                    if(data.lightNode?.light===bandSun||data.lightNode?.light===bandShine){
+                        const shade=T3.Fn(()=>{
+                            const point=worldToRing.mul(T3.vec4(T3.positionWorld,1)).xyz;
+                            const direction=worldToRing.mul(T3.cameraWorldMatrix.mul(T3.vec4(data.lightDirection,0))).xyz.normalize();
+                            const a=T3.dot(direction.yz,direction.yz).max(.000001);
+                            const q=T3.dot(point.yz,direction.yz);
+                            const c=T3.dot(point.yz,point.yz).sub((R_REF-cloudH)**2);
+                            const discriminant=q.mul(q).sub(a.mul(c));
+                            const distance=q.negate().sub(discriminant.max(0).sqrt()).div(a);
+                            const transmission=float(1).toVar();
+                            T3.If(discriminant.greaterThan(0).and(distance.greaterThan(0)),()=>{
+                                const hit=point.add(direction.mul(distance));
+                                const coordinate=vec2(fract(T3.atan(hit.y,hit.z).div(Math.PI*2)),hit.x.div(940).add(.5));
+                                const opacity=cloudField.sample(coordinate).x;
+                                const cosine=T3.abs(T3.dot(hit.yz.normalize(),direction.yz)).max(.12);
+                                const remaining=float(1).sub(opacity).max(.001).pow(float(1).div(cosine));
+                                const inside=coordinate.y.greaterThan(0).and(coordinate.y.lessThan(1));
+                                const farLayer=smoothstep(3500,7000,T3.positionWorld.distance(T3.cameraPosition));
+                                transmission.assign(mix(float(1),remaining,inside.select(farLayer,0).mul(cloudShadowStrength)));
+                            });
+                            // The nearby band sits under the same local cloud
+                            // deck as buildings. Blend that shared world map
+                            // into the far cylindrical sheet's projection.
+                            const localTransmission=sys._sky?.tslCloudShadow(T3.positionWorld)??float(1);
+                            const localWeight=float(1).sub(smoothstep(2500,5000,T3.positionWorld.distance(T3.cameraPosition)));
+                            return transmission.mul(mix(float(1),localTransmission,localWeight));
+                        })();
+                        data={...data,lightColor:data.lightColor.mul(shade)};
+                    }
+                    return direct.call(this,data,b);
+                };
+                return model;
+            };
             sysPendingLights = [bandSun, bandSun.target, bandShine, bandShine.target];
 
             // cast AND receive, so the arc shadows itself. The meshes stay on the
@@ -1223,8 +1231,12 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
         }
 
         const sys = {
-            group, band: terrain, walls, clouds: ringClouds, cloudUniforms: cu,
+            group, band: terrain, walls, clouds: ringClouds, cloudUniforms: cu,cloudField,cloudShadowStrength,
             arcLight: sysArcLight,
+            async prepareFrame(renderer){
+                group.updateWorldMatrix(true,false);worldToRing.value.copy(group.matrixWorld).invert();
+                return cloudField.prepare(renderer,tU.value);
+            },
             bindWeather(weather, sky) { sys._wx = weather; sys._sky = sky; },
             // The band's lights must be parented to the SCENE, not to `group`.
             // update() does this itself by walking up from the group, so there
@@ -1245,6 +1257,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             // exits; it matters in the realtime host, where the skybox is swapped
             // live. Safe to call more than once, and safe if they never attached.
             disposeLights() {
+                cloudField.dispose();
                 for (const o of [bandSun, bandSun?.target, bandShine, bandShine?.target]) {
                     if (o?.parent) o.parent.remove(o);
                     o?.dispose?.();
@@ -1396,7 +1409,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
                     }
                     if (U.finalMul) {
                         // 0.24 is the fair-weather reference density
-                        cu.dens.value = Math.max(0.55, Math.min(1.5, U.finalMul.value / 0.24));
+                        cu.dens.value = Math.max(0, Math.min(1.5, U.finalMul.value / 0.24));
                     }
                     // cloudLightColor is HDR-calibrated (sunBase * pal.int * 7);
                     // /7 puts it back on the palette scale this sheet's own
@@ -1404,7 +1417,14 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
                     if (U.cloudLightColor) {
                         cu.tintSun.value.copy(U.cloudLightColor.value).multiplyScalar(0.42 / 7);
                     }
-                    if (U.cloudAmbSky) cu.tintAmb.value.copy(U.cloudAmbSky.value);
+                    if (U.cloudAmbSky) {
+                        cu.tintAmb.value.copy(U.cloudAmbSky.value);
+                        const a=cu.tintAmb.value,k=U.cloudLightColor.value;
+                        const luminance=a.x*.2126+a.y*.7152+a.z*.0722;
+                        const peak=Math.max(k.x,k.y,k.z,.0001),grey=U.cloudWeatherGrey?.value??0;
+                        a.set(a.x+(luminance*k.x/peak-a.x)*grey,
+                            a.y+(luminance*k.y/peak-a.y)*grey,a.z+(luminance*k.z/peak-a.z)*grey);
+                    }
                     if (U.cloudRadiance) cu.rad.value = U.cloudRadiance.value;
                 }
                 if (sk && sk.state && sk.state.palette) {
