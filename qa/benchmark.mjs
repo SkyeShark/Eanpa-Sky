@@ -27,7 +27,8 @@ try {
         ready:document.getElementById('boot').style.display==='none',pointerLocked:!!document.pointerLockElement,
         transitioning:!!(_weather?.diagnostics?.transition?.active||_sky?.cloudTransitionInfo?.active),
         gpuMemory:_reflectionPipeline?.pipeline.renderer.info.memory??null,
-        wetness:_weather?.uniforms?.wetness?.value, surfaceWater:_weather?.uniforms?.surfaceWater?.value})`);
+        wetness:_weather?.uniforms?.wetness?.value, surfaceWater:_weather?.uniforms?.surfaceWater?.value,
+        simulationTime:_sky.uniforms.time.value, scenario:globalThis.__benchmarkScenario??null})`);
     if(!metadata.ready||metadata.pointerLocked||metadata.transitioning)throw new Error('Preview not settled for capture');
     metadata.cpuThrottleRate=Number(rate); metadata.gpu='NVIDIA GeForce RTX 5090 Laptop GPU, 24GB';
     metadata.captureMode=mode;

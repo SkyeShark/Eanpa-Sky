@@ -9,6 +9,7 @@ import { textureSize, perspectiveDepthToViewZ, orthographicDepthToViewZ,
 
 export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
     camera, projection, projectionInverse, near, far, maxDistance, thickness, quality,
+    coarseDepthGate = float(1),
     logarithmicDepthBuffer = false }) {
     // textureSize is uvec2. Ray/viewport arithmetic must stay floating point;
     // integer division would reduce every clipped ray's extent to zero.
@@ -36,7 +37,7 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 		// https://gist.github.com/h3r2tic/9c8356bdaefbe80b1a22ae0aaee192db
 		// Their farther value finds a continuous crossing; the nearer value
 		// rejects interpolation across unrelated foreground/background surfaces.
-		const depthRange = Fn( ( [ coord ] ) => {
+		const rangeWithNearest = Fn( ( [ coord, nearest ] ) => {
 			const pixel = coord.mul( resolution ).sub( 0.5 ).toVar();
 			const base = pixel.floor().toVar();
 			const f = pixel.fract().toVar();
@@ -46,9 +47,9 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 			const d01 = at( vec2( 0, 1 ) ).toVar();
 			const d11 = at( vec2( 1, 1 ) ).toVar();
 			const linear = getViewZ( mix( mix( d00, d10, f.x ), mix( d01, d11, f.x ), f.y ) ).negate();
-			const nearest = getViewZ( sampleDepth( coord ) ).negate();
 			return vec2( min( nearest, linear ), max( nearest, linear ) );
 		} );
+		const depthRange = (coord, nearest = getViewZ(sampleDepth(coord)).negate()) => rangeWithNearest(coord, nearest);
 
     return Fn(([origin, direction, geometricNormal, receiverKey, rayRoughness]) => {
         const viewPosition = origin.toVar();
@@ -121,9 +122,17 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 				const s = fraction.mul( fraction ).mul( endS ).toVar();
 				const coord = uvAt( s ).toVar();
 				If( isSelf( coord ), () => { previousS.assign( s ); Continue(); } );
-				const range = depthRange( coord ).toVar();
-				If( rayZAt( s ).greaterThanEqual( range.y.add( bias ) ), () => {
-					lo.assign( previousS ); hi.assign( s ); found.assign( true ); Break();
+				const rayDepth = rayZAt(s).toVar();
+				const nearest = getViewZ(sampleDepth(coord)).negate().toVar();
+				// A crossing requires ray >= max(nearest, bilinear) + bias.
+				// ray < nearest + bias therefore cannot cross. Avoid the four
+				// interpolation reads on these empty steps without changing the
+				// accepted crossings, refinement, or first-occluder behavior.
+				If(coarseDepthGate.lessThan(.5).or(rayDepth.greaterThanEqual(nearest.add(bias))), () => {
+					const range = depthRange(coord, nearest).toVar();
+					If(rayDepth.greaterThanEqual(range.y.add(bias)), () => {
+						lo.assign(previousS); hi.assign(s); found.assign(true); Break();
+					});
 				} );
 				previousS.assign( s );
 			} );

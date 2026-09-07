@@ -58,7 +58,8 @@ try {
             if(failure)throw new Error(failure);
             return {date:new Date().toISOString(),sky:document.getElementById('skybox').value,
                 quality:document.getElementById('quality').value,clouds:document.getElementById('cloud-type').value,
-                weather:document.getElementById('weather').value,records};
+                weather:document.getElementById('weather').value,camera:_c.position.toArray(),verticalFov:_c.getEffectiveFOV(),
+                coarseDepthGate:_reflectionPipeline.ssrNode.coarseDepthGate?.value,records};
         }finally{
             proto.beginRenderPass=originalRender;proto.beginComputePass=originalCompute;pipeline.render=originalPipeline;
             if(read.mapState==='mapped')read.unmap();read.destroy();resolve.destroy();queries.destroy();

@@ -37,7 +37,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const previousProjectionInverse = shared(camera.projectionMatrixInverse.clone());
     const previousNear = shared(camera.near), previousFar = shared(camera.far);
     const historyValid = shared(0);
-    const params = {maxDistance: shared(32), thickness: shared(0.15), quality: shared(1)};
+    const params = {maxDistance: shared(32), thickness: shared(0.15), quality: shared(1), coarseDepthGate: shared(1)};
     const trace = makeScreenSpaceTrace({colorNode: sourceColor, depthNode: sourceDepth,
         objectIdNode: T.sample(coord => sourceIds.load(coord.mul(T.textureSize(sourceIds)).floor()).a),
         camera, projection: previousProjection, projectionInverse: previousProjectionInverse,
@@ -175,7 +175,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
         setAOEnabled(value){aoEnabled=!!value;aoWeight.value=aoEnabled?1:0;n8ao.enabled=aoEnabled;return aoEnabled;},
         setBloomEnabled(value){bloomEnabled=!!value;bloomWeight.value=bloomEnabled?1:0;return bloomEnabled;},
         setAuditContributions({ssr=true,sky=true,probe=true}={}){ssrWeight.value=ssr?1:0;skyWeight.value=sky?1:0;probeWeight.value=probe?1:0;auditing=!ssr||!sky||!probe;},
-        setSsrParams(values={}){for(const k of ['maxDistance','thickness','quality'])if(values[k]!==undefined)params[k].value=values[k];},
+        setSsrParams(values={}){for(const k of ['maxDistance','thickness','quality','coarseDepthGate'])if(values[k]!==undefined)params[k].value=values[k];},
         setEnvironment(texture){environmentTexture=texture;invalidateHistory();localProbe.setEnvironment(texture);
             for(const material of installed.keys())if(material.envMap!==texture){material.envMap=texture;material.needsUpdate=true;}
             texture.userData.eanpaReflectionMaterialCount=installed.size;return texture;},
