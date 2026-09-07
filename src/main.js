@@ -12,6 +12,7 @@ import { fxaa as requiredFxaaFactory } from 'three/addons/tsl/display/FXAANode.j
 import { makeAudioSystem } from './audio_system.js';
 import { FrameMetrics } from './frame_metrics.js';
 import { installShadowMaterialCache } from './shadow_material_cache.js';
+import { makeReflectionEnvironment } from './reflection_environment.js';
 import { makeFirstPersonViewmodel } from './first_person_viewmodel.js?v=20260722-armlight-isolation';
 import {
     MAX_WALK_STEP_RISE,
@@ -1191,6 +1192,9 @@ const updateWeatherStatus = () => {
     setWeatherStatus(weatherLabel());
 };
 
+const filteredEnvironment = makeReflectionEnvironment(THREE, renderer);
+globalThis._filteredEnvironment = filteredEnvironment;
+
 function assignReflectionEnvironment(env) {
     if (!env) return 0;
     const installed = reflectionPipeline
@@ -1220,7 +1224,7 @@ async function rebakeReflections(force = false) {
             includeClouds: true,
         });
         if (active !== owner) return;
-        const count = assignReflectionEnvironment(env);
+        const count = assignReflectionEnvironment(filteredEnvironment.update(env));
         reflectionBakedHours = Number(document.getElementById('tod').value);
         reflectionBakedWeatherSig = weatherBakeSignature();
         reflectionDirty = false;
@@ -1861,6 +1865,7 @@ addEventListener('beforeunload', () => {
     probePedestalMat.dispose();
     for (const texturePromise of imageTextureCache.values()) texturePromise.then((texture) => texture.dispose()).catch(() => {});
     shadowMaterialCache.dispose();
+    filteredEnvironment.dispose();
     renderer.dispose();
     globalThis._temple = null;
     globalThis._vegetation = null;
