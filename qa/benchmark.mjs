@@ -28,11 +28,14 @@ try {
         wetness:_weather?.uniforms?.wetness?.value, surfaceWater:_weather?.uniforms?.surfaceWater?.value})`);
     if(!metadata.ready||metadata.pointerLocked||metadata.transitioning)throw new Error('Preview not settled for capture');
     metadata.cpuThrottleRate=Number(rate); metadata.gpu='NVIDIA GeForce RTX 5090 Laptop GPU, 24GB';
+    metadata.revision=(await runFile('git',['-c',`safe.directory=${process.cwd().replaceAll('\\','/')}`,
+        'rev-parse','HEAD'],{windowsHide:true})).stdout.trim();
     metadata.constraint=Number(rate)===1?'Unthrottled browser CPU; local GPU unchanged':`${rate}x CDP CPU slowdown; local GPU unchanged`;
     const duringPromise=resources(Math.ceil(Number(seconds)));
     await cdp.evaluate(`_eanpaTest.paused=false;_benchmark.start(${JSON.stringify(metadata)});`);
     await new Promise(r=>setTimeout(r,Number(seconds)*1000));
     const result=await cdp.evaluate('_benchmark.stop()');
+    result.endingCamera=await cdp.evaluate('_c.position.toArray()');
     result.resources={before,during:await duringPromise};
     result.cleanGpuWindow=result.resources.before.clean&&result.resources.during.clean;
     result.errors=await cdp.evaluate(`[...document.body.children].find(e=>e.style?.zIndex==='99')?.textContent`);

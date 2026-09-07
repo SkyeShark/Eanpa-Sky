@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { blendAmbienceLoop } from '../src/audio_loop.js';
 
 const ROOT = new URL('../', import.meta.url);
 const read = (path) => readFile(new URL(path, ROOT), 'utf8');
@@ -726,9 +727,10 @@ await withGlobals(['loadImageTexture', 'makeSkySystem', 'makeWeatherSystem', '_w
 
 function compileAudioSystem() {
     const transformed = audioSource
+        .replace("import { blendAmbienceLoop } from './audio_loop.js';", '')
         .replace("const ASSET_ROOT = new URL('../assets/audio/', import.meta.url);", "const ASSET_ROOT = new URL('file:///assets/audio/');")
         .replace('export function makeAudioSystem', 'function makeAudioSystem');
-    return Function(`${transformed}\nreturn makeAudioSystem;`)();
+    return Function('blendAmbienceLoop', `${transformed}\nreturn makeAudioSystem;`)(blendAmbienceLoop);
 }
 
 class Param {
@@ -770,7 +772,12 @@ class FakeAudioContext {
         this.panners.push(node); return node;
     }
     createBiquadFilter() { const node = new Node(); node.frequency = new Param(); node.Q = new Param(); return node; }
-    async decodeAudioData() { return { duration: 4 }; }
+    createBuffer(numberOfChannels, length, sampleRate) {
+        const channels = Array.from({ length: numberOfChannels }, () => new Float32Array(length));
+        return { numberOfChannels, length, sampleRate, duration: length / sampleRate,
+            getChannelData: channel => channels[channel] };
+    }
+    async decodeAudioData() { return this.createBuffer(2, 4000, 1000); }
     async resume() { this.state = 'running'; }
     async close() { this.state = 'closed'; }
 }
@@ -789,7 +796,7 @@ await withGlobals(['AudioContext', 'webkitAudioContext', 'fetch', 'addEventListe
     const context = FakeAudioContext.last;
     const rainSource = context.sources.find((source) => source.loop);
     ok(rainSource, 'rain loop starts after decode');
-    equal([rainSource.loopStart, rainSource.loopEnd], [0, 4], 'rain source loops the complete mastered buffer');
+    equal([rainSource.loopStart, rainSource.loopEnd], [0, 3.82], 'rain source loops the complete seam-blended buffer');
 
     globalThis._weather = { uniforms: { rainK: { value: 0.5 } }, state: {}, bolt: { intensity: 0 } };
     audio.update(0.016, 20, null);

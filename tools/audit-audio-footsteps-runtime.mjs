@@ -112,8 +112,13 @@ class FakeAudioContext {
         return node;
     }
     createBufferSource() { return new Source(this); }
+    createBuffer(channels, length, sampleRate) {
+        const data = Array.from({ length: channels }, () => new Float32Array(length));
+        return { numberOfChannels: channels, length, sampleRate, duration: length / sampleRate,
+            getChannelData: channel => data[channel] };
+    }
     async decodeAudioData(payload) {
-        return { name: payload.name, duration: 0.65 };
+        return { ...this.createBuffer(1, 650, 1000), name: payload.name };
     }
     async resume() { this.state = 'running'; }
     async close() { this.state = 'closed'; }

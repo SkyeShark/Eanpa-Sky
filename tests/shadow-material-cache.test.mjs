@@ -34,7 +34,10 @@ test('source changes and custom shadow roots still invalidate their variant', ()
     h.cutout.alphaTest = 0; h.draw(h.cutout);
     assert.equal(h.draws.at(-1).material.alphaTest, 0);
     assert.ok(h.draws.at(-1).version > first.version);
+    h.draw(h.opaque);
+    const opaqueVariant = h.draws.at(-1).material;
     h.base.positionNode = { custom: true }; h.draw(h.opaque);
+    assert.equal(h.draws.at(-1).material, opaqueVariant);
     assert.equal(h.draws.at(-1).material.positionNode, h.base.positionNode);
     h.cache.dispose();
 });

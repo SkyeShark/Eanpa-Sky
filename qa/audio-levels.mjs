@@ -8,6 +8,7 @@ const cdp = await connect();
 try {
     const result = await cdp.evaluate(`(async()=>{
         const context=new OfflineAudioContext(2,1,48000),rows=[];
+        const {blendAmbienceLoop}=await import('/src/audio_loop.js');
         for(const file of ${JSON.stringify(files)}){
             const response=await fetch('./assets/audio/'+file);
             if(!response.ok)throw new Error(file+': '+response.status);
@@ -20,9 +21,22 @@ try {
             }
             const trim=file==='footstep_gravel_04.ogg'?.22:1;
             const db=x=>20*Math.log10(Math.max(x,1e-12));
+            let loop=null;
+            if(/wind|rain/.test(file)){
+                const blended=blendAmbienceLoop(context,buffer);
+                let beforeJump=0,afterJump=0,loopPeak=0;
+                for(let c=0;c<buffer.numberOfChannels;c++){
+                    const original=buffer.getChannelData(c),samples=blended.getChannelData(c);
+                    beforeJump=Math.max(beforeJump,Math.abs(original[0]-original.at(-1)));
+                    afterJump=Math.max(afterJump,Math.abs(samples[0]-samples.at(-1)));
+                    for(const x of samples)loopPeak=Math.max(loopPeak,Math.abs(x));
+                }
+                loop={duration:blended.duration,beforeJumpDb:db(beforeJump),afterJumpDb:db(afterJump),peakDb:db(loopPeak)};
+                if(loopPeak>peak+1e-6)throw new Error('Loop blend introduced a peak: '+file);
+            }
             rows.push({file,channels:buffer.numberOfChannels,sampleRate:buffer.sampleRate,duration:buffer.duration,
                 peakDb:db(peak),trimmedPeakDb:db(peak*trim),rmsDb:db(Math.sqrt(sum/(buffer.length*buffer.numberOfChannels))*trim),
-                boundaryDb:db(edge*trim),nonfinite});
+                boundaryDb:db(edge*trim),nonfinite,loop});
         }
         return rows;
     })()`);

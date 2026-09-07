@@ -111,8 +111,15 @@
                 && roof.material === material && cutout.material === cutoutMat
                 && renderer.getRenderTarget() === output;
         } finally { renderer.renderAsync = originalRender; }
-        return { pass: restored && failureRestored && results.every(r => r.pass) && wind.every(r => r.pass),
-            restored, failureRestored, results, wind, stats: { ...field.stats } };
+        const cachedBefore = field.stats.captureMaterials;
+        raisedMat.dispose();
+        const releasedSource = field.stats.captureMaterials === cachedBefore - 1;
+        field.invalidate();
+        await field.prepareFrame(renderer, view, { force: true });
+        const rebuiltSource = field.stats.captureMaterials === cachedBefore;
+        return { pass: restored && failureRestored && releasedSource && rebuiltSource
+                && results.every(r => r.pass) && wind.every(r => r.pass),
+            restored, failureRestored, releasedSource, rebuiltSource, results, wind, stats: { ...field.stats } };
     } finally {
         T.RendererUtils.restoreRendererState(renderer, rendererState);
         field.dispose(); output.dispose(); probeMat.dispose(); normalMat.dispose();

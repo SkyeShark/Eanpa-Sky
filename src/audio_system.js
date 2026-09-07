@@ -1,6 +1,7 @@
 // EANPA scene audio — lazy Web Audio controller for Foley, weather and temple SFX.
 // The AudioContext is deliberately not created until a real user gesture. This
 // keeps boot/autoplay clean while still allowing all game state to update muted.
+import { blendAmbienceLoop } from './audio_loop.js';
 
 const ASSET_ROOT = new URL('../assets/audio/', import.meta.url);
 const ASSET_REVISION = 'scene-audio-v4';
@@ -460,7 +461,9 @@ export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
             if (!response.ok) throw new Error(`${response.status} ${name}`);
             const decoded = await context.decodeAudioData(await response.arrayBuffer());
             if (disposed) return decoded;
-            buffers.set(name, decoded);
+            const ready = FILES.rain.includes(name) || FILES.desertWind.includes(name)
+                ? blendAmbienceLoop(context, decoded) : decoded;
+            buffers.set(name, ready);
             stats.loaded = buffers.size;
             if (FILES.gateOpen.includes(name) || FILES.gateClose.includes(name)) {
                 stats.gate.ready = buffers.has(FILES.gateOpen[0]) && buffers.has(FILES.gateClose[0]);
@@ -479,7 +482,7 @@ export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
             // waiting for every long thunder asset made active precipitation
             // appear silent during the rest of the background load.
             if (FILES.rain.includes(name)) beginRain();
-            return decoded;
+            return ready;
         })().finally(() => bufferLoads.delete(name));
         bufferLoads.set(name, request);
         return request;
