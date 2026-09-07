@@ -720,29 +720,10 @@ export function makeReflectionPipeline(
     const receiverAo = aoSceneColor.rgb
         .div(sceneColor.rgb.max(THREE.float(0.0001)))
         .clamp(0, 1);
-    // Match the donor's deferred ownership contract at the hit source as well
-    // as at the receiver. If SSR samples the PMREM-bearing scene beauty, a
-    // curved-surface/self hit carries the hit pixel's differently mapped sky
-    // field while a miss carries the receiver ray's PMREM field. Their changing
-    // ownership boundary looks exactly like two reflections z-fighting.
-    //
-    // Hold only the reconstructed directional native lobe out of the sampleable
-    // SSR source. The presented scene keeps Three's complete native PBR result,
-    // and the composite below still replaces the receiver lobe on accepted
-    // hits. Diffuse, direct lighting, emissive, and native multiscattering stay
-    // in the hit color; the deliberate trade-off is losing a directional
-    // chrome-of-chrome sky bounce, the same priority chosen by Eidoverse.
-    const ssrHeldOutDirectional = sceneNativeSpecular.rgb
-        .mul(receiverAo)
-        .mul(sceneFogTransmittance);
-    const ssrSourceColor = convertOwnedToTexture(
-        THREE,
-        THREE.vec4(
-            aoSceneColor.rgb.sub(ssrHeldOutDirectional).max(THREE.float(0)),
-            aoSceneColor.a,
-        ),
-        ownedRttNodes,
-    );
+    // A local hit reflects the lit surface, including its own environment
+    // lighting. Removing that radiance turned shaded stone and metal nearly
+    // black. Occlusion is decided by the ray hit, never by stripping its light.
+    const ssrSourceColor = aoSceneColor;
     const ssrNode = makeEidoverseSsr({
         color: ssrSourceColor,
         depth: sceneDepth,
@@ -856,7 +837,7 @@ export function makeReflectionPipeline(
         cloudReflectionUpdate: 'periodic-equirectangular-pmrem',
         ssrImplementation: 'three-r184-ssr-native-pbr-response',
         ssrHitConfidence: 'binary-accepted-hit-ownership-with-screen-edge-fade',
-        ssrSource: 'ao-composited-hit-radiance-with-directional-pmrem-held-out',
+        ssrSource: 'complete-ao-composited-hdr-hit-radiance',
         ssrMaterialResponse: 'resolved-f0-dfg-roughness-metalness-albedo-normal-ao',
         reflectionFogCompose: 'radial-fogexp2-transmittance-on-directional-delta',
         sameRaySkyAvailable: Boolean(liveSkyTexture),

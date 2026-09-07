@@ -20,8 +20,19 @@ const listening = port => new Promise(resolvePort => {
 });
 const sleep = ms => new Promise(resolveWait => setTimeout(resolveWait, ms));
 const action = process.argv[2] ?? 'status';
-if (action === 'start') {
-    if (await listening(serverPort) || await listening(cdpPort)) {
+if (action === 'start' || action === 'preview') {
+    let existing = null;
+    if (action === 'preview') {
+        existing = JSON.parse(await readFile(stateFile, 'utf8'));
+        if (existing.serverPort !== serverPort || existing.cdpPort !== cdpPort
+            || !await listening(serverPort)) throw new Error('Existing owned server not available');
+        process.kill(existing.serverPid, 0);
+        try {
+            process.kill(existing.browserPid, 0);
+            throw new Error('Owned browser is still alive; no second browser launched');
+        } catch (error) { if (error.code !== 'ESRCH') throw error; }
+    }
+    if ((!existing && await listening(serverPort)) || await listening(cdpPort)) {
         throw new Error('QA port already occupied; inspect/reuse the existing session. No process launched.');
     }
     await mkdir(directory, { recursive: true });
@@ -48,8 +59,9 @@ if (action === 'start') {
     const profile = resolve(directory, 'browser');
     const owned = [];
     try {
-        const server = await start('C:/Python314/python.exe', ['tools/dev-server.py', String(serverPort)], 'server');
-        owned.push(server);
+        const server = existing ? { pid: existing.serverPid }
+            : await start('C:/Python314/python.exe', ['tools/dev-server.py', String(serverPort)], 'server');
+        if (!existing) owned.push(server);
         const browser = await start('C:/Program Files/Google/Chrome/Application/chrome.exe', [
             '--headless=new', `--remote-debugging-port=${cdpPort}`,
             '--remote-debugging-address=127.0.0.1', `--user-data-dir=${profile}`,
@@ -59,7 +71,7 @@ if (action === 'start') {
         ], 'chrome');
         owned.push(browser);
         const state = { serverPid: server.pid, browserPid: browser.pid, profile,
-            serverPort, cdpPort, started: new Date().toISOString() };
+            serverPort, cdpPort, headless: true, started: new Date().toISOString() };
         await writeFile(stateFile, JSON.stringify(state, null, 2));
         for (let i = 0; i < 40; i++) {
             if (await listening(serverPort) && await listening(cdpPort)) break;
@@ -141,4 +153,4 @@ if (action === 'start') {
 } else if (action === 'status') {
     console.log(JSON.stringify({ server: await listening(serverPort), browser: await listening(cdpPort),
         state: JSON.parse(await readFile(stateFile, 'utf8').catch(() => 'null')) }, null, 2));
-} else throw new Error('Use start, status, review, or stop');
+} else throw new Error('Use start, preview, status, review, or stop');

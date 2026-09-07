@@ -1,5 +1,5 @@
 import { HalfFloatType, RenderTarget, Vector2, RendererUtils, QuadMesh, TempNode, NodeMaterial, NodeUpdateType, LinearFilter, LinearMipmapLinearFilter } from 'three/webgpu';
-import { texture, reference, viewZToPerspectiveDepth, logarithmicDepthToViewZ, getScreenPosition, getViewPosition, mul, div, cross, float, Continue, Break, Loop, int, max, abs, sub, If, dot, reflect, normalize, screenCoordinate, nodeObject, Fn, passTexture, uv, uniform, perspectiveDepthToViewZ, orthographicDepthToViewZ, vec2, vec3, vec4 } from 'three/tsl';
+import { texture, reference, viewZToPerspectiveDepth, logarithmicDepthToViewZ, getScreenPosition, getViewPosition, mul, div, cross, float, bool, min, mix, Continue, Break, Loop, int, max, abs, sub, If, dot, reflect, normalize, screenCoordinate, nodeObject, Fn, passTexture, uv, uniform, perspectiveDepthToViewZ, orthographicDepthToViewZ, vec2, vec3, vec4 } from 'three/tsl';
 import { boxBlur } from './boxBlur.js';
 
 const _quadMesh = /*@__PURE__*/ new QuadMesh();
@@ -467,6 +467,25 @@ class SSRNode extends TempNode {
 
 		};
 
+		// A nearest-only depth field is a staircase at grazing angles. Use both
+		// nearest and bilinear depth, as in Tomasz Stachowiak's depth-ray marcher:
+		// https://gist.github.com/h3r2tic/9c8356bdaefbe80b1a22ae0aaee192db
+		// Their farther value finds a continuous crossing; the nearer value
+		// rejects interpolation across unrelated foreground/background surfaces.
+		const depthRange = Fn( ( [ coord ] ) => {
+			const pixel = coord.mul( this._resolution ).sub( 0.5 ).toVar();
+			const base = pixel.floor().toVar();
+			const f = pixel.fract().toVar();
+			const at = offset => sampleDepth( base.add( offset ).add( 0.5 ).div( this._resolution ) );
+			const d00 = at( vec2( 0, 0 ) ).toVar();
+			const d10 = at( vec2( 1, 0 ) ).toVar();
+			const d01 = at( vec2( 0, 1 ) ).toVar();
+			const d11 = at( vec2( 1, 1 ) ).toVar();
+			const linear = getViewZ( mix( mix( d00, d10, f.x ), mix( d01, d11, f.x ), f.y ) ).negate();
+			const nearest = getViewZ( sampleDepth( coord ) ).negate();
+			return vec2( min( nearest, linear ), max( nearest, linear ) );
+		} );
+
 		const ssr = Fn( () => {
 
 			const metalness = float( this.metalnessNode );
@@ -532,181 +551,103 @@ class SSRNode extends TempNode {
 			const d0 = screenCoordinate.xy.toVar();
 			const d1 = getScreenPosition( d1viewPosition, this._cameraProjectionMatrix ).mul( this._resolution ).toVar();
 
-			// below variables are used to control the raymarching process
-
-			// total length of the ray
-			const totalLen = d1.sub( d0 ).length().toVar();
-			// A subpixel ray has no independent scene sample. Avoid zero steps
-			// and division by zero when the reflection points into the camera.
-			totalLen.lessThan( 1 ).discard();
-
-			// offset in x and y direction
-			const xLen = d1.x.sub( d0.x ).toVar();
-			const yLen = d1.y.sub( d0.y ).toVar();
-
-			// determine the larger delta
-			// The larger difference will help to determine how much to travel in the X and Y direction each iteration and
-			// how many iterations are needed to travel the entire ray
-			const totalStep = int( max( max( abs( xLen ), abs( yLen ) ).mul( this.quality.clamp() ), 1 ) ).toConst();
-
-			// step sizes in the x and y directions
-			const xSpan = xLen.div( totalStep ).toVar();
-			const ySpan = yLen.div( totalStep ).toVar();
-
+			const delta = d1.sub( d0 ).toVar();
+			const rayPixels = max( abs( delta.x ), abs( delta.y ) ).toVar();
+			rayPixels.lessThan( 1 ).discard();
+			// Clip the march to the viewport before distributing samples. A ray
+			// clipped at the camera near plane can otherwise be millions of pixels.
+			const endS = float( 1 ).toVar();
+			for ( const axis of [ 'x', 'y' ] ) {
+				If( delta[ axis ].greaterThan( 0.00001 ), () => {
+					endS.assign( min( endS, this._resolution[ axis ].sub( d0[ axis ] ).sub( 1 ).div( delta[ axis ] ) ) );
+				} ).ElseIf( delta[ axis ].lessThan( - 0.00001 ), () => {
+					endS.assign( min( endS, d0[ axis ].sub( 1 ).negate().div( delta[ axis ] ) ) );
+				} );
+			}
+			endS.lessThanEqual( 0 ).discard();
+			const totalStep = int( rayPixels.mul( endS ).mul( this.quality.clamp() ).ceil().clamp( 1, 128 ) ).toConst();
+			const invZ0 = viewPosition.z.reciprocal().toConst();
+			const invZ1 = d1viewPosition.z.reciprocal().toConst();
+			const rayZAt = this.camera.isPerspectiveCamera
+				? s => mix( invZ0, invZ1, s ).reciprocal().negate()
+				: s => mix( viewPosition.z, d1viewPosition.z, s ).negate();
+			const uvAt = s => d0.add( delta.mul( s ) ).div( this._resolution );
+			const bias = max( viewPosition.z.abs().mul( 0.000002 ), 0.0002 ).toVar();
+			const previousS = float( 0 ).toVar();
+			const lo = float( 0 ).toVar();
+			const hi = float( 0 ).toVar();
+			const found = bool( false ).toVar();
 			const output = vec4( 0 ).toVar();
+			const isSelf = coord => receiverId !== null
+				? receiverId.greaterThan( 1.5 ).and( abs( this.objectIdNode.sample( coord ).sub( receiverId ) ).lessThan( 0.25 ) )
+				: bool( false );
 
-			// the actual ray marching loop
-			// starting from d0, the code gradually travels along the ray and looks for an intersection with the geometry.
-			// it does not exceed d1 (the maximum ray extend)
-			Loop( totalStep, ( { i } ) => {
-
-				// advance on the ray by computing a new position in screen coordinates
-				// The receiver's own depth is not a hit. Starting at zero makes
-				// quantized normals/depth alternately accept and reject that pixel.
-				const rayStep = float( i ).add( 1 );
-				const xy = vec2( d0.x.add( xSpan.mul( rayStep ) ), d0.y.add( ySpan.mul( rayStep ) ) ).toVar();
-
-				// stop processing if the new position lies outside of the screen
-				If( xy.x.lessThan( 0 ).or( xy.x.greaterThan( this._resolution.x ) ).or( xy.y.lessThan( 0 ) ).or( xy.y.greaterThan( this._resolution.y ) ), () => {
-
-					Break();
-
+			Loop( { start: int( 1 ), end: totalStep.add( 1 ), type: 'int', condition: '<' }, ( { i } ) => {
+				// Quadratic spacing preserves nearby detail with a fixed cost.
+				const fraction = float( i ).div( totalStep );
+				const s = fraction.mul( fraction ).mul( endS ).toVar();
+				const coord = uvAt( s ).toVar();
+				If( isSelf( coord ), () => { previousS.assign( s ); Continue(); } );
+				const range = depthRange( coord ).toVar();
+				If( rayZAt( s ).greaterThanEqual( range.y.add( bias ) ), () => {
+					lo.assign( previousS ); hi.assign( s ); found.assign( true ); Break();
 				} );
+				previousS.assign( s );
+			} );
 
-				// compute new uv, depth and viewZ for the next fragment
-				const uvNode = xy.div( this._resolution );
-				const d = sampleDepth( uvNode ).toVar();
-
-				// The clear-depth background is not geometry and cannot own a
-				// reflected ray. Reject it before reconstructing a far-plane point;
-				// otherwise an open-sky sample can become a false local hit.
-				If( d.greaterThanEqual( 0.999999 ), () => {
-
-					Continue();
-
+			If( found, () => {
+				// Refine the crossing, not merely the first sample inside a thick
+				// depth slab. This removes the alternating hit/miss contour bands.
+				Loop( 6, () => {
+					const s = lo.add( hi ).mul( 0.5 ).toVar();
+					const coord = uvAt( s ).toVar();
+					If( isSelf( coord ).not().and( rayZAt( s ).greaterThanEqual( depthRange( coord ).y.add( bias ) ) ), () => {
+						hi.assign( s );
+					} ).Else( () => { lo.assign( s ); } );
 				} );
-
-				const vZ = getViewZ( d ).toVar();
-
-				const viewReflectRayZ = float( 0 ).toVar();
-
-				// normalized distance between the current position xy and the starting point d0
-				const s = xy.sub( d0 ).length().div( totalLen );
-
-				// depending on the camera type, we now compute the z-coordinate of the reflected ray at the current step in view space
-				If( this._isPerspectiveCamera, () => {
-
-					const recipVPZ = float( 1 ).div( viewPosition.z ).toVar();
-					viewReflectRayZ.assign( float( 1 ).div( recipVPZ.add( s.mul( float( 1 ).div( d1viewPosition.z ).sub( recipVPZ ) ) ) ) );
-
-				} ).Else( () => {
-
-					viewReflectRayZ.assign( viewPosition.z.add( s.mul( d1viewPosition.z.sub( viewPosition.z ) ) ) );
-
-				} );
-
-				// if viewReflectRayZ is less or equal than the real z-coordinate at this place, it potentially intersects the geometry
-				If( viewReflectRayZ.lessThanEqual( vZ ), () => {
-
-					// compute the distance of the new location to the ray in view space
-					// to clarify vP is the fragment's view position which is not an exact point on the ray
-					const vP = getViewPosition( uvNode, d, this._cameraProjectionMatrixInverse ).toVar();
-					const away = pointToLineDistance( vP, viewPosition, d1viewPosition ).toVar();
-
-					// compute the minimum thickness between the current fragment and its neighbor in the x-direction.
-					const xyNeighbor = vec2( xy.x.add( 1 ), xy.y ).toVar(); // move one pixel
-					const uvNeighbor = xyNeighbor.div( this._resolution );
-					const vPNeighbor = getViewPosition( uvNeighbor, d, this._cameraProjectionMatrixInverse ).toVar();
-					const minThickness = abs( vPNeighbor.x.sub( vP.x ) ).toVar();
-					minThickness.mulAssign( 3 ); // expand a bit to avoid errors
-
-					const tk = max( minThickness, this.thickness ).toVar();
-
-					If( away.lessThanEqual( tk ), () => { // hit
-						if ( receiverId !== null ) {
-							const hitId = this.objectIdNode.sample( uvNode );
-							If( receiverId.greaterThan( 1.5 ).and( abs( hitId.sub( receiverId ) ).lessThan( 0.25 ) ), () => {
-								Continue();
-							} );
-						}
-						// A real reflected object must lie outside the receiving
-						// geometric plane. This rejects coplanar and convex self hits
-						// without confusing normal-map bumps with independent geometry.
-						If( dot( vP.sub( viewPosition ), receiverPlane ).lessThanEqual( minHitSeparation ), () => {
-							Continue();
-						} );
-
-						const vN = this.normalNode.sample( uvNode ).rgb.normalize().toVar();
-
-						If( dot( viewReflectDir, vN ).greaterThanEqual( 0 ), () => {
-
-							// the reflected ray is pointing towards the same side as the fragment's normal (current ray position),
-							// which means it wouldn't reflect off the surface. The loop continues to the next step for the next ray sample.
-							Continue();
-
-						} );
-
-						// this distance represents the depth of the intersection point between the reflected ray and the scene.
-						const distance = pointPlaneDistance( vP, viewPosition, viewNormal ).toVar();
-
-						If( distance.greaterThan( this.maxDistance ), () => {
-
-							// Distance exceeding limit: The reflection is potentially too far away and
-							// might not contribute significantly to the final color
-							Break();
-
-						} );
-
-						const op = this.opacity.toVar();
-
-						if ( specularResponse === null ) {
-
-							op.mulAssign( metalness );
-
-							// Preserve upstream's legacy cosmetic distance fade. This path's
-							// alpha is not consumed as environment ownership.
-							const ratio = float( 1 ).sub( distance.div( this.maxDistance ) ).toVar();
-							const attenuation = ratio.mul( ratio );
-							op.mulAssign( attenuation );
-
-						}
-
-						// fresnel (reflect more light on surfaces that are viewed at grazing angles)
-						if ( specularResponse === null ) {
-
-							const fresnelCoe = div( dot( viewIncidentDir, viewReflectDir ).add( 1 ), 2 );
-							op.mulAssign( fresnelCoe );
-
-						}
-
-						// output
-						const reflectColor = this.colorNode.sample( uvNode );
-						// Keep the intermediate buffer receiver-independent. Roughness
-						// filtering blends neighbouring hit samples; applying the receiving
-						// pixel's F0/DFG response here would bleed one material's response
-						// across another. The app-owned composite applies the current
-						// receiver response after this premultiplied RGBA buffer is blurred.
-						// In the PBR replacement path, preserve Eidoverse's binary ownership
-						// contract: an accepted geometry hit owns the complete reflected ray.
-						// Marginal residual/distance weights cannot be mixed with the sky here;
-						// doing so displays both incompatible fields and chatters as the first
-						// accepted march sample changes. Misses retain the zero initializer.
+				const coord = uvAt( hi ).toVar();
+				const range = depthRange( coord ).toVar();
+				const penetration = rayZAt( hi ).sub( range.x );
+				const hitDepth = sampleDepth( coord ).toVar();
+				const hitPosition = getViewPosition( coord, hitDepth, this._cameraProjectionMatrixInverse ).toVar();
+				const separation = hitPosition.sub( viewPosition ).toVar();
+				// Stop at the first surface even if its crossing cannot be resolved.
+				// Marching through rejected occluders leaks unrelated objects into SSR.
+				If( penetration.lessThanEqual( this.thickness )
+					.and( hitDepth.lessThan( 0.999999 ) )
+					.and( dot( separation, receiverPlane ).greaterThan( minHitSeparation ) ), () => {
+					// Test geometric orientation, not the hit's normal map. Bump
+					// normals describe shading and cannot punch holes in an occluder.
+					const dx = vec2( 1, 0 ).div( this._resolution );
+					const dy = vec2( 0, 1 ).div( this._resolution );
+					const at = uv => getViewPosition( uv, sampleDepth( uv ), this._cameraProjectionMatrixInverse );
+					const right = at( coord.add( dx ) ).sub( hitPosition ).toVar();
+					const left = hitPosition.sub( at( coord.sub( dx ) ) ).toVar();
+					const down = at( coord.add( dy ) ).sub( hitPosition ).toVar();
+					const up = hitPosition.sub( at( coord.sub( dy ) ) ).toVar();
+					const tangentX = left.toVar();
+					const tangentY = up.toVar();
+					If( abs( right.z ).lessThan( abs( left.z ) ), () => { tangentX.assign( right ); } );
+					If( abs( down.z ).lessThan( abs( up.z ) ), () => { tangentY.assign( down ); } );
+					const normal = normalize( cross( tangentX, tangentY ) ).toVar();
+					If( dot( normal, hitPosition ).greaterThan( 0 ), () => { normal.mulAssign( - 1 ); } );
+					If( dot( normal, viewReflectDir ).lessThan( 0 ), () => {
+						const color = this.colorNode.sample( coord ).rgb;
 						if ( specularResponse !== null ) {
-
-							output.assign( vec4( reflectColor.rgb, float( 1 ) ) );
-
+							// Visibility becomes unknown as the HIT leaves the frame.
+							// Fading the receiving pixel instead left hard frustum edges
+							// imprinted on curved, normal-mapped objects as dark patches.
+							const border = min( min( coord.x, coord.y ), min( coord.x.oneMinus(), coord.y.oneMinus() ) );
+							const confidence = border.smoothstep( 0.005, 0.09 );
+							output.assign( vec4( color.mul( confidence ), confidence ) );
 						} else {
-
-							// Preserve the upstream legacy payload exactly.
-							output.assign( vec4( reflectColor.rgb.mul( op ), float( 1 ) ) );
-
+							const distance = pointPlaneDistance( hitPosition, viewPosition, viewNormal );
+							const attenuation = distance.div( this.maxDistance ).oneMinus().clamp().pow( 2 );
+							const fresnel = dot( viewIncidentDir, viewReflectDir ).add( 1 ).mul( 0.5 );
+							output.assign( vec4( color.mul( this.opacity ).mul( metalness ).mul( attenuation ).mul( fresnel ), 1 ) );
 						}
-						Break();
-
 					} );
-
 				} );
-
 			} );
 
 			return output;
