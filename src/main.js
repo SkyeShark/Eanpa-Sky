@@ -264,6 +264,11 @@ const shadowMaterialCache = installShadowMaterialCache(renderer);
 globalThis._shadowMaterialCache = shadowMaterialCache;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 await renderer.init();
+// Validation failures in texture copies and render passes are device events,
+// not JavaScript exceptions or shader compilation errors.
+renderer.backend.device?.addEventListener('uncapturederror', event => {
+    errLog('[WebGPU]', event.error.message);
+});
 const rebuildResources = installRebuildResourceCache(renderer);
 globalThis._rebuildResources = rebuildResources;
 
@@ -1480,6 +1485,7 @@ async function buildSkybox() {
             requiredFxaaFactory, globalThis._reflectionEnv,
         );
         reflectionPipeline.setAOEnabled?.(aoPreference);
+        reflectionPipeline.localProbe?.configure({sampleGroundHeight:(x,z)=>navigationSurfaceAt(x,z).height});
         if (aoControl) {
             aoControl.disabled = !reflectionPipeline.aoAvailable;
             aoControl.checked = reflectionPipeline.aoAvailable

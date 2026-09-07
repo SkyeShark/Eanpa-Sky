@@ -59,7 +59,11 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
         const receiverId = receiverKey;
         const minHitSeparation = max(thickness.mul(0.01), 0.001);
         const outputValue = vec4(0).toVar();
-        If(dot(viewReflectDir,receiverPlane).greaterThan(0.001).and(rayRoughness.lessThan(0.8)),()=>{
+        const originUv = getScreenPosition(viewPosition,projection).toVar();
+        const inHistory = originUv.x.greaterThan(0).and(originUv.x.lessThan(1))
+            .and(originUv.y.greaterThan(0)).and(originUv.y.lessThan(1))
+            .and(viewPosition.z.lessThan(near.negate()));
+        If(inHistory.and(dot(viewReflectDir,receiverPlane).greaterThan(0.001)).and(rayRoughness.lessThan(0.8)),()=>{
 			// adapt maximum distance to the local geometry (see https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 			const maxReflectRayLen = maxDistance.div( max( dot( viewIncidentDir.negate(), viewNormal ), 0.05 ) ).toVar();
 
@@ -77,7 +81,7 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 			} );
 
 			// d0 and d1 are the start and maximum points of the reflection ray in screen space
-			const d0 = getScreenPosition( viewPosition, projection ).mul( resolution ).toVar();
+			const d0 = originUv.mul( resolution ).toVar();
 			const d1 = getScreenPosition( d1viewPosition, projection ).mul( resolution ).toVar();
 
 			const delta = d1.sub( d0 ).toVar();
@@ -143,6 +147,7 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 				// Stop at the first surface even if its crossing cannot be resolved.
 				// Marching through rejected occluders leaks unrelated objects into SSR.
 				If( penetration.lessThanEqual( thickness )
+					.and( objectIdNode.sample( coord ).greaterThan( 0.5 ) )
 					.and( hitDepth.lessThan( 0.999999 ) )
 					.and( dot( separation, receiverPlane ).greaterThan( minHitSeparation ) ), () => {
 					// Test geometric orientation, not the hit's normal map. Bump

@@ -35,12 +35,13 @@
     group.traverse(o=>{o.userData.noWet=true;o.userData.noCloudShadow=true;});
     _c.parent.add(group);
     _reflectionPipeline.registerObject(group);
+    _reflectionPipeline.localProbe?.configure({sampleGroundHeight:()=>40});
     globalThis.__reflectionFixture=group;
     _c.position.set(0,44,72);
     _c.fov=52;_c.updateProjectionMatrix();
     _c.lookAt(0,41.6,61.8);
     _c.updateMatrixWorld(true);
     await _reflectionPipeline.compileAsync();
-    await _reflectionPipeline.render();
+    for(let i=0;i<4;i++) await _reflectionPipeline.render();
     return {materials:properties,camera:_c.position.toArray()};
 })()

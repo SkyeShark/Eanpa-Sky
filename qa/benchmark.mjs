@@ -3,9 +3,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
-const [name='current',seconds='30',rate='1']=process.argv.slice(2);
+const [name='current',seconds='30',rate='1',mode='controlled']=process.argv.slice(2);
 if(!/^[a-z0-9_-]{1,80}$/i.test(name) || !(Number(seconds)>=5&&Number(seconds)<=120)
-    || !(Number(rate)>=1&&Number(rate)<=20)) throw new Error('Invalid benchmark name, duration, or CPU rate');
+    || !(Number(rate)>=1&&Number(rate)<=20) || !['controlled','observed'].includes(mode)) throw new Error('Invalid benchmark name, duration, CPU rate, or capture mode');
 const runFile=promisify(execFile);
 const resources=async samples=>JSON.parse((await runFile('powershell.exe',[
     '-NoProfile','-ExecutionPolicy','Bypass','-File',fileURLToPath(new URL('./resource-check.ps1',import.meta.url)),
@@ -14,7 +14,7 @@ const resources=async samples=>JSON.parse((await runFile('powershell.exe',[
 const cdp=await connect();
 try {
     const before=await resources(4);
-    if(!before.clean) throw new Error(`GPU contention before capture: ${JSON.stringify(before)}`);
+    if(!before.clean && mode==='controlled') throw new Error(`GPU contention before capture: ${JSON.stringify(before)}`);
     await cdp.send('Emulation.setCPUThrottlingRate',{rate:Number(rate)});
     await new Promise(r=>setTimeout(r,4000));
     const metadata=await cdp.evaluate(`({date:new Date().toISOString(),skybox:document.getElementById('skybox').value,
@@ -28,6 +28,7 @@ try {
         wetness:_weather?.uniforms?.wetness?.value, surfaceWater:_weather?.uniforms?.surfaceWater?.value})`);
     if(!metadata.ready||metadata.pointerLocked||metadata.transitioning)throw new Error('Preview not settled for capture');
     metadata.cpuThrottleRate=Number(rate); metadata.gpu='NVIDIA GeForce RTX 5090 Laptop GPU, 24GB';
+    metadata.captureMode=mode;
     metadata.revision=(await runFile('git',['-c',`safe.directory=${process.cwd().replaceAll('\\','/')}`,
         'rev-parse','HEAD'],{windowsHide:true})).stdout.trim();
     metadata.constraint=Number(rate)===1?'Unthrottled browser CPU; local GPU unchanged':`${rate}x CDP CPU slowdown; local GPU unchanged`;
