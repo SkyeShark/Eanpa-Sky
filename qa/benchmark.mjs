@@ -3,6 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import {createHash} from 'node:crypto';
 const [name='current',seconds='30',rate='1',mode='controlled']=process.argv.slice(2);
 if(!/^[a-z0-9_-]{1,80}$/i.test(name) || !(Number(seconds)>=5&&Number(seconds)<=120)
     || !(Number(rate)>=1&&Number(rate)<=20) || !['controlled','observed'].includes(mode)) throw new Error('Invalid benchmark name, duration, CPU rate, or capture mode');
@@ -31,9 +32,12 @@ try {
     metadata.captureMode=mode;
     metadata.revision=(await runFile('git',['-c',`safe.directory=${process.cwd().replaceAll('\\','/')}`,
         'rev-parse','HEAD'],{windowsHide:true})).stdout.trim();
+    const diff=(await runFile('git',['-c',`safe.directory=${process.cwd().replaceAll('\\','/')}`,
+        'diff','HEAD','--','src','engine','vendor'],{windowsHide:true,maxBuffer:8*1024*1024})).stdout;
+    metadata.workingTreeDiffSha256=diff?createHash('sha256').update(diff).digest('hex'):null;
     metadata.constraint=Number(rate)===1?'Unthrottled browser CPU; local GPU unchanged':`${rate}x CDP CPU slowdown; local GPU unchanged`;
     const duringPromise=resources(Math.ceil(Number(seconds)));
-    await cdp.evaluate(`_eanpaTest.paused=false;_benchmark.start(${JSON.stringify(metadata)});`);
+    await cdp.evaluate(`_eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;_benchmark.start(${JSON.stringify(metadata)});`);
     await new Promise(r=>setTimeout(r,Number(seconds)*1000));
     const result=await cdp.evaluate('_benchmark.stop()');
     result.endingCamera=await cdp.evaluate('_c.position.toArray()');

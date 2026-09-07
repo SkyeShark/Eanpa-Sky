@@ -14,7 +14,7 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
     try { renderer.setMRT(null); filtered = generator.fromCubemap(cube.texture); }
     finally { T.RendererUtils.restoreRendererState(renderer, initialState); }
     filtered.texture.name = 'eanpa-local-probe-pmrem';
-    const tex = T.texture(filtered.texture);
+    const tex = T.texture(filtered.texture,T.screenUV);
     tex.updateMatrix = false;
     const shared = value => T.uniform(value).setGroup(T.renderGroup);
     const center = shared(new T.Vector3()), boxMin = shared(new T.Vector3()), boxMax = shared(new T.Vector3());

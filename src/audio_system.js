@@ -83,6 +83,7 @@ export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
     let effectsBus = null;
     let weatherBus = null;
     let rainGain = null;
+    let rainFilter = null;
     let rainSource = null;
     let windGain = null;
     let windSource = null;
@@ -521,6 +522,8 @@ export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
                 effectsBus = context.createGain();
                 weatherBus = context.createGain();
                 rainGain = context.createGain();
+                rainFilter = context.createBiquadFilter();
+                rainFilter.type='lowpass';rainFilter.frequency.value=11000;rainFilter.Q.value=.55;
                 windGain = context.createGain();
                 master.gain.value = 0.78;
                 effectsBus.gain.value = 0.88;
@@ -528,7 +531,7 @@ export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
                 rainGain.gain.value = 0;
                 windGain.gain.value = 0;
                 effectsBus.connect(master);
-                rainGain.connect(weatherBus);
+                rainGain.connect(rainFilter);rainFilter.connect(weatherBus);
                 windGain.connect(weatherBus);
                 weatherBus.connect(master);
                 master.connect(context.destination);
@@ -829,7 +832,7 @@ export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
     } = {}) => {
         const safeDistance = Math.max(0, Number(distance) || 0);
         const eventIndex = variation++;
-        const rate = 0.93 + ((eventIndex * 11) % 11) * 0.014;
+        const rate = 0.93 + ((eventIndex * 7) % 11) * 0.014;
         stats.thunder.lastDistanceMeters = safeDistance;
         stats.thunder.lastDelaySeconds = Math.max(0, Number(delay) || 0);
         if (local) stats.thunder.local++;
@@ -924,10 +927,17 @@ export function makeAudioSystem({ camera, temple, terrain, surfaceAt } = {}) {
     const updateWeather = (nowSeconds) => {
         const weather = globalThis._weather;
         const rain = clamp(Number(weather?.uniforms?.rainK?.value ?? 0), 0, 1);
+        const listener=weather?.diagnostics?.listener;
+        const exposure=listener?.ready?clamp(listener.exposure,0,1):1;
+        const localRain=rain*(listener?.ready?clamp(listener.cell,0,1):1);
         stats.rain = rain;
+        stats.rainExposure=exposure;stats.localRain=localRain;
         if (context && rainGain) {
             beginRain();
-            setParam(rainGain.gain, rain * rain * 0.72, context.currentTime, rain > 0 ? 1.4 : 2.8);
+            // Keep distant roof rain audible under shelter, with softened
+            // high frequencies; walking out of a raining cell fades it away.
+            setParam(rainGain.gain, localRain*localRain*.72*(.12+.88*exposure),context.currentTime,.35);
+            setParam(rainFilter.frequency,1100+9900*exposure,context.currentTime,.25);
         }
 
         const strike = weather?.state?.strike;

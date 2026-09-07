@@ -35,7 +35,10 @@ for (const id of ['skybox','cloud-type','weather','quality']) {
 }
 if(launchSettings.has('tod')){
     const hours=Number(launchSettings.get('tod'));
-    if(Number.isFinite(hours)&&hours>=0&&hours<=24)document.getElementById('tod').value=String(hours);
+    if(Number.isFinite(hours)&&hours>=0&&hours<=24){
+        document.getElementById('tod').value=String(hours);
+        document.getElementById('todv').textContent=hours.toFixed(1);
+    }
 }
 
 // ---- on-page error console: WebGPU pipeline failures are SILENT no-draws,
@@ -1295,8 +1298,8 @@ const optimizedCaches = (lightSize, refreshSeconds) => ({
     lightCache: useLightCache ? { size: lightSize, refreshSeconds } : null,
 });
 // These profiles budget only sky, skybox reflections, spatial clouds, and
-// weather particles. They never hide a sky element and never alter terrain,
-// vegetation, architecture, scene shadows, N8AO, SSR, or bloom.
+// weather particles. All tiers retain terrain, architecture, N8AO and native
+// reflections. Sun-shadow resolution is fixed; refresh cadence follows the tier.
 const QUALITY = {
     high: {
         name: 'high', label: 'High / Insane', fpsTarget: 30,

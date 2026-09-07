@@ -1,6 +1,7 @@
 (async()=>{
-    _eanpaTest.paused=false;_eanpaTest.pauseAfterFrame=true;
-    while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,20));
+    const wasPaused=_eanpaTest.paused;
+    if(!wasPaused){_eanpaTest.pauseAfterFrame=true;
+        while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,20));}
     const T=THREE,r=_reflectionPipeline.pipeline.renderer;
     const weather=globalThis.__eanpaWeatherByScene.get(_c.parent),u=weather.uniforms;
     const saved=Object.fromEntries(['wetness','surfaceWater','puddleK'].map(k=>[k,u[k].value]));
@@ -27,6 +28,7 @@
         r.setRenderTarget(target);r.setScissorTest(false);r.autoClear=true;r.setClearColor(0,0);
         for(const wet of [0,1,0]){
             u.wetness.value=wet;u.surfaceWater.value=wet;u.puddleK.value=1;
+            await new Promise(requestAnimationFrame);
             await r.renderAsync(scene,camera);
             const pixels=await r.readRenderTargetPixelsAsync(target,0,0,128,32,1);
             const normals=meshes.map(m=>{
@@ -46,6 +48,6 @@
         for(const [key,value]of Object.entries(saved))u[key].value=value;
         T.RendererUtils.restoreRendererState(r,state);
         target.dispose();geometry.dispose();map.dispose();for(const m of materials)m.dispose();
-        _eanpaTest.paused=false;
+        _eanpaTest.paused=wasPaused;
     }
 })()

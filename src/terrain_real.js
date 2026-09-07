@@ -747,9 +747,9 @@ const SURFACE_ORGANIC_POLICY = Object.freeze({
     // transitions. Continuous domain-warped selectors retain broad deposits;
     // the brush supplies their irregular, hand-shaped per-fragment edges.
     authoredShapeShare: 0.68,
-    familyCrossfade: 0.16,
-    familyCrossfadePower: 4,
-    rockFamilyCrossfade: 0.22,
+    familyCrossfade: 0.30,
+    familyCrossfadePower: 2,
+    rockFamilyCrossfade: 0.38,
     craterExposureSelector: Object.freeze([0.11, 0.15]),
     craterRockEligibility: 0.20,
     craterRock061Bias: 0.30,
@@ -1861,10 +1861,18 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
     // Per-source color unification is baked by the v3 builder. Runtime macro
     // variation only breaks kilometre-scale uniformity and cannot repaint the
     // scan detail or create giant gravel.
-    const broadVariation = tint.mul(macro).clamp(0.94, 1.06);
+    const broadVariation = tint.mul(macro).clamp(0.78, 1.12);
+    // Two offset scan samples break repeated stones/cracks while every PBR
+    // channel retains the same coordinates. The variation is fixed in world
+    // space; camera motion cannot change which texture phase owns a point.
+    const variationPhase=T3.mx_noise_float(world.mul(.035),3.5,4).toVar('terrainTexturePhase');
+    const variationCell=T3.floor(variationPhase);
+    const variationBlend=T3.smoothstep(.2,.8,T3.fract(variationPhase));
+    const offsetFor=(cell,layer)=>T3.sin(T3.vec2(12.3,31.7).mul(cell.add(1))
+        .add(T3.float(layer).mul(19.13))).mul(.43);
 
     // Select the five strongest pre-height weights before touching either PBR
-    // array. The generated shader contains exactly five dynamic array reads per
+    // array. Only nonzero layers fetch their paired texture phases on each
     // binding; no hidden fourteen-layer select tree samples discarded layers.
     const TOP_K = 5;
     const selectTopK = (sourceWeights) => {
@@ -1944,18 +1952,25 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
             .toVar(`terrainTopGradX${slot}`);
         const gradY = transformCoordinate(gradientFor(positionDy, primary), transform)
             .toVar(`terrainTopGradY${slot}`);
-        const sampleArray = (key) => T3.texture(maps.surfaceArray[key], uvNode)
-            .depth(entry.layer)
-            .grad(gradX, gradY);
+        const offsetA=offsetFor(variationCell,entry.layer),offsetB=offsetFor(variationCell.add(1),entry.layer);
+        const variedSample=(key,coordinate,dx,dy)=>T3.mix(
+            T3.texture(maps.surfaceArray[key],coordinate.add(offsetA)).depth(entry.layer).grad(dx,dy),
+            T3.texture(maps.surfaceArray[key],coordinate.add(offsetB)).depth(entry.layer).grad(dx,dy),variationBlend);
+        const sampleArray = (key) => T3.Fn(()=>{
+            const dx=gradX.toVar(),dy=gradY.toVar(),value=T3.vec4(0).toVar();
+            // Most terrain pixels have one or two contributing layers. Do not
+            // fetch all five shortlisted scans where their weights are zero.
+            T3.If(entry.weight.greaterThan(.0001),()=>{value.assign(variedSample(key,uvNode,dx,dy));});
+            return value;
+        })();
         const secondaryUv = transformCoordinate(secondaryCoordinate, transform);
         const secondaryDx = transformCoordinate(gradientFor(positionDx, secondary), transform);
         const secondaryDy = transformCoordinate(gradientFor(positionDy, secondary), transform);
         const sampleSecondary = (key) => T3.Fn(() => {
             const dx = secondaryDx.toVar(), dy = secondaryDy.toVar();
             const sampled = T3.vec4(0).toVar();
-            T3.If(planeBlend.greaterThan(0.0001), () => {
-                sampled.assign(T3.texture(maps.surfaceArray[key], secondaryUv)
-                    .depth(entry.layer).grad(dx, dy));
+            T3.If(planeBlend.greaterThan(0.0001).and(entry.weight.greaterThan(.0001)), () => {
+                sampled.assign(variedSample(key,secondaryUv,dx,dy));
             });
             return sampled;
         })();

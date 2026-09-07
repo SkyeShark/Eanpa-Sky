@@ -2,17 +2,20 @@ import { connect } from './cdp.mjs';
 import { writeFile, mkdir } from 'node:fs/promises';
 const cdp = await connect();
 const prefix = process.argv[2] ?? 'cloud-shadow';
-let original;
+let original,wasPaused;
 try {
+    wasPaused=await cdp.evaluate('_eanpaTest.paused');
     original = await cdp.evaluate(`(async () => {
-        _eanpaTest.pauseAfterFrame=true;_eanpaTest.paused=false;
-        while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,20));
+        if(!_eanpaTest.paused){_eanpaTest.pauseAfterFrame=true;
+            while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,20));}
+        await _sky.prepareCloudShadows(_reflectionPipeline.pipeline.renderer,_c,{force:true});
         return _sky.uniforms.cloudShadowStrength.value;
     })()`);
     await mkdir('artifacts/overhaul/shadows', { recursive: true });
     for (const strength of [0, 1]) {
         await cdp.evaluate(`(async () => {
             _sky.uniforms.cloudShadowStrength.value=${strength};
+            await new Promise(requestAnimationFrame);
             await _reflectionPipeline.render();
         })()`);
         const shot = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
@@ -26,6 +29,6 @@ try {
     console.log(JSON.stringify(state));
 } finally {
     if (original !== undefined) await cdp.evaluate(`_sky.uniforms.cloudShadowStrength.value=${original}`).catch(() => {});
-    await cdp.evaluate('_eanpaTest.paused=false').catch(() => {});
+    await cdp.evaluate(`_eanpaTest.paused=${!!wasPaused}`).catch(() => {});
     cdp.close();
 }

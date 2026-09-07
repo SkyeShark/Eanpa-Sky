@@ -11,5 +11,6 @@ try{
     const result=await exec(process.execPath,['qa/benchmark.mjs',name,seconds,rate,'observed'],{windowsHide:true,maxBuffer:4*1024*1024,timeout:150000});
     const file=`artifacts/overhaul/benchmarks/${name}.json`,data=JSON.parse(await readFile(file,'utf8'));
     data.metadata.gpuConstraint=constraint;data.metadata.constraint=`${rate}x CPU slowdown plus calibrated synthetic GPU competition`;
-    await writeFile(file,JSON.stringify(data,null,2));console.log(result.stdout);
+    await writeFile(file,JSON.stringify(data,null,2));
+    const {intervalsMs,resources,...summary}=data;console.log(JSON.stringify(summary));
 }finally{await c.evaluate('globalThis.__gpuContention?.stop()').catch(()=>{});c.close()}

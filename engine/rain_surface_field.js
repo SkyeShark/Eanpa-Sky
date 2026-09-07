@@ -26,6 +26,9 @@ export function makeRainSurfaceField(T3, scene, options = {}) {
         depthBias: uniform(0.06 / span),
         depthScale: uniform(span),
     };
+    // One projection serves every receiver during a render pass. Keeping
+    // these matrices in each object's uniform buffer repeated the same work.
+    for(const node of Object.values(u))node.setGroup(T3.renderGroup);
     const depth = texture(target.depthTexture,T3.screenUV);
     const normals = texture(target.texture,T3.screenUV);
     const project = Fn(([world]) => {
@@ -140,6 +143,9 @@ export function makeRainSurfaceField(T3, scene, options = {}) {
                 && center.distanceToSquared(lastCenter) < 4
                 && direction.dot(lastDirection) > 0.999) return false;
             camera.coordinateSystem = renderer.coordinateSystem;
+            const oldProjection=u.viewProjection.value.clone();
+            const oldInverse=u.inverseViewProjection.value.clone();
+            const oldDirection=u.sourceDirection.value.clone();
             camera.position.copy(center).addScaledVector(direction, span * 0.5);
             camera.lookAt(center);
             camera.updateProjectionMatrix();
@@ -187,6 +193,11 @@ export function makeRainSurfaceField(T3, scene, options = {}) {
                 stats.updates++;
                 stats.enabled = true;
                 stats.lastUpdateSeconds = time;
+            } catch(error) {
+                u.viewProjection.value.copy(oldProjection);
+                u.inverseViewProjection.value.copy(oldInverse);
+                u.sourceDirection.value.copy(oldDirection);
+                throw error;
             } finally {
                 for (const [object, material, visible] of changes) {
                     object.material = material;

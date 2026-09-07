@@ -19,7 +19,7 @@ try{
         _c.position.set(chosen.x,chosen.top+1.82+2,chosen.z);
         Object.assign(_movementState,{physicalEyeY:_c.position.y,verticalVelocity:0,grounded:false,bobOffset:0,stepViewOffset:0});
         _look.pitch=-.72;_look.yaw=0;_look.vpitch=0;_look.vyaw=0;
-        _eanpaTest.paused=false;
+        _eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;
         await new Promise(r=>setTimeout(r,1800));
         const feet=_movementState.physicalEyeY-_movementState.eyeHeight;
         if(!_movementState.grounded||Math.abs(feet-chosen.top)>.08)throw new Error('Rock landing failed: '+JSON.stringify({feet,chosen}));

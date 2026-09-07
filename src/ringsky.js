@@ -33,12 +33,8 @@ export async function makeRingworld({
 }) {
     await loadEngine('sky_system.js');
     await loadEngine('ringworld.js');
-    // SPOM: the ringworld engine ray-marches the band's height field so ridges
-    // occlude the valleys behind them and cast onto each other — without this
-    // global (plus bandHeight below) its POM_ON gate fails SILENTLY and the
-    // 31 km arc reads as flat painted normal-map shading. Keep the helper as a
-    // canonical ESM dependency alongside the side-effect engine modules.
-    globalThis.parallaxOcclusionUV ??= (await import('./parallax_occlusion.js')).parallaxOcclusionUV;
+    // The band now uses displaced geometry; the engine's optional parallax
+    // path remains available to other hosts that provide that helper.
 
     const load = globalThis.loadImageTexture;
     const stars = await load('./assets/starmap_tycho_4k.jpg', { srgb: true });
@@ -111,7 +107,7 @@ export async function makeRingworld({
     globalThis._ringworld = ring;
     // authored placement: band rises from the horizon, crests ~9.8 km overhead
     ring.group.position.set(0, 4940, 0);
-    // sky-element depth: clouds render in front; the band never writes depth
+    // Celestial meshes use a private depth layer, composited behind local geometry.
     ring.group.traverse((o) => {
         if (!o.isMesh) return;
         o.userData.noCloudShadow = true;

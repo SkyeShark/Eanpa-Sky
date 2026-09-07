@@ -1,11 +1,13 @@
 (async () => {
     const wasPaused=_eanpaTest.paused;
-    _eanpaTest.paused = false;
-    _eanpaTest.pauseAfterFrame = true;
-    while (!_eanpaTest.paused) await new Promise(r => setTimeout(r, 10));
+    if (!_eanpaTest.paused) {
+        _eanpaTest.pauseAfterFrame = true;
+        while (!_eanpaTest.paused) await new Promise(r => setTimeout(r, 10));
+    }
     const T = globalThis.THREE;
     const renderer = _reflectionPipeline.pipeline.renderer;
     const { makeRainSurfaceField } = await import('/engine/rain_surface_field.js');
+    const { makeWeatherListener } = await import('/engine/weather_listener.js');
     const scene = new T.Scene();
     const resources = [];
     const material = new T.MeshStandardMaterial({ color: 0x806850 });
@@ -47,6 +49,8 @@
     const view = new T.PerspectiveCamera(60, 1, 0.1, 100);
     view.position.set(0, 3, 0);
     const field = makeRainSurfaceField(T, scene, { resolution: 512, radius: 48, verticalSpan: 256 });
+    const listener = makeWeatherListener(T, { surfaceField: field,
+        cellAt: p => T.smoothstep(-1, 1, p.x), rain: T.float(.7) });
     const cases = [
         { name: 'open ground', p: [30, 0.08, 0], height: 0, exposure: 1 },
         { name: 'roof top', p: [-18, 4.08, 0], height: 4, exposure: 1 },
@@ -100,17 +104,38 @@
             const hit = Array.from(windHits.slice(c.index * 4, c.index * 4 + 4));
             return { ...c, hit, pass: Math.abs(hit[1] - c.height) < 0.15 && hit[3] === c.exposure };
         });
+        const listenerResults=[];
+        for (const test of [
+            {name:'open raining cell',position:[30,1.82,0],exposure:1,cell:1},
+            {name:'sheltered listener',position:[6,1.82,0],exposure:0,cell:1},
+            {name:'exposed roof outside rain cell',position:[-18,5.82,0],exposure:1,cell:0},
+        ]) {
+            view.position.set(...test.position);view.updateMatrixWorld(true);
+            await new Promise(requestAnimationFrame);
+            await listener.prepare(renderer,view,0,true);
+            const measured={...await listener.settled()};
+            listenerResults.push({...test,measured,pass:measured.ready&&!measured.error
+                && Math.abs(measured.exposure-test.exposure)<.01
+                && Math.abs(measured.cell-test.cell)<.01&&Math.abs(measured.rain-.7)<.01});
+        }
         // A failed host render must leave no temporary material/visibility
         // state on persistent scene objects or on the shared renderer.
         const originalRender = renderer.renderAsync;
+        const beforeFailure={projection:field.uniforms.viewProjection.value.clone(),
+            inverse:field.uniforms.inverseViewProjection.value.clone(),
+            direction:field.uniforms.sourceDirection.value.clone()};
         let failureRestored = false;
         try {
             renderer.renderAsync = async () => { throw new Error('injected capture failure'); };
-            await field.prepareFrame(renderer, view, { force: true });
+            view.position.x+=12;
+            await field.prepareFrame(renderer, view, { force: true,wind:{x:-8,z:4} });
         } catch (error) {
             failureRestored = error.message === 'injected capture failure'
                 && roof.material === material && cutout.material === cutoutMat
-                && renderer.getRenderTarget() === output;
+                && renderer.getRenderTarget() === output
+                && field.uniforms.viewProjection.value.equals(beforeFailure.projection)
+                && field.uniforms.inverseViewProjection.value.equals(beforeFailure.inverse)
+                && field.uniforms.sourceDirection.value.equals(beforeFailure.direction);
         } finally { renderer.renderAsync = originalRender; }
         const cachedBefore = field.stats.captureMaterials;
         raisedMat.dispose();
@@ -119,11 +144,11 @@
         await field.prepareFrame(renderer, view, { force: true });
         const rebuiltSource = field.stats.captureMaterials === cachedBefore;
         return { pass: restored && failureRestored && releasedSource && rebuiltSource
-                && results.every(r => r.pass) && wind.every(r => r.pass),
-            restored, failureRestored, releasedSource, rebuiltSource, results, wind, stats: { ...field.stats } };
+                && results.every(r => r.pass) && wind.every(r => r.pass)&&listenerResults.every(r=>r.pass),
+            restored, failureRestored, releasedSource, rebuiltSource, results, wind, listenerResults, stats: { ...field.stats } };
     } finally {
         T.RendererUtils.restoreRendererState(renderer, rendererState);
-        field.dispose(); output.dispose(); probeMat.dispose(); normalMat.dispose();
+        listener.dispose();field.dispose(); output.dispose(); probeMat.dispose(); normalMat.dispose();
         instances.dispose();
         skinned.skeleton.dispose();
         for (const resource of resources) resource.dispose();

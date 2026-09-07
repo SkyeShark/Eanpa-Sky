@@ -13,7 +13,7 @@ try {
         _c.position.set(start.x,floor+1.82,start.z);
         Object.assign(_movementState,{physicalEyeY:_c.position.y,verticalVelocity:0,grounded:true,bobOffset:0,stepViewOffset:0});
         _look.yaw=0;_look.pitch=.12;_look.vyaw=0;_look.vpitch=0;
-        _eanpaTest.paused=false;
+        _eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;
         return {start:start.toArray(),end:end.toArray(),nav};
     })()`);
     await sleep(1500);

@@ -12954,6 +12954,9 @@ class TextureNode extends UniformNode {
 	clone() {
 
 		const newNode = new this.constructor( this.value, this.uvNode, this.levelNode, this.biasNode );
+		// Eanpa: retain an explicit matrix-update policy through sample/LOD
+		// clones. Screen and PMREM reads must not regain per-object UV matrices.
+		newNode.updateMatrix = this.updateMatrix;
 		newNode.sampler = this.sampler;
 		newNode.depthNode = this.depthNode;
 		newNode.compareNode = this.compareNode;

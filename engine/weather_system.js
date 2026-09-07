@@ -35,6 +35,7 @@
 //   shieldColor  [r,g,b]  red giant shieldworld's hex shield
 // Omit any of them to keep the state's authored colour.
 import { makeRainSurfaceField } from './rain_surface_field.js';
+import { makeWeatherListener } from './weather_listener.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -352,6 +353,14 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             refreshHz: opts.surfaceRefreshHz ?? 8,
             getMaterialRoots: (material) => wrappedRoots.get(material)?.before ?? material,
         });
+        const rainCellAt=Fn(([world])=>{
+            if(!sky)return float(1);
+            const source=world.xz.sub(u.windVec.xz.mul(max(sky.uniforms.cloudStart.sub(world.y),0)
+                .div(max(u.fallSpeed.mul(u.fallMul),1))));
+            return mix(smoothstep(u.cellLo,u.cellHi,sky.tslCoverage(source)),float(1),
+                clamp(sky.uniforms.stormCanopy,0,1));
+        });
+        const listener=makeWeatherListener(T3,{surfaceField,cellAt:rainCellAt,rain:u.rainK});
 
         // ---------------- world-space rain (instanced streaks) ----------------
         // deterministic: every streak's world position is a pure function of
@@ -1403,7 +1412,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             // Porous dielectric surfaces darken when filled with water. Metal
             // keeps its authored conductor response; it does not turn black.
             const porosity = Math.max(0, Math.min(1, mat.userData?.wetPorosity ?? 0.65));
-            const darkened = baseRgb.mul(float(1).sub(upMask.mul(porosity * 0.32).mul(float(1).sub(baseMetal))));
+            const darkened = baseRgb.mul(float(1).sub(upMask.mul(porosity * 0.50).mul(float(1).sub(baseMetal))));
             const wetCol = darkened.mul(mix(vec3(1, 1, 1), u.wetTint, upMask.mul(0.6)));
             // Puddles receive sky through Three's native cloud PMREM/IBL and
             // local geometry through SSR. The metalness/roughness TSL
@@ -1420,7 +1429,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             // The former near-white injection plus metalness=fresnel could
             // saturate broad wet terrain during a lightning flash.
             const pDepth = smoothstep(0.3, 1.0, puddle);
-            const waterFloor = wetCol.mul(mix(float(0.99), float(0.91), pDepth));
+            const waterFloor = wetCol.mul(mix(float(.98),float(1-porosity*.28),pDepth));
             const finalWetRgb = mix(wetCol, waterFloor, puddle);
             // Weather color must not replace the alpha channel used by
             // foliage/decals for cutout silhouettes. Losing it turns distant
@@ -1564,7 +1573,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
                 volumetricCurtains: true,
                 featherInnerRadius: RAD * 0.70,
                 featherOuterRadius: RAD,
-                opacityBaseRange: [0.14, 0.40],
+                opacityBaseRange: [0.24, 0.56],
                 sceneLightResponsive: true,
                 rainPopulation: N_RAIN,
                 splashPopulation: N_SPLASH,
@@ -1614,6 +1623,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
             },
             wetness: wetnessStats,
             surfaceCapture: surfaceField.stats,
+            listener:listener.stats,
         };
         // ---- smooth weather transitions: lerp every uniform setWeather touches
         // plus a BLENDED live state.def, so per-frame readers (palette greying,
@@ -1831,20 +1841,24 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
                 return Math.max(0.08, 1 - (1 - target) * state.k);
             },
             wrapMaterial, wrapScene,
-            surfaceField,
+            surfaceField,listener,
             async prepareFrame(renderer, camera, captureOptions = {}) {
                 if (disposed) return false;
                 renderer.getDrawingBufferSize(drawingBufferSize);
                 u.pixelWorldScale.value = camera.isPerspectiveCamera
                     ? 2 * Math.tan(camera.getEffectiveFOV() * Math.PI / 360) / Math.max(1, drawingBufferSize.y)
                     : (camera.top - camera.bottom) / Math.max(1, drawingBufferSize.y);
-                return surfaceField.prepareFrame(renderer, camera, {
+                const updated=await surfaceField.prepareFrame(renderer, camera, {
                     time: u.time.value,
                     active: u.rainK.value > 0.001 || u.wetness.value > 0.001 || u.surfaceWater.value > 0.06,
                     wind: u.windVec.value,
                     fallSpeed: u.fallSpeed.value * u.fallMul.value,
                     ...captureOptions,
                 });
+                if(u.rainK.value>.001||captureOptions.force){
+                    await listener.prepare(renderer,camera,u.time.value,!!captureOptions.force);
+                }
+                return updated;
             },
             // Every pooled weather mesh, for boot-time pipeline warmup. These
             // spawn invisible, and compileAsync skips invisible objects — so
@@ -2352,6 +2366,7 @@ import { makeRainSurfaceField } from './rain_surface_field.js';
                     mat.needsUpdate = true;
                 }
                 surfaceField.dispose();
+                listener.dispose();
                 wrapped.clear();
                 // drop any outstanding wrap queue too, so a disposed system
                 // stops holding references to the scene's materials
