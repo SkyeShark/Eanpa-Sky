@@ -9,10 +9,10 @@ are authorized until the user's final review.
 - Hardware detected: NVIDIA GeForce RTX 5090 **Laptop GPU**, 24 GB, driver 610.88.
   Results must identify this configuration rather than imply desktop 5090 performance.
 - Prior performance claims are retracted in the existing acceptance ledger.
-- Automated browser validation awaits the user's answer to the September 6
-  request to supersede the old prohibition on CDP/automated browsers. If allowed,
-  use one owned browser instance and one loopback server, record their PIDs,
-  and close the test browser when finished. Do not control existing user pages.
+- The user explicitly authorized one controlled browser and one local server
+  on September 6, superseding the old prohibition on automated/CDP browsers.
+  Record their PIDs, reuse this instance, and close the test browser when
+  finished. Do not control existing user pages or launch competing instances.
 - A reduced-resource test must state its actual constraints. CPU throttling
   does not emulate a slower GPU. Quality-tier comparisons are separate from
   hardware constraints; do not silently remove scene content.
@@ -20,6 +20,12 @@ are authorized until the user's final review.
 
 ## Work and evidence
 
+- During inspection the user reported desktop cursor confinement. The owned
+  headless page reported no pointer lock and zero lock requests; its browser
+  and server were closed immediately. Cause is unconfirmed. Automated previews
+  now use `?automated=1`, which prevents pointer lock even for trusted input.
+  Capture helpers neither request foreground focus nor grant script evaluation
+  a synthetic user gesture. The browser remains closed while this is checked.
 - Player contacts now preserve incoming velocity along the contact normal;
   the wall-brace animation previously read speed after collision stopped the
   player. Executable controller tests cover frontal, sprint, sliding, held

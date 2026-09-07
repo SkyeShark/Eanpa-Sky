@@ -342,8 +342,12 @@ const look = {
 };
 globalThis._look = look;   // debug: lets the CDP harness drive camera motion
 camera.rotation.order = 'YXZ';
+// Automated inspection drives the camera directly and must never capture the
+// desktop mouse, even if a test dispatches a trusted browser input event.
+const automatedPreview = new URLSearchParams(location.search).get('automated') === '1';
 canvas.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0 || document.pointerLockElement === canvas) return;
+    if (automatedPreview || !e.isTrusted || document.hidden || !document.hasFocus()
+        || e.button !== 0 || document.pointerLockElement === canvas) return;
     look.pointerLockRequests++;
     try {
         const request = canvas.requestPointerLock?.();

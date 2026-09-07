@@ -1,0 +1,98 @@
+// One owned browser + loopback server for the overhaul. Never attach to the
+// user's Chrome profile. `stop` closes our browser through CDP, then our server.
+import { spawn } from 'node:child_process';
+import { open, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createConnection } from 'node:net';
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
+
+const root = fileURLToPath(new URL('../', import.meta.url));
+const directory = resolve(root, '.artifacts/overhaul-20260906');
+const stateFile = resolve(directory, 'processes.json');
+const serverPort = 8378, cdpPort = 9223;
+const listening = port => new Promise(resolvePort => {
+    const socket = createConnection({ host: '127.0.0.1', port });
+    socket.setTimeout(1000);
+    const finish = value => { socket.destroy(); resolvePort(value); };
+    socket.once('connect', () => finish(true));
+    socket.once('error', () => finish(false));
+    socket.once('timeout', () => finish(false));
+});
+const sleep = ms => new Promise(resolveWait => setTimeout(resolveWait, ms));
+const action = process.argv[2] ?? 'status';
+if (action === 'start') {
+    if (await listening(serverPort) || await listening(cdpPort)) {
+        throw new Error('QA port already occupied; inspect/reuse the existing session. No process launched.');
+    }
+    await mkdir(directory, { recursive: true });
+    // Windows environment dictionaries are case insensitive; some hosts expose
+    // both Path and PATH, which breaks PowerShell Start-Process.
+    const env = Object.fromEntries(Object.entries(process.env)
+        .filter(([key], index, entries) => entries.findIndex(([other]) =>
+            other.toLowerCase() === key.toLowerCase()) === index));
+    const start = async (executable, args, name) => {
+        const stdout = await open(resolve(directory, `${name}.out.log`), 'a');
+        const stderr = await open(resolve(directory, `${name}.err.log`), 'a');
+        try {
+            const child = spawn(executable, args, {
+                cwd: root, env, windowsHide: true, detached: true,
+                stdio: ['ignore', stdout.fd, stderr.fd],
+            });
+            await new Promise((resolveSpawn, reject) => {
+                child.once('spawn', resolveSpawn); child.once('error', reject);
+            });
+            child.unref();
+            return child;
+        } finally { await stdout.close(); await stderr.close(); }
+    };
+    const profile = resolve(directory, 'browser');
+    const owned = [];
+    try {
+        const server = await start('C:/Python314/python.exe', ['tools/dev-server.py', String(serverPort)], 'server');
+        owned.push(server);
+        const browser = await start('C:/Program Files/Google/Chrome/Application/chrome.exe', [
+            '--headless=new', `--remote-debugging-port=${cdpPort}`,
+            '--remote-debugging-address=127.0.0.1', `--user-data-dir=${profile}`,
+            '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
+            '--enable-unsafe-webgpu', '--window-size=1600,1000',
+            `http://127.0.0.1:${serverPort}/?benchmark=1&automated=1`,
+        ], 'chrome');
+        owned.push(browser);
+        const state = { serverPid: server.pid, browserPid: browser.pid, profile,
+            serverPort, cdpPort, started: new Date().toISOString() };
+        await writeFile(stateFile, JSON.stringify(state, null, 2));
+        for (let i = 0; i < 40; i++) {
+            if (await listening(serverPort) && await listening(cdpPort)) break;
+            await sleep(250);
+        }
+        if (!await listening(serverPort) || !await listening(cdpPort)) throw new Error('QA startup failed; see owned process logs');
+        console.log(JSON.stringify(state, null, 2));
+    } catch (error) {
+        for (const child of owned.reverse()) child.kill();
+        throw error;
+    }
+} else if (action === 'stop') {
+    const state = JSON.parse(await readFile(stateFile, 'utf8'));
+    if (await listening(cdpPort)) {
+        const version = await fetch(`http://127.0.0.1:${cdpPort}/json/version`).then(r => r.json());
+        const socket = new WebSocket(version.webSocketDebuggerUrl);
+        await new Promise((resolveOpen, reject) => {
+            socket.addEventListener('open', resolveOpen, { once: true });
+            socket.addEventListener('error', reject, { once: true });
+        });
+        socket.send(JSON.stringify({ id: 1, method: 'Browser.close' }));
+        await new Promise(resolveClose => {
+            socket.addEventListener('close', resolveClose, { once: true });
+            setTimeout(() => { socket.close(); resolveClose(); }, 2000);
+        });
+    }
+    if (state.serverPid) {
+        try { process.kill(state.serverPid); } catch (error) { if (error.code !== 'ESRCH') throw error; }
+    }
+    state.stopped = new Date().toISOString();
+    await writeFile(stateFile, JSON.stringify(state, null, 2));
+    console.log('Owned QA browser and server stopped.');
+} else if (action === 'status') {
+    console.log(JSON.stringify({ server: await listening(serverPort), browser: await listening(cdpPort),
+        state: JSON.parse(await readFile(stateFile, 'utf8').catch(() => 'null')) }, null, 2));
+} else throw new Error('Use start, status, or stop');
