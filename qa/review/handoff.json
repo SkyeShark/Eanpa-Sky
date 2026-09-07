@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-07T20:14:43.497Z",
+  "visibility": "hidden",
+  "boot": "none",
+  "initialized": true,
+  "frames": 21,
+  "failedFrames": 0,
+  "sky": "earth",
+  "quality": "balanced",
+  "weather": "none",
+  "pointerLocked": false,
+  "errors": [],
+  "constraint": false,
+  "firstFrameVisuallyReviewed": true,
+  "nativeWindowVisible": true,
+  "nativeWindowForegroundRequestSucceeded": true,
+  "note": "The scene initialized while Chromium reported the page hidden; the native review window exists and is visible. Normal animation resumes when the page is unobscured."
+}

@@ -1,6 +1,6 @@
 // One owned browser + loopback server for the overhaul. Never attach to the
 // user's Chrome profile. `stop` closes our browser through CDP, then our server.
-import { spawn } from 'node:child_process';
+import { spawn, execFile } from 'node:child_process';
 import { open, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createConnection } from 'node:net';
 import { fileURLToPath } from 'node:url';
@@ -128,7 +128,12 @@ if (action === 'start' || action === 'preview') {
         Object.assign(state, { browserPid: browser.pid, headless: false, reviewStarted: new Date().toISOString() });
         await writeFile(stateFile, JSON.stringify(state, null, 2));
     } finally { await stdout.close(); await stderr.close(); }
-    console.log(JSON.stringify(state, null, 2));
+    const reviewWindow = await new Promise((done, reject) => execFile('powershell.exe', [
+        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', resolve(root, 'qa/show-review-window.ps1'),
+    ], { cwd: root, windowsHide: true }, (error, stdout) => {
+        if (error) reject(error); else { try { done(JSON.parse(stdout)); } catch (parseError) { reject(parseError); } }
+    }));
+    console.log(JSON.stringify({ ...state, reviewWindow }, null, 2));
 } else if (action === 'stop') {
     const state = JSON.parse(await readFile(stateFile, 'utf8'));
     if (await listening(cdpPort)) {
