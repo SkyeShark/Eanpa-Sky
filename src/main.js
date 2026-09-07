@@ -13,6 +13,7 @@ import { makeAudioSystem } from './audio_system.js';
 import { FrameMetrics } from './frame_metrics.js';
 import { installShadowMaterialCache } from './shadow_material_cache.js';
 import { makeReflectionEnvironment } from './reflection_environment.js';
+import { installRebuildResourceCache } from './rebuild_resource_cache.js';
 import { makeFirstPersonViewmodel } from './first_person_viewmodel.js?v=20260722-armlight-isolation';
 import {
     MAX_WALK_STEP_RISE,
@@ -263,6 +264,8 @@ const shadowMaterialCache = installShadowMaterialCache(renderer);
 globalThis._shadowMaterialCache = shadowMaterialCache;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 await renderer.init();
+const rebuildResources = installRebuildResourceCache(renderer);
+globalThis._rebuildResources = rebuildResources;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(52, innerWidth / innerHeight, 0.18, 60000);
@@ -1368,6 +1371,7 @@ async function buildSkybox() {
     while (pipelineWarmup) await pipelineWarmup;
     try {
         clearWeatherReflectionTimers();
+        rebuildResources.clear();
         if (reflectionPipeline) {
             if (pipelineWarmupReadyOwner === reflectionPipeline) {
                 pipelineWarmupReadyOwner = null;
@@ -1866,6 +1870,7 @@ addEventListener('beforeunload', () => {
     for (const texturePromise of imageTextureCache.values()) texturePromise.then((texture) => texture.dispose()).catch(() => {});
     shadowMaterialCache.dispose();
     filteredEnvironment.dispose();
+    rebuildResources.dispose();
     renderer.dispose();
     globalThis._temple = null;
     globalThis._vegetation = null;

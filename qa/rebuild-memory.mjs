@@ -15,6 +15,7 @@ try{
         await sleep(3500);
         const record=await cdp.evaluate(`({quality:document.getElementById('quality').value,
             memory:_reflectionPipeline.pipeline.renderer.info.memory,environment:_filteredEnvironment.stats,
+            rebuildResources:globalThis._rebuildResources?.stats,
             errors:[...document.body.children].find(e=>e.style?.zIndex==='99')?.textContent,
             pointerLocked:!!document.pointerLockElement})`);
         if(record.errors||record.pointerLocked)throw new Error(JSON.stringify(record));
@@ -22,7 +23,8 @@ try{
     }
     const steady=records.filter(r=>r.quality==='balanced').slice(1);
     const range=key=>Math.max(...steady.map(r=>r.memory[key]))-Math.min(...steady.map(r=>r.memory[key]));
-    const pass=range('renderTargets')===0&&range('textures')===0&&range('geometries')===0;
+    const pass=['renderTargets','textures','geometries','attributes','indexAttributes','attributesSize']
+        .every(key=>range(key)===0);
     await writeFile('artifacts/overhaul/rebuild-memory.json',JSON.stringify({pass,records},null,2));
     if(!pass)throw new Error('Repeated Balanced rebuilds retained GPU resources');
 }finally{cdp.close();}
