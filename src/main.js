@@ -1,7 +1,7 @@
 // EANPA ENGINE — realtime browser branch of the eidoverse volumetric sky.
-// Boot order matters: THREE shim + harness stubs FIRST (the engine files are
-// eval'd verbatim and expect the offline harness's globals), then renderer,
-// then terrain, then the selected skybox module.
+// Boot order matters: install the browser THREE globals before importing the
+// legacy side-effect engine modules, then initialize the renderer, terrain,
+// and selected skybox module.
 import * as WEBGPU from 'three';
 import * as TSL from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -103,11 +103,9 @@ if (globalThis.GPUDevice) {
     } catch {}
 }
 
-// ---- harness shims (ring-editor porting recipe) ----
+// ---- browser engine globals (legacy engine scripts are loaded below) ----
 globalThis.THREE = Object.assign({}, WEBGPU, TSL);
 globalThis.GLTFLoader = GLTFLoader;
-globalThis._envKnobs = {};
-globalThis.Deno = { env: { get: (k) => globalThis._envKnobs[k] } };
 globalThis.EANPA_NO_MRT = true;   // forward renderer: no G-buffer, no mrt stamps
 
 // Shared image cache: settings sweeps rebuild sky systems, but immutable
@@ -160,13 +158,51 @@ globalThis.eanpaStripMrt = (root) => {
     if (n) console.log('[eanpa] stripped mrt stamps from', n, 'materials');
 };
 
-const engineText = {};
-async function loadEngine(name) {
-    if (!engineText[name]) {
-        engineText[name] = await (await fetch(`./engine/${name}?ts=${Date.now()}`)).text();
+const ENGINE_MODULE_LOADERS = Object.freeze({
+    'sky_system.js': () => import('../engine/sky_system.js'),
+    'weather_system.js': () => import('../engine/weather_system.js'),
+    'ringworld.js': () => import('../engine/ringworld.js'),
+    'redgiant.js': () => import('../engine/redgiant.js'),
+    'asteroid_moon.js': () => import('../engine/asteroid_moon.js'),
+});
+const engineModules = new Map();
+function loadEngine(name) {
+    const loader = ENGINE_MODULE_LOADERS[name];
+    if (!loader) return Promise.reject(new Error('Unknown engine module: ' + name));
+    if (!engineModules.has(name)) {
+        const pending = loader().catch((error) => {
+            engineModules.delete(name);
+            throw error;
+        });
+        engineModules.set(name, pending);
     }
-    (0, eval)(engineText[name]);
+    return engineModules.get(name);
 }
+
+// Start independent browser modules as soon as the legacy engine globals exist.
+// Immediate observers prevent early network failures from becoming unhandled;
+// the later awaited batch still propagates the original error to the boot UI.
+const observePreload = (promise) => {
+    promise.catch(() => {});
+    return promise;
+};
+const coreEngineModulesReady = observePreload(Promise.all([
+    loadEngine('sky_system.js'),
+    loadEngine('weather_system.js'),
+]));
+const sceneModulesReady = observePreload(Promise.all([
+    import('./terrain_real.js'),
+    import('./temple_real.js'),
+    import('./desert_dressing.js'),
+    import('./vegetation.js'),
+]));
+const skyModulesReady = observePreload(Promise.all([
+    import('./weathersky.js'),
+    import('./shieldworld.js'),
+    import('./ringsky.js'),
+    import('./reflection_pipeline.js?rev=reflection-holdout-20260805'),
+    import('./cloudspatial.js'),
+]));
 
 // ---- renderer / scene / camera ----
 const canvas = document.getElementById('view');
@@ -178,12 +214,29 @@ const adapterProbe = await navigator.gpu?.requestAdapter({ powerPreference: 'hig
 const adapterSampledTextureLimit = Number(
     adapterProbe?.limits?.maxSampledTexturesPerShaderStage ?? 16,
 );
-const requiredLimits = adapterSampledTextureLimit >= 24
-    ? { maxSampledTexturesPerShaderStage: 24 }
+const adapterAttachmentByteLimit = Number(
+    adapterProbe?.limits?.maxColorAttachmentBytesPerSample ?? 32,
+);
+const requestedLimits = {};
+if (adapterSampledTextureLimit >= 24) {
+    requestedLimits.maxSampledTexturesPerShaderStage = 24;
+}
+// The exact PBR response MRT plus the authored selective-emissive bloom target
+// is five colors. WebGPU accounts this layout as 40 bytes/sample even though
+// the four auxiliary textures are RGBA8. Request it only when the adapter
+// explicitly advertises support; portable 32-byte devices retain the four-
+// target reflection graph and its non-selective bloom fallback.
+if (adapterAttachmentByteLimit >= 40) {
+    requestedLimits.maxColorAttachmentBytesPerSample = 40;
+}
+const requiredLimits = Object.keys(requestedLimits).length
+    ? requestedLimits
     : undefined;
 globalThis._gpuLimits = {
     adapterSampledTextures: adapterSampledTextureLimit,
     requestedSampledTextures: requiredLimits?.maxSampledTexturesPerShaderStage ?? 16,
+    adapterAttachmentBytes: adapterAttachmentByteLimit,
+    requestedAttachmentBytes: requiredLimits?.maxColorAttachmentBytesPerSample ?? 32,
 };
 const renderer = new THREE.WebGPURenderer({
     canvas,
@@ -827,10 +880,10 @@ const fogDensityUniform = THREE.uniform(scene.fog.density);
 }
 
 // ---- terrain + skybox modules ----
-const { makeTerrain } = await import('./terrain_real.js?ts=' + Date.now());
-const { makeTempleScene } = await import('./temple_real.js?ts=' + Date.now());
-const { makeDesertDressing } = await import('./desert_dressing.js?ts=' + Date.now());
-const { makeVegetationScene } = await import('./vegetation.js?ts=' + Date.now());
+const [
+    { makeTerrain }, { makeTempleScene },
+    { makeDesertDressing }, { makeVegetationScene },
+] = await sceneModulesReady;
 document.getElementById('boot').textContent = 'building the alluvial valley…';
 const terrain = await makeTerrain(THREE, renderer);
 scene.add(terrain);
@@ -982,8 +1035,8 @@ await vegetation.hullLibraryReady;
 // Optional chrome probe for automated reflection validation. It is not part
 // of the authored scene; enable it explicitly with ?debugProbe=1.
 const showReflectionProbe = new URLSearchParams(location.search).get('debugProbe') === '1';
-const ballMat = new THREE.MeshStandardNodeMaterial({ metalness: 1, roughness: 0.06, color: 0xffffff });
-ballMat.envMapIntensity = 0.68;
+const ballMat = new THREE.MeshStandardNodeMaterial({ metalness: 1, roughness: 0, color: 0xffffff });
+ballMat.envMapIntensity = 1;
 const ballRadius = 2.4;
 const ball = new THREE.Mesh(new THREE.SphereGeometry(ballRadius, 48, 24), ballMat);
 ball.name = 'reflection_probe';
@@ -1017,22 +1070,45 @@ const weatherBusy = document.getElementById('weather-busy');
 // One in-flight async pipeline warmup; the frame loop waits on it instead of
 // letting the next render compile every dirtied material synchronously.
 let pipelineWarmup = null;
+// Boot preloads the weather engine, finishes every material wrapper, exposes
+// pooled rain/lightning meshes, then compiles them with the exact scene MRT.
+// Later weather transitions are uniform-only and must not traverse/compile the
+// same 235 render items again.
+let pipelineWarmupReadyOwner = null;
 const setWeatherBusy = (on) => {
     if (weatherBusy) weatherBusy.hidden = !on;
 };
 const beginPipelineWarmup = () => {
+    if (pipelineWarmup) return pipelineWarmup;
+    const owner = reflectionPipeline;
+    if (owner && pipelineWarmupReadyOwner === owner) {
+        setWeatherBusy(false);
+        return Promise.resolve(true);
+    }
+    const warmupObjects = active?.weatherWarmupObjects?.() ?? [];
+    const savedVisibility = warmupObjects.map((object) => object.visible);
+    for (const object of warmupObjects) object.visible = true;
     const started = performance.now();
-    const compilePromise = renderer.compileAsync(scene, camera);
+    const compilePromise = typeof owner?.compileAsync === 'function'
+        ? owner.compileAsync() : renderer.compileAsync(scene, camera);
     const syncMs = performance.now() - started;
     if (syncMs > 200) {
         console.log('[perf] pipeline warmup blocked', Math.round(syncMs), 'ms synchronously');
     }
+    let compileSucceeded = false;
     const warmup = compilePromise
-        .catch((e) => { console.warn('[weather] pipeline warmup failed', e); })
+        .then(() => { compileSucceeded = true; })
+        .catch((error) => { console.warn('[weather] exact-pass pipeline warmup failed', error); })
         .then(() => {
+            warmupObjects.forEach((object, index) => {
+                object.visible = savedVisibility[index];
+            });
             const totalMs = performance.now() - started;
             if (totalMs > 500) {
-                console.log('[perf] pipeline warmup total', Math.round(totalMs), 'ms');
+                console.log('[perf] exact-pass pipeline warmup total', Math.round(totalMs), 'ms');
+            }
+            if (compileSucceeded && reflectionPipeline === owner) {
+                pipelineWarmupReadyOwner = owner;
             }
             if (pipelineWarmup === warmup) pipelineWarmup = null;
             setWeatherBusy(false);
@@ -1134,7 +1210,7 @@ async function rebakeReflections(force = false) {
             materials: count,
             quality: document.getElementById('quality').value,
             hours: reflectionBakedHours,
-            cloudPbr: 'three-native-pmrem-material-brdf',
+            cloudPbr: 'same-ray-live-sky-plus-pmrem-pbr-response',
             cloudsIncluded: true,
             cloudRefreshSeconds: q.cloudReflectionRefreshSeconds,
             bakeRevision: ++reflectionBakeRevision,
@@ -1148,11 +1224,12 @@ async function rebakeReflections(force = false) {
     }
 }
 
-const { makeWeatherSky } = await import('./weathersky.js?ts=' + Date.now());
-const { makeShieldworld } = await import('./shieldworld.js?ts=' + Date.now());
-const { makeRingworld } = await import('./ringsky.js?ts=' + Date.now());
-const { makeReflectionPipeline, installReflectionEnvironment } = await import('./reflection_pipeline.js?ts=' + Date.now());
-const { makeSpatialCloudPass } = await import('./cloudspatial.js?ts=' + Date.now());
+await coreEngineModulesReady;
+const [
+    { makeWeatherSky }, { makeShieldworld }, { makeRingworld },
+    { makeReflectionPipeline, installReflectionEnvironment },
+    { makeSpatialCloudPass },
+] = await skyModulesReady;
 
 const SKYBOX_FACTORIES = Object.freeze({
     earth: (ctx, cloudPreset, weatherState) => makeWeatherSky(ctx, cloudPreset, weatherState),
@@ -1264,9 +1341,13 @@ async function buildSkybox() {
     // never dispose the scene while a frame is mid-flight on the device —
     // that's a renderAsync hang (Chrome freeze on settings change)
     while (inFlight) await new Promise((r) => setTimeout(r, 16));
+    while (pipelineWarmup) await pipelineWarmup;
     try {
         clearWeatherReflectionTimers();
         if (reflectionPipeline) {
+            if (pipelineWarmupReadyOwner === reflectionPipeline) {
+                pipelineWarmupReadyOwner = null;
+            }
             reflectionPipeline.dispose();
             reflectionPipeline = null;
             globalThis._reflectionPipeline = null;
@@ -1347,6 +1428,15 @@ async function buildSkybox() {
             installedWithoutWeather: true,
             quality: q.name,
         };
+        // Register the local sky system's existing Eidoverse same-ray shader
+        // before the bake: bakeEnv then binds its stable below-horizon
+        // ground-bounce texture, while the hook supplies deterministic live
+        // sky/cloud radiance above the reflected horizon. The reflection
+        // pipeline applies Eanpa's resolved F0/DFG/AO response externally.
+        active.sky?.enableReflections?.(camera, {
+            externalPbrResponse: true,
+            blur: false,
+        });
         reflectionDirty = true;
         reflectionBakedHours = null;
         await rebakeReflections(true);
@@ -1358,7 +1448,7 @@ async function buildSkybox() {
             // The sky selector must not degrade local reflections, N8AO, SSR,
             // or bloom. Keep that scene pipeline at its authored setting.
             THREE, renderer, scene, camera, active.sky, 'balanced',
-            requiredFxaaFactory,
+            requiredFxaaFactory, globalThis._reflectionEnv,
         );
         reflectionPipeline.setAOEnabled?.(aoPreference);
         if (aoControl) {
@@ -1381,22 +1471,47 @@ async function buildSkybox() {
             environmentSuppressedMaterials: reflectionPipeline.environmentSuppressedMaterials ?? 0,
             reflectionCompose: reflectionPipeline.reflectionCompose ?? null,
             aoReceiverMask: reflectionPipeline.aoReceiverMask ?? null,
+            sameRaySkyAvailable: Boolean(reflectionPipeline.sameRaySkyAvailable),
+            sameRaySkySource: reflectionPipeline.sameRaySkySource ?? null,
+            sameRaySkyReason: reflectionPipeline.sameRaySkyReason ?? null,
+            bloomSource: reflectionPipeline.bloomSource ?? null,
+            sceneColorAttachments: reflectionPipeline.sceneColorAttachments ?? null,
         };
-        // FIRST FRAME BEHIND THE CURTAIN. Rendering once through the real
-        // pipeline compiles every material in its FINAL shape (MRT applied,
-        // envMaps installed, weather wraps landed) while the boot overlay is
+        // STAGED WARMUP BEHIND THE CURTAIN. First compile the exact scene MRT
+        // asynchronously after native environment bindings, material graphs, lights,
+        // and weather wrappers have reached their final form. The boot overlay is
         // still up — this was the multi-second black screen after loading:
-        // the first visible frame used to carry that entire compile. The
-        // pooled weather meshes flash visible so their pipelines compile too
-        // and a later weather switch stays a pure uniform change.
+        // Pooled weather meshes stay visible to the compiler so later weather
+        // switches remain uniform changes instead of surprise shader builds.
+        // The boot overlay remains painted while Three yields between objects.
         {
             const warmupObjects = active.weatherWarmupObjects?.() ?? [];
             const savedVisibility = warmupObjects.map((object) => object.visible);
             for (const object of warmupObjects) object.visible = true;
             const firstFrameStarted = performance.now();
+            let exactMrtCompileMs = null;
+            let finalGraphRenderMs = null;
+            let curtainFrameReady = false;
             try {
                 reflectionPipeline.update();
-                await reflectionPipeline.render();
+                if (typeof reflectionPipeline.compileAsync === 'function') {
+                    const compileStarted = performance.now();
+                    try {
+                        await reflectionPipeline.compileAsync();
+                        exactMrtCompileMs = performance.now() - compileStarted;
+                        console.log('[perf] exact MRT async compile took',
+                            Math.round(exactMrtCompileMs), 'ms');
+                    } catch (error) {
+                        console.warn('[boot] exact MRT async compile failed', error);
+                    }
+                }
+                const finalGraphStarted = performance.now();
+                try {
+                    await reflectionPipeline.render();
+                    curtainFrameReady = true;
+                } finally {
+                    finalGraphRenderMs = performance.now() - finalGraphStarted;
+                }
             } catch (error) {
                 console.warn('[boot] curtain frame failed', error);
             } finally {
@@ -1404,9 +1519,25 @@ async function buildSkybox() {
                     object.visible = savedVisibility[index];
                 });
             }
-            console.log('[perf] first-frame compile behind boot took',
-                Math.round(performance.now() - firstFrameStarted), 'ms');
+            const totalWarmupMs = performance.now() - firstFrameStarted;
+            globalThis._shaderWarmupStats = {
+                exactMrtCompileMs: exactMrtCompileMs === null
+                    ? null : Number(exactMrtCompileMs.toFixed(2)),
+                finalGraphRenderMs: finalGraphRenderMs === null
+                    ? null : Number(finalGraphRenderMs.toFixed(2)),
+                totalMs: Number(totalWarmupMs.toFixed(2)),
+                weatherGraphReady: curtainFrameReady,
+            };
+            if (curtainFrameReady) pipelineWarmupReadyOwner = reflectionPipeline;
+            console.log('[perf] staged curtain warmup total',
+                Math.round(totalWarmupMs), 'ms; final graph render',
+                Math.round(finalGraphRenderMs ?? 0), 'ms');
         }
+        // Boot-time shader compilation does not advance the authored sky or
+        // weather simulation, so its wall-clock duration must not make the
+        // first live frame immediately repeat the environment bake that just
+        // completed behind the curtain.
+        reflectionLastBake = performance.now();
         document.getElementById('boot').style.display = 'none';
     } catch (e) {
         clearWeatherReflectionTimers();
@@ -1415,6 +1546,7 @@ async function buildSkybox() {
         // prevent the remaining GPU resources from being retired.
         const failedPipeline = reflectionPipeline;
         reflectionPipeline = null;
+        if (pipelineWarmupReadyOwner === failedPipeline) pipelineWarmupReadyOwner = null;
         globalThis._reflectionPipeline = null;
         try { failedPipeline?.dispose?.(); } catch (cleanupError) { console.error('[cleanup] reflection pipeline', cleanupError); }
 
@@ -1519,9 +1651,10 @@ weatherControl.addEventListener('change', () => {
         if (active !== owner) return;
         reflectionDirty = true;
         setWeatherStatus(weatherLabel(state) + ' 0% · ' + Math.round(duration ?? 45) + 's');
-        // The lazy first-use load just dirtied many scene materials; compile
-        // their pipelines asynchronously while the frame loop holds off, so
-        // the first storm frame does not freeze the page.
+        // A true lazy/failure fallback still compiles asynchronously. The normal
+        // browser path was preloaded and exact-MRT compiled behind the boot
+        // curtain, so beginPipelineWarmup() resolves immediately without a
+        // redundant full-scene traversal on every uniform-only transition.
         beginPipelineWarmup();
         // Start the PMREM milestones only once a lazy first-use weather load
         // has completed and the actual long morph has begun.

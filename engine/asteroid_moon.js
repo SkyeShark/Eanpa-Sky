@@ -10,9 +10,15 @@
 // Bake runs ONCE via bakeAsteroidMoon (a tool, not engine behavior); the
 // engine only ever loads the three artifacts with makeAsteroidMoon.
 //
-// BAKE (once, from a bake scene):
+// BAKE (once, from a browser bake scene):
+//   const directory = await showDirectoryPicker();
+//   const writeArtifact = async (name, data) => {
+//       const file = await directory.getFileHandle(name, { create: true });
+//       const output = await file.createWritable();
+//       await output.write(data); await output.close();
+//   };
 //   const out = await globalThis.bakeAsteroidMoon({ renderer,
-//       textures: { height, albedo }, outDir: 'work/skylab/redgiant/assets' });
+//       textures: { height, albedo }, writeArtifact });
 //   → writes asteroid_moon_mesh.f32 + asteroid_moon_baked.png +
 //     asteroid_moon_normal.png; returns { mesh } for the lookdev turntable
 // RUNTIME (any scene — ASSETS values are base64 CONTENT, decode the mesh
@@ -54,7 +60,7 @@ globalThis._asteroidMoonMaterial = function (bakedTex, normalTex) {
     return { mat, uniforms: { sunDir: uSunDir, sunCol: uSunCol, gain: uGain } };
 };
 
-globalThis.bakeAsteroidMoon = async function ({ renderer, textures = {}, outDir, opts = {} } = {}) {
+globalThis.bakeAsteroidMoon = async function ({ renderer, textures = {}, writeArtifact = null, opts = {} } = {}) {
     const T3 = THREE;
     const { vec2, vec3, float, texture, normalize, clamp, abs, attribute } = T3;
     const SEED = opts.seed ?? 7;
@@ -290,8 +296,11 @@ globalThis.bakeAsteroidMoon = async function ({ renderer, textures = {}, outDir,
     nrmMat.colorNode = attribute('hnrm', 'vec3').mul(0.5).add(0.5);
     const nrmRT = await runBake(nrmMat, new T3.Color(0.5, 0.5, 0.5));
 
-    // ---- artifacts ----
-    if (outDir) {
+    // ---- optional browser artifact sink ----
+    if (writeArtifact !== null && typeof writeArtifact !== 'function') {
+        throw new TypeError('bakeAsteroidMoon writeArtifact must be a function');
+    }
+    if (writeArtifact) {
         const pos = geo.getAttribute('position'), nrm = geo.getAttribute('normal');
         const count = pos.count;
         const bytes = new Uint8Array(4 + count * 32);
@@ -299,22 +308,25 @@ globalThis.bakeAsteroidMoon = async function ({ renderer, textures = {}, outDir,
         bytes.set(new Uint8Array(pos.array.buffer, pos.array.byteOffset, count * 12), 4);
         bytes.set(new Uint8Array(nrm.array.buffer, nrm.array.byteOffset, count * 12), 4 + count * 12);
         bytes.set(new Uint8Array(uvArr.buffer), 4 + count * 24);
-        await Deno.writeFile(`${outDir}/asteroid_moon_mesh.f32`, bytes);
-        const writeAtlas = async (rt, name) => {
+        await writeArtifact('asteroid_moon_mesh.f32', new Blob(
+            [bytes], { type: 'application/octet-stream' },
+        ));
+        const encodeAtlas = async (rt) => {
             const px = await renderer.readRenderTargetPixelsAsync(rt, 0, 0, W, W);
-            const flipped = new Uint8Array(px.length);   // readback bottom-up; ffmpeg stdin top-down
+            const flipped = new Uint8Array(px.length);   // readback bottom-up; canvas pixels top-down
             for (let y = 0; y < W; y++) flipped.set(px.subarray(y * W * 4, (y + 1) * W * 4), (W - 1 - y) * W * 4);
-            const ff = new Deno.Command('ffmpeg', {
-                args: ['-y', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${W}x${W}`, '-i', 'pipe:0', '-frames:v', '1', `${outDir}/${name}`],
-                stdin: 'piped', stdout: 'null', stderr: 'null',
-            }).spawn();
-            const wtr = ff.stdin.getWriter();
-            await wtr.write(flipped); await wtr.close();
-            await ff.status;
+            const canvas = new OffscreenCanvas(W, W);
+            const context = canvas.getContext('2d');
+            if (!context) throw new Error('2D canvas unavailable for asteroid atlas encoding');
+            const rgba = new Uint8ClampedArray(
+                flipped.buffer, flipped.byteOffset, flipped.byteLength,
+            );
+            context.putImageData(new ImageData(rgba, W, W), 0, 0);
+            return canvas.convertToBlob({ type: 'image/png' });
         };
-        await writeAtlas(albRT, 'asteroid_moon_baked.png');
-        await writeAtlas(nrmRT, 'asteroid_moon_normal.png');
-        console.log(`[asteroid_moon] baked artifacts -> ${outDir}/asteroid_moon_mesh.f32 + asteroid_moon_baked.png + asteroid_moon_normal.png (${count} runtime verts, ${hiCount / 3} bake tris)`);
+        await writeArtifact('asteroid_moon_baked.png', await encodeAtlas(albRT));
+        await writeArtifact('asteroid_moon_normal.png', await encodeAtlas(nrmRT));
+        console.log(`[asteroid_moon] wrote browser artifacts: asteroid_moon_mesh.f32 + asteroid_moon_baked.png + asteroid_moon_normal.png (${count} runtime verts, ${hiCount / 3} bake tris)`);
     }
 
     // lookdev mesh straight from the live targets (celestial-body material)
@@ -748,9 +760,29 @@ globalThis.makeShatteredMoon = async function ({ glbBytes, spread = 1.75 } = {})
 
 // ---------- runtime: load the baked artifacts, nothing else ----------
 globalThis.makeAsteroidMoon = async function ({ meshBytes, meshPath, baked, normal } = {}) {
-    const bytes = meshBytes ?? await Deno.readFile(meshPath);
+    let bytes;
+    if (meshBytes !== undefined && meshBytes !== null) {
+        if (meshBytes instanceof ArrayBuffer) {
+            bytes = new Uint8Array(meshBytes);
+        } else if (ArrayBuffer.isView(meshBytes)) {
+            bytes = new Uint8Array(
+                meshBytes.buffer, meshBytes.byteOffset, meshBytes.byteLength,
+            );
+        } else {
+            throw new TypeError('makeAsteroidMoon meshBytes must be an ArrayBuffer or typed-array view');
+        }
+    } else {
+        if (!meshPath) throw new TypeError('makeAsteroidMoon requires meshBytes or meshPath');
+        const response = await fetch(meshPath);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch asteroid moon mesh ${meshPath}: HTTP ${response.status}`);
+        }
+        bytes = new Uint8Array(await response.arrayBuffer());
+    }
+    if (bytes.byteLength < 4) throw new Error('Asteroid moon mesh is truncated');
     const base = bytes.byteOffset;
     const count = new Uint32Array(bytes.buffer.slice(base, base + 4))[0];
+    if (4 + count * 32 > bytes.byteLength) throw new Error('Asteroid moon mesh payload is truncated');
     const posA = new Float32Array(bytes.buffer.slice(base + 4, base + 4 + count * 12));
     const nrmA = new Float32Array(bytes.buffer.slice(base + 4 + count * 12, base + 4 + count * 24));
     const uvA = new Float32Array(bytes.buffer.slice(base + 4 + count * 24, base + 4 + count * 32));

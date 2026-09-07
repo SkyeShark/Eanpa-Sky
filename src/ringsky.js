@@ -35,8 +35,8 @@ export async function makeRingworld({
     // SPOM: the ringworld engine ray-marches the band's height field so ridges
     // occlude the valleys behind them and cast onto each other — without this
     // global (plus bandHeight below) its POM_ON gate fails SILENTLY and the
-    // 31 km arc reads as flat painted normal-map shading. A real ESM import:
-    // loadEngine()'s eval cannot execute import/export statements.
+    // 31 km arc reads as flat painted normal-map shading. Keep the helper as a
+    // canonical ESM dependency alongside the side-effect engine modules.
     globalThis.parallaxOcclusionUV ??= (await import('./parallax_occlusion.js')).parallaxOcclusionUV;
 
     const load = globalThis.loadImageTexture;

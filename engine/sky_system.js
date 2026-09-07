@@ -147,9 +147,9 @@
         // the field reads as cloud smeared along that plane — the darkstorm band,
         // whose upper edge is exactly the elevation of the deck base at the
         // flat/curve join (atan(450/4200) = 6.1 deg, measured at y=345).
-        // STORMSTEPS overrides; the loop bound has to be a build-time constant.
+        // opts.stormSamples overrides; the loop bound has to be a build-time constant.
         const N_STORM_STEPS = Math.max(4, Math.round(Number(
-            globalThis.Deno?.env?.get?.('STORMSTEPS') ?? opts.stormSamples ?? 12)));
+            opts.stormSamples ?? 12)));
         const N_STORM_PASSES = 2;
         // Cloud shadows are a sky-budget item, but 2-6 taps integrated a
         // fine erosion-bearing density so coarsely that a drifting cloud
@@ -451,13 +451,13 @@
         // left the streaks — they're density structure). Shearing the
         // lookup by in-layer height, gated by |slope|, breaks the climb
         // into stacked cells and is an exact no-op wherever the deck is flat.
-        // RINGSHEAR scales the coefficient for bisecting the vertically
+        // opts.ringShear scales the coefficient for bisecting the vertically
         // stretched "wall" of cloud reported at the horizon on darkstorm.
         // darkstorm authors its own layer geometry (start 500 / height 650 vs
         // the cumulus default 700 / 520), so a coefficient tuned against the
         // default may not break its climb into cells.
         const RING_SHEAR_K = Number(
-            globalThis.Deno?.env?.get?.('RINGSHEAR') ?? 2.0);
+            opts.ringShear ?? 2.0);
         const ringZShear = (pIn, ch) => RING_R
             ? ringSlopeAt(pIn).mul(ch).mul(RING_THICK * RING_SHEAR_K)
             : float(0);
@@ -1042,7 +1042,7 @@
                 // CPU emulation of the full weather+erosion chain: max err
                 // 0.0097 = f16 rounding, corr 1.0000), but the FRAGMENT stage's
                 // reads of the same Data3DTexture drift over the run on the
-                // Deno-wgpu backend (differential probes: pristine at t=2.5 s,
+                // legacy wgpu backend (differential probes: pristine at t=2.5 s,
                 // straight-edged corrupt regions growing from t≈4 s — same
                 // object identity, compute readback still pristine at t=18 s).
                 // A cache built from the TRUE basis therefore lights a field
@@ -1065,13 +1065,13 @@
         // ---------------- CLOUD DOME material ----------------
         // body parameterized on (dir, org) so the env bake below can evaluate
         // the SAME sky from equirect directions (dome pass uses screen rays)
-        // CLOUDDBG=1: lookdev build that strips every under-the-deck camera
+        // opts.cloudDebug=true: lookdev build that strips every under-the-deck camera
         // assumption — no upward-ray gate, march from the camera over the
         // full range, no distance/horizon fades. Coarse (N_MARCH over the
         // whole fadeDist) but it SHOWS THE SHAPE from any vantage, which is
         // the entire point of a debug view — never cull the subject of a
         // debug. Proper any-vantage rendering is future work.
-        const CLOUD_DBG = globalThis.Deno?.env?.get?.('CLOUDDBG') === '1';
+        const CLOUD_DBG = opts.cloudDebug === true;
         const cloudBody = (
             dirIn, orgIn, passesIn, jitterOverride = null,
             transientLightScale = float(1),
@@ -2459,6 +2459,19 @@
                 return target;
             },
             enableReflections(camera, ropts = {}) {
+                const externalPbrResponse = ropts.externalPbrResponse === true;
+                // Re-registering on the same sky instance must release the
+                // placeholder and globals owned by the previous hook graph.
+                if (globalThis._autoEnhanceCloudReflectHook === sys._reflectionHook) {
+                    globalThis._autoEnhanceCloudReflectHook = null;
+                }
+                if (globalThis._autoEnhanceCloudReflectBlurHook === sys._reflectionBlurHook) {
+                    globalThis._autoEnhanceCloudReflectBlurHook = null;
+                }
+                if (sys._envFbNode) sys._envFbNode.value = null;
+                sys._envFbNode = null;
+                sys._envFbPlaceholder?.dispose?.();
+                sys._envFbPlaceholder = null;
                 // EIDOVERSE PORT: the hook suppresses material env-IBL and SSR
                 // only covers camera-visible ground — below-horizon rays whose
                 // target the camera cannot see (e.g. the ground directly under
@@ -2473,6 +2486,7 @@
                 const envFbPlaceholder = new T3.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
                 envFbPlaceholder.needsUpdate = true;
                 const envFbNode = T3.texture(envFbPlaceholder);
+                sys._envFbPlaceholder = envFbPlaceholder;
                 sys._envFbNode = envFbNode;
                 // debug modes REPLACE the final image (render_scene checks this
                 // flag in the deferred compose) — additive debug over a lit
@@ -2513,8 +2527,14 @@
                         // into the sharp source before roughness mip filtering.
                         // Environment rays have no finite geometry-hit distance,
                         // so SSR's hit-distance attenuation is intentionally 1.
-                        const op = float(ropts.gain ?? 1.0).mul(metalness).toVar();
-                        op.mulAssign(fresnelCoe);
+                        // The deferred reflection pipeline owns receiver PBR
+                        // response in external mode. Emit same-ray environment
+                        // radiance there; legacy callers retain the exact
+                        // metalness * Fresnel weighting used before this mode.
+                        const op = externalPbrResponse
+                            ? float(ropts.gain ?? 1.0).toVar()
+                            : float(ropts.gain ?? 1.0).mul(metalness).toVar();
+                        if (!externalPbrResponse) op.mulAssign(fresnelCoe);
                         const reflRO = worldPos.add(worldNormal.mul(0.05));
                         const cloudCol = vec3(0).toVar();
                         // The horizon transition is metadata for the final
@@ -2607,15 +2627,24 @@
                         // multiply as the production five-mip path.
                         const stage1 = mix(sharp, lightBlur.rgb, smoothstep(0.0, 0.25, r2));
                         const stage2 = mix(stage1, heavyBlur.rgb, smoothstep(0.25, 1.0, r2));
-                        return vec4(stage2.mul(mr.r), 1.0);
+                        return vec4(externalPbrResponse ? stage2 : stage2.mul(mr.r), 1.0);
                     })();
                 };
+                sys._reflectionHook = reflHook;
+                sys._reflectionBlurHook = ropts.blur !== false ? reflBlur : null;
+                reflHook.selfGated = true;
+                reflHook.externalPbrResponse = externalPbrResponse;
                 globalThis._autoEnhanceCloudReflectHook = reflHook;
                 // this hook gates by REFLECTION DIRECTION internally — tell the
                 // engine to skip its blunt N·up multiply (kept for the old
                 // screenspace effect, whose hook doesn't self-gate)
-                globalThis._autoEnhanceCloudReflectHook.selfGated = true;
-                if (ropts.blur !== false) globalThis._autoEnhanceCloudReflectBlurHook = reflBlur;
+                if (ropts.blur !== false) {
+                    globalThis._autoEnhanceCloudReflectBlurHook = reflBlur;
+                } else {
+                    // A previous registration may have installed a blur hook;
+                    // it must not process this raw-radiance source implicitly.
+                    globalThis._autoEnhanceCloudReflectBlurHook = null;
+                }
                 // standalone godrays effect can't see these clouds — trip its
                 // mutual-exclusion sentinel (the sky carries its own shafts)
                 globalThis._volumetricCloudsActive = true;
@@ -2749,19 +2778,12 @@
                 // hand the now-rendered bake to the reflection hook's
                 // below-horizon fallback (it boots on a 1x1 placeholder)
                 if (sys._envFbNode) sys._envFbNode.value = target.texture;
-                // Assigning the bake to scene.environment is HOST-DEPENDENT, and
-                // this is the one place the two hosts genuinely disagree:
-                //   • offline renderer — wants it. The sky owns the world's light,
-                //     and env-IBL is how clouds reach reflections.
-                //   • browser (the realtime host) — must NOT have it by default.
-                //     Chrome suppresses Basic-family sky domes once
-                //     scene.environment is set, which blanks the sky entirely.
-                // So the default follows the host rather than being hard-coded to
-                // either, which keeps ONE shared engine file correct in both and
-                // avoids the forked-copy drift that has bitten this code before.
-                // bopts.assign forces it either way; bopts.ifAbsent respects an
-                // HDRI the scene already set.
-                const assignEnv = bopts.assign ?? !!globalThis.Deno;
+                // The realtime browser must not receive a global environment by
+                // default: Chrome suppresses Basic-family sky domes once
+                // scene.environment is set. Consumers that explicitly own a
+                // scene-level environment can opt in with bopts.assign=true;
+                // bopts.ifAbsent then respects an HDRI the scene already set.
+                const assignEnv = bopts.assign ?? false;
                 if (assignEnv && !(bopts.ifAbsent && scene.environment)) {
                     scene.environment = target.texture;
                     console.log(`[sky] env bake ${W}x${H} -> scene.environment (clouds reach reflections via env-IBL)`);
@@ -2808,6 +2830,19 @@
             dispose() {
                 if (disposed) return;
                 disposed = true;
+                if (globalThis._autoEnhanceCloudReflectHook === sys._reflectionHook) {
+                    globalThis._autoEnhanceCloudReflectHook = null;
+                }
+                if (sys._reflectionBlurHook
+                    && globalThis._autoEnhanceCloudReflectBlurHook === sys._reflectionBlurHook) {
+                    globalThis._autoEnhanceCloudReflectBlurHook = null;
+                }
+                sys._reflectionHook = null;
+                sys._reflectionBlurHook = null;
+                if (sys._envFbNode) sys._envFbNode.value = null;
+                sys._envFbNode = null;
+                sys._envFbPlaceholder?.dispose?.();
+                sys._envFbPlaceholder = null;
                 sys._cloudTransition = null;
                 cloudTransitionInfo.active = false;
                 for (const [material, roots] of cloudShadowRoots) {

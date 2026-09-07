@@ -127,8 +127,9 @@
 }
 </script>
 <script type="module">
-  // cache-busted loader: Chrome's module cache survives F5 and lies (ring-editor lesson)
-  import('./src/main.js?ts=' + Date.now()).catch((e) => {
+  // Pin one coherent graph revision. Long-lived Chromium module maps can retain
+  // an already-instantiated dependency even after a cache-disabled page reload.
+  import('./src/main.js?rev=reflection-holdout-20260805').catch((e) => {
     document.getElementById('boot').textContent = 'boot failed: ' + e.message;
     console.error(e);
   });

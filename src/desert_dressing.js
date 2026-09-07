@@ -8,6 +8,16 @@
 // policy: deterministic seeded generation, authored-scene exclusion zones,
 // slope rejection, and 9-tap footprint seating over terrain_real heights.
 
+import {
+    createFloraField,
+    FLORA_SPECIES,
+    occupancyConflict,
+    claimPlantFootprint,
+    resetFloraOccupancy,
+    disposeSharedFloraResources,
+    valueNoise2D,
+} from './mojave_flora.js';
+
 class Rng {
     constructor(seed = 1) {
         const text = String(seed);
@@ -52,16 +62,6 @@ function makeTerrainReader(terrain) {
 }
 
 export async function makeDesertDressing(T3, { terrain, quality = 'balanced' } = {}) {
-    const {
-        createFloraField,
-        FLORA_SPECIES,
-        occupancyConflict,
-        claimPlantFootprint,
-        resetFloraOccupancy,
-        disposeSharedFloraResources,
-        valueNoise2D,
-    } = await import('./mojave_flora.js?ts=' + Date.now());
-
     const group = new T3.Group();
     group.name = 'eanpa_real_desert_dressing';
     const ownedGeometries = new Set();

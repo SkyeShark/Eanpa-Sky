@@ -35416,7 +35416,7 @@ class MRTNode extends OutputStructNode {
 		const blendings = { ...this.blendModes, ...mrtNode.blendModes };
 
 		const mrtTarget = mrt( outputs );
-		mrtTarget.blendings = blendings;
+		mrtTarget.blendModes = blendings;
 
 		return mrtTarget;
 
@@ -44718,6 +44718,11 @@ class ShadowNode extends ShadowBaseNode {
 	 * @param {NodeFrame} frame - A reference to the current node frame.
 	 */
 	updateBefore( frame ) {
+
+		// A precompile warms resources only. Rendering a shadow map here enters
+		// the normal synchronous pipeline path, blocking the browser and mutating
+		// render state while compileAsync() is still traversing the scene.
+		if ( frame.renderer._isPreCompiling === true ) return;
 
 		const { shadow } = this;
 
@@ -58430,6 +58435,19 @@ class Renderer {
 		this._compilationPromises = null;
 
 		/**
+		 * Whether the renderer is currently precompiling a render object in
+		 * `compileAsync()`.
+		 *
+		 * Backported from Three's post-r184 compiler fixes: update-before nodes
+		 * such as shadow maps must not issue real renders during precompilation.
+		 *
+		 * @private
+		 * @type {boolean}
+		 * @default false
+		 */
+		this._isPreCompiling = false;
+
+		/**
 		 * Whether the renderer should render transparent render objects or not.
 		 *
 		 * @type {boolean}
@@ -58776,14 +58794,27 @@ class Renderer {
 			renderObject.drawRange = item.object.geometry.drawRange;
 			renderObject.group = item.group;
 
-			this._geometries.updateForRender( renderObject );
-
 			// Use async node building to yield to main thread
 			await this._nodes.getForRenderAsync( renderObject );
 
-			this._nodes.updateBefore( renderObject );
-			this._nodes.updateForRender( renderObject );
-			this._bindings.updateForRender( renderObject );
+			// No awaits are allowed while this flag is true: it is renderer-wide
+			// state consumed by update-before nodes such as ShadowNode.
+			this._isPreCompiling = true;
+			try {
+
+				this._nodes.updateBefore( renderObject );
+				// r184 called this before getForRenderAsync(). Geometries needs the
+				// node-builder state, so that order silently performed a synchronous
+				// build and defeated compileAsync's browser yielding.
+				this._geometries.updateForRender( renderObject );
+				this._nodes.updateForRender( renderObject );
+				this._bindings.updateForRender( renderObject );
+
+			} finally {
+
+				this._isPreCompiling = false;
+
+			}
 
 			// Wait for pipeline creation
 			const pipelinePromises = [];
@@ -58794,7 +58825,16 @@ class Renderer {
 
 			}
 
-			this._nodes.updateAfter( renderObject );
+			this._isPreCompiling = true;
+			try {
+
+				this._nodes.updateAfter( renderObject );
+
+			} finally {
+
+				this._isPreCompiling = false;
+
+			}
 
 			// Yield between objects to allow animation frames
 			await yieldToMain();
@@ -74929,7 +74969,7 @@ const wgslMethods = {
 
 let diagnostics = '';
 
-if ( ( typeof navigator !== 'undefined' && /Firefox|Deno/g.test( navigator.userAgent ) ) !== true ) {
+if ( ( typeof navigator !== 'undefined' && /Firefox/g.test( navigator.userAgent ) ) !== true ) {
 
 	diagnostics += 'diagnostic( off, derivative_uniformity );\n';
 

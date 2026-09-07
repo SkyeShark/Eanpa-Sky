@@ -76,6 +76,20 @@ class SSRNode extends TempNode {
 		this.roughnessNode = roughnessNode;
 
 		/**
+		 * Optional resolved RGB specular response for the receiving pixel. When
+		 * supplied, SSR uses this native-material DFG/F0 response instead of the
+		 * legacy scalar metalness/Fresnel approximation. As in the donor renderer,
+		 * alpha is a strict accepted-hit mask: one when this ray found geometry and
+		 * zero on a miss. Roughness filtering may spatially filter that mask together
+		 * with RGB, but an accepted sharp hit never shares ownership with the sky
+		 * fallback. The default remains the upstream SSR behavior.
+		 *
+		 * @type {?Node<vec3>}
+		 * @default null
+		 */
+		this.specularResponseNode = null;
+
+		/**
 		 * The resolution scale. Valid values are in the range
 		 * `[0,1]`. `1` means best quality but also results in
 		 * more computational overhead. Setting to `0.5` means
@@ -444,9 +458,16 @@ class SSRNode extends TempNode {
 		const ssr = Fn( () => {
 
 			const metalness = float( this.metalnessNode );
+			const specularResponse = this.specularResponseNode !== null
+				? this.specularResponseNode.sample( uvNode ).rgb
+				: null;
+			const receiverMask = specularResponse !== null
+				? max( max( specularResponse.r, specularResponse.g ), specularResponse.b )
+				: metalness;
 
-			// fragments with no metalness do not reflect their environment
-			metalness.equal( 0.0 ).discard();
+			// Skip pixels without a supported reflective receiver. The PBR path
+			// includes dielectric F0, so it is intentionally not metal-only.
+			receiverMask.lessThanEqual( 0.00001 ).discard();
 
 			// compute some standard FX entities
 			const depth = sampleDepth( uvNode ).toVar();
@@ -517,6 +538,16 @@ class SSRNode extends TempNode {
 				// compute new uv, depth and viewZ for the next fragment
 				const uvNode = xy.div( this._resolution );
 				const d = sampleDepth( uvNode ).toVar();
+
+				// The clear-depth background is not geometry and cannot own a
+				// reflected ray. Reject it before reconstructing a far-plane point;
+				// otherwise an open-sky sample can become a false local hit.
+				If( d.greaterThanEqual( 0.999999 ), () => {
+
+					Continue();
+
+				} );
+
 				const vZ = getViewZ( d ).toVar();
 
 				const viewReflectRayZ = float( 0 ).toVar();
@@ -576,20 +607,50 @@ class SSRNode extends TempNode {
 
 						} );
 
-						const op = this.opacity.mul( metalness ).toVar();
+						const op = this.opacity.toVar();
 
-						// distance attenuation (the reflection should fade out the farther it is away from the surface)
-						const ratio = float( 1 ).sub( distance.div( this.maxDistance ) ).toVar();
-						const attenuation = ratio.mul( ratio );
-						op.mulAssign( attenuation );
+						if ( specularResponse === null ) {
+
+							op.mulAssign( metalness );
+
+							// Preserve upstream's legacy cosmetic distance fade. This path's
+							// alpha is not consumed as environment ownership.
+							const ratio = float( 1 ).sub( distance.div( this.maxDistance ) ).toVar();
+							const attenuation = ratio.mul( ratio );
+							op.mulAssign( attenuation );
+
+						}
 
 						// fresnel (reflect more light on surfaces that are viewed at grazing angles)
-						const fresnelCoe = div( dot( viewIncidentDir, viewReflectDir ).add( 1 ), 2 );
-						op.mulAssign( fresnelCoe );
+						if ( specularResponse === null ) {
+
+							const fresnelCoe = div( dot( viewIncidentDir, viewReflectDir ).add( 1 ), 2 );
+							op.mulAssign( fresnelCoe );
+
+						}
 
 						// output
 						const reflectColor = this.colorNode.sample( uvNode );
-						output.assign( vec4( reflectColor.rgb.mul( op ), 1 ) );
+						// Keep the intermediate buffer receiver-independent. Roughness
+						// filtering blends neighbouring hit samples; applying the receiving
+						// pixel's F0/DFG response here would bleed one material's response
+						// across another. The app-owned composite applies the current
+						// receiver response after this premultiplied RGBA buffer is blurred.
+						// In the PBR replacement path, preserve Eidoverse's binary ownership
+						// contract: an accepted geometry hit owns the complete reflected ray.
+						// Marginal residual/distance weights cannot be mixed with the sky here;
+						// doing so displays both incompatible fields and chatters as the first
+						// accepted march sample changes. Misses retain the zero initializer.
+						if ( specularResponse !== null ) {
+
+							output.assign( vec4( reflectColor.rgb, float( 1 ) ) );
+
+						} else {
+
+							// Preserve the upstream legacy payload exactly.
+							output.assign( vec4( reflectColor.rgb.mul( op ), float( 1 ) ) );
+
+						}
 						Break();
 
 					} );

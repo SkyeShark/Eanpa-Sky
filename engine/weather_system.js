@@ -14,7 +14,7 @@
 // Plus deterministic LIGHTNING (separated storm events with bounded
 // return-stroke clusters, no runtime RNG).
 //
-//   eval sky_system.js first, then:
+//   await loadEngine('sky_system.js') first, then:
 //   const weather = await makeWeatherSystem({ scene, sky });
 //   weather.wrapScene();                  // wetness on existing materials
 //   weather.setWeather('storm', 1.0);     // see WEATHER table below
@@ -117,17 +117,14 @@
     // GAP SCALE — the cadence above is authored for a realtime world you stand
     // around in, where 16-38 s of dark between strikes is the point.
     //
-    // The DEFAULT FOLLOWS THE HOST, because the right answer genuinely differs:
-    //   • realtime (browser) — 1.0, the authored spacing. Compressing it is not an
-    //     improvement here, it just makes the storm restless — and incidentally
-    //     multiplies how often every per-strike path runs.
-    //   • offline renderer — 0.42. A produced clip is 15-90 s long, so at the
-    //     authored spacing most videos catch one strike or none; the whole scale
-    //     is fitted to that runtime so storms read as storms within a shot.
+    // The realtime browser default is 1.0, the authored spacing. Compressing it
+    // makes the storm restless and multiplies how often every per-strike path
+    // runs. Non-realtime callers can request another cadence explicitly.
     //
     // Override either way with makeWeatherSystem({ opts: { lightningGapScale } }).
-    let LIGHTNING_GAP_SCALE = globalThis.Deno ? 0.42 : 1;
-    const lightningEventGapAt = (eventIndex, paletteName = 'standard', level = 1) => {
+    const lightningEventGapAt = (
+        eventIndex, paletteName = 'standard', level = 1, gapScale = 1,
+    ) => {
         const cadence = lightningCadenceFor(paletteName);
         const safeLevel = Math.max(0.01, Math.min(1, Number(level) || 0));
         // Less electrical weather stretches the same natural base range. It
@@ -139,18 +136,20 @@
         const spread = cadence.maxGapSeconds - cadence.minGapSeconds;
         return (cadence.minGapSeconds
             + jsHash(eventIndex * 47.17 + 19.73) * spread)
-            * rarityScale * LIGHTNING_GAP_SCALE;
+            * rarityScale * gapScale;
     };
-    const lightningInitialEventGapAt = (eventIndex, paletteName = 'standard', level = 1) => {
+    const lightningInitialEventGapAt = (
+        eventIndex, paletteName = 'standard', level = 1, gapScale = 1,
+    ) => {
         const cadence = lightningCadenceFor(paletteName);
         if (!Number.isFinite(cadence.initialGapMinSeconds)
             || !Number.isFinite(cadence.initialGapMaxSeconds)) {
-            return lightningEventGapAt(eventIndex, paletteName, level);
+            return lightningEventGapAt(eventIndex, paletteName, level, gapScale);
         }
         return (cadence.initialGapMinSeconds
             + jsHash(eventIndex * 53.71 + 41.9)
                 * (cadence.initialGapMaxSeconds - cadence.initialGapMinSeconds))
-            * LIGHTNING_GAP_SCALE;
+            * gapScale;
     };
     const lightningStrokePlanAt = (eventIndex, paletteName = 'standard') => {
         const cadence = lightningCadenceFor(paletteName);
@@ -300,11 +299,11 @@
             sun:    asRGB(opts.sunColor,    [1, 1, 1]),
             shield: asRGB(opts.shieldColor, [1, 1, 1]),
         };
-        // 1 = the authored realtime cadence (16-38 s between events); the
-        // default compresses that to fit a produced clip's runtime.
-        if (Number.isFinite(opts.lightningGapScale)) {
-            LIGHTNING_GAP_SCALE = Math.max(0.05, Math.min(4, Number(opts.lightningGapScale)));
-        }
+        // 1 = the authored realtime cadence (16-38 s between events). Capture
+        // this per instance so another scene cannot alter a live scheduler.
+        const lightningGapScale = Number.isFinite(opts.lightningGapScale)
+            ? Math.max(0.05, Math.min(4, Number(opts.lightningGapScale)))
+            : 1;
         const N_RAIN = opts.rainCount ?? 16000;
         const RAD = opts.rainRadius ?? 45;     // world tile half-extent (m)
         const HGT = opts.rainHeight ?? 24;     // vertical recycle height (m)
@@ -1816,6 +1815,7 @@
                             lightningCadenceKey = cadenceKey;
                             const firstGap = lightningInitialEventGapAt(
                                 lightningEventIndex + 1, cadenceKey, lightningLevel,
+                                lightningGapScale,
                             );
                             nextLightningEventAt = finiteT + firstGap;
                             diagnostics.lightning.lastEventGapSeconds = firstGap;
@@ -1843,6 +1843,7 @@
                                 : 0;
                             const nextGap = lightningEventGapAt(
                                 lightningEventIndex + 1, cadenceKey, lightningLevel,
+                                lightningGapScale,
                             );
                             nextLightningEventAt = finiteT + nextGap;
                             diagnostics.lightning.eventCount++;

@@ -26,7 +26,7 @@
 //   • Scene-MRT overrides follow vegetation.js's contract
 //     (userData.preserveSceneMrtOverride + explicit N8AO acceptance).
 // Dropped from the source: rosette/tuft card archetypes (unused here), corn,
-// VRM/harness code, Deno env flags, eidoverse audit userData stamps.
+// VRM/harness code, host-specific lookdev flags, eidoverse audit userData stamps.
 
 const T3 = globalThis.THREE;
 const {
@@ -1056,7 +1056,7 @@ function stampSceneMrtOverride(material, n8aoAcceptance) {
         normal: T3.vec4(T3.directionToColor(T3.normalView), T3.float(1)),
         metalrough: T3.vec4(
             T3.metalness, T3.roughness,
-            T3.float(n8aoAcceptance), T3.float(1),
+            T3.float(n8aoAcceptance), T3.materialEnvIntensity,
         ),
         emissive: T3.vec4(T3.emissive, T3.float(1)),
     });

@@ -17,10 +17,9 @@
 
     globalThis.makeRingworld = async function ({ glbBytes, textures = {}, opts = {} } = {}) {
         const { texture, uv, mix, smoothstep, float, vec2, vec3, fract, floor, uniform } = T3;
-        // Debug/override gates, declared at function entry because consumers are
-        // spread through the build (RINGNSAT in the terrain shading, RINGNOCLOUD
-        // at the cloud sheet, RINGFOGWALL/RINGRAINWALL at the horizon walls).
-        const _envRG = (k) => globalThis.Deno?.env?.get?.(k);
+        // Lookdev and quality overrides are explicit constructor options. They
+        // are read while the material graph is built because most affect static
+        // shader structure rather than per-frame uniforms.
         // REAL-LIGHT BAND — the default. Declared here because it is consumed in
         // two places spread through the build: the albedo/emissive split in the
         // terrain shading, and the band's own lights near the end.
@@ -50,17 +49,17 @@
         // So both are used, for what each actually does: the lights sit on a layer
         // the camera never enables, which keeps them out of the global light list,
         // and bandMat.lightsNode names them explicitly, which is NodeMaterial's
-        // per-material light list. RINGLIT=0 restores the analytic emissive path.
-        const RING_LIT = _envRG('RINGLIT') !== '0' && opts.litBand !== false;
+        // per-material light list. opts.litBand=false restores the analytic emissive path.
+        const RING_LIT = opts.litBand !== false;
         // Night haze floor — see the note at the hazeCol write in update(). The
         // colour is the planetshine (normalised so the level, not the constant's
-        // magnitude, sets the brightness); RINGHAZEN=0 restores the old
+        // magnitude, sets the brightness); opts.hazeNightLevel=0 restores the old
         // palette-only haze that went black at night.
         const PS_RAW = Array.isArray(opts.planetShineColor) && opts.planetShineColor.length === 3
             ? opts.planetShineColor : [1.00, 0.92, 0.82];
         const PS_MAX = Math.max(PS_RAW[0], PS_RAW[1], PS_RAW[2], 1e-4);
         const PS_HAZE = [PS_RAW[0] / PS_MAX, PS_RAW[1] / PS_MAX, PS_RAW[2] / PS_MAX];
-        const HAZE_NIGHT_LEVEL = Number(_envRG('RINGHAZEN') ?? opts.hazeNightLevel ?? 0.055);
+        const HAZE_NIGHT_LEVEL = Number(opts.hazeNightLevel ?? 0.055);
         // the colour the band's sun holds at local night — see the handover note
         // in update(). Faintly warm rather than pure white so the arc does not
         // read colder than the daylit side it is continuous with.
@@ -199,7 +198,7 @@
             // night side (which is scaled right down), and the arc reads as a
             // smooth blue wash with the normal-map detail visible but drowned.
             // Daytime is unaffected: there litArc dwarfs the veil anyway.
-            const inscNight = mx(f(Number(globalThis.Deno?.env?.get?.('RINGINSCN') ?? 0.28)), f(1), dayF);
+            const inscNight = mx(f(Number(opts.inscatterNightLevel ?? 0.28)), f(1), dayF);
             const insc = uHazeCol.mul(f(1).sub(trans0)).mul(veil).mul(rainT)
                 .add(uHazeCol.mul(f(1).sub(rainT)).mul(veil).mul(f(0.55))
                     .mul(f(1.08).sub(curt.mul(0.22))))
@@ -228,7 +227,7 @@
             // (39.2 -> 31.7 -> 44.1 over 25 px) — the band appearing to shrink to
             // a sliver. Widening the veil as the light falls keeps the covered
             // angle roughly constant instead of letting the toe decide it.
-            const footW = mx(f(Number(_envRG('RINGFOOTW') ?? opts.footWidthNight ?? 0.075)),
+            const footW = mx(f(Number(opts.footWidthNight ?? 0.075)),
                 f(0.022), dayF);
             const foot = f(1).sub(ss(f(0.0), footW, viewD.y));
             return { litK, warmT, trans, insc, expK: gain, litCol, dSun, sunTerm, foot, dayF, pVis };
@@ -337,19 +336,19 @@
             const POM_ON = textures.bandHeight
                 && !!globalThis.parallaxOcclusionUV
                 && bandTangents
-                && _envRG('RINGPOM') !== '0';
+                && opts.pomEnabled !== false;
             if (POM_ON) {
                 textures.bandHeight.wrapS = textures.bandHeight.wrapT = T3.RepeatWrapping;
                 textures.bandHeight.colorSpace = T3.NoColorSpace;
                 const pom = globalThis.parallaxOcclusionUV(textures.bandHeight, {
                     uvNode: uvF,
-                    scale: Number(_envRG('RINGPOMS') ?? opts.pomScale ?? 0.03),
+                    scale: Number(opts.pomScale ?? 0.03),
                     // the band covers a huge screen area at a grazing angle, so
                     // the step count matters for cost; the relief is broad and
                     // smooth (plateaus and swells, no high-frequency detail) and
                     // does not need a deep march to resolve.
-                    minLayers: Number(_envRG('RINGPOMMIN') ?? 10),
-                    maxLayers: Number(_envRG('RINGPOMMAX') ?? 28),
+                    minLayers: Number(opts.pomMinLayers ?? 10),
+                    maxLayers: Number(opts.pomMaxLayers ?? 28),
                     silhouette: false,
                 });
                 uvF = pom.uv;
@@ -372,7 +371,7 @@
             // 3x3 taps at a few texels' radius, weights summing to 1.
             const MW = textures.landmask.image?.width || 2172;
             const MH = textures.landmask.image?.height || 724;
-            const ST = Number(_envRG('RINGSHORE') ?? opts.shoreTexels ?? 3.0);
+            const ST = Number(opts.shoreTexels ?? 3.0);
             const sx = float(ST / MW), sy = float(ST / MH);
             const mSoft = mRaw.mul(0.36)
                 .add(mAt(sx, float(0)).add(mAt(sx.negate(), float(0)))
@@ -433,7 +432,7 @@
             // actually sells a shoreline. Applied to the BLEND, so it darkens the
             // land side and the shallows together rather than drawing a line.
             albedoArc = albedoArc.mul(float(1).sub(shore.mul(float(
-                Number(_envRG('RINGSHOREW') ?? opts.shoreWetness ?? 0.20)))));
+                Number(opts.shoreWetness ?? 0.20)))));
             // SPOM SELF-SHADOW — ridges cast onto the ground behind them, marched
             // against the same height field. This is the half of relief a normal
             // map cannot do at all: a normal map can shade a slope away from the
@@ -441,11 +440,11 @@
             // albedo, which is what the library's own wrapper does; a floor keeps
             // shadowed ground from going to pure black where the ambient and the
             // planetshine should still reach it.
-            if (pomShadow && _envRG('RINGPOMSHADOW') !== '0') {
+            if (pomShadow && opts.pomShadow !== false) {
                 const lightView = T3.cameraViewMatrix.mul(T3.vec4(uSunDirN, float(0))).xyz;
-                const sFloor = Number(_envRG('RINGPOMSF') ?? opts.pomShadowFloor ?? 0.45);
+                const sFloor = Number(opts.pomShadowFloor ?? 0.45);
                 const s = pomShadow(lightView, {
-                    steps: Number(_envRG('RINGPOMSS') ?? 12), strength: 6, bias: 0.03,
+                    steps: Number(opts.pomShadowSteps ?? 12), strength: 6, bias: 0.03,
                 });
                 albedoArc = albedoArc.mul(s.mul(1 - sFloor).add(sFloor));
             }
@@ -460,8 +459,8 @@
                 // the only thing that can still say "this is a landscape" is
                 // occlusion baked into the surface itself. Deepening the floor is
                 // therefore what fixes head-on flatness, where more sun does not.
-                // RINGAOK sets how dark a fully occluded valley gets.
-                const aoLo = float(Number(_envRG('RINGAOK') ?? opts.bandAOFloor ?? 0.62));
+                // opts.bandAOFloor sets how dark a fully occluded valley gets.
+                const aoLo = float(Number(opts.bandAOFloor ?? 0.62));
                 const aoK = mix(mix(aoLo, float(1.06), aoS), float(1), k);
                 albedoArc = albedoArc.mul(aoK);
                 nightAO = mix(aoS.mul(aoS).mul(1.15), float(1), k);   // deeper valley shadow under moonlight (land only)
@@ -579,7 +578,7 @@
             // 8-bit chroma quantises away. Expanding chroma about the term's
             // own luma restores the hue separation without touching contrast
             // or brightness. opts.nightSat overrides; 1 = off.
-            const nSat = float(Number(_envRG('RINGNSAT') ?? opts.nightSat ?? 1.3));
+            const nSat = float(Number(opts.nightSat ?? 1.3));
             let nBase = albedoArc.mul(vec3(nt[0], nt[1], nt[2]));
             const nLum = T3.dot(nBase, vec3(0.2126, 0.7152, 0.0722));
             nBase = mix(vec3(nLum, nLum, nLum), nBase, nSat).max(vec3(0));
@@ -591,14 +590,14 @@
             // range therefore grows SUPERLINEARLY as the level rises: V spread
             // 35 -> 52 -> 67 at levels 0.60 / 1.20 / 2.00. Lifting out of the
             // toe is what restores the terrain's hue separation; the small
-            // nSat above only tops it up. opts.nightLevel / RINGNLEV override.
-            const nLev = float(Number(_envRG('RINGNLEV') ?? opts.nightLevel ?? 1.20));
+            // nSat above only tops it up. opts.nightLevel overrides.
+            const nLev = float(Number(opts.nightLevel ?? 1.20));
             const nightSide = nBase.mul(nightRelief).mul(nightAO).mul(shine).mul(nLev).mul(nightVis);
             // strong graze response: at a segment's local morning/evening the
             // ridges catch the sun and the valleys drop out — the flat-at-noon
             // residue is carried by the baked AO above
             const litArc = albedoArc.mul(A.warmT).mul(A.litCol).mul(float(0.22).add(relief.mul(1.05)));
-            // ---- RINGLIT=1: REAL LIGHT PATH (experimental) -----------------
+            // ---- opts.litBand=true: REAL LIGHT PATH --------------------------
             // The default path below hands the band ZERO albedo and paints
             // everything through emissiveNode. That opts the surface out of
             // GTAO, out of specular/Fresnel shape, and out of any diffuse
@@ -622,7 +621,7 @@
             // authored wide terminator is preserved as an irradiance SHAPE on
             // top (raw N.L at -35 deg only lights theta>=150; the
             // smoothstep(-0.22, 0.30) spreads it much further down the arc).
-            // REAL LIGHT is now the default. RINGLIT=0 restores the old
+            // REAL LIGHT is now the default. opts.litBand=false restores the old
             // analytic path for comparison only.
             //
             // HOW THE LIGHT REACHES ONLY THE BAND. Not with layers: on this
@@ -697,7 +696,7 @@
                 // baked cavity AO. Hence the ambient stays, and the relief comes
                 // from AO (below) plus SPOM's own occlusion.
                 bandMat.envMapIntensity = Number(
-                    _envRG('RINGENVI') ?? opts.bandEnvIntensity ?? 1.0);
+                    opts.bandEnvIntensity ?? 1.0);
             } else {
                 bandMat.colorNode = vec3(0);
             }
@@ -718,22 +717,22 @@
             // dissolves the seam where the band's base meets the local scene —
             // without it the ring ends in a hard line against the horizon.
             const arcOut = RING_LIT
-                // atmosphere only — no painted sun. RINGNOINSC=1 zeroes it, to
-                // test how much of the band's flat pale wash is haze rather than
-                // shading.
-                ? (_envRG('RINGNOINSC') === '1' ? vec3(0) : A.insc.mul(float(0.68)))
+                // atmosphere only — no painted sun. opts.inscatterEnabled=false
+                // zeroes it to test how much of the band's flat pale wash is haze
+                // rather than shading.
+                ? (opts.inscatterEnabled === false ? vec3(0) : A.insc.mul(float(0.68)))
                 : litArc.mul(A.litK).mul(A.trans)
                     .add(nightSide.mul(float(1).sub(A.litK)).mul(A.trans))
                     .add(A.insc.mul(float(0.68)))
                     .add(sparkle);
-            // RINGFOOT0=1: debug — the foot veil assumes a GROUND camera (ray
+            // opts.footVeil=false: debug — the foot veil assumes a GROUND camera (ray
             // near horizontal = band foot in local haze); from an exterior
             // camera it whitewashes the whole lower arc and impersonates a
             // cloud lining (Skye's catch)
-            bandMat.emissiveNode = globalThis.Deno?.env?.get?.('RINGFOOT0') === '1'
+            bandMat.emissiveNode = opts.footVeil === false
                 ? arcOut
                 : mix(arcOut, uHazeCol, A.foot.mul(float(0.8)));   // foot -> local horizon haze
-            if (globalThis.Deno?.env?.get?.('RINGDBG') === '1') {
+            if (opts.debugBand === 'lighting') {
                 // TEMP diagnostic: R=sun terminator, G=planet-shine terminator, B=night relief
                 bandMat.emissiveNode = vec3(A.litK, A.pVis, nightRelief.mul(float(0.4)));
             }
@@ -774,7 +773,7 @@
             // flat while the water still shows a crisp sun spot — the water's shape
             // comes from SPECULAR, whose half-vector changes fast across the
             // surface, so it survives what kills the diffuse.
-            const NSC = Number(_envRG('RINGNSCALE') ?? opts.bandNormalScale ?? 1.4);
+            const NSC = Number(opts.bandNormalScale ?? 1.4);
             const landTSraw = textures.bandNormal
                 ? texture(textures.bandNormal, uvF).rgb
                 : (origMat.normalMap ? texture(origMat.normalMap, uvP).rgb : vec3(0.5, 0.5, 1));
@@ -802,8 +801,8 @@
                 // specular rather than diffuse. The tell was that raising the
                 // band sun 62x (3.2 -> 200) moved the band by only +2.7 luma —
                 // not a dim light, a backfacing surface.
-                // RINGNGEO=0 restores the authored normals for comparison.
-                const Nn = _envRG('RINGNGEO') === '0'
+                // opts.analyticBandNormal=false restores the authored normals for comparison.
+                const Nn = opts.analyticBandNormal === false
                     ? T3.normalLocal
                     : T3.normalize(vec3(float(0), posL.y, posL.z)).negate();
                 const landVr = landTS.mul(2).sub(1);
@@ -912,7 +911,7 @@
         cloudGeo.rotateZ(Math.PI / 2);  // cylinder axis Y → ring axis X
         // Standard-family, NOT Basic: with shadow maps enabled, a Basic sheet's
         // pipeline compiles to an EMPTY fragment output struct — Dawn tolerates
-        // it, Deno's naga rejects it ("Structure types must have at least one
+        // it, stricter Naga validation rejects it ("Structure types must have at least one
         // member") and the sheet silently dies. Standard is proven under
         // shadows here; the clouds stay visually unlit by routing colour
         // through emissiveNode.
@@ -995,13 +994,13 @@
         // section (opacity 0) contributes nothing. Its geometry lies tangent
         // to y=0 at the local origin — with alpha-1 padding it would silently
         // ERASE the metalness of any scene floor beneath it.
-        // opts.ringClouds = false (or RINGNOCLOUD=1) drops the sheet. It exists
+        // opts.ringClouds=false drops the sheet. It exists
         // because the shared sky cloud field is a CAMERA-CENTERED dome and so
         // cannot reach the far arc kilometres away or the overhead crossing —
         // those are the sheet's whole job. The near fade above keeps it out of
         // the local scene, where the volumetric deck is the right owner.
         let ringClouds = null;
-        if (opts.ringClouds !== false && _envRG('RINGNOCLOUD') !== '1') {
+        if (opts.ringClouds !== false) {
             const cloudMatBack = cloudMat.clone();
             cloudMatBack.side = T3.BackSide;
             ringClouds = new T3.Group();
@@ -1018,8 +1017,8 @@
         // into the distant band instead of cutting against it. Opaque-ish at
         // horizon level, dissolving upward; local opaques occlude it by depth.
         let fogWall = null;
-        // RINGFOGWALL=0 / RINGRAINWALL=0 — bisect the two horizon walls
-        if (opts.fogWall !== false && _envRG('RINGFOGWALL') !== '0') {
+        // opts.fogWall / opts.rainWall bisect the two horizon walls.
+        if (opts.fogWall !== false) {
             const fwR = opts.fogWallRadius ?? 1250;
             const fogGeo = new T3.CylinderGeometry(fwR, fwR, 90, 96, 1, true);
             const fogMat = new T3.MeshStandardNodeMaterial({
@@ -1041,7 +1040,7 @@
         // only covers the halo directions); opacity rides the blended rain
         // gate, so it simply isn't there outside real rain.
         let rainWall = null;
-        if (opts.fogWall !== false && _envRG('RINGRAINWALL') !== '0') {
+        if (opts.fogWall !== false && opts.rainWall !== false) {
             const rwR = (opts.fogWallRadius ?? 1250) + 130;
             const rainGeoW = new T3.CylinderGeometry(rwR, rwR, 730, 96, 1, true);
             const rainMatW = new T3.MeshStandardNodeMaterial({
@@ -1091,7 +1090,7 @@
 
         group.add(ringClouds);   // built origin-centered — no recenter needed
 
-        // ---- THE BAND'S OWN TWO LIGHTS (RINGLIT path) --------------------
+        // ---- THE BAND'S OWN TWO LIGHTS (lit-band path) --------------------
         // The band needs the sun at FULL intensity while the local scene keeps
         // its dimmed/moonlit one. Not so the band stays bright — the near band
         // must and does go dark, because at theta=0 its normal is the ground
@@ -1119,9 +1118,9 @@
         //     per-material light list and overrides the scene's. That is the
         //     only mechanism here that means "these lights, this surface".
         let bandSun = null, bandShine = null;
-        if (RING_LIT && _envRG('RINGEMISSIVE') !== '1') {
+        if (RING_LIT && opts.bandLights !== false) {
             // deliberately NOT a layer the camera enables (see above)
-            const LIGHT_LAYER = Number(_envRG('RINGLIGHTLAYER') ?? opts.bandLightLayer ?? 5);
+            const LIGHT_LAYER = Number(opts.bandLightLayer ?? 5);
             //
             // SUN — tracks the TRUE sun at FULL intensity always, day and
             // night. It is never dimmed, because the dimming the local scene
@@ -1135,7 +1134,7 @@
             // brightness and the terrain read flat. See the ratio note at
             // envMapIntensity.
             bandSun = new T3.DirectionalLight(0xffffff,
-                Number(_envRG('RINGSUNI') ?? opts.bandSunIntensity ?? 3.2));
+                Number(opts.bandSunIntensity ?? 3.2));
             bandSun.layers.set(LIGHT_LAYER);
             // SELF-SHADOWING ARCH. This light is its own, so it gets its own
             // shadow camera sized for the RING — the +-50 m frustum that makes
@@ -1157,7 +1156,7 @@
             // which drops the whole band material to its fallback. So the arch
             // self-shadow needs a different mechanism than a scene light, and the
             // moving gradient — the thing actually asked for — does not need one.
-            bandSun.castShadow = _envRG('RINGSHADOW') === '1';
+            bandSun.castShadow = opts.bandCastShadow === true;
             if (bandSun.castShadow) {
                 const S = R_REF * 1.15;
                 const sc = bandSun.shadow.camera;
@@ -1165,8 +1164,8 @@
                 sc.near = 1; sc.far = R_REF * 8;
                 sc.updateProjectionMatrix();
                 bandSun.shadow.mapSize.set(
-                    Number(_envRG('RINGSHADOWMAP') ?? 4096),
-                    Number(_envRG('RINGSHADOWMAP') ?? 4096));
+                    Number(opts.bandShadowMapSize ?? 4096),
+                    Number(opts.bandShadowMapSize ?? 4096));
                 // 10 km across a 4096 map is ~2.8 m/texel; the arch shadow is a
                 // kilometre-scale feature so that is ample, but the bias has to
                 // scale with the texel size or the band self-acnes.
@@ -1256,7 +1255,7 @@
                         sysArcLight.sunElev.value = sk.sunDir.y;
                     }
                     if (sk?.moonDir) sysArcLight.moonDir.value.copy(sk.moonDir).normalize();
-                    // RINGLIT: drive the band's own sun from the TRUE sun
+                    // Lit-band path: drive the band's own sun from the TRUE sun
                     // direction, including below the local horizon — that is
                     // what lights the arc's upper reaches while the ground and
                     // the arc's foot are correctly dark. Position is a

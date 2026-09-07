@@ -569,7 +569,7 @@ export async function makeVegetationScene(THREE, {
                             ),
                             metalrough: T3.vec4(
                                 T3.metalness, T3.roughness,
-                                T3.float(n8aoAcceptance), T3.float(1),
+                                T3.float(n8aoAcceptance), T3.materialEnvIntensity,
                             ),
                             emissive: T3.vec4(T3.emissive, T3.float(1)),
                         });

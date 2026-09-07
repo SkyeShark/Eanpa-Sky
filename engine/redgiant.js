@@ -6,8 +6,8 @@
 // the shield as expanding rings of whole-hexagon activations — more and
 // harder hits while a flare peaks.
 //
-// Usage (three phases — the celestial must exist BEFORE the sky):
-//   eval(Deno.readTextFileSync('work/skylab/redgiant/redgiant.js'));
+// Usage (three phases — load this browser engine module first; the celestial
+// must exist BEFORE the sky):
 //   const rg = await globalThis.makeRedGiant({ opts: { shield: true } });
 //   const sky = await globalThis.makeSkySystem({ scene, textures, opts: {
 //       celestial: rg.celestial, paletteTint: rg.paletteTint, ... } });
@@ -30,7 +30,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
     const uStarUp = uniform(new T3.Vector3(0, 1, 0));
     const uStarT = uniform(0);
     const uBurstK = uniform(0);          // live max flare envelope
-    const uFlareBoost = uniform(0);      // FLAREMAX debug: force eruptions to peak
+    const uFlareBoost = uniform(Number(opts.flareBoost ?? 0)); // lookdev: force eruptions to peak
     const STAR_R = opts.angularRadius ?? 0.28;
     const SIN_R = Math.sin(STAR_R), COS_R = Math.cos(STAR_R);
     const GRAN = opts.granScale ?? 32;   // close orbit = fine boiling cells
@@ -310,7 +310,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         },
         update(t) {
             uStarT.value = t;
-            uFlareBoost.value = Number((globalThis.Deno?.env.get('FLAREMAX')) || 0);
+            uFlareBoost.value = Number(opts.flareBoost ?? 0);
             const sky = sys._sky;
             if (sky) {
                 // the giant IS the sun: ride the sky's TOD sun (day cycle,
