@@ -19,6 +19,7 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
     const captureContext=T.context({});
     const map=T.texture(target.texture,T.screenUV);
     const stats={resolution:size,extent,refreshSeconds,captures:0};
+    const cameraWorld=new T.Vector3();
     let lastTime=-Infinity,disposed=false;
     const texel=extent/size;
     return {target,stats,
@@ -33,18 +34,25 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
         async prepare(renderer,camera,force=false){
             if(disposed||!camera)return false;
             const light=lightDirection.value,t=time.value;
-            const x=Math.floor((camera.position.x-light.x*camera.position.y/Math.max(light.y,.02))/texel)*texel;
-            const z=Math.floor((camera.position.z-light.z*camera.position.y/Math.max(light.y,.02))/texel)*texel;
+            camera.getWorldPosition(cameraWorld);
+            const x=Math.floor((cameraWorld.x-light.x*cameraWorld.y/Math.max(light.y,.02))/texel)*texel;
+            const z=Math.floor((cameraWorld.z-light.z*cameraWorld.y/Math.max(light.y,.02))/texel)*texel;
             const moved=Math.abs(origin.value.x-x)>extent*.125||Math.abs(origin.value.y-z)>extent*.125;
             const turned=captureLight.value.dot(light)<.9995;
             if(!force&&ready.value&&!moved&&!turned&&t>=lastTime&&t-lastTime<refreshSeconds)return false;
             const saved={target:renderer.getRenderTarget(),mrt:renderer.getMRT(),context:renderer.contextNode};
+            const oldOrigin=origin.value.clone(),oldLight=captureLight.value.clone();
             try{
                 origin.value.set(x,z);captureLight.value.copy(light);
                 renderer.setMRT(null);renderer.contextNode=captureContext;renderer.setRenderTarget(target);
                 await quad.renderAsync(renderer);
                 ready.value=1;lastTime=t;stats.captures++;
                 return true;
+            }catch(error){
+                // A failed refresh must retain the projection belonging to
+                // the last successfully published texture.
+                origin.value.copy(oldOrigin);captureLight.value.copy(oldLight);
+                throw error;
             }finally{renderer.contextNode=saved.context;renderer.setRenderTarget(saved.target);renderer.setMRT(saved.mrt);}
         },
         dispose(){if(disposed)return;disposed=true;target.dispose();material.dispose();},

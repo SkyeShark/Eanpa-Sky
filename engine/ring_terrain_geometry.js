@@ -1,8 +1,10 @@
 // A continuous height-displaced inner cylinder. Water texels stay on the same
 // base cylinder; triangles connect every shoreline with no discarded fragments.
 export function makeRingTerrainGeometry(T, source, heightTexture, {
-    radius=5000,halfWidth=483,heightMeters=180,around=2048,across=128,repeat=8,
+    radius=5000,halfWidth=483,heightMeters=180,around=4096,across=512,repeat=8,
 }={}) {
+    around=Math.max(16,Math.round(around));
+    across=Math.max(8,Math.round(across/8)*8);
     const data=heightTexture.image.data,W=heightTexture.image.width,H=heightTexture.image.height;
     const sample=(u,v)=>{
         const x=((u%1)+1)%1*W-.5,y=((v%1)+1)%1*H-.5;
@@ -19,13 +21,23 @@ export function makeRingTerrainGeometry(T, source, heightTexture, {
         phaseX+=Math.cos(delta);phaseY+=Math.sin(delta);
     }
     const phase=Math.atan2(phaseY,phaseX);
-    const columns=across+1,count=(around+1)*columns;
-    const positions=new Float32Array(count*3),normals=new Float32Array(count*3),uv=new Float32Array(count*2);
+    // Concentrate vertices near the observer's part of the ring. Distant rows
+    // need fewer cross-band samples; stitched transitions share every edge.
+    const rows=[];let surfaceCount=0;
+    for(let i=0;i<=around;i++){
+        const t=i/around*2-1,s=Math.sign(t)*Math.pow(Math.abs(t),1.8);
+        const distance=Math.abs(s)*Math.PI*radius;
+        const segments=Math.max(8,across/(distance<300?1:distance<1000?2:distance<3500?4:8));
+        rows.push({u:s*.5+phase/(Math.PI*2),angle:Math.PI-s*Math.PI,segments,offset:surfaceCount});
+        surfaceCount+=segments+1;
+    }
+    const count=surfaceCount+(around+1)*4;
+    const positions=new Float32Array(count*3),normals=new Float32Array(count*3),uv=new Float32Array(count*2),skirt=new Float32Array(count);
     let minHeight=Infinity,maxHeight=-Infinity;
     for(let i=0;i<=around;i++){
-        const u=i/around,angle=(.5-u)*Math.PI*2+phase,cy=Math.cos(angle),cz=Math.sin(angle);
-        for(let j=0;j<=across;j++){
-            const v=j/across,index=i*columns+j;
+        const row=rows[i],{u,angle,segments,offset}=row,cy=Math.cos(angle),cz=Math.sin(angle);
+        for(let j=0;j<=segments;j++){
+            const v=j/segments,index=offset+j;
             const h=sample(u*repeat,1-v)*heightMeters;
             minHeight=Math.min(minHeight,h);maxHeight=Math.max(maxHeight,h);
             positions.set([(v-.5)*halfWidth*2,(radius-h)*cy,(radius-h)*cz],index*3);
@@ -33,19 +45,39 @@ export function makeRingTerrainGeometry(T, source, heightTexture, {
             // the cylindrical frame here so macro slopes are not applied twice.
             normals.set([0,-cy,-cz],index*3);uv.set([u,v],index*2);
         }
+        for(let side=0;side<2;side++){
+            const top=offset+(side?segments:0),edge=surfaceCount+i*4+side*2;
+            positions.set(positions.subarray(top*3,top*3+3),edge*3);
+            positions.set([(side-.5)*halfWidth*2,radius*cy,radius*cz],(edge+1)*3);
+            for(const index of [edge,edge+1]){
+                normals.set([side?1:-1,0,0],index*3);uv.set([u,side],index*2);skirt[index]=1;
+            }
+        }
     }
-    const indices=new Uint32Array(around*across*6);let k=0;
-    for(let i=0;i<around;i++)for(let j=0;j<across;j++){
-        const a=i*columns+j,b=a+columns;
-        indices[k++]=a;indices[k++]=b;indices[k++]=a+1;
-        indices[k++]=a+1;indices[k++]=b;indices[k++]=b+1;
+    const triangleCount=rows.slice(1).reduce((n,row,i)=>n+row.segments+rows[i].segments,0)+around*4;
+    const indices=new Uint32Array(triangleCount*3);let k=0;
+    const triangle=(a,b,c)=>{indices[k++]=a;indices[k++]=b;indices[k++]=c};
+    for(let i=0;i<around;i++){
+        const a=rows[i],b=rows[i+1];let j=0,l=0;
+        while(j<a.segments||l<b.segments){
+            const nextA=(j+1)/a.segments,nextB=(l+1)/b.segments;
+            if(nextA<=nextB&&j<a.segments){triangle(a.offset+j,b.offset+l,a.offset+j+1);j++;}
+            else{triangle(a.offset+j,b.offset+l,b.offset+l+1);l++;}
+        }
+        for(let side=0;side<2;side++){
+            const a=surfaceCount+i*4+side*2,b=a+4;
+            if(side){triangle(a,a+1,b);triangle(b,a+1,b+1);}
+            else{triangle(a,b,a+1);triangle(b,b+1,a+1);}
+        }
     }
     const geometry=new T.BufferGeometry();
     geometry.setAttribute('position',new T.BufferAttribute(positions,3));
     geometry.setAttribute('normal',new T.BufferAttribute(normals,3));
     geometry.setAttribute('uv',new T.BufferAttribute(uv,2));
+    geometry.setAttribute('ringSkirt',new T.BufferAttribute(skirt,1));
     geometry.setIndex(new T.BufferAttribute(indices,1));
     geometry.computeBoundingBox();geometry.computeBoundingSphere();
-    geometry.userData.ringRelief={around,across,vertices:count,triangles:indices.length/3,heightMeters,minHeight,maxHeight,phase};
+    geometry.userData.ringRelief={around,across,vertices:count,triangles:indices.length/3,heightMeters,minHeight,maxHeight,phase,
+        rows:rows.map(row=>({offset:row.offset,segments:row.segments})),surfaceVertices:surfaceCount};
     return geometry;
 }

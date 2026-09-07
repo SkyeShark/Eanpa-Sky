@@ -107,7 +107,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
         // graph miscompiles into an INVISIBLE mesh rather than failing loudly, so
         // the requirement is checked up front and the feature dropped if unmet.
         let bandTangents = !!terrain.geometry.getAttribute('tangent');
-        if (!bandTangents) {
+        if (!bandTangents && opts.pomEnabled === true) {
             const g = terrain.geometry;
             if (g.index && g.getAttribute('uv') && g.getAttribute('normal')) {
                 try { g.computeTangents(); bandTangents = !!g.getAttribute('tangent'); }
@@ -151,17 +151,18 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             const dayF = ss(f(-0.10), f(0.15), uSunElev);                                    // how "day" it is locally
             const sunTerm = uSunCol.mul(mx(f(0.22), f(1), dayF));                            // radiance tracks the LOCAL sun (wrap floor = ring-shine/altitude)
             const viewD = T3.normalize(Pw.sub(T3.cameraPosition));
-            const amass = f(1).div(T3.max(viewD.y, f(0.0264)));                              // air mass, horizon-capped ~38
-            // ×0.55: the band sits at 5-8 km INSIDE the atmosphere — full
-            // to-space optical depth overstates the haze and washes the arc
-            const trans0 = T3.exp(v3(0.030, 0.072, 0.154).mul(amass).negate());              // Hillaire depths scaled to the band's altitude
+            const fragD = T3.length(Pw.sub(T3.cameraPosition));
+            const elevation = T3.max(viewD.y, f(.00001));
+            const opticalHeight = elevation.mul(fragD).div(8000);
+            const integral = f(1).sub(T3.exp(opticalHeight.negate())).mul(8000).div(elevation);
+            const opticalLength = mx(fragD, integral, ss(.001,.005,opticalHeight));
+            const trans0 = T3.exp(v3(.000026,.000041,.000070).mul(opticalLength).negate());
             // SUB-CLOUD RAIN VEIL: in rain, everything seen through the falling
             // layer hazes toward the horizon palette. Path length = the ray's
             // run below the local cloud ceiling — the near arc plunging behind
             // the horizon crosses kilometres of rain and washes out, while
             // high-elevation rays exit the layer in a few hundred metres (rain
             // only exists UNDER the clouds; the deck itself hides what's above).
-            const fragD = T3.length(Pw.sub(T3.cameraPosition));
             const underLen = T3.min(fragD, cl(f(730).sub(T3.cameraPosition.y), f(0), f(1e5)).div(T3.max(viewD.y, f(0.02))));
             // the veil hugs the RAIN LAYER: full on fragments below the cloud
             // ceiling, gone by ~3× ceiling — pure slant-path length also fogged
@@ -239,7 +240,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
             // angle roughly constant instead of letting the toe decide it.
             const footW = mx(f(Number(opts.footWidthNight ?? 0.075)),
                 f(0.022), dayF);
-            const foot = f(1).sub(ss(f(0.0), footW, viewD.y));
+            const foot = f(1).sub(ss(f(0.0), footW, viewD.y)).mul(ss(1600,3800,fragD));
             return { litK, warmT, trans, insc, expK: gain, litCol, dSun, sunTerm, foot, dayF, pVis };
         };
 
@@ -788,7 +789,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
                 ? texture(textures.bandNormal, uvF).rgb
                 : (origMat.normalMap ? texture(origMat.normalMap, uvP).rgb : vec3(0.5, 0.5, 1));
             const landTS = landTSraw;
-            const lightweightWaveTexture = textures.bandNormal ?? origMat.normalMap ?? null;
+            const lightweightWaveTexture = textures.waterWaveNormal ?? textures.bandNormal ?? origMat.normalMap ?? null;
             const canBuildWaves = waterWaveMode !== 'off'
                 && T3.transformNormalToView && T3.positionLocal && T3.normalLocal
                 && (waterWaveMode !== 'lightweight' || lightweightWaveTexture);
@@ -871,7 +872,9 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
                         .mul(float(1).sub(farK));
                 }
                 const waveN = T3.normalize(Nn.add(Tn.mul(waveSlope.x)).add(Bn.mul(waveSlope.y)));
-                bandMat.normalNode = T3.transformNormalToView(T3.normalize(mix(landN, waveN, k)));
+                let surfaceNormal=T3.normalize(mix(landN,waveN,k));
+                if(terrain.geometry.getAttribute('ringSkirt'))surfaceNormal=mix(surfaceNormal,T3.normalLocal,T3.attribute('ringSkirt','float'));
+                bandMat.normalNode = T3.transformNormalToView(surfaceNormal);
                 // NIGHT WATER: normalNode only reaches env/lit shading — the
                 // unlit emissive needs its own term. Same tangential rake as
                 // the night land: exaggerated ANIMATED wave normals glinting
@@ -910,7 +913,7 @@ import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
         // above the band ("up" = toward the ring axis, so SMALLER radius).
         // Look is driven by the weather/sky state from update() — coverage per
         // weather name, storm greying, palette tint, wind-matched drift.
-        const cloudH = opts.cloudHeight ?? 60;
+        const cloudH = opts.cloudHeight ?? 280;
         const cu = {
             cover: uniform(0.45), grey: uniform(0), dens: uniform(1), rad: uniform(1),
             tintSun: uniform(new T3.Vector3(1, 0.97, 0.9)),

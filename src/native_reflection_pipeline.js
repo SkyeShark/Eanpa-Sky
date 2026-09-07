@@ -167,7 +167,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
         hasHistory = true; historyValid.value = 1;
     };
     prepareHistory();
-    return {supported:true, mode:'native-pbr-screen-space-radiance', pipeline, scenePass, history, trace, localProbe, registerObject, invalidateHistory,
+    return {supported:true, mode:'native-pbr-screen-space-radiance', pipeline, scenePass, history, trace, localProbe, skyLayers, registerObject, invalidateHistory,
         ssrImplementation:'reprojected-history-native-material-radiance', ssrNode:params,
         ssrMaterialResponse:'native-three-base-clearcoat-anisotropy-iridescence-specular-ior',
         nativeEnvironmentPbr:true, sceneColorAttachments:4, aoAvailable:true, aoQuality:'Medium',

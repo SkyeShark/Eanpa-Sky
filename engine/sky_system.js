@@ -2375,8 +2375,9 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             },
             tslCloudShadow(pWorld, strength = 1) {
                 const transmittance = cloudShadowMap.sample(pWorld);
-                const daylight = smoothstep(0.02, 0.16, u.cloudLightDir.y)
-                    .mul(clamp(u.celestialVisibility, 0, 1));
+                // Celestial visibility controls the background disc. Rain
+                // must not make an opaque cloud transparent to direct light.
+                const daylight = smoothstep(0.02, 0.16, u.cloudLightDir.y);
                 const belowDeck = float(1).sub(smoothstep(u.cloudStart,
                     u.cloudStart.add(u.cloudHeight), atmoHeight(pWorld)));
                 return float(1).sub(float(1).sub(transmittance).mul(strength)
@@ -2402,7 +2403,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                             || (m?.isNodeMaterial
                                 && m.roughness !== undefined
                                 && m.metalness !== undefined);
-                        if (!isPbr || m.userData?.keepEnv
+                        if (!isPbr
                             || done.has(m) || cloudShadowRoots.has(m)) continue;
                         done.add(m);
                         const original = m.setupLightingModel;

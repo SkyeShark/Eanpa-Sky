@@ -25,15 +25,16 @@ test('displaced ring is a continuous inward-facing surface with closed angular s
     source.setAttribute('uv',new T.Float32BufferAttribute([0,0,.5,1],2));
     const texture=new T.DataTexture(relief.heightData,relief.width,relief.height,T.RedFormat,T.HalfFloatType);
     const geometry=makeRingTerrainGeometry(T,source,texture,{around:256,across:64});
-    const p=geometry.getAttribute('position'),columns=65;
-    for(let j=0;j<columns;j++)for(let a=0;a<3;a++)assert.ok(Math.abs(p.array[j*3+a]-p.array[(256*columns+j)*3+a])<.001);
+    const p=geometry.getAttribute('position'),info=geometry.userData.ringRelief,first=info.rows[0],last=info.rows.at(-1);
+    for(let j=0;j<=first.segments;j++)for(let a=0;a<3;a++)assert.ok(Math.abs(p.array[j*3+a]-p.array[(last.offset+j)*3+a])<.001);
     let water=0;for(let i=0;i<p.count;i++){const radius=Math.hypot(p.getY(i),p.getZ(i));assert.ok(radius<=5000.001&&radius>=4820);if(Math.abs(radius-5000)<.001)water++;}
     assert.ok(water>1000,'water remains on the authored cylinder');
     const a=new T.Vector3(),b=new T.Vector3(),c=new T.Vector3(),inward=new T.Vector3();
     for(let i=0;i<geometry.index.count;i+=81){
         a.fromBufferAttribute(p,geometry.index.array[i]);b.fromBufferAttribute(p,geometry.index.array[i+1]);c.fromBufferAttribute(p,geometry.index.array[i+2]);
+        if(geometry.getAttribute('ringSkirt').getX(geometry.index.array[i]))continue;
         inward.set(0,-a.y,-a.z);assert.ok(b.sub(a).cross(c.sub(a)).dot(inward)>0);
     }
-    assert.equal(geometry.index.count,256*64*6);
+    assert.ok(geometry.index.count<256*64*6,'distant rows retain less geometry');
     geometry.dispose();source.dispose();texture.dispose();
 });

@@ -27,6 +27,14 @@ export function loadRingRelief(THREE) {
             ? await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()
             : compressed;
         const { width, height, heightData, normalAoData } = decodeRingRelief(buffer);
+        // Complete fallible I/O before allocating owned GPU textures.
+        const bandColor = await globalThis.loadImageTexture('./assets/ringworld/ring_albedo_v4.png', {srgb:true,mipmaps:true});
+        const legacyResponse=await fetch(new URL('../assets/ringworld/ring_relief_v3.bin.gz',import.meta.url));
+        if(!legacyResponse.ok)throw new Error(`Water-wave source fetch failed: ${legacyResponse.status}`);
+        const legacyBytes=await legacyResponse.arrayBuffer();
+        const legacyBuffer=new Uint8Array(legacyBytes)[0]===0x1f
+            ?await new Response(new Blob([legacyBytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer():legacyBytes;
+        const legacy=decodeRingRelief(legacyBuffer);
         const bandHeight = new THREE.DataTexture(heightData, width, height, THREE.RedFormat, THREE.HalfFloatType);
         const bandNormal = new THREE.DataTexture(normalAoData, width, height, THREE.RGBAFormat);
         for (const texture of [bandHeight, bandNormal]) {
@@ -39,9 +47,13 @@ export function loadRingRelief(THREE) {
         }
         bandHeight.name = 'ring_relief_v4_height';
         bandNormal.name = 'ring_relief_v4_normal_ao';
-        const bandColor = await globalThis.loadImageTexture('./assets/ringworld/ring_albedo_v4.png', {srgb:true,mipmaps:true});
         bandColor.wrapS = bandColor.wrapT = THREE.RepeatWrapping;
-        return { bandHeight, bandNormal, bandAO: bandNormal, bandColor };
+        // Preserve the existing water-wave signal independently of land relief.
+        const waterWaveNormal=new THREE.DataTexture(legacy.normalAoData,legacy.width,legacy.height,THREE.RGBAFormat);
+        waterWaveNormal.minFilter=waterWaveNormal.magFilter=THREE.LinearFilter;
+        waterWaveNormal.wrapS=waterWaveNormal.wrapT=THREE.RepeatWrapping;
+        waterWaveNormal.needsUpdate=true;
+        return { bandHeight, bandNormal, bandAO: bandNormal, bandColor, waterWaveNormal };
     })().catch(error => { pendingTextures = null; throw error; });
     return pendingTextures;
 }
