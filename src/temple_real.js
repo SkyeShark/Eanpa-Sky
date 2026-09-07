@@ -895,7 +895,8 @@ export async function makeTempleScene(THREE, {
     const orbBaseY = summitY + 5.0;
     orbPivot.position.y = orbBaseY;
     orbPivot.userData.noWet = true;
-    orbPivot.userData.noCloudShadow = true;
+    // Cloud attenuation belongs to the shell's direct PBR lighting. Native
+    // emission keeps the red/blue islands luminous without exempting the metal.
     // The authored orb is one mesh with three material groups: shell, red
     // light island, and blue light island. Anchoring by whole-mesh bounds
     // collapses both emitters to the sphere centre, so derive each anchor from
@@ -936,7 +937,6 @@ export async function makeTempleScene(THREE, {
         object.castShadow = true;
         object.receiveShadow = false;
         object.userData.noWet = true;
-        object.userData.noCloudShadow = true;
         if (object.geometry) ownedGeometries.add(object.geometry);
         const materials = Array.isArray(object.material) ? object.material : [object.material];
         for (const [materialIndex, material] of materials.entries()) {
@@ -1072,7 +1072,6 @@ export async function makeTempleScene(THREE, {
         emitter.castShadow = false;
         emitter.receiveShadow = false;
         emitter.userData.noWet = true;
-        emitter.userData.noCloudShadow = true;
         emitters.push(emitter);
 
         const light = new T3.SpotLight(
@@ -1191,7 +1190,6 @@ export async function makeTempleScene(THREE, {
         strip.castShadow = false;
         strip.receiveShadow = false;
         strip.userData.noWet = true;
-        strip.userData.noCloudShadow = true;
         lightStrips.push(strip);
     }
 

@@ -1095,7 +1095,6 @@ probePedestal.name = 'reflection_probe_pedestal';
 probePedestal.position.set(20, probeGroundY + 0.625, 14);
 ball.position.set(20, probeGroundY + 1.25 + ballRadius + 0.06, 14);
 ball.userData.noWet = true;
-ball.userData.noCloudShadow = true;
 ball.visible = showReflectionProbe;
 probePedestal.visible = showReflectionProbe;
 scene.add(probePedestal, ball);

@@ -319,7 +319,6 @@ export async function makeTempleScene(THREE, {
             if (!object.isMesh) return;
             object.castShadow = false;
             object.receiveShadow = false;
-            object.userData.noCloudShadow = true;
             object.userData.noWet = true;
             if (object.geometry) ownedGeometries.add(object.geometry);
             const materials = Array.isArray(object.material) ? object.material : [object.material];
@@ -492,7 +491,6 @@ export async function makeTempleScene(THREE, {
         if (materials.some((material) => material === cyanMaterial || material === amberMaterial
             || material === orbMaterial || material === wireMaterial)) {
             object.userData.noWet = true;
-            object.userData.noCloudShadow = true;
         }
     });
 
