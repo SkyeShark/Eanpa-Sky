@@ -33,7 +33,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
     const uFlareBoost = uniform(Number(opts.flareBoost ?? 0)); // lookdev: force eruptions to peak
     const STAR_R = opts.angularRadius ?? 0.28;
     const SIN_R = Math.sin(STAR_R), COS_R = Math.cos(STAR_R);
-    const GRAN = opts.granScale ?? 22;
+    const GRAN = opts.granScale ?? 32;
 
     // flare slots: JS-authored constants so the SAME deterministic schedule
     // drives the shader prominences and the JS-side shield coupling
@@ -65,25 +65,12 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         const c = h21(i.add(vec2(0, 1))), d = h21(i.add(vec2(1, 1)));
         return mix(mix(a, b, sm.x), mix(c, d, sm.x), sm.y);
     };
-    const fbm3 = (p) => vn(p).mul(0.55).add(vn(p.mul(2.3).add(19.7)).mul(0.28)).add(vn(p.mul(5.1).add(7.3)).mul(0.17));
-
-    // Unequal convective cells carry the structure seen in resolved cool giants.
-    // https://www.eso.org/public/videos/eso2412a/
-    const convection=T3.Fn(([p])=>{
-        const cell=floor(p),f=fract(p),first=float(9).toVar(),second=float(9).toVar();
-        const heat=float(0).toVar(),weightSum=float(0).toVar();
-        for(let y=-1;y<=1;y++)for(let x=-1;x<=1;x++){
-            const offset=vec2(x,y),seed=h21(cell.add(offset)).toVar();
-            const center=vec2(.5).add(T3.sin(vec2(seed.mul(31.7),seed.mul(53.3))
-                .add(uStarT.mul(.004))).mul(.27));
-            const delta=offset.add(center).sub(f),d=dot(delta,delta).toVar();
-            const weight=float(1).div(d.add(.12).pow(3));
-            heat.addAssign(seed.mul(weight));weightSum.addAssign(weight);
-            T3.If(d.lessThan(first),()=>{second.assign(first);first.assign(d);})
-                .Else(()=>{second.assign(T3.min(second,d));});
-        }
-        return vec3(heat.div(weightSum),sqrt(second).sub(sqrt(first)),sqrt(first));
-    });
+    // Sample a 3D field on the photosphere. Longitude/latitude noise stretched
+    // the granules into stripes at the limbs and poles of the close-up disc.
+    const noise3 = T3.Fn(([p]) => T3.mx_noise_float(p).mul(.5).add(.5));
+    const granulation = T3.Fn(([p]) => noise3(p).mul(.57)
+        .add(noise3(p.mul(2.07).add(vec3(19.7,7.3,31.1))).mul(.28))
+        .add(noise3(p.mul(4.31).add(vec3(3.1,43.7,11.9))).mul(.15)));
 
     // ---- the celestial node: pass to makeSkySystem opts.celestial ----
     const shadeStar = (dir, col) => {
@@ -92,27 +79,21 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         const ly = dot(dir, uStarUp).div(SIN_R);
         const face = step(COS_R * 0.2, dot(dir, uStarDir));     // hemisphere guard
         const rho = length(vec2(lx, ly));
-        // surface: convection granulation, slowly boiling — fine-grained
+        // Close-orbit photosphere: fine boiling rides larger, slower structures.
         const muL = sqrt(tmax(float(1).sub(rho.mul(rho)), 0));
-        // Surface coordinates foreshorten the cells toward the limb. Using
-        // screen-disc XY made the texture read as a flat animated plate.
-        const surfaceCoord = vec2(atan2f(lx, tmax(muL, 0.02)), T3.asin(clamp(ly, -1, 1)));
-        const p = surfaceCoord.mul(GRAN);
-        // Slow advection beneath a few persistent giant convection cells.
-        const w = vec2(
-            fbm3(p.mul(0.55).add(uStarT.mul(0.055))),
-            fbm3(p.mul(0.55).sub(uStarT.mul(0.043)).add(41.3)),
-        ).sub(0.5).mul(1.9);
-        const g = fbm3(p.add(w).add(vec2(uStarT.mul(0.022), 0))).mul(0.82)
-            .add(vn(p.mul(3.1).add(w.mul(2)).add(vec2(0, uStarT.mul(0.09)))).mul(0.18));
-        const cells=convection(surfaceCoord.mul(1.8).add(w.mul(.14))).toVar();
-        const interior=smoothstep(0,.30,cells.y);
-        const temperature=clamp(cells.x.mul(.62).add(interior.mul(.08)).add(g.mul(.23)).add(.08),0,1);
-        let sCol=mix(vec3(.38,.045,.009),vec3(2.05,.83,.24),temperature);
-        // Cooler downflow lanes surround broad hot interiors. Fine granulation
-        // remains secondary and the structure survives the normal field of view.
-        sCol=sCol.mul(interior.mul(.08).add(.92));
-        sCol=mix(sCol,vec3(2.5,1.24,.49),smoothstep(.76,.98,temperature).mul(.65));
+        const turn=uStarT.mul(.006),ct=T3.cos(turn),st=sin(turn);
+        const surfaceCoord=vec3(lx.mul(ct).add(muL.mul(st)),ly,muL.mul(ct).sub(lx.mul(st))).toVar();
+        const slow=surfaceCoord.mul(3.4).add(vec3(0,uStarT.mul(.018),0));
+        const warp=vec3(noise3(slow),noise3(slow.add(31.7)),noise3(slow.add(67.3))).sub(.5).mul(.12);
+        const p=surfaceCoord.add(warp).mul(GRAN).add(vec3(0,uStarT.mul(.12),uStarT.mul(-.08)));
+        const g=granulation(p).toVar();
+        const cells=granulation(surfaceCoord.mul(2.1).add(vec3(uStarT.mul(.003),0,0)));
+        const hot=smoothstep(.32,.69,g);
+        // Restore the ember ramp and local contrast. Broad convection modulates
+        // brightness rather than replacing nearly all of the fine structure.
+        let sCol=mix(vec3(.24,.018,.005),vec3(1.22,.255,.045),hot);
+        sCol=mix(sCol,vec3(2.05,.76,.20),smoothstep(.68,.82,g));
+        sCol=sCol.mul(cells.sub(.5).mul(1.25).add(1));
         // A persistent asymmetric hot region breaks the disc's symmetry.
         const phi = atan2f(ly, lx);
         const p2h = vec2(lx, ly);
@@ -128,7 +109,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         // chromosphere rim: H-ALPHA PINK (not orange — Balmer emission),
         // patchy around the limb like the ALMA asymmetric chromosphere
         const rimPatch = vn(vec2(phi.mul(2.2), uStarT.mul(0.11))).mul(0.6).add(0.55);
-        sCol = sCol.add(vec3(1.35, 0.32, 0.38).mul(pow(float(1).sub(muL), 6).mul(.18)).mul(rimPatch));
+        sCol = sCol.add(vec3(1.35, 0.32, 0.38).mul(pow(float(1).sub(muL), 6).mul(1.35)).mul(rimPatch));
         // COLOUR OVERRIDE, applied once the authored ramp is fully assembled:
         // granulation, convection cells, hot patch, limb darkening/reddening
         // and the chromospheric rim all keep their relative structure and only

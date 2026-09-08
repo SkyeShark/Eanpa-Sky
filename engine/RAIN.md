@@ -65,8 +65,11 @@ outlast the rain instead of disappearing with the weather selector.
 Falling drops use independent PCG random channels and a denser near-camera
 population. Cloud coverage at the upwind emission position gates precipitation;
 the same captured surface stops the falling streak and places its impact.
-Splash crowns and ballistic beads use that surface's position and normal,
-including roofs. The surface field also produces a throttled, asynchronous
+Brief contact flashes and six independently seeded ballistic droplets use that
+surface's position and normal, including roofs. Each event changes location;
+droplet directions, launch speeds and lifetimes vary instead of making dotted
+circles. Projected velocity shapes each droplet's short streak, and subpixel
+coverage compensation prevents oversized distant dots. The surface field also produces a throttled, asynchronous
 listener-exposure sample for rain gain and shelter filtering in the standalone.
 
 The capture covers a camera-local region (72 m half-width by default), refreshed

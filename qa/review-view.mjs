@@ -12,6 +12,9 @@ const views={
     roof:{camera:[8,23.754446588,-75],pitch:-.22,yaw:-Math.PI/2,fov:62},
     roofwide:{camera:[90,65,20],target:[0,12,-70],fov:62},
     terrain:{camera:[38,1.82,40],pitch:-.38,yaw:.45,fov:62},
+    star:{camera:[0,1.82,96],sun:true,fov:52},
+    starclose:{camera:[0,1.82,96],sun:true,fov:34},
+    rainclose:{camera:[8,22.40,-75],pitch:-.48,yaw:-Math.PI/2,fov:62},
 };
 if(!views[view])throw new Error('Unknown view');
 const c=await connect();
@@ -30,12 +33,15 @@ try{
         const w=globalThis.__eanpaWeatherByScene?.get(_c.parent);
         if(!w)throw new Error('Weather was not preloaded');
         w.setWeather(${JSON.stringify(weather)});
+        w.uniforms.wetness.value=w.uniforms.wetTarget.value;
+        w.uniforms.surfaceWater.value=Math.pow(w.uniforms.wetTarget.value,1.8);
     })()`);
     await new Promise(r=>setTimeout(r,4000));
     const state=await c.evaluate(`(async()=>{
         _eanpaTest.pauseAfterFrame=true;while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,20));
         const v=${JSON.stringify(views[view])};_c.position.fromArray(v.camera);_c.rotation.order='YXZ';
-        if(v.target)_c.lookAt(...v.target);else _c.rotation.set(v.pitch,v.yaw,0,'YXZ');
+        if(v.sun)_c.lookAt(_c.position.clone().addScaledVector(_sky.sunDir,1000));
+        else if(v.target)_c.lookAt(...v.target);else _c.rotation.set(v.pitch,v.yaw,0,'YXZ');
         _look.pitch=_c.rotation.x;_look.yaw=_c.rotation.y;_look.vpitch=0;_look.vyaw=0;
         Object.assign(_movementState,{physicalEyeY:_c.position.y,verticalVelocity:0,grounded:true,bobOffset:0,stepViewOffset:0});
         _c.fov=v.fov;_c.updateProjectionMatrix();_c.updateMatrixWorld(true);

@@ -484,11 +484,10 @@ import { makeWeatherListener } from './weather_listener.js';
         scene.add(rainInst);
 
         // ---------------- ground splashes (the world-anchor cue) ----------------
-        // Surface-aligned impact crowns. Puddle ripples are normal perturbations
-        // in the water shader; these short-lived droplets also work on dry roofs.
+        // Brief surface contacts and unequal ballistic ejecta. Puddle ripples
+        // remain normal perturbations in the water shader, not painted rings.
         const SP = Math.min(9,RAD/3);
-        // A shallow crown with individual ballistic droplets. Each impact is
-        // one instance; its ring and eight bead quads share a single draw.
+        // One contact quad and six droplets per impact, in a single draw.
         const splashPositions=[],splashUV=[],splashParts=[],splashIndices=[];
         const addQuad=(positions,part)=>{
             const first=splashParts.length;splashPositions.push(...positions);
@@ -496,7 +495,7 @@ import { makeWeatherListener } from './weather_listener.js';
             splashIndices.push(first,first+1,first+2,first,first+2,first+3);
         };
         addQuad([-.5,0,-.5,.5,0,-.5,.5,0,.5,-.5,0,.5],0);
-        for(let bead=1;bead<=8;bead++)addQuad([-.5,-.5,0,.5,-.5,0,.5,.5,0,-.5,.5,0],bead);
+        for(let bead=1;bead<=6;bead++)addQuad([-.5,-.5,0,.5,-.5,0,.5,.5,0,-.5,.5,0],bead);
         const splashGeo=new T3.BufferGeometry();
         splashGeo.setAttribute('position',new T3.Float32BufferAttribute(splashPositions,3));
         splashGeo.setAttribute('uv',new T3.Float32BufferAttribute(splashUV,2));
@@ -504,11 +503,16 @@ import { makeWeatherListener } from './weather_listener.js';
         splashGeo.setIndex(splashIndices);
         const splashMat = noGBuffer(new T3.MeshBasicNodeMaterial({ transparent: true, depthWrite: false, fog: false,side:T3.DoubleSide }));
         {
-            const s1 = hashI(instanceIndex, 11), s2 = hashI(instanceIndex, 12), s3 = hashI(instanceIndex, 13);
+            const s3 = hashI(instanceIndex, 13);
+            // New locations and independent ejecta for every event. Reusing
+            // eight equally spaced trajectories produced expanding dot rings.
+            const clock=u.time.mul(s3.mul(1.4).add(2.1)).add(s3.mul(9.7));
+            const cycle=T3.uint(floor(clock));
+            const eventSeed=T3.uint(instanceIndex).add(cycle.mul(T3.uint(1597334677)));
+            const s1=hashI(eventSeed,11),s2=hashI(eventSeed,12);
             const px = u.camPos.x.add(fract(s1.sub(u.camPos.x.div(SP * 2))).sub(0.5).mul(SP * 2));
             const pz = u.camPos.z.add(fract(s2.sub(u.camPos.z.div(SP * 2))).sub(0.5).mul(SP * 2));
-            const phase = fract(s3.mul(9.7).add(u.time.mul(2.8)));
-            const ringR = phase.mul(0.075).add(0.012);
+            const age = fract(clock).div(s3.mul(1.4).add(2.1));
             const seed = vec3(px, u.camPos.y, pz);
             const hit = surfaceField.impactAt(seed);
             const hitNormal = surfaceField.normalAt(seed);
@@ -516,22 +520,32 @@ import { makeWeatherListener } from './weather_listener.js';
             const tangent = normalize(T3.cross(axis, hitNormal));
             const bitangent = T3.cross(hitNormal, tangent);
             const part=T3.attribute('impactPart','float');
-            const crownPosition = hit.xyz.add(hitNormal.mul(float(0.006).add(sin(phase.mul(Math.PI)).mul(0.012))))
-                .add(tangent.mul(positionLocal.x.mul(ringR.mul(2))))
-                .add(bitangent.mul(positionLocal.z.mul(ringR.mul(2))));
-            const beadAngle=part.mul(Math.PI/4).add(s3.mul(6.283185));
-            const flight=phase.mul(.28),beadRadius=flight.mul(.26);
-            const beadHeight=max(flight.mul(.82).sub(flight.mul(flight).mul(4.905)),0);
-            const beadCenter=hit.xyz.add(hitNormal.mul(beadHeight.add(.006)))
-                .add(tangent.mul(cos(beadAngle).mul(beadRadius)))
-                .add(bitangent.mul(sin(beadAngle).mul(beadRadius)));
-            const beadSize=max(float(.0025),length(hit.xyz.sub(cameraPosition)).mul(u.pixelWorldScale).mul(.8));
-            const beadPosition=beadCenter.add(u.camRight.mul(positionLocal.x.mul(beadSize)))
-                .add(u.camUp.mul(positionLocal.y.mul(beadSize).mul(1.8)));
-            splashMat.positionNode=part.greaterThan(.5).select(beadPosition,crownPosition);
-            const rr = uv().sub(0.5).length().mul(2);
-            const ring = smoothstep(0.55, 0.8, rr)
-                .mul(float(1).sub(smoothstep(0.85, 1.0, rr)));
+            const spread=age.mul(.20).add(.008).mul(s3.mul(.65).add(.65));
+            const contactPosition = hit.xyz.add(hitNormal.mul(.003))
+                .add(tangent.mul(positionLocal.x.mul(spread)))
+                .add(bitangent.mul(positionLocal.z.mul(spread).mul(.73)));
+            const beadSeed=eventSeed.add(T3.uint(part).mul(T3.uint(747796405)));
+            const a=hashI(beadSeed,21),b=hashI(beadSeed,22),d=hashI(beadSeed,23);
+            const beadAngle=a.mul(Math.PI*2);
+            const speed=b.mul(.70).add(.36),sideSpeed=d.mul(.50).add(.10);
+            const launch=tangent.mul(cos(beadAngle).mul(sideSpeed))
+                .add(bitangent.mul(sin(beadAngle).mul(sideSpeed)))
+                .add(hitNormal.mul(speed))
+                .add(u.windVec.mul(.006));
+            const beadCenter=hit.xyz.add(hitNormal.mul(.004)).add(launch.mul(age))
+                .add(vec3(0,age.mul(age).mul(-4.905),0));
+            const velocity=launch.add(vec3(0,age.mul(-9.81),0));
+            const screenVelocity=vec2(dot(velocity,u.camRight),dot(velocity,u.camUp));
+            const projectedUp=normalize(screenVelocity.add(vec2(.00001,0)));
+            const streakUp=u.camRight.mul(projectedUp.x).add(u.camUp.mul(projectedUp.y));
+            const streakRight=u.camRight.mul(projectedUp.y).sub(u.camUp.mul(projectedUp.x));
+            const diameter=d.mul(.0015).add(.0014);
+            const pixelSize=length(hit.xyz.sub(cameraPosition)).mul(u.pixelWorldScale);
+            const beadSize=max(diameter,pixelSize.mul(1.4));
+            const streakLength=max(beadSize,length(screenVelocity).mul(1/180).add(diameter));
+            const beadPosition=beadCenter.add(streakRight.mul(positionLocal.x.mul(beadSize)))
+                .add(streakUp.mul(positionLocal.y.mul(streakLength)));
+            splashMat.positionNode=part.greaterThan(.5).select(beadPosition,contactPosition);
             const ordinaryCellGateS = sky
                 ? smoothstep(u.cellLo, u.cellHi, sky.tslCoverage(hit.xz.sub(u.windVec.xz
                     .mul(max(sky.uniforms.cloudStart.sub(hit.y),0).div(u.fallSpeed.mul(u.fallMul))))))
@@ -547,13 +561,19 @@ import { makeWeatherListener } from './weather_listener.js';
             const countGate = smoothstep(population, population.add(0.001), u.rainK);
             const fieldDistance = vec2(px.sub(u.camPos.x), pz.sub(u.camPos.z)).length();
             const fieldFade = float(1).sub(smoothstep(SP * 0.70, SP, fieldDistance));
-            const angle = atan2w(uv().y.sub(0.5), uv().x.sub(0.5));
-            const crown = smoothstep(0.35, 0.75, sin(angle.mul(7).add(s3.mul(19))));
+            const q=uv().sub(.5).mul(2);
+            const footprint=exp(dot(q,q).mul(-3));
+            const aboveSurface=dot(beadCenter.sub(hit.xyz),hitNormal);
+            const beadAlpha=footprint.mul(smoothstep(0,.004,aboveSurface))
+                .mul(float(1).sub(smoothstep(.14,.23,age)))
+                // Minimum pixel width stabilizes rasterization, while coverage
+                // compensation prevents distant millimetre drops becoming dots.
+                .mul(clamp(diameter.div(beadSize),.12,1))
+                .mul(hashI(beadSeed,24).lessThan(.74).select(1,0));
+            const contactAlpha=footprint.mul(float(1).sub(smoothstep(.010,.038,age))).mul(.32);
             splashMat.colorNode = u.rainColor.mul(u.rainLight).mul(2.6);
-            const beadAlpha=exp(uv().sub(.5).mul(2).dot(uv().sub(.5).mul(2)).mul(-3.5))
-                .mul(float(1).sub(smoothstep(.48,.62,phase)));
-            const shape=part.greaterThan(.5).select(beadAlpha,ring.mul(crown).mul(float(1).sub(phase).pow(2)));
-            splashMat.opacityNode = shape.mul(.68)
+            const shape=part.greaterThan(.5).select(beadAlpha,contactAlpha);
+            splashMat.opacityNode = shape.mul(.70)
                 .mul(fieldFade).mul(cellGateS).mul(countGate).mul(clamp(u.rainK.mul(2), 0, 1))
                 .mul(hit.w).mul(clamp(hitNormal.y, 0, 1));
         }
