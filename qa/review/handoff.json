@@ -1,11 +1,11 @@
 {
-  "date": "2026-09-07T20:14:43.497Z",
-  "visibility": "hidden",
-  "boot": "none",
+  "date": "2026-09-08T00:12:35.122Z",
+  "url": "http://127.0.0.1:8378/?benchmark=1&skybox=ringworld&cloud-type=clear&weather=none",
+  "visibility": "visible",
   "initialized": true,
-  "frames": 21,
+  "frames": 5979,
   "failedFrames": 0,
-  "sky": "earth",
+  "sky": "ringworld",
   "quality": "balanced",
   "weather": "none",
   "pointerLocked": false,
@@ -13,6 +13,5 @@
   "constraint": false,
   "firstFrameVisuallyReviewed": true,
   "nativeWindowVisible": true,
-  "nativeWindowForegroundRequestSucceeded": true,
-  "note": "The scene initialized while Chromium reported the page hidden; the native review window exists and is visible. Normal animation resumes when the page is unobscured."
+  "note": "The corrected Ringworld is open in the single owned interactive browser."
 }
