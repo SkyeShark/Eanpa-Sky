@@ -419,7 +419,7 @@ import { makeWeatherListener } from './weather_listener.js';
             // Millimetre drops leave long exposure streaks, not centimetre-wide
             // glass needles. A subpixel footprint keeps distant rain stable.
             const diameter = h2.mul(h2).mul(0.0035).add(0.002);
-            const wThick = max(diameter, dist.mul(u.pixelWorldScale).mul(1.1));
+            const wThick = max(diameter, dist.mul(u.pixelWorldScale).mul(1.7));
             const viewDir = normalize(base.sub(cameraPosition));
             const crossRight = T3.cross(streakDir, viewDir);
             const streakRight = normalize(mix(u.camRight, crossRight,
@@ -440,7 +440,8 @@ import { makeWeatherListener } from './weather_listener.js';
             // Integrate a narrow drop through the exposure rather than
             // stretching its entire teardrop silhouette into a glass needle.
             const highlight=texC?mix(float(.72),texC.a,.28):float(1);
-            const shapeA = xProf.mul(endFade).mul(highlight);
+            const shapeA = xProf.mul(endFade).mul(highlight)
+                .mul(mix(.42,1,smoothstep(.08,.80,uv().y)));
             const stormRainCover = sky
                 ? clamp(sky.uniforms.stormCanopy, 0, 1)
                 : float(0);
@@ -453,10 +454,7 @@ import { makeWeatherListener } from './weather_listener.js';
             // WORLD gating: streaks only materialize where the weather map says
             // this cell is raining — walk out from under the cell and the rain
             // stops around you while the far curtains keep falling on the cells
-            const ordinaryCellGate = sky
-                ? smoothstep(u.cellLo, u.cellHi, sky.tslCoverage(vec2(px,pz).sub(u.windVec.xz
-                    .mul(max(sky.uniforms.cloudStart.sub(py),0).div(fall)))))
-                : float(1);
+            const ordinaryCellGate = rainCellAt(base);
             const stormCellGate = h4.mul(0.18).add(0.82);
             const cellGate = mix(ordinaryCellGate, stormCellGate, stormRainCover);
             const population=hashI(instanceIndex,6);
@@ -466,15 +464,15 @@ import { makeWeatherListener } from './weather_listener.js';
             // color comes from the lit rainColor alone
             // per-drop brightness: catchlights vary drop to drop (big slow
             // drops flare, fine drizzle nearly vanishes) — h4 spans 0.5-1.5×
-            rainMat.colorNode = u.rainColor.mul(u.rainLight).mul(sunGlint).mul(h4.add(0.5)).mul(1.4);
+            rainMat.colorNode = u.rainColor.mul(u.rainLight).mul(sunGlint).mul(h4.add(0.5)).mul(2.0);
             const stormRainVisibility = sky
                 ? clamp(sky.uniforms.stormCanopy, 0, 1).mul(clamp(u.rainK, 0, 1))
                 : float(0);
             const stormOpacityBoost = mix(float(1), float(1.28), stormRainVisibility);
             rainMat.opacityNode = clamp(shapeA.mul(nearFade).mul(fieldFade).mul(cellGate)
-                .mul(float(0.24).add(h3.mul(0.32)).mul(u.denseA))
+                .mul(float(0.46).add(h3.mul(0.38)).mul(u.denseA))
                 .mul(countGate).mul(clamp(u.rainK.mul(2), 0, 1))
-                .mul(stormOpacityBoost).mul(surfaceField.visibilityAt(positionWorld, float(0.025))), 0, 0.72);
+                .mul(stormOpacityBoost).mul(surfaceField.visibilityAt(positionWorld, float(0.025))), 0, 0.85);
         }
         const rainInst = new T3.InstancedMesh(rainGeo, rainMat, N_RAIN);
         rainInst.frustumCulled = false;
@@ -1479,6 +1477,9 @@ import { makeWeatherListener } from './weather_listener.js';
                         result.addAssign(delta.div(radius).mul(cos(wave.mul(110)))
                             .mul(envelope).mul(0.075));
                     }
+                // Existing puddles can remain after a cloud passes, but new
+                // impacts stop with its rain supply, just like airborne drops.
+                    result.mulAssign(rainCellAt(positionWorld));
                 });
                 return result;
             })(positionWorld.xz).mul(u.rainK).mul(float(1).sub(smoothstep(8, 35, pDist)));

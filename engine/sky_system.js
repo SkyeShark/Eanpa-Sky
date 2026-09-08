@@ -176,6 +176,8 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             horizon: uniform(V(0.62, 0.78, 0.92)),
             sunColor: uniform(V(1, 0.95, 0.9)),
             sunDiscI: uniform(48),
+            solarVisibility: uniform(1),
+            solarSkyVisibility: uniform(1),
             sunGlowI: uniform(1),      // forward-scatter glow lobes gate — scenes with a custom celestial body AS the sun zero this (the disc obeys sunDiscI; these lobes previously bled a bright white core through any body riding sunDir)
             frameJit: uniform(0),      // EANPA: per-frame golden-ratio phase for temporal blue-noise jitter (fed by the cloud frame graph)
             starFade: uniform(0),
@@ -1172,7 +1174,12 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             const ringWispHalf = mix(uLocalHalf, uWispCurveHalf, ringWispProgress);
             const width = float(1).sub(smoothstep(ringWispHalf.mul(0.72), ringWispHalf.mul(1.22), p.x.abs()));
             const ends = float(1).sub(smoothstep(float(RING_VISIBLE_END - RING_END_FADE), float(RING_VISIBLE_END), p.z.abs()));
-            return vec2(t, width.mul(ends));
+            // High ice trails span the upper atmosphere. Clipping them to
+            // the low deck's 140 m end feather exposed a rectangular edge
+            // across the horizon. Use the continuous high shell for cirrus;
+            // retain the confined low storm canopy during the crossfade.
+            return mix(vec2(t, width.mul(ends)),vec2(shellFar(org,dir,flatY),1),
+                smoothstep(.55,.85,u.wispFilament));
         });
 
         const cloudBody = (
@@ -1616,7 +1623,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             const dg2 = OUTPUT_DITHER > 0
                 ? hashScreen(screenCoordinate.xy.add(vec2(17.3, 41.7))).sub(0.5).mul(OUTPUT_DITHER).mul(coverT)
                 : float(0);
-            return vec4(cloudRgb.add(shaftCol).add(vec3(dg2, dg2, dg2)), coverT);
+            return vec4(cloudRgb.add(shaftCol).mul(u.solarSkyVisibility).add(vec3(dg2, dg2, dg2)), coverT);
         };
         const cloudOut = Fn(() => cloudBody(screenRayDir(), cameraPosition));
         // analytic ringworld band along a ray — SHARED by the env bake and the
@@ -1755,7 +1762,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             if (opts.celestial) col.assign(mix(col, opts.celestial(dir, col), clamp(u.celestialVisibility, 0, 1)));
             // HDR sun disc + corona
             const disc = smoothstep(0.99995, 0.999985, mu);
-            col.addAssign(u.sunColor.mul(disc).mul(u.sunDiscI).mul(u.celestialVisibility));
+            col.addAssign(u.sunColor.mul(disc).mul(u.sunDiscI).mul(u.celestialVisibility).mul(u.solarVisibility));
             col.addAssign(u.sunColor.mul(pow(max(mu, 0.0), 900.0)).mul(3.0).mul(u.sunGlowI).mul(u.celestialVisibility));
             col.addAssign(u.sunColor.mul(pow(max(mu, 0.0), 60.0)).mul(0.22).mul(u.sunGlowI).mul(u.celestialVisibility));
             // Optional stable lookdev dither. Production output is HDR here;
@@ -1764,7 +1771,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                 ? hashScreen(screenCoordinate.xy.add(vec2(53.1, 9.7))).sub(0.5).mul(OUTPUT_DITHER)
                 : float(0);
             col.addAssign(vec3(dg, dg, dg));
-            return vec4(col, 1);
+            return vec4(col.mul(u.solarSkyVisibility), 1);
         };
         const bgOut = Fn(() => bgBody(screenRayDir()));
         const bgMat = noGBuffer(new T3.MeshBasicNodeMaterial({ side: T3.BackSide, depthWrite: false, fog: false }));
@@ -2228,7 +2235,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                         (pal.sun[2] * (1 - nightK) + ml[2] * nightK) * SKY_COLOR.sun[2],
                     );
                     const moonUp = Math.max(0, Math.min(1, sys.moonDir.y / 0.12));
-                    sun.intensity = Math.max(0.08, pal.int * 1.15) * (1 - nightK)
+                    sun.intensity = Math.max(0.08, pal.int * 1.15) * (1 - nightK) * u.solarVisibility.value
                         + (opts.moonLightIntensity ?? 0.35) * nightK * moonUp * moonUp * (3 - 2 * moonUp);
                     const d = nightK > 0.5 ? sys.moonDir : sys.sunDir;
                     sun.position.copy(d).multiplyScalar(120);
@@ -2240,7 +2247,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                     const zen=u.zenith.value,hor=u.horizon.value;
                     hemi.color.setRGB(zen.x,zen.y,zen.z).multiplyScalar(2.2);
                     hemi.groundColor.setRGB(hor.x * 0.25, hor.y * 0.2, hor.z * 0.18);
-                    hemi.intensity = 0.25 + pal.int * 0.25 + nightK * 0.06;
+                    hemi.intensity = (0.25 + pal.int * 0.25 + nightK * 0.06) * u.solarSkyVisibility.value;
                 }
                 // FOG FOLLOWS THE WEATHERED SKY, not the clean TOD palette.
                 // pal.hor is the authored time-of-day horizon; the weather
@@ -2258,6 +2265,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                     if (h) fog.color.setRGB(h.x * F[0], h.y * F[1], h.z * F[2]).multiplyScalar(0.5 + pal.int * 0.12);
                     else fog.color.setRGB(pal.hor[0] * F[0], pal.hor[1] * F[1], pal.hor[2] * F[2]).multiplyScalar(0.5 + pal.int * 0.12);
                 }
+                if(fog?.color)fog.color.multiplyScalar(u.solarSkyVisibility.value);
                 return pal;
             },
             // world weather-field access — the SAME macro coverage the clouds
@@ -2680,7 +2688,11 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                 // on every weather/cloud reflection update. Everything the
                 // graph reads at render time is uniform-driven; only the
                 // baked-in branches below participate in the cache key.
-                const cloudsOn = bopts.includeClouds !== false && state.preset !== 'clear';
+                // Cloud presets are uniform state, never shader variants. A
+                // clear -> cloudy switch previously discarded this very large
+                // graph and synchronously compiled it again during play.
+                // cloudBody already skips its volume/wisps at zero density.
+                const cloudsOn = bopts.includeClouds !== false;
                 const bakeKey = `${W}x${H}|p${bopts.cloudPasses ?? 'd'}|c${cloudsOn ? 1 : 0}`;
                 let bake = sys._envBake;
                 if (!bake || bake.key !== bakeKey || bake.rw !== (rw ?? null)) {

@@ -961,8 +961,20 @@ export async function makeTempleScene(THREE, {
     // warm emitter, and narrow stair light strips. The additive volumes are
     // depth-tested and never write depth, so masonry and the Inanna sphere
     // correctly occlude them.
-    const blueLightColor = new T3.Color(0x007cff);
-    const redLightColor = new T3.Color(0xff4a24);
+    const blueLightColor = new T3.Color(0x123bff);
+    const redLightColor = new T3.Color(0xff102a);
+    for(const [channel,color]of [['blue',blueLightColor],['red',redLightColor]]){
+        for(const material of sphereEmitterMaterials[channel]){
+            // Keep the authored emission pattern, but its RGB should not
+            // multiply a second hue into the red/blue light source.
+            const pattern=material.emissiveMap
+                ? T3.dot(T3.texture(material.emissiveMap).rgb,T3.vec3(.2126,.7152,.0722))
+                : T3.float(1);
+            material.emissive.copy(color);
+            material.emissiveNode=T3.reference('emissive','color',material)
+                .mul(T3.reference('emissiveIntensity','float',material)).mul(pattern);
+        }
+    }
     const makeEmitterMaterial = (name, color) => {
         const material = new StandardMaterial({
             color: 0x101820,
@@ -1205,14 +1217,16 @@ export async function makeTempleScene(THREE, {
     let templeHours = 10.5;
     let targetNightLevel = nightForHours(templeHours);
     let nightLevel = targetNightLevel;
+    let ambientDarkness = 0;
     const applyNightLighting = (timeSeconds = 0) => {
         const pulse = 0.94 + Math.sin(timeSeconds * 1.7) * 0.06;
         for (const material of sphereEmitterMaterials.blue) {
             material.emissive.copy(blueLightColor);
-            material.emissiveIntensity = 0.45 + nightLevel * 15.5 * pulse;
+            material.emissiveIntensity = 0.9 + nightLevel * 7.5 * pulse;
         }
         for (const material of sphereEmitterMaterials.red) {
-            material.emissiveIntensity = 0.45 + nightLevel * 14.8 * (1.96 - pulse);
+            material.emissive.copy(redLightColor);
+            material.emissiveIntensity = 0.9 + nightLevel * 7.0 * (1.96 - pulse);
         }
         stripMaterials[0].emissiveIntensity = nightLevel * 6.4 * pulse;
         stripMaterials[1].emissiveIntensity = nightLevel * 6.0 * (1.96 - pulse);
@@ -2145,6 +2159,9 @@ export async function makeTempleScene(THREE, {
         group,
         setQuality,
         setTime,
+        setAmbientLight(level) {
+            ambientDarkness=1-smoothstep01((Math.max(0,Number(level)||0)-.055)/.25);
+        },
         heightAt,
         walkSurfaceAt,
         walkSurfaceHeightAt,
@@ -2210,8 +2227,9 @@ export async function makeTempleScene(THREE, {
             group.userData.gate.closeDelay = gateCloseDelay;
 
             const nightBlend = 1 - Math.exp(-delta * 1.45);
-            nightLevel += (targetNightLevel - nightLevel) * nightBlend;
-            if (Math.abs(targetNightLevel - nightLevel) < 0.0002) nightLevel = targetNightLevel;
+            const lightingTarget=Math.max(targetNightLevel,ambientDarkness);
+            nightLevel += (lightingTarget - nightLevel) * nightBlend;
+            if (Math.abs(lightingTarget - nightLevel) < 0.0002) nightLevel = lightingTarget;
             applyNightLighting(Number(t) || 0);
         },
         dispose() {

@@ -1358,7 +1358,8 @@ import { makeRingCloudField } from './ring_cloud_field.js';
                     // it) brighter still. Fall back to pal.hor only if the
                     // uniform is missing.
                     const hz = sk?.uniforms?.horizon?.value;
-                    if (hz) sysArcLight.hazeCol.value.setRGB(hz.x ?? hz.r, hz.y ?? hz.g, hz.z ?? hz.b);
+                    if (hz) sysArcLight.hazeCol.value.setRGB(hz.x ?? hz.r, hz.y ?? hz.g, hz.z ?? hz.b)
+                        .multiplyScalar(sk.uniforms.solarSkyVisibility?.value??1);
                     else if (pal?.hor) sysArcLight.hazeCol.value.setRGB(pal.hor[0], pal.hor[1], pal.hor[2]);
                     // NIGHT HAZE FLOOR. Every haze surface here is drawn IN this
                     // colour — the foot veil that dissolves the seam where the

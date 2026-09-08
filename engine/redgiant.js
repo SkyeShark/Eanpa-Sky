@@ -65,12 +65,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         const c = h21(i.add(vec2(0, 1))), d = h21(i.add(vec2(1, 1)));
         return mix(mix(a, b, sm.x), mix(c, d, sm.x), sm.y);
     };
-    // Sample a 3D field on the photosphere. Longitude/latitude noise stretched
-    // the granules into stripes at the limbs and poles of the close-up disc.
-    const noise3 = T3.Fn(([p]) => T3.mx_noise_float(p).mul(.5).add(.5));
-    const granulation = T3.Fn(([p]) => noise3(p).mul(.57)
-        .add(noise3(p.mul(2.07).add(vec3(19.7,7.3,31.1))).mul(.28))
-        .add(noise3(p.mul(4.31).add(vec3(3.1,43.7,11.9))).mul(.15)));
+    const fbm3 = (p) => vn(p).mul(0.55).add(vn(p.mul(2.3).add(19.7)).mul(0.28)).add(vn(p.mul(5.1).add(7.3)).mul(0.17));
 
     // ---- the celestial node: pass to makeSkySystem opts.celestial ----
     const shadeStar = (dir, col) => {
@@ -79,22 +74,28 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         const ly = dot(dir, uStarUp).div(SIN_R);
         const face = step(COS_R * 0.2, dot(dir, uStarDir));     // hemisphere guard
         const rho = length(vec2(lx, ly));
-        // Close-orbit photosphere: fine boiling rides larger, slower structures.
-        const muL = sqrt(tmax(float(1).sub(rho.mul(rho)), 0));
-        const turn=uStarT.mul(.006),ct=T3.cos(turn),st=sin(turn);
-        const surfaceCoord=vec3(lx.mul(ct).add(muL.mul(st)),ly,muL.mul(ct).sub(lx.mul(st))).toVar();
-        const slow=surfaceCoord.mul(3.4).add(vec3(0,uStarT.mul(.018),0));
-        const warp=vec3(noise3(slow),noise3(slow.add(31.7)),noise3(slow.add(67.3))).sub(.5).mul(.12);
-        const p=surfaceCoord.add(warp).mul(GRAN).add(vec3(0,uStarT.mul(.12),uStarT.mul(-.08)));
-        const g=granulation(p).toVar();
-        const cells=granulation(surfaceCoord.mul(2.1).add(vec3(uStarT.mul(.003),0,0)));
-        const hot=smoothstep(.32,.69,g);
-        // Restore the ember ramp and local contrast. Broad convection modulates
-        // brightness rather than replacing nearly all of the fine structure.
-        let sCol=mix(vec3(.24,.018,.005),vec3(1.22,.255,.045),hot);
-        sCol=mix(sCol,vec3(2.05,.76,.20),smoothstep(.68,.82,g));
-        sCol=sCol.mul(cells.sub(.5).mul(1.25).add(1));
-        // A persistent asymmetric hot region breaks the disc's symmetry.
+        // surface: convection granulation, slowly boiling — fine-grained
+        const p = vec2(lx, ly).mul(GRAN);
+        // boil rates ~18x the original: tuned for realtime seconds, they
+        // drifted 3% of the domain across a whole compressed day cycle and
+        // read as a fully static surface (Skye's catch)
+        const w = vec2(
+            fbm3(p.mul(0.55).add(uStarT.mul(0.55))),
+            fbm3(p.mul(0.55).sub(uStarT.mul(0.43)).add(41.3)),
+        ).sub(0.5).mul(1.9);
+        const g = fbm3(p.add(w).add(vec2(uStarT.mul(0.22), 0))).mul(0.82)
+            .add(vn(p.mul(3.1).add(w.mul(2)).add(vec2(0, uStarT.mul(0.9)))).mul(0.18));
+        let sCol = mix(vec3(0.42, 0.050, 0.015), vec3(1.05, 0.32, 0.06), smoothstep(0.35, 0.75, g));
+        sCol = mix(sCol, vec3(1.85, 1.05, 0.45), smoothstep(0.78, 0.95, g));
+        // GIANT convection cells (Betelgeuse-class: a handful across the
+        // disc, near-static — they live for months; the fine boil above
+        // rides on top). Chiavassa 2010: cell size >60% R*, one cell can
+        // carry ~8% of total flux.
+        const pg = vec2(lx, ly).mul(1.15);
+        const cell = fbm3(pg.add(vec2(uStarT.mul(0.006), uStarT.mul(-0.004))));
+        sCol = sCol.mul(cell.sub(0.5).mul(0.55).add(1.0));
+        // ONE asymmetric hot patch — the signature feature of every resolved
+        // red-supergiant image (ALMA/VLT); drifts imperceptibly
         const phi = atan2f(ly, lx);
         const p2h = vec2(lx, ly);
         const hpD = p2h.sub(vec2(0.34, -0.18));
@@ -104,12 +105,13 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         // limb darkening — STRONG for a cool giant (u≈0.95: edge ~5% of
         // center) and the limb REDDENS (blue darkens first; center is the
         // hotter, yellower layer — TiO haze at the rim)
+        const muL = sqrt(tmax(float(1).sub(rho.mul(rho)), 0));
         sCol = sCol.mul(muL.mul(0.95).add(0.05));
         sCol = sCol.mul(mix(vec3(1.0, 0.60, 0.42), vec3(1.0, 1.03, 1.08), muL));
         // chromosphere rim: H-ALPHA PINK (not orange — Balmer emission),
         // patchy around the limb like the ALMA asymmetric chromosphere
         const rimPatch = vn(vec2(phi.mul(2.2), uStarT.mul(0.11))).mul(0.6).add(0.55);
-        sCol = sCol.add(vec3(1.35, 0.32, 0.38).mul(pow(float(1).sub(muL), 6).mul(1.35)).mul(rimPatch));
+        sCol = sCol.add(vec3(1.35, 0.32, 0.38).mul(pow(float(1).sub(muL), 6).mul(1.8)).mul(rimPatch));
         // COLOUR OVERRIDE, applied once the authored ramp is fully assembled:
         // granulation, convection cells, hot patch, limb darkening/reddening
         // and the chromospheric rim all keep their relative structure and only
@@ -170,7 +172,7 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         }
         const outside = float(1).sub(inDisc).mul(face).mul(step(1.0, rho));
         let out = mix(col, sCol, inDisc);                        // opaque body replaces sky (and stars)
-        out = out.add(vec3(0.95, 0.22, 0.05).mul(glow).mul(outside).mul(0.18));
+        out = out.add(vec3(0.95, 0.22, 0.05).mul(glow).mul(outside).mul(0.55));
         // flares erupt FROM the surface: the old outside-only mask clipped
         // them at the silhouette (eclipse-prominence look). The limb-crossing
         // mask lets the roots burn on the disc and the arcs run past it.

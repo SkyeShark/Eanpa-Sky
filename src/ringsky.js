@@ -5,6 +5,7 @@
 // scene.environment, which kills the Basic-family domes).
 import { makeLazyWeatherAttachment } from './weathersky.js';
 import { loadRingRelief } from './ring_relief.js';
+import { ringSolarVisibility } from '../engine/ring_eclipse.js';
 
 function disposeObject(root) {
     const geometries = new Set(), materials = new Set();
@@ -119,7 +120,10 @@ export async function makeRingworld({
         for (const m of mats) if (m) m.depthWrite = false;
     });
     scene.add(ring.group);
-    sky.depthLayers = [{objects:[ring.band,ring.walls],renderOrder:-99}];
+    // The clouds must be in the same depth layer as their land. Leaving them
+    // in the main scene drew them before the opaque band reconstruction and
+    // erased their contribution, even though their coverage atlas was valid.
+    sky.depthLayers = [{objects:[ring.band,ring.walls,ring.clouds].filter(Boolean),renderOrder:-99}];
 
     // The band lights itself. The engine owns a real directional "underground
     // sun" plus planetshine that track the sky's TRUE sun vector, so the arc
@@ -177,6 +181,12 @@ export async function makeRingworld({
         weatherWarmupObjects(){return weatherAttachment.weatherWarmupObjects();},
         prepareFrame(renderer){return ring.prepareFrame(renderer);},
         update(t) {
+            const solar=ringSolarVisibility(camera.position,sky.sunDir,{
+                radius:ring.info.radius,centerY:ring.group.position.y,halfWidth:ring.info.halfWidth,
+            });
+            sky.uniforms.solarVisibility.value=solar;
+            sky.uniforms.solarSkyVisibility.value=.16+.84*solar;
+            globalThis._ringEclipse={solarVisibility:solar,skyVisibility:sky.uniforms.solarSkyVisibility.value};
             sky.update(t, camera);
             weatherAttachment.update(t);
             ring.update(t);

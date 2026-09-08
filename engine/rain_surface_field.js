@@ -40,11 +40,22 @@ export function makeRainSurfaceField(T3, scene, options = {}) {
         .and(p.z.greaterThan(0)).and(p.z.lessThan(1));
     const visibilityAt = Fn(([world, biasMeters]) => {
         const p = project(world).toVar();
-        const d = depth.sample(p.xy).level(0).r;
-        const exposed = p.z.lessThanEqual(d.add(biasMeters.div(u.depthScale))).select(1, 0);
+        const sampleUV = T3.floor(p.xy.mul(resolution)).add(0.5).div(resolution);
+        const d = depth.sample(sampleUV).level(0).r.toVar();
+        const n = normalize(normals.sample(sampleUV).level(0).rgb.mul(2).sub(1).add(vec3(0, 0.00001, 0)));
+        const hit = u.inverseViewProjection.mul(vec4(sampleUV.x.mul(2).sub(1),
+            float(1).sub(sampleUV.y.mul(2)), d, 1));
+        // Compare against the captured surface plane, not its texel-centre
+        // depth. The old comparison classified opposite halves of a sloping
+        // texel as wet/dry, revealing a square grid in glossy flashlight pools.
+        const separation = T3.dot(world.sub(hit.xyz.div(hit.w)), n);
+        const exposed = T3.smoothstep(biasMeters.negate().sub(0.025),
+            biasMeters.negate().add(0.025), separation);
+        const border = T3.max(T3.abs(p.x.sub(.5)),T3.abs(p.y.sub(.5))).mul(2);
+        const weight = T3.smoothstep(.85,1,border).oneMinus();
         // The field is intentionally local. Outside it retain the host's
         // normal weather response rather than drawing a moving dry square.
-        return mix(float(1), exposed, inBounds(p).select(u.enabled, 0));
+        return mix(float(1), exposed, inBounds(p).and(d.lessThan(.99999)).select(u.enabled.mul(weight), 0));
     });
     const impactAt = Fn(([world]) => {
         const p = project(world).toVar();

@@ -1102,6 +1102,7 @@ scene.add(probePedestal, ball);
 let reflectionDirty = true;
 let reflectionLastBake = -Infinity;
 let reflectionBakedHours = null;
+let reflectionBakedSolarVisibility = 1;
 // The IBL environment must never lag the weather: a pre-storm bake leaves
 // PBR receivers (temple, far terrain) lit sunny-bright under a sealed sky.
 let reflectionBakedWeatherSig = '';
@@ -1202,9 +1203,10 @@ const setWeatherStatus = (text) => {
 };
 const weatherBakeSignature = () => {
     const tr = globalThis._weather?.diagnostics?.transition;
-    return tr?.active
+    const weather = tr?.active
         ? tr.target + ':' + Math.round((tr.easedProgress ?? 0) * 8)
         : 'settled:' + sceneSelection.weather;
+    return weather + ':solar:' + Math.round((active?.sky?.uniforms.solarVisibility?.value??1)*8);
 };
 const updateWeatherStatus = () => {
     const tr = globalThis._weather?.diagnostics?.transition;
@@ -1251,6 +1253,7 @@ async function rebakeReflections(force = false) {
         if (active !== owner) return;
         const count = assignReflectionEnvironment(filteredEnvironment.update(env));
         reflectionBakedHours = Number(document.getElementById('tod').value);
+        reflectionBakedSolarVisibility=sky.uniforms.solarVisibility?.value??1;
         reflectionBakedWeatherSig = weatherBakeSignature();
         reflectionDirty = false;
         reflectionLastBake = performance.now();
@@ -1797,6 +1800,10 @@ async function tick(now, dt) {
         if (dh >= 0.35) reflectionDirty = true;
     }
     if (active) active.update(t, dt);
+    // Fixtures respond to ambient illumination, so storms and eclipses can
+    // switch them on without changing the stable scene light topology.
+    const luma=color=>color.r*.2126+color.g*.7152+color.b*.0722;
+    temple.setAmbientLight?.(luma(sun.color)*sun.intensity*.25+luma(hemi.color)*hemi.intensity);
     const shadowHz={high:60,balanced:30,performance:20}[document.getElementById('quality').value]??30;
     sunShadowRefresh.update(t,shadowHz);
     updateWeatherStatus();
@@ -1828,7 +1835,8 @@ async function tick(now, dt) {
     await globalThis._weather?.prepareFrame?.(renderer, camera);
     await active?.sky?.prepareCloudShadows?.(renderer, camera);
     if (reflectionBakedWeatherSig !== weatherBakeSignature()) reflectionDirty = true;
-    if (reflectionDirty && performance.now() - reflectionLastBake >= 1500) {
+    const eclipseChanged=Math.abs((active?.sky?.uniforms.solarVisibility?.value??1)-reflectionBakedSolarVisibility)>.25;
+    if (reflectionDirty && performance.now() - reflectionLastBake >= (eclipseChanged?150:1500)) {
         globalThis._frameStage = 'reflection-bake';
         await rebakeReflections();
     }
