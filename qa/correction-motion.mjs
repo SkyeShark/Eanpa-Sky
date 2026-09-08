@@ -6,6 +6,7 @@ const name=process.argv[2]??'rain-correction';
 if(!/^[a-z0-9_-]+$/.test(name))throw new Error('Invalid capture name');
 const c=await connect();
 try{
+    if(!await c.evaluate("document.getElementById('boot')?.style.display==='none'"))throw new Error('Wait for scene initialization before a motion capture');
     const result=await c.evaluate(`(async()=>{
         _eanpaTest.pauseAfterFrame=true;
         while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,10));

@@ -36,6 +36,7 @@
 // Omit any of them to keep the state's authored colour.
 import { makeRainSurfaceField } from './rain_surface_field.js';
 import { makeWeatherListener } from './weather_listener.js';
+import { makeImpactSmoke } from './impact_smoke.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -854,35 +855,10 @@ import { makeWeatherListener } from './weather_listener.js';
             // Eight front-to-back volume samples in each bounded puff. The
             // previous surface mask used local XY on a spinning icosphere,
             // exposing hard balloon silhouettes and a flat painted interior.
-            const puffNoise3=Fn(([p])=>T3.mx_noise_float(p).mul(.5).add(.5));
-            const puffRgba = Fn(() => {
-                const seed=T3.hash(T3.uint(instanceIndex).add(T3.uint(719))).toVar();
-                const xy=positionLocal.xy.toVar();
-                const halfChord=T3.sqrt(max(float(1).sub(dot(xy,xy)),0)).toVar();
-                const trans=float(1).toVar(),radiance=vec3(0).toVar();
-                const dt=halfChord.mul(2/8).toVar();
-                T3.Loop({start:0,end:8,type:'int'},({i})=>{
-                    const z=halfChord.sub(float(i).add(.5).mul(dt));
-                    const p=vec3(xy,z).toVar();
-                    const adv=p.mul(2.8).add(vec3(seed.mul(31.7),puffAge.mul(-.38),seed.mul(11.3)));
-                    const noise=puffNoise3(adv).mul(.72)
-                        .add(puffNoise3(adv.mul(2.13).add(17.9)).mul(.28)).toVar();
-                    const boundary=float(1).sub(smoothstep(.63,.99,length(p).add(noise.sub(.5).mul(.4))));
-                    const density=smoothstep(.24,.68,noise).mul(boundary).mul(3.5);
-                    const absorption=float(1).sub(exp(density.mul(dt).negate()));
-                    const illumination=smoothstep(-.8,.8,p.y).mul(.65).add(.35);
-                    const smoke=puffColor.mul(illumination).mul(u.rainLight.mul(2.8).add(.55));
-                    // Brief electrical heat dies into steam/dust, rather than
-                    // leaving a burning orange explosion after every strike.
-                    const heat=exp(puffAge.mul(-12)).mul(exp(dot(p,p).mul(-4)));
-                    const source=smoke.add(mix(puffGlowColor,vec3(1),.65).mul(heat).mul(5));
-                    radiance.addAssign(trans.mul(absorption).mul(source));
-                    trans.mulAssign(float(1).sub(absorption));
-                });
-                const opacity=float(1).sub(trans);
-                const fade=float(1).sub(smoothstep(.40,1,puffAge01));
-                return vec4(radiance.div(max(opacity,.001)),opacity.mul(fade).mul(puffAlpha));
-            })();
+            const puffVolume={age:puffAge,life:puffAge01,alpha:puffAlpha,color:puffColor,
+                glowColor:puffGlowColor,sceneLight:u.rainLight};
+            const puffRgba=makeImpactSmoke(T3,puffVolume);
+            puffMaterial.userData.volumeUniforms=puffVolume;
             puffMaterial.colorNode = puffRgba.rgb;
             puffMaterial.opacityNode = puffRgba.a;
             const puffs = new T3.InstancedMesh(

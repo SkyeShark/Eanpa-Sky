@@ -10,6 +10,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 // construction; antialias:false can never silently continue without edge AA.
 import { fxaa as requiredFxaaFactory } from 'three/addons/tsl/display/FXAANode.js';
 import { makeAudioSystem } from './audio_system.js';
+import { fetchAssetBlob } from './asset_blob.js';
 import { FrameMetrics } from './frame_metrics.js';
 import { installShadowMaterialCache } from './shadow_material_cache.js';
 import { makeShadowRefreshPolicy } from './shadow_refresh.js';
@@ -139,7 +140,7 @@ globalThis.loadImageTexture = async (url, { srgb = false, mipmaps = false } = {}
     const key = `${url}|${srgb ? 'srgb' : 'linear'}|${mipmaps ? 'mips' : 'nomips'}`;
     if (!imageTextureCache.has(key)) {
         imageTextureCache.set(key, (async () => {
-            const bmp = await createImageBitmap(await (await fetch(url)).blob());
+            const bmp = await createImageBitmap(await fetchAssetBlob(url));
             const cv = new OffscreenCanvas(bmp.width, bmp.height);
             const ctx = cv.getContext('2d', { willReadFrequently: true });
             ctx.drawImage(bmp, 0, 0);
@@ -1557,7 +1558,8 @@ async function buildSkybox() {
         // switches remain uniform changes instead of surprise shader builds.
         // The boot overlay remains painted while Three yields between objects.
         {
-            const warmupObjects = [...(active.weatherWarmupObjects?.() ?? []),...(temple.pipelineWarmupObjects?.()??[])];
+            const warmupObjects = [...(active.weatherWarmupObjects?.() ?? []),
+                ...(active.sky?.domes??[]),...(temple.pipelineWarmupObjects?.()??[])];
             const savedVisibility = warmupObjects.map((object) => object.visible);
             const firstFrameStarted = performance.now();
             let rainSurfaceWarmupMs = null;

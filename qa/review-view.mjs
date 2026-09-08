@@ -19,6 +19,7 @@ const views={
 if(!views[view])throw new Error('Unknown view');
 const c=await connect();
 try{
+    if(!await c.evaluate("document.getElementById('boot')?.style.display==='none'"))throw new Error('Wait for scene initialization before a look capture');
     await c.evaluate(`(()=>{
         _eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;
         for(const [id,value]of ${JSON.stringify([['cloud-type',cloud],['weather',weather],['tod',hours]])}){

@@ -44,6 +44,11 @@ try{
   await mkdir('artifacts/feedback-20260908',{recursive:true});
   await writeFile(`artifacts/feedback-20260908/${label}-transitions.json`,JSON.stringify({samples,frames},null,2));
   console.log(JSON.stringify({summary:frames.frameIntervalMs}));
+}catch(error){
+  const frames=await c.evaluate('_benchmark.stop()').catch(()=>null);
+  await mkdir('artifacts/feedback-20260908',{recursive:true});
+  await writeFile(`artifacts/feedback-20260908/${label}-transitions.json`,JSON.stringify({error:String(error),samples,frames},null,2));
+  throw error;
 }finally{
   await c.evaluate('(()=>{for(const restore of _switchRestores??[])restore()})()').catch(()=>{});
   c.close();

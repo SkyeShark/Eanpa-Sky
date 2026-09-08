@@ -972,8 +972,11 @@ export async function makeTempleScene(THREE, {
                 ? T3.dot(T3.texture(material.emissiveMap).rgb,T3.vec3(.2126,.7152,.0722))
                 : T3.float(1);
             material.emissive.copy(color);
-            material.emissiveNode=T3.reference('emissive','color',material)
-                .mul(T3.reference('emissiveIntensity','float',material)).mul(pattern);
+            // Follow the material being drawn. An object-bound ReferenceNode
+            // can be retained in a shared node-builder state and make both
+            // emitters inherit the first material's color.
+            material.emissiveNode=T3.materialReference('emissive','color')
+                .mul(T3.materialReference('emissiveIntensity','float')).mul(pattern);
         }
     }
     const makeEmitterMaterial = (name, color) => {
