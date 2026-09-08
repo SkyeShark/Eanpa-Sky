@@ -4,6 +4,7 @@ import * as WebGPU from '../vendor/three/three.webgpu.js';
 import {makeSkyGeometryLayer} from '../src/sky_geometry_layer.js';
 import {makeCloudShadowMap} from '../engine/cloud_shadow_map.js';
 import {makeRingCloudField} from '../engine/ring_cloud_field.js';
+import {makeSpatialCloudPass} from '../src/cloudspatial.js';
 
 function fixture(){
     const uniforms=[];
@@ -68,4 +69,28 @@ test('ring cloud atlas shares captures, restores renderer state after failure an
     let disposals=0;field.target.addEventListener('dispose',()=>disposals++);
     field.dispose();field.dispose();assert.equal(disposals,1);
     assert.equal(await field.prepare(renderer,2),false);
+});
+
+test('clear startup submits the hidden cloud pass and waits for GPU completion; failed warmup restores state',async()=>{
+    const {T,renderer}=fixture(),scene=new T.Scene(),camera=new T.PerspectiveCamera();
+    const oldWidth=globalThis.innerWidth,oldHeight=globalThis.innerHeight;
+    globalThis.innerWidth=800;globalThis.innerHeight=450;
+    const domes=[0,1].map(()=>new T.Mesh(new T.SphereGeometry(100,8,4),new T.MeshBasicNodeMaterial()));
+    domes.forEach(o=>scene.add(o));domes[1].visible=false;
+    const steps=[];const sky={domes,uniforms:{},async prepareOptimizedCaches(r,c,force){assert.equal(force,true);steps.push('cache')}};
+    renderer.backend={device:{queue:{async onSubmittedWorkDone(){steps.push('complete')}}}};
+    renderer.renderAsync=async function(s){assert.equal(this.mrt,null);assert.equal(s.children[0].visible,true);steps.push('draw');this.draw?.(s)};
+    const pass=makeSpatialCloudPass(T,renderer,camera);
+    try{
+        assert.equal(pass.attach(scene,sky),true);
+        await pass.compileAsync();
+        assert.deepEqual(steps,['cache','draw','draw','complete']);
+        assert.equal(domes[1].visible,false);assert.equal(renderer.target,null);
+        renderer.draw=()=>{throw new Error('cloud warmup failed')};
+        await assert.rejects(pass.compileAsync(),/cloud warmup failed/);
+        assert.equal(domes[1].visible,false);assert.equal(renderer.target,null);
+    }finally{
+        pass.dispose();globalThis.innerWidth=oldWidth;globalThis.innerHeight=oldHeight;
+        for(const dome of domes){assert.equal(dome.parent,scene);dome.geometry.dispose();dome.material.dispose()}
+    }
 });

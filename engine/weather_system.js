@@ -629,8 +629,9 @@ import { makeWeatherListener } from './weather_listener.js';
         }));
         {
             const prof = max(float(1).sub(abs(uv().x.mul(2).sub(1))), 0);
-            const core = pow(prof, 6).mul(1.3).add(pow(prof, 1.6).mul(0.42)); // white-hot core + wide glow in one ribbon
-            const cloudFade = smoothstep(0.0, 0.14, uv().y); // top dissolves INTO the deck
+            const core = pow(prof, 18).mul(1.3).add(pow(prof, 2).mul(0.18)); // narrow plasma core inside a softer corona
+            const energy=T3.attribute('boltEnergy','float');
+            const cloudFade = mix(float(1),smoothstep(0.0, 0.08, uv().y),T3.step(.99,energy));
             const boltTexN = opts.textures?.bolt ? T3.texture(opts.textures.bolt) : null;
             // trace_06.png alpha dies to zero at both v ends (lens-shaped
             // streak): sampled 0..1 it erased the bottom ~10% of the channel,
@@ -644,8 +645,8 @@ import { makeWeatherListener } from './weather_listener.js';
             // the wider channel and glow. Every other lightning consumer uses
             // this same linear color uniform.
             const coreTint = mix(boltColor, vec3(1, 1, 1), pow(prof, 10).mul(0.34));
-            boltMat.colorNode = coreTint.mul(boltChannelK.mul(26));
-            boltMat.opacityNode = core.mul(texA).mul(cloudFade).mul(clamp(boltChannelK.mul(3), 0, 1));
+            boltMat.colorNode = coreTint.mul(boltChannelK.mul(22)).mul(energy);
+            boltMat.opacityNode = core.mul(mix(.65,1,texA)).mul(cloudFade).mul(clamp(boltChannelK.mul(3), 0, 1));
         }
         const boltGeo = new T3.BufferGeometry();
         // A strike changes the ribbon's contents, not its topology budget. The
@@ -654,20 +655,23 @@ import { makeWeatherListener } from './weather_listener.js';
         // attributes that are still attached at final disposal, so every
         // superseded attribute could leave its GPU buffer behind. Keep one
         // bounded dynamic allocation for the lifetime of the weather system.
-        // Maximum topology: 89-point fractal trunk (12 anchors, three
+        // Maximum topology: 177-point fractal trunk (12 anchors, four
         // midpoint-displacement passes) + four 5-point branches + four
-        // 3-point sub-branches = 242 ribbon vertices / 672 indices, budgeted
+        // 3-point sub-branches = 418 ribbon vertices / 1200 indices, budgeted
         // with headroom.
-        const BOLT_MAX_VERTICES = 256;
-        const BOLT_MAX_INDICES = 768;
+        const BOLT_MAX_VERTICES = 448;
+        const BOLT_MAX_INDICES = 1280;
         const boltPositionAttribute = new T3.BufferAttribute(new Float32Array(BOLT_MAX_VERTICES * 3), 3);
         const boltUvAttribute = new T3.BufferAttribute(new Float32Array(BOLT_MAX_VERTICES * 2), 2);
+        const boltEnergyAttribute = new T3.BufferAttribute(new Float32Array(BOLT_MAX_VERTICES), 1);
         const boltIndexAttribute = new T3.BufferAttribute(new Uint16Array(BOLT_MAX_INDICES), 1);
         boltPositionAttribute.setUsage(T3.DynamicDrawUsage);
         boltUvAttribute.setUsage(T3.DynamicDrawUsage);
+        boltEnergyAttribute.setUsage(T3.DynamicDrawUsage);
         boltIndexAttribute.setUsage(T3.DynamicDrawUsage);
         boltGeo.setAttribute('position', boltPositionAttribute);
         boltGeo.setAttribute('uv', boltUvAttribute);
+        boltGeo.setAttribute('boltEnergy', boltEnergyAttribute);
         boltGeo.setIndex(boltIndexAttribute);
         boltGeo.setDrawRange(0, 0);
         const boltMesh = new T3.Mesh(boltGeo, boltMat);
@@ -701,21 +705,27 @@ import { makeWeatherListener } from './weather_listener.js';
             const rng = (i) => jsHash(I * 131.7 + i * 17.3);
             // start slightly INSIDE the deck — bolts come from the clouds
             const topY = (sky ? sky.uniforms.cloudStart.value : 500) * 1.04;
-            const pos = [], uvs = [], idx = [];
-            const addRibbon = (pts, w0, w1) => {
+            const pos = [], uvs = [], energies = [], idx = [];
+            const addRibbon = (pts, w0, w1, trunkChannel = false) => {
                 const b0 = pos.length / 3;
-                const toCam = V(camera.position.x - gx, 0, camera.position.z - gz).normalize();
                 for (let i = 0; i < pts.length; i++) {
                     const t = i / (pts.length - 1);
                     const dirSeg = (i < pts.length - 1)
                         ? V(...pts[i + 1]).sub(V(...pts[i])).normalize()
                         : V(...pts[i]).sub(V(...pts[i - 1])).normalize();
-                    const right = dirSeg.clone().cross(toCam).normalize();
-                    const w = (w0 + (w1 - w0) * t) / 2;
+                    const toCam=V().copy(camera.position).sub(V(...pts[i])).normalize();
+                    const right = dirSeg.clone().cross(toCam);
+                    if(right.lengthSq()<1e-8)right.set(1,0,0);else right.normalize();
+                    // Preserve a sub-metre close channel; distant strikes keep
+                    // a bounded pixel footprint instead of becoming a fat rod.
+                    const pixelWidth=camera.position.distanceTo(V(...pts[i]))*u.pixelWorldScale.value*2.8;
+                    const w = Math.max(w0 + (w1 - w0) * t,pixelWidth) / 2;
                     const p = pts[i];
                     pos.push(p[0] - right.x * w, p[1] - right.y * w, p[2] - right.z * w);
                     pos.push(p[0] + right.x * w, p[1] + right.y * w, p[2] + right.z * w);
                     uvs.push(0, t, 1, t);
+                    const energy=trunkChannel?1:Math.max(.16,w0/.65)*(1-t*.7);
+                    energies.push(energy,energy);
                     if (i > 0) {
                         const a = b0 + (i - 1) * 2;
                         idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
@@ -725,9 +735,9 @@ import { makeWeatherListener } from './weather_listener.js';
             // main channel: multi-scale fractal trunk. A single random walk
             // has one feature size, and its straight inter-point segments read
             // as a laser at close range. Coarse anchors set the overall drift;
-            // three midpoint-displacement passes then kink every segment at
+            // four midpoint-displacement passes then kink every segment at
             // half the previous scale — organic direction changes from ~60 m
-            // wander down to ~3 m jitter, with both endpoints preserved so the
+            // wander down to metre-scale jitter, with both endpoints preserved so the
             // channel still leaves the deck and lands exactly on the impact.
             let trunk = [];
             const N0 = 12;
@@ -744,7 +754,7 @@ import { makeWeatherListener } from './weather_listener.js';
                 trunk.push([x, y, z]);
             }
             let displacementSeed = 500;
-            for (let level = 0; level < 3; level++) {
+            for (let level = 0; level < 4; level++) {
                 const refined = [trunk[0]];
                 for (let i = 1; i < trunk.length; i++) {
                     const a = trunk[i - 1], b = trunk[i];
@@ -760,7 +770,7 @@ import { makeWeatherListener } from './weather_listener.js';
                 displacementSeed += 137;
             }
             const spine = trunk;
-            addRibbon(spine, 3.6, 1.3);
+            addRibbon(spine, .65, .28, true);
             // recursive branching: forks off the trunk, sub-forks off forks
             const branchFrom = (parent, seed, w0, depth) => {
                 const k = 3 + Math.floor(rng(seed) * (parent.length - 6));
@@ -776,7 +786,7 @@ import { makeWeatherListener } from './weather_listener.js';
                 if (depth < 2 && rng(seed + 5) > 0.4) branchFrom(bp, seed * 3 + 7, w0 * 0.5, depth + 1);
             };
             const nBranch = 2 + Math.floor(rng(50) * 3);
-            for (let b = 0; b < nBranch; b++) branchFrom(spine, 60 + b * 23, 1.5, 1);
+            for (let b = 0; b < nBranch; b++) branchFrom(spine, 60 + b * 23, .28, 1);
             if (pos.length > boltPositionAttribute.array.length
                 || uvs.length > boltUvAttribute.array.length
                 || idx.length > boltIndexAttribute.array.length) {
@@ -787,9 +797,11 @@ import { makeWeatherListener } from './weather_listener.js';
             boltIndexAttribute.array.fill(0);
             boltPositionAttribute.array.set(pos);
             boltUvAttribute.array.set(uvs);
+            boltEnergyAttribute.array.set(energies);
             boltIndexAttribute.array.set(idx);
             boltPositionAttribute.needsUpdate = true;
             boltUvAttribute.needsUpdate = true;
+            boltEnergyAttribute.needsUpdate = true;
             boltIndexAttribute.needsUpdate = true;
             boltGeo.setDrawRange(0, idx.length);
             boltGeo.computeBoundingSphere();
@@ -804,7 +816,7 @@ import { makeWeatherListener } from './weather_listener.js';
         // A crossed/billboard plane is not a volumetric impact. A small pooled
         // low-poly sphere keeps the puff readable from every view direction
         // without allocating anything when a strike occurs.
-        const impactPuffGeometry = new T3.IcosahedronGeometry(1, 1);
+        const impactPuffGeometry = new T3.IcosahedronGeometry(1, 2);
         const scorchGeometry = new T3.CircleGeometry(1, 32);
         const impactObjects = [];
         const makeImpactSlot = (slotIndex) => {
@@ -831,7 +843,6 @@ import { makeWeatherListener } from './weather_listener.js';
             const puffAlpha = uniform(0);
             const puffColor = uniform(V(0.12, 0.14, 0.17));
             const puffGlowColor = uniform(V(1, 1, 1));
-            const puffGlowK = uniform(0);
             const puffAge = uniform(0);
             const puffAge01 = uniform(0);
             const puffMaterial = noGBuffer(new T3.MeshBasicNodeMaterial({
@@ -840,88 +851,37 @@ import { makeWeatherListener } from './weather_listener.js';
                 depthTest: true,
                 fog: true,
             }));
-            // Soft optical-thickness proxy for the 3D puff: front-facing
-            // normals are dense, grazing normals fade to zero. A UV radial
-            // mask on an icosphere would expose seams and painted patches.
-            // The uniform proxy alone read as a smooth balloon: a per-instance
-            // drifting lump field ruffles the silhouette and interior, an
-            // age-driven dissolve breaks the cloud apart as it fades, and the
-            // strike color glows from the dense core for the first half
-            // second — a burn puff, not a grey sphere.
-            // Gyroid-FBM explosion body (user-supplied reference shader,
-            // recolored for lightning). abs(gyroid) FBM with z-feedback gives
-            // billowing turbulent structure; its finite-difference normal
-            // top-lights the smoke; power curves drive growth (fast then
-            // slowing), burn (ember core dying quickly into soot), and fade
-            // (hold, then die). Internal motion is a slow scroll through the
-            // fixed field — churn without swirling interference bands.
-            const puffGyroid = (p) => dot(cos(p), sin(vec3(p.y, p.z, p.x)));
-            // The whole body lives inside ONE Fn() so toVar() emits real WGSL
-            // temporaries. A functional unroll without variables inlined the
-            // feedback chain as text and the shader grew multiplicatively per
-            // octave — megabytes of WGSL, 30 s pipeline compiles, device
-            // losses, and an impact puff that never rendered at all.
-            const puffFbm = (pIn) => {
-                const p = vec3(pIn).toVar();
-                const result = float(0).toVar();
-                let amp = 0.5;
-                for (let octave = 0; octave < 6; octave++) {
-                    p.assign(vec3(p.x, p.y, p.z.add(result.mul(0.1))));
-                    result.addAssign(abs(puffGyroid(p.div(amp)).mul(amp)));
-                    amp /= 1.7;
-                }
-                return result;
-            };
+            // Eight front-to-back volume samples in each bounded puff. The
+            // previous surface mask used local XY on a spinning icosphere,
+            // exposing hard balloon silhouettes and a flat painted interior.
+            const puffNoise3=Fn(([p])=>T3.mx_noise_float(p).mul(.5).add(.5));
             const puffRgba = Fn(() => {
-                const puffSeed = fract(
-                    float(instanceIndex).mul(0.6180339887).add(0.317),
-                ).toVar();
-                const puffLp = vec3(positionLocal).toVar();
-                // staggered per-instance timeline on the shared slot clock
-                const puffT = clamp(
-                    puffAge01.mul(1.1).sub(puffSeed.mul(0.10)), 0, 1,
-                ).toVar();
-                const puffGrowth = pow(puffT, 0.2);
-                const puffFade = float(1).sub(pow(puffT, 7.0));
-                const puffBurn = float(1).sub(pow(puffT, 0.4));
-                const puffScroll = pow(puffT, 0.4).mul(1.1)
-                    .add(puffSeed.mul(196.128));
-                const puffP = puffLp.mul(2.2)
-                    .add(vec3(0, 0, puffScroll))
-                    .add(puffSeed.mul(17.3)).toVar();
-                const puffNoise = puffFbm(puffP).toVar();
-                const puffNx = puffFbm(puffP.add(vec3(0.15, 0, 0))).toVar();
-                const puffNy = puffFbm(puffP.add(vec3(0, 0.15, 0))).toVar();
-                const puffNormal = normalize(vec3(
-                    puffNoise.sub(puffNx),
-                    puffNoise.sub(puffNy),
-                    puffNoise.sub(1),
-                )).toVar();
-                const puffShade = puffNormal.y.mul(0.5).add(0.5).toVar();
-                const puffSmoke = puffNoise.sub(puffBurn.mul(2.6)).toVar();
-                // ember: white-hot lightning-tinted core while burn is high
-                const puffEmber = mix(vec3(1.0, 1.0, 1.0), puffGlowColor, 0.55)
-                    .mul(4.6)
-                    .mul(float(0.75).add(puffShade.mul(0.45)))
-                    .mul(float(1).add(puffGlowK.mul(0.5)));
-                const puffSmokeGrey = clamp(puffSmoke.mul(puffShade), 0, 1.6);
-                const puffSmokeCol = puffColor.mul(puffSmokeGrey.mul(1.2).add(0.15))
-                    // rising smoke stays faintly lit by the strike afterglow
-                    // instead of vanishing dark-on-dark under the sealed sky
-                    .add(puffGlowColor.mul(puffGlowK).mul(0.35));
-                const puffCol = mix(
-                    puffEmber, puffSmokeCol, smoothstep(0.0, 0.1, puffSmoke),
-                );
-                // ragged expanding silhouette: noise-modulated radius
-                const puffRadius = puffNoise.mul(puffGrowth).mul(0.5);
-                const puffShape = float(1).sub(smoothstep(
-                    0.0, 0.05, length(puffLp.xy).sub(puffRadius),
-                ));
-                const puffA = puffShape
-                    .mul(puffFade)
-                    .mul(float(0.82).add(puffSeed.mul(0.3)))
-                    .mul(puffAlpha);
-                return vec4(puffCol, puffA);
+                const seed=T3.hash(T3.uint(instanceIndex).add(T3.uint(719))).toVar();
+                const xy=positionLocal.xy.toVar();
+                const halfChord=T3.sqrt(max(float(1).sub(dot(xy,xy)),0)).toVar();
+                const trans=float(1).toVar(),radiance=vec3(0).toVar();
+                const dt=halfChord.mul(2/8).toVar();
+                T3.Loop({start:0,end:8,type:'int'},({i})=>{
+                    const z=halfChord.sub(float(i).add(.5).mul(dt));
+                    const p=vec3(xy,z).toVar();
+                    const adv=p.mul(2.8).add(vec3(seed.mul(31.7),puffAge.mul(-.38),seed.mul(11.3)));
+                    const noise=puffNoise3(adv).mul(.72)
+                        .add(puffNoise3(adv.mul(2.13).add(17.9)).mul(.28)).toVar();
+                    const boundary=float(1).sub(smoothstep(.63,.99,length(p).add(noise.sub(.5).mul(.4))));
+                    const density=smoothstep(.24,.68,noise).mul(boundary).mul(3.5);
+                    const absorption=float(1).sub(exp(density.mul(dt).negate()));
+                    const illumination=smoothstep(-.8,.8,p.y).mul(.65).add(.35);
+                    const smoke=puffColor.mul(illumination).mul(u.rainLight.mul(2.8).add(.55));
+                    // Brief electrical heat dies into steam/dust, rather than
+                    // leaving a burning orange explosion after every strike.
+                    const heat=exp(puffAge.mul(-12)).mul(exp(dot(p,p).mul(-4)));
+                    const source=smoke.add(mix(puffGlowColor,vec3(1),.65).mul(heat).mul(5));
+                    radiance.addAssign(trans.mul(absorption).mul(source));
+                    trans.mulAssign(float(1).sub(absorption));
+                });
+                const opacity=float(1).sub(trans);
+                const fade=float(1).sub(smoothstep(.40,1,puffAge01));
+                return vec4(radiance.div(max(opacity,.001)),opacity.mul(fade).mul(puffAlpha));
             })();
             puffMaterial.colorNode = puffRgba.rgb;
             puffMaterial.opacityNode = puffRgba.a;
@@ -952,7 +912,6 @@ import { makeWeatherListener } from './weather_listener.js';
                 puffAlpha,
                 puffColor,
                 puffGlowColor,
-                puffGlowK,
                 puffAge,
                 puffAge01,
                 sparkVelocity: Array.from({ length: IMPACT_SPARK_COUNT }, () => V(0, 0, 0)),
@@ -1074,9 +1033,8 @@ import { makeWeatherListener } from './weather_listener.js';
                     .copy(impactBasisTangent).multiplyScalar((jsHash(interval * 67.1 + index * 3.7 + 17) - 0.5) * 0.75)
                     .addScaledVector(impactBasisBitangent, (jsHash(interval * 71.3 + index * 6.1 + 19) - 0.5) * 0.75)
                     .addScaledVector(normal, 0.45 + jsHash(interval * 73.9 + index * 2.9 + 21) * 0.75);
-                // Sized for a lightning burn: the old 0.45-1.3 m bodies were a
-                // 20 px smudge at the 35-60 m forced-strike distance.
-                slot.puffSize[index] = 1.1 + jsHash(interval * 79.7 + index * 10.7 + 23) * 1.6;
+                // Compact steam/dust bodies spread and rise after contact.
+                slot.puffSize[index] = 0.65 + jsHash(interval * 79.7 + index * 10.7 + 23) * 1.15;
             }
 
             const scorch = chooseOldestSlot(scorchSlots);
@@ -1127,14 +1085,12 @@ import { makeWeatherListener } from './weather_listener.js';
                 const puffLife = 4.5;
                 if (age < puffLife && camera) {
                     slot.puffs.visible = true;
-                    // Fade lives in the shader (hold, then die: 1 - t^7); JS
-                    // supplies only the fast rise-in and the overall gain.
+                    // Extinction and lifetime fade live in the shader; JS
+                    // supplies the fast rise and particle motion.
                     const rise = Math.min(1, age / 0.15);
                     slot.puffAlpha.value = rise;
                     slot.puffAge.value = age;
                     slot.puffAge01.value = age / puffLife;
-                    slot.puffGlowK.value = Math.exp(-age * 3.4) * 1.1
-                        + Math.exp(-age * 0.8) * 0.30;
                     for (let index = 0; index < IMPACT_PUFF_COUNT; index++) {
                         impactScratchPosition.copy(slot.origin)
                             .add(slot.puffOffset[index])
@@ -1167,7 +1123,6 @@ import { makeWeatherListener } from './weather_listener.js';
                 } else {
                     slot.puffs.visible = false;
                     slot.puffAlpha.value = 0;
-                    slot.puffGlowK.value = 0;
                 }
                 if (age >= puffLife) slot.active = false;
             }
@@ -1477,8 +1432,8 @@ import { makeWeatherListener } from './weather_listener.js';
                         result.addAssign(delta.div(radius).mul(cos(wave.mul(110)))
                             .mul(envelope).mul(0.075));
                     }
-                // Existing puddles can remain after a cloud passes, but new
-                // impacts stop with its rain supply, just like airborne drops.
+                    // Existing puddles can remain after a cloud passes, but new
+                    // impacts stop with its rain supply, just like airborne drops.
                     result.mulAssign(rainCellAt(positionWorld));
                 });
                 return result;
@@ -1498,7 +1453,7 @@ import { makeWeatherListener } from './weather_listener.js';
                 blendedSpecular.assign(mix(blendedSpecular, vec3(0.02037), puddle));
             };
             const after = Object.fromEntries(Object.keys(before).map(key => [key, mat[key]]));
-            wrappedRoots.set(mat, { before, after, response:{wetness:upMask,puddle,exposure} });
+            wrappedRoots.set(mat, { before, after, response:{wetness:upMask,puddle,exposure,rippleSlope} });
             mat.needsUpdate = true;
             wetnessStats.wrappedMaterials = wrapped.size;
             return true;
@@ -1594,7 +1549,7 @@ import { makeWeatherListener } from './weather_listener.js';
                 volumetricCurtains: true,
                 featherInnerRadius: RAD * 0.70,
                 featherOuterRadius: RAD,
-                opacityBaseRange: [0.24, 0.56],
+                opacityBaseRange: [0.46, 0.84],
                 sceneLightResponsive: true,
                 rainPopulation: N_RAIN,
                 splashPopulation: N_SPLASH,
@@ -1705,6 +1660,7 @@ import { makeWeatherListener } from './weather_listener.js';
         };
         const sys = {
             uniforms: u, state, rain: rainInst, splashes:splashInst, bolt, WEATHER, diagnostics,
+            rainCellAt,
             getSurfaceNodes(material){return wrappedRoots.get(material)?.response??null;},
             lightningProfile: globalThis.EANPA_LIGHTNING_PROFILE,
             // Debug/inspection: the next lightning event becomes a forced

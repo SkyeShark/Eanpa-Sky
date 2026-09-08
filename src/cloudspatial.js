@@ -127,6 +127,28 @@ export function makeSpatialCloudPass(THREE, renderer, camera, { div = 2 } = {}) 
             if (sky.uniforms?.frameJit) sky.uniforms.frameJit.value = 0;
             return true;
         },
+        async compileAsync() {
+            if(disposed||!sky)return;
+            const state=T3.RendererUtils.saveRendererState(renderer),visible=cloudDome.visible;
+            try{
+                // A clear initial sky hides this mesh. It must nevertheless
+                // compile before play, or the first cloudy preset pays for
+                // the entire volume shader on the interaction thread.
+                await sky.prepareOptimizedCaches?.(renderer,camera,true);
+                cloudDome.visible=true;renderer.setMRT(null);
+                renderer.setRenderTarget(backgroundTarget);
+                await renderer.compileAsync(backgroundScene,camera);
+                await renderer.renderAsync(backgroundScene,camera);
+                renderer.setRenderTarget(cloudTarget);
+                await renderer.compileAsync(cloudScene,camera);
+                // compileAsync alone does not exercise every final render
+                // context variant in the pinned renderer. Submit this exact
+                // transparent pass and finish its GPU work before revealing
+                // the scene, including when the initial preset is clear.
+                await renderer.renderAsync(cloudScene,camera);
+                await renderer.backend.device.queue.onSubmittedWorkDone();
+            }finally{cloudDome.visible=visible;T3.RendererUtils.restoreRendererState(renderer,state);}
+        },
         async render() {
             if (disposed || !backgroundDome || !cloudDome) return;
             await sky.prepareOptimizedCaches?.(renderer, camera);

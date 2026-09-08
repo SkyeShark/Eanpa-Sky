@@ -14,16 +14,19 @@ try{
         const chunks=[];recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
         const finished=new Promise(r=>recorder.onstop=r);
         const w=__eanpaWeatherByScene.get(_c.parent),r=_reflectionPipeline.pipeline.renderer;
+        if(${JSON.stringify(name.includes('lightning'))}&&!w.debugForceLocalStrike())throw new Error('Lightning weather required');
         const time=_sky.uniforms.time.value,start=performance.now(),frames=[];
         recorder.start();
         try{
             for(let i=0;i<180;i++){
                 const t=time+(performance.now()-start)/1000;
                 _sky.update(t,_c);w.update(t,_c);globalThis._ringworld?.update(t);
+                _sky._celestialModule?.update(t);globalThis._temple?.update(t,_c,1/30);
                 await globalThis._ringworld?.prepareFrame(r);await w.prepareFrame(r,_c);
                 await _sky.prepareCloudShadows(r,_c);await _spatialClouds?.render();
                 await _reflectionPipeline.render();
-                if(i%30===0){await r.backend.device.queue.onSubmittedWorkDone();frames.push(canvas.toDataURL('image/png'));}
+                if(i%30===0||(${JSON.stringify(name.includes('lightning'))}&&[18,19,20,22,26,45].includes(i))){
+                    await r.backend.device.queue.onSubmittedWorkDone();frames.push(canvas.toDataURL('image/png'));}
                 await new Promise(done=>setTimeout(done,Math.max(1,(i+1)*1000/30-(performance.now()-start))));
             }
         }finally{recorder.stop();await finished;stream.getTracks().forEach(t=>t.stop());}

@@ -4,6 +4,7 @@
 // while every perimeter element is an authored Eidoverse GLB used at its
 // original scale.  Imported wall assets are normalized because the source
 // GLBs retain their Blender scene offsets.
+import {makeStaticInstances} from './static_instances.js';
 
 export async function makeTempleScene(THREE, {
     terrain = null,
@@ -1218,6 +1219,7 @@ export async function makeTempleScene(THREE, {
     let targetNightLevel = nightForHours(templeHours);
     let nightLevel = targetNightLevel;
     let ambientDarkness = 0;
+    let lastFixtureShadowTime=-Infinity;
     const applyNightLighting = (timeSeconds = 0) => {
         const pulse = 0.94 + Math.sin(timeSeconds * 1.7) * 0.06;
         for (const material of sphereEmitterMaterials.blue) {
@@ -1235,11 +1237,15 @@ export async function makeTempleScene(THREE, {
         // Three still renders a shadow map for a zero-intensity spotlight.
         // Keep these lights in the stable light list, but sleep their shadow
         // captures during daylight and refresh immediately when they light up.
+        const shadowHz={high:60,balanced:30,performance:20}[group.userData.requestedSkyQuality]??30;
+        const refresh=timeSeconds<lastFixtureShadowTime||timeSeconds-lastFixtureShadowTime>=1/shadowHz;
+        if(refresh)lastFixtureShadowTime=timeSeconds;
         for (const light of summitLights) {
             const active = light.intensity > 0.001;
-            if (active && !light.shadow.autoUpdate) light.shadow.needsUpdate=true;
+            if (active && (refresh||!light.userData.fixtureShadowActive)) light.shadow.needsUpdate=true;
             if (!active) light.shadow.needsUpdate=false;
-            light.shadow.autoUpdate=active;
+            light.shadow.autoUpdate=false;
+            light.userData.fixtureShadowActive=active;
         }
         // Day/night is carried ONLY by intensity. Toggling light `visible` at
         // the nightLevel threshold changed the scene's light list at every
@@ -1557,6 +1563,10 @@ export async function makeTempleScene(THREE, {
     const gateDoorClosedTopLocal = gateClosedWorldBounds.max.y - group.position.y;
     gateDoor.userData.authoredRetractingDoor = true;
     gateDoor.userData.sourceMeshName = 'Cube.001';
+    // These placed modules never move. Preserve the animated gate as authored,
+    // and share repeated wall/pillar draws within small culling cells.
+    const staticInstances=makeStaticInstances(T3,group,placedPerimeter.filter(root=>root!==mainGateInstance));
+    group.userData.staticInstancing=staticInstances.stats;
     let gateProgress = 0;
     let gateTarget = 0;
     let gateCloseDelay = 0;
@@ -2157,7 +2167,9 @@ export async function makeTempleScene(THREE, {
 
     return {
         group,
+        staticInstances,
         setQuality,
+        pipelineWarmupObjects(){return beams;},
         setTime,
         setAmbientLight(level) {
             ambientDarkness=1-smoothstep01((Math.max(0,Number(level)||0)-.055)/.25);
@@ -2235,6 +2247,7 @@ export async function makeTempleScene(THREE, {
         dispose() {
             if (disposed) return;
             disposed = true;
+            staticInstances.dispose();
             group.removeFromParent?.();
             group.clear();
             for (const prototype of prototypes) prototype.clear();

@@ -5,7 +5,6 @@
 // scene.environment, which kills the Basic-family domes).
 import { makeLazyWeatherAttachment } from './weathersky.js';
 import { loadRingRelief } from './ring_relief.js';
-import { ringSolarVisibility } from '../engine/ring_eclipse.js';
 
 function disposeObject(root) {
     const geometries = new Set(), materials = new Set();
@@ -46,6 +45,7 @@ export async function makeRingworld({
         textures: { stars, moon },
         opts: {
             hours, clouds: cloudPreset, ringCurve: 5000, moonAngularDeg: 16,
+            noonAzimuth: Math.PI/2,
             // planet-shine: the rock-giant companion reflects warm near-white
             // onto the night side (eidoverse sky_worlds parity — the same
             // value the band material receives as planetShineColor below).
@@ -181,9 +181,7 @@ export async function makeRingworld({
         weatherWarmupObjects(){return weatherAttachment.weatherWarmupObjects();},
         prepareFrame(renderer){return ring.prepareFrame(renderer);},
         update(t) {
-            const solar=ringSolarVisibility(camera.position,sky.sunDir,{
-                radius:ring.info.radius,centerY:ring.group.position.y,halfWidth:ring.info.halfWidth,
-            });
+            const solar=ring.eclipseK(sky.sunDir,camera.position);
             sky.uniforms.solarVisibility.value=solar;
             sky.uniforms.solarSkyVisibility.value=.16+.84*solar;
             globalThis._ringEclipse={solarVisibility:solar,skyVisibility:sky.uniforms.solarSkyVisibility.value};

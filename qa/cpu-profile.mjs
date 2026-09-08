@@ -3,6 +3,7 @@ import { writeFile, mkdir } from 'node:fs/promises';
 const [name='current', rate='4'] = process.argv.slice(2);
 const cdp = await connect();
 try {
+    await cdp.evaluate('_eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;');
     await cdp.send('Emulation.setCPUThrottlingRate',{rate:Number(rate)});
     await new Promise(r=>setTimeout(r,3000));
     await cdp.send('Profiler.enable');

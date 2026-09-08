@@ -1557,7 +1557,7 @@ async function buildSkybox() {
         // switches remain uniform changes instead of surprise shader builds.
         // The boot overlay remains painted while Three yields between objects.
         {
-            const warmupObjects = active.weatherWarmupObjects?.() ?? [];
+            const warmupObjects = [...(active.weatherWarmupObjects?.() ?? []),...(temple.pipelineWarmupObjects?.()??[])];
             const savedVisibility = warmupObjects.map((object) => object.visible);
             const firstFrameStarted = performance.now();
             let rainSurfaceWarmupMs = null;
@@ -1574,6 +1574,7 @@ async function buildSkybox() {
                 await globalThis._weather?.prepareFrame?.(renderer, camera, { force: true });
                 rainSurfaceWarmupMs = performance.now() - rainSurfaceStarted;
                 for (const object of warmupObjects) object.visible = true;
+                await spatialClouds?.compileAsync?.();
                 reflectionPipeline.update();
                 if (typeof reflectionPipeline.compileAsync === 'function') {
                     const compileStarted = performance.now();

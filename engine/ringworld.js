@@ -15,6 +15,7 @@
 //   // Per serialized frame: ring.update(t); await ring.prepareFrame(renderer);
 import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
 import { makeRingCloudField } from './ring_cloud_field.js';
+import { ringSolarVisibility } from './ring_eclipse.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -1467,17 +1468,9 @@ import { makeRingCloudField } from './ring_cloud_field.js';
             // the ring cylinder from the stage origin toward the light — the
             // classic ringworld sun-eclipse ("arch night"), soft penumbra.
             eclipseK(dir, originY = 0) {
-                const oy = originY - group.position.y;
-                const a = dir.y * dir.y + dir.z * dir.z;
-                if (a < 1e-9) return 1;
-                const b = 2 * oy * dir.y, c = oy * oy - R_REF * R_REF;
-                const disc = b * b - 4 * a * c;
-                if (disc <= 0) return 1;
-                const t = (-b + Math.sqrt(disc)) / (2 * a);
-                if (t <= 0) return 1;
-                const hx = dir.x * t - group.position.x;
-                const pen = 70;
-                return Math.min(1, Math.max(0, (Math.abs(hx) - (483 - pen)) / (2 * pen)));
+                const p=typeof originY==='object'?originY:{x:0,y:originY,z:0};
+                return ringSolarVisibility({x:p.x-group.position.x,y:p.y,z:p.z-group.position.z},dir,
+                    {radius:R_REF,centerY:group.position.y,halfWidth:483});
             },
         };
         return sys;

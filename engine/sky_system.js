@@ -1968,8 +1968,8 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                 lightCacheDirty = !!lightCacheCompute;
             },
             async prepareOptimizedCaches(renderer, camera, force = false) {
-                if (!lightCacheCompute || state.preset === 'clear' || u.finalMul.value <= 0.0001
-                    || u.lightCacheDirect.value >= 0.999) return false;
+                if (!lightCacheCompute || (!force && (state.preset === 'clear' || u.finalMul.value <= 0.0001
+                    || u.lightCacheDirect.value >= 0.999))) return false;
                 const cam = camera ?? globalThis._c;
                 if (!cam) return false;
                 const [LX, , LZ] = lightCacheDims;
@@ -2088,7 +2088,12 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                     const n = ((w - 18) + 24) % 24;          // 0..12 across the night
                     return span * Math.PI * 0.5 + n / 12 * (2 - span) * Math.PI;
                 };
-                const az = state.azBase + arcAz(hours, state.azSpanK);
+                let az = state.azBase + arcAz(hours, state.azSpanK);
+                // Align this world's daytime transit with its ring. Ease the
+                // correction to zero at dawn/dusk and leave the night arc and
+                // companion trajectory exactly as authored.
+                if(Number.isFinite(opts.noonAzimuth))az+=(opts.noonAzimuth-state.azBase)
+                    *Math.max(0,Math.sin(dayK*Math.PI))**2;
                 // moon: the opposite arc, and the same continuity requirement — its
                 // own (hours + 6) % 24 term jumped at 18h, right at moonrise.
                 const mel = Math.sin(((hours + 12 - 6) / 12) * Math.PI) * 48 * Math.PI / 180;

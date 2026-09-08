@@ -66,6 +66,10 @@
         { name: 'upwind roof edge', p: [-21.5, 0.08, 0], height: 4, exposure: 0 },
         { name: 'skinned roof', p: [-12, 4.08, 14], height: 4, exposure: 1 },
         { name: 'under skinned roof', p: [-12, 0.08, 14], height: 4, exposure: 0 },
+        ...Array.from({length:41},(_,i)=>{
+            const x=-9.5+i*7/40,height=2-Math.tan(Math.PI/8)*(x+6);
+            return {name:`continuous sloped receiver ${i}`,p:[x,height+.002,0],height,exposure:1};
+        }),
     ];
     const samples = T.uniformArray(cases.map(c => new T.Vector3(...c.p)), 'vec3');
     const sample = samples.element(T.int(T.uv().x.mul(cases.length)));
