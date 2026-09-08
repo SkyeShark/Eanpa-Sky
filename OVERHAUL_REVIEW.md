@@ -83,17 +83,25 @@ Cloud-shape provenance: [assets/weather/README.md](assets/weather/README.md).
 
 ## Terrain and celestial appearance
 
+The subsequent terrain, star and rain-impact correction is shown in the
+[visual feedback comparisons](qa/review/corrections.html).
+
 The ring uses a new 4,344 × 1,448 erosion bake with 3,145,056 hydraulic droplets.
 Height, normals, and terrain shading derive from the same field. Adaptive,
-stitched geometry contains 626,565 vertices and 1,228,416 triangles, with a
-closed angular seam and skirts that close the sides beneath displaced peaks.
+stitched land geometry has a closed angular seam and submerged side skirts.
+Following visual feedback, an independent sea cylinder now shares the land draw:
+water shading never interpolates onto a displaced mountain triangle. Terrain
+height scale is 85 m, with the baked peak below 76 m and an eight-neighbour
+slope constraint in physical metres to remove coastal cliffs and thin spikes.
+The normal frame also follows the actual directions of the band's texture axes.
 Relief blends into the local playable patch between 700 and 2,000 m, avoiding
 mountains intersecting the foreground terrain.
 
 Both horizon directions and the overhead band have been inspected. The original
-water mask and water shader are retained. The new terrain payload is approximately
-37.7 MB uncompressed; compressed height/normal data and albedo are approximately
-32.9 MB. This is a deliberate asset/detail increase, not a free resolution gain.
+coastline source and animated water shader are retained; actual land/sea depth
+intersections now define the visible coast. The corrected terrain payload is
+37.7 MB uncompressed; compressed height/normal data and albedo total approximately
+19.3 MB.
 Regenerate it with [qa/bake-ring-terrain.py](qa/bake-ring-terrain.py).
 
 Local ground has less repetitive world-space material sampling, broader natural
@@ -106,13 +114,18 @@ motion envelope. The deterministic motion checks preserve positive clearance
 through 1,200 sampled times, and several widely spaced animation poses have been
 visually reviewed. Its 7,000 smaller fragments now move in the GPU shader from
 16 parent transforms. Dust uses depth-aware ordering with the solid fragments.
-The red giant has larger, slower convection features, warmer internal variation,
-and a softer limb. These are artistic celestial models.
+Following visual feedback, the red giant again has a dark ember palette, fine
+boiling detail and a distinct pink-red rim over limb darkening. A rotating 3D
+noise field replaces the stretched longitude/latitude mapping. Broad, slower
+convection now modulates the fine structure rather than overwhelming it. These
+are artistic celestial models; the close-range appearance also draws inspiration
+from [SpaceEngine's red giant rendering](https://spaceengine.org/news/blog190703/)
+and [an Elite Dangerous planetary view](https://inara.cz/elite/cmdr/381355/).
 
 ## Rain, puddles, physics, and sound
 
 A rain-aligned depth/normal field captures arbitrary nearby geometry. It supplies
-shelter, falling-drop termination, surface-aligned splash crowns and beads,
+shelter, falling-drop termination, surface-aligned contacts and ballistic droplets,
 wetness exposure, and puddle eligibility. Temple roofs participate without a
 terrain callback. Instances, skinning, vertex deformation, alpha-cutout openings,
 and wind projection have been checked in an actual GPU fixture.
@@ -123,6 +136,14 @@ before pooled water; drying takes longer. Porous materials darken, level puddles
 flatten normals and use water reflectance, and falling rain produces expanding
 ripples and surface impacts. The native PBR reflection path supplies local and
 sky reflections on those surfaces.
+
+The impact correction removes the flat crown and eight equally spaced beads that
+read as dotted circles. Events now change location and emit six independently
+seeded droplets with unequal angles, speeds, sizes and lifetimes. Gravity and
+projected velocity shape the short trajectories and streaks. Pixel-footprint
+filtering keeps small drops from vanishing between pixels. This is a stochastic
+visual approximation, informed by the distinction between impact distributions
+in [Columbia's material-based splash study](https://www.cs.columbia.edu/cg/pdfs/135-splash_egsr07.pdf).
 
 The field covers a camera-local 72 m half-width by default at 8 Hz in Balanced.
 It resolves the first surface along the rain ray. This is not runoff, trapped
@@ -235,7 +256,7 @@ claimed.
 
 ## Validation and review
 
-- `npm.cmd test`: 52 tests passed, covering reflection ownership/visibility,
+- `npm.cmd test`: 53 tests passed, covering reflection ownership/visibility,
   fragment motion, ring seams and relief, cloud-map rollback, material wrapping,
   wet-related texture policy, resource retirement, and player/input behavior.
 - GPU rain fixture: exposed/sheltered geometry, elevated surfaces, slopes,

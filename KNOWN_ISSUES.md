@@ -26,7 +26,8 @@ The revised standalone overhaul and its measured evidence are documented in
   The last receiver-correction run overlapped with heavy Blender CPU activity;
   a CPU-idle throughput baseline for that final correction is not established.
 - **The ring's sharper relief increases the asset payload.** Compressed terrain
-  height/normal data and albedo total approximately 32.9 MB. The current standalone
+  height/normal data and albedo total approximately 19.3 MB after the terrain
+  slope correction. The current standalone
   loads this dataset as a whole; it does not stream terrain tiles.
 - **Player collision coverage is bounded.** The actual temple stair flight,
   authored convex rock landing, and impact behavior have passed checks. Decorative

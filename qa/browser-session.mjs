@@ -84,6 +84,9 @@ if (action === 'start' || action === 'preview') {
         throw error;
     }
 } else if (action === 'review') {
+    const reviewUrl=new URL(process.argv[3]??`http://127.0.0.1:${serverPort}/?benchmark=1`);
+    if(reviewUrl.origin!==`http://127.0.0.1:${serverPort}`||reviewUrl.pathname!=='/')throw new Error('Review URL must be the owned local engine');
+    reviewUrl.searchParams.delete('automated');
     const state = JSON.parse(await readFile(stateFile, 'utf8'));
     if (!await listening(serverPort) || !await listening(cdpPort)) {
         throw new Error('Review handoff requires the existing owned browser and server. Nothing launched.');
@@ -121,7 +124,7 @@ if (action === 'start' || action === 'preview') {
             `--remote-debugging-port=${cdpPort}`, '--remote-debugging-address=127.0.0.1',
             `--user-data-dir=${state.profile}`, '--no-first-run', '--no-default-browser-check',
             '--disable-background-networking', '--enable-unsafe-webgpu', '--window-size=1600,1000',
-            `http://127.0.0.1:${serverPort}/?benchmark=1`,
+            reviewUrl.href,
         ], { cwd: root, windowsHide: false, detached: true, stdio: ['ignore', stdout.fd, stderr.fd] });
         await new Promise((done, reject) => { browser.once('spawn', done); browser.once('error', reject); });
         browser.unref();

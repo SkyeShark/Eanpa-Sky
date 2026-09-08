@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eanpa — terrain, star and rain corrections</title>
+<style>
+  :root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#10151b;color:#dbe7ef}
+  body{max-width:1600px;margin:auto;padding:24px}h1{font-size:28px}h2{margin-top:32px;font-size:22px}
+  p{max-width:92ch;color:#b9c9d4}a{color:#8fcdf2}.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  figure{margin:0}figcaption{padding:8px 0;color:#b9c9d4}img,video{display:block;width:100%;border-radius:6px;background:#080c10}
+  @media(max-width:850px){.pair{grid-template-columns:1fr}}
+</style>
+<h1>Terrain, star and rain corrections</h1>
+<p>Engine captures following the visual feedback. Open an image for its full resolution.
+  Animation times differ between the previous and corrected captures.</p>
+<p><a href="../../?benchmark=1&amp;skybox=ringworld&amp;cloud-type=clear">Review the ring in the engine</a> ·
+  <a href="../../?benchmark=1&amp;skybox=shieldworld&amp;cloud-type=clear&amp;tod=6.5">Review the red giant</a> ·
+  <a href="./">Full overhaul gallery</a></p>
+<h2>Ring terrain and sea level</h2>
+<p>Lower relief and a slope constraint remove the thin spikes and abrupt coastal cliffs.
+  Water now occupies its own undisplaced cylindrical surface. Its shading cannot climb
+  a displaced land triangle. The original animated water response is retained.</p>
+<div class="pair">
+  <figure><a href="ring-before.png"><img src="ring-before.png" alt="Previous tall, narrow ring mountains with water on their slopes"></a><figcaption>Previous appearance</figcaption></figure>
+  <figure><a href="ring-corrected.png"><img src="ring-corrected.png" alt="Corrected ring terrain with lower mountains and level lakes"></a><figcaption>Corrected reverse horizon</figcaption></figure>
+</div>
+<div class="pair">
+  <figure><a href="ring-forward-corrected.png"><img src="ring-forward-corrected.png" alt="Corrected ring terrain seen above the temple"></a><figcaption>Forward horizon</figcaption></figure>
+  <figure><a href="ring-overhead-corrected.png"><img src="ring-overhead-corrected.png" alt="Corrected land and water on the overhead band"></a><figcaption>Overhead band</figcaption></figure>
+</div>
+<h2>Red giant</h2>
+<p>The dark ember palette, fine boiling structure and glowing edge return. Surface
+  detail uses a rotating 3D field to avoid longitude/latitude stretching.</p>
+<div class="pair">
+  <figure><a href="star-before.png"><img src="star-before.png" alt="Previous pale orange red giant with faint surface detail"></a><figcaption>Previous appearance</figcaption></figure>
+  <figure><a href="star-corrected.png"><img src="star-corrected.png" alt="Corrected red giant with dark lanes, granulation and a glowing rim"></a><figcaption>Corrected surface and rim</figcaption></figure>
+</div>
+<figure><a href="star-horizon-corrected.png"><img src="star-horizon-corrected.png" alt="Detailed red giant rising over the local landscape"></a><figcaption>Planet-surface view</figcaption></figure>
+<h2>Rain impacts</h2>
+<p>Independent short droplets replace the flat dotted crowns. Locations, launch angles,
+  speeds and lifetimes vary between impacts. The same surface capture places them on
+  roofs and ground. These small splashes are best judged in motion.</p>
+<video controls loop muted playsinline preload="metadata" src="rain-corrected.webm" poster="rain-corrected.png"></video>
+<p>Actual engine motion at a fixed inspection camera; no added splash artwork or
+  post-production effects. Shader tests and evidence are recorded in
+  <a href="correction-checks.json">the correction checks</a>.</p>
+<p>Validation: 53 tests passed, including independent sea-level triangles and
+  physical slope bounds. The older full-resource and constrained benchmark sweep
+  remains in the main gallery with its original revision labels.</p>
+</html>

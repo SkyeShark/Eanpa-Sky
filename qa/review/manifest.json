@@ -71,17 +71,17 @@
   },
   {
     "file": "ring-relief.png",
-    "source": "look-review/ring-cumulus-final.png",
+    "source": "qa/review/ring-forward-corrected.png",
     "title": "Ring terrain and clouds",
-    "note": "Displaced, stitched terrain with the local relief transition.",
-    "sha256": "957a28463136693cc49f612164b796517633b5fbf862b22afc25c637468e30d8"
+    "note": "Corrected terrain proportions and independent sea surface above the temple.",
+    "sha256": "b41f8565e5b49677552235fd0f360d03a7d1fb14c96c42ffde57137a9c69746e"
   },
   {
     "file": "ring-reverse.png",
-    "source": "look-review/ring-clear-reverse-final.png",
+    "source": "qa/review/ring-corrected.png",
     "title": "Ring terrain — reverse horizon",
-    "note": "Actual mountain silhouettes and closed shoreline geometry; original water retained.",
-    "sha256": "744238929322b2ff414edaff86f6ec44a4420ca55abf63ba89e5a4f17c75e87a"
+    "note": "Corrected lower terrain and level water at the reverse horizon.",
+    "sha256": "ed17e88c2cba019a50fe185bf3625d65b26751679478c1c9ec088a0ec86f7d27"
   },
   {
     "file": "terrain-steep.png",
@@ -99,17 +99,17 @@
   },
   {
     "file": "rain-impact-a.png",
-    "source": "rain-roof-motion-0.png",
+    "source": "qa/review/rain-corrected.png",
     "title": "Roof impacts — motion A",
-    "note": "Surface-aligned crown and bead motion; captured before the final cloud-radiance adjustment.",
-    "sha256": "d7fce88b7eec8c793ee6bf3a31edac0c2fe15cc8a5fb3782560992c26363f4f8"
+    "note": "Independent short splash droplets on the temple roof; see the correction page for motion.",
+    "sha256": "97c42ab1230366ded4d987c59e74596d52faf91244902392ee4a72643729cc7a"
   },
   {
     "file": "rain-impact-b.png",
-    "source": "rain-roof-motion-4.png",
+    "source": "look-review/rain-correction-ring-motion-2.png",
     "title": "Roof impacts — motion B",
-    "note": "A later animation frame on the same roof.",
-    "sha256": "1b64e7e4935896e1f9e0cef5f65bf5767d81a08d6796f3243b85dde5d7b72184"
+    "note": "A later frame of the corrected irregular splash motion on the same roof.",
+    "sha256": "21c26822622d466ba3aa86c82fedf5ab4cb784b46bf31036c227a8abf0ac7a7d"
   },
   {
     "file": "shattered-moon.png",
@@ -134,10 +134,10 @@
   },
   {
     "file": "red-giant.png",
-    "source": "look-review/red-giant.png",
+    "source": "qa/review/star-corrected.png",
     "title": "Red giant",
-    "note": "Broad convection features, warm variation and a softer limb.",
-    "sha256": "546cf14d30b50bd3f3b9a2a2d643d2c302c7f5139f2d15122c42eb1bd6cc9258"
+    "note": "Restored ember palette, fine 3D surface structure and glowing limb.",
+    "sha256": "978d0c7e39433e8ee2be8228854d5b6eea4697ff88166b9667c87c93e107f7dd"
   },
   {
     "file": "cirrus.png",
