@@ -1,0 +1,1460 @@
+[
+  {
+    "name": "feedback-ringworld-performance-none-full",
+    "tier": "performance",
+    "weather": "none",
+    "constraint": "full",
+    "valid": false,
+    "reasons": [
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 57.60276573209961,
+    "ms": {
+      "mean": 17.360277536860384,
+      "median": 16.699999999953434,
+      "p95": 29.099999999976717,
+      "p99": 37.40000000002328,
+      "max": 50.09999999997672
+    },
+    "renderTaskMs": {
+      "mean": 19.467042497464526,
+      "median": 18.700000000419095,
+      "p95": 29.699999999254942,
+      "p99": 38.499999999650754,
+      "max": 50.499999999650754
+    },
+    "cpuBackground": 43.44999999999999,
+    "gpuBackground": [],
+    "gpuConstraint": null
+  },
+  {
+    "name": "feedback-ringworld-performance-none-reduced",
+    "tier": "performance",
+    "weather": "none",
+    "constraint": "reduced",
+    "valid": false,
+    "reasons": [
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 5.856178268072844,
+    "ms": {
+      "mean": 170.75982905982826,
+      "median": 154.09999999997672,
+      "p95": 329.10000000009313,
+      "p99": 358.30000000004657,
+      "max": 366.69999999995343
+    },
+    "renderTaskMs": {
+      "mean": 169.4504273500996,
+      "median": 151.8000000003958,
+      "p95": 327.599999998929,
+      "p99": 356,
+      "max": 366.10000000032596
+    },
+    "cpuBackground": 41.68000000000001,
+    "gpuBackground": [],
+    "gpuConstraint": {
+      "method": "Synthetic GPU memory-latency workload and per-frame completion fence",
+      "targetExtraGpuMs": 8,
+      "calibration": [
+        {
+          "iterations": 16,
+          "ms": 0.093152
+        },
+        {
+          "iterations": 1374,
+          "ms": 6.04112
+        },
+        {
+          "iterations": 1820,
+          "ms": 6.798496
+        },
+        {
+          "iterations": 2142,
+          "ms": 8.102784
+        }
+      ],
+      "iterations": 2142,
+      "runtimeSamples": [
+        {
+          "time": 828895.5,
+          "ms": 7.546048
+        },
+        {
+          "time": 829896.5,
+          "ms": 7.829376
+        },
+        {
+          "time": 830903.9000000004,
+          "ms": 8.653504
+        },
+        {
+          "time": 831923.1999999993,
+          "ms": 7.822112
+        },
+        {
+          "time": 832967.1999999993,
+          "ms": 9.321696
+        },
+        {
+          "time": 833979,
+          "ms": 7.806784
+        },
+        {
+          "time": 835002.6999999993,
+          "ms": 8.22848
+        },
+        {
+          "time": 836037.4000000004,
+          "ms": 8.909248
+        },
+        {
+          "time": 837037.6999999993,
+          "ms": 8.800768
+        },
+        {
+          "time": 838061.6999999993,
+          "ms": 7.3304
+        },
+        {
+          "time": 839092.5,
+          "ms": 7.419904
+        },
+        {
+          "time": 840189.5999999996,
+          "ms": 7.614208
+        },
+        {
+          "time": 841352.9000000004,
+          "ms": 7.663136
+        },
+        {
+          "time": 842454.9000000004,
+          "ms": 7.51552
+        },
+        {
+          "time": 843517.5999999996,
+          "ms": 8.404512
+        },
+        {
+          "time": 844643,
+          "ms": 8.227424
+        },
+        {
+          "time": 845646.5999999996,
+          "ms": 16.144768
+        },
+        {
+          "time": 846783.9000000004,
+          "ms": 7.850752
+        },
+        {
+          "time": 847808.5,
+          "ms": 9.010304
+        },
+        {
+          "time": 848932,
+          "ms": 8.669056
+        },
+        {
+          "time": 849980.4000000004,
+          "ms": 8.164224
+        },
+        {
+          "time": 850995.6999999993,
+          "ms": 8.872096
+        },
+        {
+          "time": 852166.5,
+          "ms": 8.009824
+        },
+        {
+          "time": 853246.0999999996,
+          "ms": 7.991584
+        },
+        {
+          "time": 854364.2999999989,
+          "ms": 7.238208
+        },
+        {
+          "time": 855441.5,
+          "ms": 7.562688
+        },
+        {
+          "time": 856453.6999999993,
+          "ms": 8.189184
+        },
+        {
+          "time": 857617.5,
+          "ms": 7.270176
+        },
+        {
+          "time": 858672.5,
+          "ms": 7.781856
+        },
+        {
+          "time": 859804.5999999996,
+          "ms": 7.780928
+        },
+        {
+          "time": 860913.5,
+          "ms": 8.39072
+        },
+        {
+          "time": 861949.7999999989,
+          "ms": 8.652736
+        },
+        {
+          "time": 862996.0999999996,
+          "ms": 8.513248
+        },
+        {
+          "time": 864150.0999999996,
+          "ms": 8.211424
+        },
+        {
+          "time": 865407.5999999996,
+          "ms": 7.859168
+        },
+        {
+          "time": 866432.5999999996,
+          "ms": 8.827648
+        },
+        {
+          "time": 867469.9000000004,
+          "ms": 9.8216
+        },
+        {
+          "time": 868481.6999999993,
+          "ms": 8.288192
+        },
+        {
+          "time": 869627.9000000004,
+          "ms": 8.355296
+        }
+      ],
+      "limitations": "Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card."
+    }
+  },
+  {
+    "name": "feedback-ringworld-performance-rain-full",
+    "tier": "performance",
+    "weather": "rain",
+    "constraint": "full",
+    "valid": false,
+    "reasons": [
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 70.70651549297166,
+    "ms": {
+      "mean": 14.142968197879892,
+      "median": 12.5,
+      "p95": 24.899999999906868,
+      "p99": 33.300000000046566,
+      "max": 112.5
+    },
+    "renderTaskMs": {
+      "mean": 16.213851589737658,
+      "median": 14.900000000372529,
+      "p95": 25,
+      "p99": 33.80000000039581,
+      "max": 112.09999999927823
+    },
+    "cpuBackground": 63.41,
+    "gpuBackground": [],
+    "gpuConstraint": null
+  },
+  {
+    "name": "feedback-ringworld-performance-rain-reduced",
+    "tier": "performance",
+    "weather": "rain",
+    "constraint": "reduced",
+    "valid": false,
+    "reasons": [
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 4.77593331791628,
+    "ms": {
+      "mean": 209.38315789473708,
+      "median": 196,
+      "p95": 370.79999999993015,
+      "p99": 504.19999999995343,
+      "max": 504.19999999995343
+    },
+    "renderTaskMs": {
+      "mean": 210.18526315742147,
+      "median": 198.39999999920838,
+      "p95": 373.49999999883585,
+      "p99": 501.99999999883585,
+      "max": 501.99999999883585
+    },
+    "cpuBackground": 31.27,
+    "gpuBackground": [],
+    "gpuConstraint": {
+      "method": "Synthetic GPU memory-latency workload and per-frame completion fence",
+      "targetExtraGpuMs": 8,
+      "calibration": [
+        {
+          "iterations": 16,
+          "ms": 0.095232
+        },
+        {
+          "iterations": 1344,
+          "ms": 5.468608
+        },
+        {
+          "iterations": 1966,
+          "ms": 7.436384
+        }
+      ],
+      "iterations": 1966,
+      "runtimeSamples": [
+        {
+          "time": 915964.5999999996,
+          "ms": 7.84112
+        },
+        {
+          "time": 916991.2999999989,
+          "ms": 7.751936
+        },
+        {
+          "time": 918002.4000000004,
+          "ms": 8.20576
+        },
+        {
+          "time": 919020.7999999989,
+          "ms": 6.972608
+        },
+        {
+          "time": 920026.6999999993,
+          "ms": 8.188544
+        },
+        {
+          "time": 921047.6999999993,
+          "ms": 8.707936
+        },
+        {
+          "time": 922050.7999999989,
+          "ms": 8.58032
+        },
+        {
+          "time": 923075.5,
+          "ms": 9.478816
+        },
+        {
+          "time": 924088.5999999996,
+          "ms": 8.970624
+        },
+        {
+          "time": 925099.6999999993,
+          "ms": 8.62096
+        },
+        {
+          "time": 926306.1999999993,
+          "ms": 7.634848
+        },
+        {
+          "time": 927757.6999999993,
+          "ms": 6.629152
+        },
+        {
+          "time": 928861,
+          "ms": 7.411968
+        },
+        {
+          "time": 930002.0999999996,
+          "ms": 8.911936
+        },
+        {
+          "time": 931410.6999999993,
+          "ms": 7.789056
+        },
+        {
+          "time": 932533.7999999989,
+          "ms": 7.063712
+        },
+        {
+          "time": 933856.5,
+          "ms": 7.252064
+        },
+        {
+          "time": 934862.9000000004,
+          "ms": 7.417952
+        },
+        {
+          "time": 935952.0999999996,
+          "ms": 7.227168
+        },
+        {
+          "time": 937213.9000000004,
+          "ms": 12.435008
+        },
+        {
+          "time": 938375.4000000004,
+          "ms": 8.010272
+        },
+        {
+          "time": 939396.7999999989,
+          "ms": 7.789696
+        },
+        {
+          "time": 940632.1999999993,
+          "ms": 7.581024
+        },
+        {
+          "time": 941731.5999999996,
+          "ms": 8.158848
+        },
+        {
+          "time": 942914.5,
+          "ms": 6.971264
+        },
+        {
+          "time": 943976.0999999996,
+          "ms": 9.108448
+        },
+        {
+          "time": 945163,
+          "ms": 7.690528
+        },
+        {
+          "time": 946231.4000000004,
+          "ms": 7.703872
+        },
+        {
+          "time": 947343.5999999996,
+          "ms": 8.083584
+        },
+        {
+          "time": 948444.7999999989,
+          "ms": 8.525056
+        },
+        {
+          "time": 949543.9000000004,
+          "ms": 7.12144
+        },
+        {
+          "time": 950594,
+          "ms": 7.375584
+        },
+        {
+          "time": 951640,
+          "ms": 8.65408
+        },
+        {
+          "time": 952800.0999999996,
+          "ms": 9.004768
+        },
+        {
+          "time": 953855.4000000004,
+          "ms": 6.95632
+        },
+        {
+          "time": 954898.1999999993,
+          "ms": 7.653664
+        }
+      ],
+      "limitations": "Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card."
+    }
+  },
+  {
+    "name": "feedback-ringworld-balanced-none-full",
+    "tier": "balanced",
+    "weather": "none",
+    "constraint": "full",
+    "valid": false,
+    "reasons": [
+      "External GPU activity exceeded the 5% gate during capture",
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 78.11570051184418,
+    "ms": {
+      "mean": 12.80152380952375,
+      "median": 12.5,
+      "p95": 22.5,
+      "p99": 29.300000000046566,
+      "max": 58.300000000046566
+    },
+    "renderTaskMs": {
+      "mean": 14.951936507531487,
+      "median": 13.399999999208376,
+      "p95": 24.899999998975545,
+      "p99": 33.49999999883585,
+      "max": 59.90000000037253
+    },
+    "cpuBackground": 53.56999999999999,
+    "gpuBackground": [
+      {
+        "processId": 24044,
+        "process": "WindowsTerminal.exe",
+        "engine": "3d",
+        "peakPercent": 5.64,
+        "meanPercent": 2.65,
+        "owned": false
+      }
+    ],
+    "gpuConstraint": null
+  },
+  {
+    "name": "feedback-ringworld-balanced-none-reduced",
+    "tier": "balanced",
+    "weather": "none",
+    "constraint": "reduced",
+    "valid": false,
+    "reasons": [
+      "External GPU activity exceeded the 5% gate during capture",
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 6.182302530723028,
+    "ms": {
+      "mean": 161.7520325203252,
+      "median": 154.19999999995343,
+      "p95": 258.5,
+      "p99": 320.80000000004657,
+      "max": 358.4000000001397
+    },
+    "renderTaskMs": {
+      "mean": 161.61382113790285,
+      "median": 152.09999999892898,
+      "p95": 260.6999999997206,
+      "p99": 321.90000000037253,
+      "max": 356.2999999993481
+    },
+    "cpuBackground": 46.10000000000001,
+    "gpuBackground": [
+      {
+        "processId": 2344,
+        "process": "blender.exe",
+        "engine": "3d",
+        "peakPercent": 5.7,
+        "meanPercent": 0.69,
+        "owned": false
+      },
+      {
+        "processId": 24044,
+        "process": "WindowsTerminal.exe",
+        "engine": "3d",
+        "peakPercent": 5.3,
+        "meanPercent": 3.9,
+        "owned": false
+      }
+    ],
+    "gpuConstraint": {
+      "method": "Synthetic GPU memory-latency workload and per-frame completion fence",
+      "targetExtraGpuMs": 8,
+      "calibration": [
+        {
+          "iterations": 16,
+          "ms": 0.113024
+        },
+        {
+          "iterations": 1133,
+          "ms": 4.859072
+        },
+        {
+          "iterations": 1865,
+          "ms": 7.446368
+        }
+      ],
+      "iterations": 1865,
+      "runtimeSamples": [
+        {
+          "time": 1173455.5999999996,
+          "ms": 9.142624
+        },
+        {
+          "time": 1174463.4000000004,
+          "ms": 7.295072
+        },
+        {
+          "time": 1175475.5,
+          "ms": 8.124832
+        },
+        {
+          "time": 1176499.7999999989,
+          "ms": 7.862112
+        },
+        {
+          "time": 1177507.6999999993,
+          "ms": 6.851264
+        },
+        {
+          "time": 1178520.1999999993,
+          "ms": 7.876032
+        },
+        {
+          "time": 1179548.4000000004,
+          "ms": 8.07712
+        },
+        {
+          "time": 1180560.6999999993,
+          "ms": 8.725184
+        },
+        {
+          "time": 1181566.5,
+          "ms": 8.644832
+        },
+        {
+          "time": 1182603,
+          "ms": 7.538176
+        },
+        {
+          "time": 1183712.5,
+          "ms": 7.567168
+        },
+        {
+          "time": 1184743.5999999996,
+          "ms": 10.756992
+        },
+        {
+          "time": 1186028.0999999996,
+          "ms": 6.709664
+        },
+        {
+          "time": 1187074.9000000004,
+          "ms": 7.258848
+        },
+        {
+          "time": 1188126.5,
+          "ms": 6.981696
+        },
+        {
+          "time": 1189193.9000000004,
+          "ms": 8.80816
+        },
+        {
+          "time": 1190353.2999999989,
+          "ms": 7.405984
+        },
+        {
+          "time": 1191481.5,
+          "ms": 7.523616
+        },
+        {
+          "time": 1192644.5999999996,
+          "ms": 7.565856
+        },
+        {
+          "time": 1193888.0999999996,
+          "ms": 6.676736
+        },
+        {
+          "time": 1195056,
+          "ms": 7.184544
+        },
+        {
+          "time": 1196124.0999999996,
+          "ms": 7.321376
+        },
+        {
+          "time": 1197182.9000000004,
+          "ms": 7.092768
+        },
+        {
+          "time": 1198328.4000000004,
+          "ms": 7.3704
+        },
+        {
+          "time": 1199469,
+          "ms": 8.534688
+        },
+        {
+          "time": 1200479.2999999989,
+          "ms": 12.749408
+        },
+        {
+          "time": 1201564.1999999993,
+          "ms": 7.016992
+        },
+        {
+          "time": 1202677,
+          "ms": 7.497632
+        },
+        {
+          "time": 1203835,
+          "ms": 7.53744
+        },
+        {
+          "time": 1204876.5,
+          "ms": 7.007776
+        },
+        {
+          "time": 1206001.4000000004,
+          "ms": 6.994496
+        },
+        {
+          "time": 1207056.5999999996,
+          "ms": 6.87536
+        },
+        {
+          "time": 1208087.5,
+          "ms": 7.14176
+        },
+        {
+          "time": 1209148.2999999989,
+          "ms": 7.153792
+        },
+        {
+          "time": 1210176.2999999989,
+          "ms": 6.751648
+        },
+        {
+          "time": 1211255.9000000004,
+          "ms": 7.458848
+        }
+      ],
+      "limitations": "Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card."
+    }
+  },
+  {
+    "name": "feedback-ringworld-balanced-rain-full",
+    "tier": "balanced",
+    "weather": "rain",
+    "constraint": "full",
+    "valid": false,
+    "reasons": [
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 92.53618049798813,
+    "ms": {
+      "mean": 10.806583917970782,
+      "median": 8.400000000139698,
+      "p95": 16.700000000186265,
+      "p99": 25,
+      "max": 45.799999999813735
+    },
+    "renderTaskMs": {
+      "mean": 13.02973556356993,
+      "median": 12.299999999348074,
+      "p95": 19.69999999878928,
+      "p99": 27.5,
+      "max": 44.69999999878928
+    },
+    "cpuBackground": 66.04999999999998,
+    "gpuBackground": [],
+    "gpuConstraint": null
+  },
+  {
+    "name": "feedback-ringworld-balanced-rain-reduced",
+    "tier": "balanced",
+    "weather": "rain",
+    "constraint": "reduced",
+    "valid": false,
+    "reasons": [
+      "External GPU activity exceeded the 5% gate during capture",
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 5.3478608556577365,
+    "ms": {
+      "mean": 186.99065420560748,
+      "median": 179.0999999998603,
+      "p95": 312.5,
+      "p99": 362.5,
+      "max": 370.89999999990687
+    },
+    "renderTaskMs": {
+      "mean": 186.89626168188744,
+      "median": 177.39999999967404,
+      "p95": 316.90000000037253,
+      "p99": 364.89999999967404,
+      "max": 370.90000000037253
+    },
+    "cpuBackground": 51.85000000000001,
+    "gpuBackground": [
+      {
+        "processId": 27348,
+        "process": "blender.exe",
+        "engine": "3d",
+        "peakPercent": 6.19,
+        "meanPercent": 0.86,
+        "owned": false
+      }
+    ],
+    "gpuConstraint": {
+      "method": "Synthetic GPU memory-latency workload and per-frame completion fence",
+      "targetExtraGpuMs": 8,
+      "calibration": [
+        {
+          "iterations": 16,
+          "ms": 0.096768
+        },
+        {
+          "iterations": 1323,
+          "ms": 6.658368
+        },
+        {
+          "iterations": 1590,
+          "ms": 6.361888
+        },
+        {
+          "iterations": 1999,
+          "ms": 7.563616
+        }
+      ],
+      "iterations": 1999,
+      "runtimeSamples": [
+        {
+          "time": 1257798,
+          "ms": 7.832512
+        },
+        {
+          "time": 1258803.2999999989,
+          "ms": 8.36608
+        },
+        {
+          "time": 1259825.7999999989,
+          "ms": 8.479008
+        },
+        {
+          "time": 1260828.1999999993,
+          "ms": 7.215872
+        },
+        {
+          "time": 1261830.6999999993,
+          "ms": 8.90688
+        },
+        {
+          "time": 1262864.0999999996,
+          "ms": 8.276416
+        },
+        {
+          "time": 1263894.1999999993,
+          "ms": 8.371904
+        },
+        {
+          "time": 1264905.5,
+          "ms": 7.03024
+        },
+        {
+          "time": 1265907.7999999989,
+          "ms": 8.968352
+        },
+        {
+          "time": 1267040.5999999996,
+          "ms": 8.131744
+        },
+        {
+          "time": 1268070.9000000004,
+          "ms": 9.462688
+        },
+        {
+          "time": 1269121.5,
+          "ms": 7.9768
+        },
+        {
+          "time": 1270198.0999999996,
+          "ms": 8.20896
+        },
+        {
+          "time": 1271377.2999999989,
+          "ms": 7.640928
+        },
+        {
+          "time": 1272501.6999999993,
+          "ms": 9.05664
+        },
+        {
+          "time": 1273543.5999999996,
+          "ms": 7.523904
+        },
+        {
+          "time": 1274716.4000000004,
+          "ms": 7.166464
+        },
+        {
+          "time": 1275868,
+          "ms": 7.958816
+        },
+        {
+          "time": 1277049.2999999989,
+          "ms": 7.56512
+        },
+        {
+          "time": 1278059.5,
+          "ms": 7.576704
+        },
+        {
+          "time": 1279123.5999999996,
+          "ms": 7.211232
+        },
+        {
+          "time": 1280163.0999999996,
+          "ms": 6.926176
+        },
+        {
+          "time": 1281374.7999999989,
+          "ms": 8.028256
+        },
+        {
+          "time": 1282522.2999999989,
+          "ms": 7.428064
+        },
+        {
+          "time": 1283558.5,
+          "ms": 7.800672
+        },
+        {
+          "time": 1284737.6999999993,
+          "ms": 7.325728
+        },
+        {
+          "time": 1285808.5999999996,
+          "ms": 7.963456
+        },
+        {
+          "time": 1286962.9000000004,
+          "ms": 6.896672
+        },
+        {
+          "time": 1288026.9000000004,
+          "ms": 8.271712
+        },
+        {
+          "time": 1289272.1999999993,
+          "ms": 7.332032
+        },
+        {
+          "time": 1290377.0999999996,
+          "ms": 7.360608
+        },
+        {
+          "time": 1291602.7999999989,
+          "ms": 7.45248
+        },
+        {
+          "time": 1292709.5999999996,
+          "ms": 7.486368
+        },
+        {
+          "time": 1293738.0999999996,
+          "ms": 6.99936
+        },
+        {
+          "time": 1294822,
+          "ms": 9.316704
+        },
+        {
+          "time": 1295831.7999999989,
+          "ms": 8.292512
+        },
+        {
+          "time": 1296911.4000000004,
+          "ms": 8.30912
+        },
+        {
+          "time": 1297986,
+          "ms": 8.576768
+        }
+      ],
+      "limitations": "Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card."
+    }
+  },
+  {
+    "name": "feedback-ringworld-high-none-full",
+    "tier": "high",
+    "weather": "none",
+    "constraint": "full",
+    "valid": false,
+    "reasons": [
+      "External GPU activity exceeded the 5% gate during capture",
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 49.31109499637418,
+    "ms": {
+      "mean": 20.279411764705884,
+      "median": 20.700000000186265,
+      "p95": 33.300000000046566,
+      "p99": 41.699999999953434,
+      "max": 54
+    },
+    "renderTaskMs": {
+      "mean": 20.336713995585693,
+      "median": 18.899999999674037,
+      "p95": 33.399999999208376,
+      "p99": 43.800000000046566,
+      "max": 56.00000000046566
+    },
+    "cpuBackground": 45.53,
+    "gpuBackground": [
+      {
+        "processId": 14028,
+        "process": "blender.exe",
+        "engine": "3d",
+        "peakPercent": 7.47,
+        "meanPercent": 1.62,
+        "owned": false
+      },
+      {
+        "processId": 24044,
+        "process": "WindowsTerminal.exe",
+        "engine": "3d",
+        "peakPercent": 5.44,
+        "meanPercent": 4.85,
+        "owned": false
+      }
+    ],
+    "gpuConstraint": null
+  },
+  {
+    "name": "feedback-ringworld-high-none-reduced",
+    "tier": "high",
+    "weather": "none",
+    "constraint": "reduced",
+    "valid": false,
+    "reasons": [
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 7.945153456391619,
+    "ms": {
+      "mean": 125.86289308176072,
+      "median": 116.69999999995343,
+      "p95": 220.69999999995343,
+      "p99": 262.39999999990687,
+      "max": 270.89999999990687
+    },
+    "renderTaskMs": {
+      "mean": 125.22767295558796,
+      "median": 115.00000000046566,
+      "p95": 219.39999999990687,
+      "p99": 264.1999999987893,
+      "max": 269.2999999995809
+    },
+    "cpuBackground": 73.28999999999999,
+    "gpuBackground": [],
+    "gpuConstraint": {
+      "method": "Synthetic GPU memory-latency workload and per-frame completion fence",
+      "targetExtraGpuMs": 8,
+      "calibration": [
+        {
+          "iterations": 16,
+          "ms": 0.098048
+        },
+        {
+          "iterations": 1305,
+          "ms": 6.19728
+        },
+        {
+          "iterations": 1685,
+          "ms": 6.737792
+        },
+        {
+          "iterations": 2001,
+          "ms": 9.237984
+        },
+        {
+          "iterations": 1733,
+          "ms": 7.185184
+        }
+      ],
+      "iterations": 1733,
+      "runtimeSamples": [
+        {
+          "time": 2037403.1999999993,
+          "ms": 8.754816
+        },
+        {
+          "time": 2038423.6999999993,
+          "ms": 8.34928
+        },
+        {
+          "time": 2039427.9000000004,
+          "ms": 8.05952
+        },
+        {
+          "time": 2040429.6999999993,
+          "ms": 7.488096
+        },
+        {
+          "time": 2041443.5999999996,
+          "ms": 7.732416
+        },
+        {
+          "time": 2042446.7999999989,
+          "ms": 6.757632
+        },
+        {
+          "time": 2043460.4000000004,
+          "ms": 7.388256
+        },
+        {
+          "time": 2044486.2999999989,
+          "ms": 7.744768
+        },
+        {
+          "time": 2045533,
+          "ms": 10.085728
+        },
+        {
+          "time": 2046592,
+          "ms": 7.113504
+        },
+        {
+          "time": 2047632.5999999996,
+          "ms": 6.507456
+        },
+        {
+          "time": 2048760.0999999996,
+          "ms": 6.67072
+        },
+        {
+          "time": 2049798.9000000004,
+          "ms": 6.756032
+        },
+        {
+          "time": 2050871.6999999993,
+          "ms": 7.240224
+        },
+        {
+          "time": 2051960.2999999989,
+          "ms": 6.690656
+        },
+        {
+          "time": 2052991.9000000004,
+          "ms": 8.146784
+        },
+        {
+          "time": 2053998.1999999993,
+          "ms": 6.91584
+        },
+        {
+          "time": 2055005.1999999993,
+          "ms": 7.488192
+        },
+        {
+          "time": 2056101.9000000004,
+          "ms": 7.575712
+        },
+        {
+          "time": 2057209.6999999993,
+          "ms": 7.492256
+        },
+        {
+          "time": 2058211.4000000004,
+          "ms": 6.99888
+        },
+        {
+          "time": 2059275.5,
+          "ms": 7.515744
+        },
+        {
+          "time": 2060323.4000000004,
+          "ms": 7.51584
+        },
+        {
+          "time": 2061429,
+          "ms": 6.369952
+        },
+        {
+          "time": 2062429.4000000004,
+          "ms": 6.949024
+        },
+        {
+          "time": 2063451,
+          "ms": 7.131584
+        },
+        {
+          "time": 2064451.6999999993,
+          "ms": 7.14544
+        },
+        {
+          "time": 2065492.4000000004,
+          "ms": 6.806784
+        },
+        {
+          "time": 2066664.5,
+          "ms": 6.43504
+        },
+        {
+          "time": 2067707.6999999993,
+          "ms": 11.779104
+        },
+        {
+          "time": 2068722.4000000004,
+          "ms": 6.60304
+        },
+        {
+          "time": 2069783.5,
+          "ms": 7.610944
+        },
+        {
+          "time": 2070824.6999999993,
+          "ms": 6.577952
+        },
+        {
+          "time": 2071906.5999999996,
+          "ms": 10.811264
+        },
+        {
+          "time": 2072988.5,
+          "ms": 11.300832
+        },
+        {
+          "time": 2074034.2999999989,
+          "ms": 9.228352
+        },
+        {
+          "time": 2075051.7999999989,
+          "ms": 6.818752
+        }
+      ],
+      "limitations": "Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card."
+    }
+  },
+  {
+    "name": "feedback-ringworld-high-rain-full",
+    "tier": "high",
+    "weather": "rain",
+    "constraint": "full",
+    "valid": false,
+    "reasons": [
+      "External GPU activity exceeded the 5% gate during capture",
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 55.824283563349276,
+    "ms": {
+      "mean": 17.91335125448054,
+      "median": 16.700000000186265,
+      "p95": 25,
+      "p99": 37.5,
+      "max": 54.10000000009313
+    },
+    "renderTaskMs": {
+      "mean": 16.52195340465011,
+      "median": 15.299999999813735,
+      "p95": 26.699999999254942,
+      "p99": 36.99999999906868,
+      "max": 52.49999999953434
+    },
+    "cpuBackground": 61.199999999999996,
+    "gpuBackground": [
+      {
+        "processId": 24044,
+        "process": "WindowsTerminal.exe",
+        "engine": "3d",
+        "peakPercent": 5.18,
+        "meanPercent": 2.61,
+        "owned": false
+      }
+    ],
+    "gpuConstraint": null
+  },
+  {
+    "name": "feedback-ringworld-high-rain-reduced",
+    "tier": "high",
+    "weather": "rain",
+    "constraint": "reduced",
+    "valid": false,
+    "reasons": [
+      "External GPU activity exceeded the 5% gate during capture",
+      "External CPU activity exceeded the 20% gate during capture"
+    ],
+    "fps": 4.658275020506471,
+    "ms": {
+      "mean": 214.67173913043783,
+      "median": 212.39999999990687,
+      "p95": 337.5,
+      "p99": 375,
+      "max": 375
+    },
+    "renderTaskMs": {
+      "mean": 215.23913043435238,
+      "median": 212.49999999906868,
+      "p95": 340.09999999962747,
+      "p99": 377,
+      "max": 377
+    },
+    "cpuBackground": 51.76,
+    "gpuBackground": [
+      {
+        "processId": 24044,
+        "process": "WindowsTerminal.exe",
+        "engine": "3d",
+        "peakPercent": 8.64,
+        "meanPercent": 4.41,
+        "owned": false
+      }
+    ],
+    "gpuConstraint": {
+      "method": "Synthetic GPU memory-latency workload and per-frame completion fence",
+      "targetExtraGpuMs": 8,
+      "calibration": [
+        {
+          "iterations": 16,
+          "ms": 0.122464
+        },
+        {
+          "iterations": 1045,
+          "ms": 6.480896
+        },
+        {
+          "iterations": 1290,
+          "ms": 6.51888
+        },
+        {
+          "iterations": 1583,
+          "ms": 7.8688
+        }
+      ],
+      "iterations": 1583,
+      "runtimeSamples": [
+        {
+          "time": 2123237.799999999,
+          "ms": 6.661888
+        },
+        {
+          "time": 2124266.799999999,
+          "ms": 7.49088
+        },
+        {
+          "time": 2125299.299999999,
+          "ms": 6.952992
+        },
+        {
+          "time": 2126307.9000000004,
+          "ms": 7.58896
+        },
+        {
+          "time": 2127323.299999999,
+          "ms": 8.08592
+        },
+        {
+          "time": 2128341.5,
+          "ms": 7.003104
+        },
+        {
+          "time": 2129356.5999999996,
+          "ms": 6.39696
+        },
+        {
+          "time": 2130368.299999999,
+          "ms": 8.055744
+        },
+        {
+          "time": 2131372.0999999996,
+          "ms": 7.767456
+        },
+        {
+          "time": 2132392.5999999996,
+          "ms": 7.463776
+        },
+        {
+          "time": 2133411.4000000004,
+          "ms": 6.738912
+        },
+        {
+          "time": 2134488.6999999993,
+          "ms": 7.10048
+        },
+        {
+          "time": 2135589.799999999,
+          "ms": 6.350816
+        },
+        {
+          "time": 2136666.5,
+          "ms": 6.627296
+        },
+        {
+          "time": 2137828.4000000004,
+          "ms": 6.347136
+        },
+        {
+          "time": 2138865.0999999996,
+          "ms": 7.142208
+        },
+        {
+          "time": 2139905.799999999,
+          "ms": 6.533824
+        },
+        {
+          "time": 2140961.9000000004,
+          "ms": 6.250976
+        },
+        {
+          "time": 2142147.1999999993,
+          "ms": 6.355584
+        },
+        {
+          "time": 2143354,
+          "ms": 6.205216
+        },
+        {
+          "time": 2144394.9000000004,
+          "ms": 6.768512
+        },
+        {
+          "time": 2145727.6999999993,
+          "ms": 6.387328
+        },
+        {
+          "time": 2146937.6999999993,
+          "ms": 10.99856
+        },
+        {
+          "time": 2147942.9000000004,
+          "ms": 6.182112
+        },
+        {
+          "time": 2148982.5999999996,
+          "ms": 6.060672
+        },
+        {
+          "time": 2150086.799999999,
+          "ms": 6.501568
+        },
+        {
+          "time": 2151176.299999999,
+          "ms": 10.173408
+        },
+        {
+          "time": 2152183.9000000004,
+          "ms": 6.900608
+        },
+        {
+          "time": 2153402.1999999993,
+          "ms": 5.95184
+        },
+        {
+          "time": 2154476.799999999,
+          "ms": 6.091136
+        },
+        {
+          "time": 2155530.6999999993,
+          "ms": 6.974368
+        },
+        {
+          "time": 2156574.5,
+          "ms": 6.379968
+        },
+        {
+          "time": 2157717.9000000004,
+          "ms": 6.206656
+        },
+        {
+          "time": 2158837.5,
+          "ms": 6.209216
+        },
+        {
+          "time": 2159991.0999999996,
+          "ms": 6.682048
+        },
+        {
+          "time": 2161060.6999999993,
+          "ms": 6.338208
+        },
+        {
+          "time": 2162192.1999999993,
+          "ms": 6.019616
+        },
+        {
+          "time": 2163469.9000000004,
+          "ms": 5.992832
+        },
+        {
+          "time": 2164556.6999999993,
+          "ms": 6.202528
+        }
+      ],
+      "limitations": "Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card."
+    }
+  }
+]

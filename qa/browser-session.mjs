@@ -88,30 +88,32 @@ if (action === 'start' || action === 'preview') {
     if(reviewUrl.origin!==`http://127.0.0.1:${serverPort}`||reviewUrl.pathname!=='/')throw new Error('Review URL must be the owned local engine');
     reviewUrl.searchParams.delete('automated');
     const state = JSON.parse(await readFile(stateFile, 'utf8'));
-    if (!await listening(serverPort) || !await listening(cdpPort)) {
-        throw new Error('Review handoff requires the existing owned browser and server. Nothing launched.');
-    }
-    const targets = await fetch(`http://127.0.0.1:${cdpPort}/json/list`).then(r => r.json());
-    if (!targets.some(t => t.type === 'page' && t.url.startsWith(`http://127.0.0.1:${serverPort}/`))) {
-        throw new Error('Owned preview identity does not match; nothing closed or launched.');
-    }
-    const version = await fetch(`http://127.0.0.1:${cdpPort}/json/version`).then(r => r.json());
-    const socket = new WebSocket(version.webSocketDebuggerUrl);
-    await new Promise((done, reject) => {
-        socket.addEventListener('open', done, { once: true });
-        socket.addEventListener('error', reject, { once: true });
-    });
-    socket.send(JSON.stringify({ id: 1, method: 'Browser.close' }));
-    await new Promise(done => {
-        socket.addEventListener('close', done, { once: true });
-        setTimeout(() => { socket.close(); done(); }, 2000);
-    });
+    if (!await listening(serverPort)) throw new Error('Existing owned server unavailable. Nothing launched.');
     const alive = pid => { try { process.kill(pid, 0); return true; } catch (error) {
         if (error.code === 'ESRCH') return false; throw error;
     } };
-    for (let i = 0; i < 60 && (alive(state.browserPid) || await listening(cdpPort)); i++) await sleep(250);
+    // A slow WebGPU shutdown can outlive the first handoff attempt. Resume
+    // only after both the recorded browser PID and its CDP listener are gone.
+    if (await listening(cdpPort)) {
+        const targets = await fetch(`http://127.0.0.1:${cdpPort}/json/list`).then(r => r.json());
+        if (!targets.some(t => t.type === 'page' && t.url.startsWith(`http://127.0.0.1:${serverPort}/`))) {
+            throw new Error('Owned preview identity does not match; nothing closed or launched.');
+        }
+        const version = await fetch(`http://127.0.0.1:${cdpPort}/json/version`).then(r => r.json());
+        const socket = new WebSocket(version.webSocketDebuggerUrl);
+        await new Promise((done, reject) => {
+            socket.addEventListener('open', done, { once: true });
+            socket.addEventListener('error', reject, { once: true });
+        });
+        socket.send(JSON.stringify({ id: 1, method: 'Browser.close' }));
+        await new Promise(done => {
+            socket.addEventListener('close', done, { once: true });
+            setTimeout(() => { socket.close(); done(); }, 2000);
+        });
+        for (let i = 0; i < 240 && (alive(state.browserPid) || await listening(cdpPort)); i++) await sleep(250);
+    }
     if (alive(state.browserPid) || await listening(cdpPort)) {
-        throw new Error('The owned headless browser has not exited. No second browser launched.');
+        throw new Error('The owned browser has not exited. No second browser launched.');
     }
     const stdout = await open(resolve(directory, 'chrome-review.out.log'), 'a');
     const stderr = await open(resolve(directory, 'chrome-review.err.log'), 'a');

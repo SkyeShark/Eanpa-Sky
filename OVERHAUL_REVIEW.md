@@ -1,5 +1,9 @@
 ﻿# Standalone overhaul review
 
+The [September 8 feedback report](REVIEW_2026-09-08.md) and
+[motion gallery](qa/review/feedback-20260908/index.html) contain the newer
+weather, eclipse, star, rain, orb-light and benchmark corrections.
+
 This is the revised pass after the September 7 feedback. The earlier report and
 CPU-only measurements did not establish that the requested overhaul was complete.
 The current work replaces the reflection path, adds shared cloud shadows and

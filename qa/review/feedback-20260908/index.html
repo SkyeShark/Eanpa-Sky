@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eanpa — September 8 feedback review</title>
+<style>
+  :root{color-scheme:dark;font:16px/1.55 system-ui,sans-serif;background:#111820;color:#dce8ee}
+  body{max-width:1580px;margin:auto;padding:24px}h1{font-size:30px}h2{margin-top:36px;font-size:23px}
+  p{max-width:94ch;color:#b7cbd6}a{color:#8ed8ff}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  figure{margin:0}figcaption{padding:8px 0 18px;color:#b7cbd6}img,video{display:block;width:100%;background:#070c10;border-radius:5px}
+  details{margin:18px 0}summary{cursor:pointer}code{font-size:.9em}table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{text-align:left;padding:9px;border-bottom:1px solid #32424d}th{color:#8ed8ff}td:last-child{max-width:34ch}
+  @media(max-width:850px){.pair{grid-template-columns:1fr}body{padding:15px}.scroll{overflow:auto}}
+</style>
+<h1>September 8 feedback review</h1>
+<p>Captures from the running WebGPU engine. The motion clips advance six seconds of simulation time;
+  recording was paced frame by frame. HUD readings in screenshots are not benchmark results.</p>
+<p><a href="../../../?benchmark=1&amp;skybox=ringworld&amp;cloud-type=cumulus&amp;weather=none&amp;tod=10.5">Open Ringworld</a> ·
+  <a href="../../../?benchmark=1&amp;skybox=shieldworld&amp;cloud-type=clear&amp;weather=none&amp;tod=6.5">Open the red giant world</a> ·
+  <a href="../../../REVIEW_2026-09-08.md">Implementation and measurement report</a> ·
+  <a href="../">Earlier overhaul gallery</a></p>
+
+<p>Weather-switch checks: <a href="ring-balanced-transitions.json">Ringworld Balanced</a> ? <a href="ring-high-transitions.json">Ringworld High</a> ? <a href="shield-balanced-transitions.json">Shieldworld Balanced</a> ? <a href="earth-high-transitions.json">Earth High, cold clear start</a>.</p>
+<h2>Ring clouds and midday eclipse</h2>
+<div class="pair">
+  <figure><a href="ring-clouds.png"><img src="ring-clouds.png" alt="Ringworld with local cumulus and the distant ring cloud layer" loading="lazy"></a><figcaption>Distant weather shares the ring's celestial rendering layer.</figcaption></figure>
+  <figure><a href="cirrus.png"><img src="cirrus.png" alt="High cirrus continuing into the Ringworld horizon" loading="lazy"></a><figcaption>High cirrus uses a continuous atmospheric shell.</figcaption></figure>
+  <figure><a href="eclipse.png"><img src="eclipse.png" alt="Dim local atmosphere during the midday ring eclipse" loading="lazy"></a><figcaption>Noon eclipse: local sky and surfaces dim while the opposite arc retains daylight.</figcaption></figure>
+  <figure><a href="night.png"><img src="night.png" alt="Ringworld's dark near arc and illuminated companion at midnight" loading="lazy"></a><figcaption>Midnight toward the near arc. The authored night lighting and companion remain.</figcaption></figure>
+</div>
+
+<details><summary>Matched distant cloud sheet on / off</summary><div class="pair">
+  <figure><a href="ring-sheet-on.png"><img src="ring-sheet-on.png" alt="Distant ring cloud sheet enabled" loading="lazy"></a><figcaption>Sheet enabled; camera and simulation time held fixed.</figcaption></figure>
+  <figure><a href="ring-sheet-off.png"><img src="ring-sheet-off.png" alt="Same view with only the distant cloud sheet disabled" loading="lazy"></a><figcaption>Only the distant sheet disabled. Local volumetric clouds are retained.</figcaption></figure>
+</div><p><a href="ring-sky-checks.json">Layer readback and full sun-path checks</a></p></details>
+
+<h2>Animated red giant and preserved moon</h2>
+<div class="pair">
+  <figure><video controls muted loop playsinline preload="none" poster="redgiant.png" src="redgiant.webm"></video><figcaption>Restored animated granulation, ember palette, broad corona and bright rim.</figcaption></figure>
+  <figure><a href="moon.png"><img src="moon.png" alt="Separated shattered moon fragments on the red giant world" loading="lazy"></a><figcaption>The newer moon fragments and their motion are preserved.</figcaption></figure>
+</div>
+
+<h2>Rain, impact smoke and wet surfaces</h2>
+<div class="pair">
+  <figure><video controls muted loop playsinline preload="none" poster="sunshower.png" src="sunshower.webm"></video><figcaption>Sunshower footage recorded within a raining cloud cell. The air streaks and surface impacts share the same cloud gate.</figcaption></figure>
+  <figure><video controls muted loop playsinline preload="none" poster="lightning.png" src="lightning.webm"></video><figcaption>Narrow, branched lightning and an eroded impact plume that drifts and fades.</figcaption></figure>
+  <figure><a href="torch-puddle.png"><img src="torch-puddle.png" alt="Flashlight shining onto a fully formed terrain puddle" loading="lazy"></a><figcaption>Flashlight aimed at a sampled full puddle; the rain-exposure plane avoids texel-sized wetness steps.</figcaption></figure>
+  <figure><a href="torch-roof.png"><img src="torch-roof.png" alt="Flashlight and rain wetness on the temple roof" loading="lazy"></a><figcaption>Wetness and rain exposure also apply to the roof.</figcaption></figure>
+</div>
+<p>GPU checks cover sheltered floors, roofs, slopes, cutouts, animated and instanced surfaces, and wind.
+  Dry rain-cell samples produced no ripple motion; translated smoke remained visible and fully expired.</p>
+<p><a href="rain-surface-contract.json">Surface checks</a> · <a href="rain-cell-contract.json">Rain-cell checks</a> ·
+  <a href="impact-smoke-contract.json">Smoke checks</a></p>
+
+<h2>Orb lights in a daytime dark storm</h2>
+<div class="pair">
+  <figure><a href="orb-red.png"><img src="orb-red.png" alt="Red orb emitter illuminated in a daytime dark storm" loading="lazy"></a><figcaption>Red emitter, 10:30, dark storm.</figcaption></figure>
+  <figure><a href="orb-blue.png"><img src="orb-blue.png" alt="Blue orb emitter illuminated in a daytime dark storm" loading="lazy"></a><figcaption>Blue emitter, same storm. Each draw reads its own material emission.</figcaption></figure>
+</div>
+
+<h2>All three quality settings under reduced resources</h2>
+<p>Unthrottled and synthetic stress measurements use the same RTX 5090 Laptop GPU, camera and scene.
+  Stress adds 4× browser CPU throttling and a GPU workload calibrated to approximately 8 ms.
+  It does not emulate a named lower-end device. Contended rows are observations, not clean comparative benchmarks.</p>
+<div class="scroll"><table><thead><tr><th>Quality</th><th>Weather</th><th>Constraint</th><th>Mean FPS</th><th>Mean / p95 ms</th><th>Background CPU</th><th>Status</th></tr></thead><tbody id="benchmarks"></tbody></table></div>
+<p><a href="benchmarks.json">Measurement summary</a>. Complete run metadata and resource counters are in the adjacent <code>benchmarks/</code> directory.</p>
+<script type="module">
+  for(const video of document.querySelectorAll('video'))video.addEventListener('play',()=>{
+    for(const other of document.querySelectorAll('video'))if(other!==video)other.pause();
+  });
+  const table=document.getElementById('benchmarks');
+  try{
+    const response=await fetch('./benchmarks.json');if(!response.ok)throw new Error('Measurements unavailable');
+    for(const row of await response.json()){
+      const tr=table.insertRow();
+      for(const value of [row.tier,row.weather==='none'?'Dry / cumulus':'Rain / stratus',row.constraint==='full'?'Unthrottled':'4x CPU + GPU load',Number(row.fps).toFixed(1),
+        `${Number(row.ms.mean).toFixed(1)} / ${Number(row.ms.p95).toFixed(1)}`,`${Number(row.cpuBackground).toFixed(1)}%`,
+        row.valid?'Clean capture':`Contended: ${(row.reasons??[]).join('; ')}`])tr.insertCell().textContent=value;
+    }
+  }catch(error){const cell=table.insertRow().insertCell();cell.colSpan=7;cell.textContent=error.message;}
+</script>
+</html>

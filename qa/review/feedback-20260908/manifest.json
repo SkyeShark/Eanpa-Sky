@@ -1,0 +1,157 @@
+[
+  {
+    "file": "before-eclipse.png",
+    "bytes": 634365,
+    "sha256": "477b40333ef46eecded36614ced6852b6fe96f4d3b6e08f079ca32d13864ce8b"
+  },
+  {
+    "file": "benchmarks.json",
+    "bytes": 32736,
+    "sha256": "e30278076c034e0255ea904510229b9a73313a56d534b3ccbc148a05751aaf38"
+  },
+  {
+    "file": "cirrus.png",
+    "bytes": 828991,
+    "sha256": "0289003eb0aaf7fbca57c0e3d81dd01e913ae4f829647eafaba5918325d37f43"
+  },
+  {
+    "file": "earth-high-transitions.json",
+    "bytes": 74839,
+    "sha256": "4890ab0fab58f77bac153b1e62ad1274c93f2b9eb5fa7d16b88b92df4e38203e"
+  },
+  {
+    "file": "earth-rain-transition.json",
+    "bytes": 238092,
+    "sha256": "30404495b7af16f0bf509851de2cb53fe656db1ec25ab4dd6a2f21a19ba6e6c0"
+  },
+  {
+    "file": "eclipse.png",
+    "bytes": 571455,
+    "sha256": "7af898748c1cf0763aecb8b2703784a6683cdf18020bdea755e2dbc4a70bbb83"
+  },
+  {
+    "file": "impact-smoke-contract.json",
+    "bytes": 261,
+    "sha256": "87118dbc804bb14fb23d46f980dad5da8c4e10d695fe7cc01d969240cc4017c5"
+  },
+  {
+    "file": "index.html",
+    "bytes": 7832,
+    "sha256": "a3cecd26f2e71fdeccbd4b8c589a4b5f40d0fe26f0f12a845e435766484e96b8"
+  },
+  {
+    "file": "lightning.png",
+    "bytes": 1811985,
+    "sha256": "37b5e7c352d14f34b407500e56eabeb6a7a9b9c53b826a047d651628c1376b29"
+  },
+  {
+    "file": "lightning.webm",
+    "bytes": 3709726,
+    "sha256": "36fc08910f655dcb47bd254b150f7deb4a4f1dc50567babd4ac05b1060c052fe"
+  },
+  {
+    "file": "moon.png",
+    "bytes": 657935,
+    "sha256": "509d419290b3ed16b7f0ce8affbd9fb2d452db09a12cb28e399b2cce8a1b463e"
+  },
+  {
+    "file": "night.png",
+    "bytes": 1025702,
+    "sha256": "74e6e46a3ba93848f9a1ad7e885db0206819611ba60ad1662bd08cb26849e317"
+  },
+  {
+    "file": "orb-blue.png",
+    "bytes": 658539,
+    "sha256": "20b643d8c0444a76b47a40a8d23c7cc7482efd00fcfe039bd487720d7daaba54"
+  },
+  {
+    "file": "orb-colors.json",
+    "bytes": 786,
+    "sha256": "08e4fb34cf3f2e38abedb4d659812a0a99366ee373305a516c7101ab90ee0bbf"
+  },
+  {
+    "file": "orb-red.png",
+    "bytes": 645137,
+    "sha256": "06e3a8b54a4048c2b44e6a95b50776570e179fb9804f77c07945c371d7ca9e1b"
+  },
+  {
+    "file": "rain-cell-contract.json",
+    "bytes": 1317,
+    "sha256": "e49fda9f26a807a099e1bf08eae668df16986a350a0d68ecfc11307b8a7e1a43"
+  },
+  {
+    "file": "rain-surface-contract.json",
+    "bytes": 24997,
+    "sha256": "91980cb015c66334c7687565a143e2db41181bb1c654b6f1267d642e6ba0bf18"
+  },
+  {
+    "file": "redgiant.png",
+    "bytes": 1243037,
+    "sha256": "47f9de7ac1eef2087d527f17e3ce618c4673375b572375f06485ee73a57321c4"
+  },
+  {
+    "file": "redgiant.webm",
+    "bytes": 3356821,
+    "sha256": "e60f5e666fc560c98afe425b5801c46bf1cda432c84216034ebe52fd35467f4e"
+  },
+  {
+    "file": "ring-balanced-transitions.json",
+    "bytes": 89891,
+    "sha256": "02004a8f1b3e510af5a35b75a77023ec01b98affd066cd67472eafe54fb3fa25"
+  },
+  {
+    "file": "ring-clouds.png",
+    "bytes": 903599,
+    "sha256": "236f68c9c91aab90207d8a184445f0a876961208718bc47649575a04df3b5420"
+  },
+  {
+    "file": "ring-high-transitions.json",
+    "bytes": 68457,
+    "sha256": "b92302cd7b8bcdc772c07252cf72e00aef85a4eeff23e9c0915f21223e4d17f1"
+  },
+  {
+    "file": "ring-sheet-off.png",
+    "bytes": 435245,
+    "sha256": "608608dee203055f24ba6577b4052df00628e9f5a798c116b6814c2465dda007"
+  },
+  {
+    "file": "ring-sheet-on.png",
+    "bytes": 426457,
+    "sha256": "37e77c5e73e7573a8a4a8bcaef9a218e4217f0165a42266357dfd785220611d0"
+  },
+  {
+    "file": "ring-sky-checks.json",
+    "bytes": 243952,
+    "sha256": "198443b434ac4701875c4b34d81a938ef689d6c8c59491b7af277f5cdfaf24bf"
+  },
+  {
+    "file": "shield-balanced-transitions.json",
+    "bytes": 126429,
+    "sha256": "4cd114da4de62e85f0cdcfa8102299158725d955f31b480892c87343548bb837"
+  },
+  {
+    "file": "shield-rain-transition.json",
+    "bytes": 239977,
+    "sha256": "5aeb88b91853e6e39b170fa1c3d30bdca95580c6dd9fa22fd1e7cfc685d141a7"
+  },
+  {
+    "file": "sunshower.png",
+    "bytes": 2336013,
+    "sha256": "6ebdf27c3e121a2512d42efa0155099db5ebc6ae36d62e725f5010bfce98fa86"
+  },
+  {
+    "file": "sunshower.webm",
+    "bytes": 3464599,
+    "sha256": "c8004210f28b5ac37e43fa84c8282b2353503e3007b61e05e416a76dd497b532"
+  },
+  {
+    "file": "torch-puddle.png",
+    "bytes": 1120778,
+    "sha256": "f065032e3eecca099b609d5e3df15ac661e7b40fc9ed3e85a7debb1a10c4764a"
+  },
+  {
+    "file": "torch-roof.png",
+    "bytes": 1626661,
+    "sha256": "fcf9327064ac3e9ca95be3d31cb2ec2a5ce9f1ea2fefb398c0e6ba4f3745ad53"
+  }
+]

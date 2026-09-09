@@ -1,0 +1,832 @@
+{
+  "metadata": {
+    "date": "2026-09-09T00:30:47.024Z",
+    "skybox": "ringworld",
+    "clouds": "cumulus",
+    "weather": "none",
+    "hours": "10.5",
+    "quality": "high",
+    "canvas": [
+      1578,
+      846
+    ],
+    "camera": [
+      0,
+      1.82,
+      96
+    ],
+    "look": {
+      "yaw": 0,
+      "pitch": 0.16
+    },
+    "verticalFov": 62,
+    "ready": true,
+    "pointerLocked": false,
+    "transitioning": false,
+    "gpuMemory": {
+      "geometries": 133,
+      "textures": 162,
+      "attributes": 446,
+      "indexAttributes": 96,
+      "storageAttributes": 0,
+      "indirectStorageAttributes": 0,
+      "readbackBuffers": 0,
+      "programs": 433,
+      "renderTargets": 37,
+      "total": 1395590501,
+      "texturesSize": 1270914753,
+      "attributesSize": 86497508,
+      "indexAttributesSize": 27099920,
+      "storageAttributesSize": 0,
+      "indirectStorageAttributesSize": 0,
+      "readbackBuffersSize": 0,
+      "programsSize": 11078320
+    },
+    "wetness": 0,
+    "surfaceWater": 0,
+    "simulationTime": 733.24679999982,
+    "scenario": null,
+    "cpuThrottleRate": 4,
+    "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 24GB",
+    "captureMode": "observed",
+    "revision": "436a295ded41c286bd10a29ba7faacf368d7081d",
+    "workingTreeDiffSha256": null,
+    "constraint": "4x CPU slowdown plus calibrated synthetic GPU competition",
+    "gpuConstraint": {
+      "method": "Synthetic GPU memory-latency workload and per-frame completion fence",
+      "targetExtraGpuMs": 8,
+      "calibration": [
+        {
+          "iterations": 16,
+          "ms": 0.098048
+        },
+        {
+          "iterations": 1305,
+          "ms": 6.19728
+        },
+        {
+          "iterations": 1685,
+          "ms": 6.737792
+        },
+        {
+          "iterations": 2001,
+          "ms": 9.237984
+        },
+        {
+          "iterations": 1733,
+          "ms": 7.185184
+        }
+      ],
+      "iterations": 1733,
+      "runtimeSamples": [
+        {
+          "time": 2037403.1999999993,
+          "ms": 8.754816
+        },
+        {
+          "time": 2038423.6999999993,
+          "ms": 8.34928
+        },
+        {
+          "time": 2039427.9000000004,
+          "ms": 8.05952
+        },
+        {
+          "time": 2040429.6999999993,
+          "ms": 7.488096
+        },
+        {
+          "time": 2041443.5999999996,
+          "ms": 7.732416
+        },
+        {
+          "time": 2042446.7999999989,
+          "ms": 6.757632
+        },
+        {
+          "time": 2043460.4000000004,
+          "ms": 7.388256
+        },
+        {
+          "time": 2044486.2999999989,
+          "ms": 7.744768
+        },
+        {
+          "time": 2045533,
+          "ms": 10.085728
+        },
+        {
+          "time": 2046592,
+          "ms": 7.113504
+        },
+        {
+          "time": 2047632.5999999996,
+          "ms": 6.507456
+        },
+        {
+          "time": 2048760.0999999996,
+          "ms": 6.67072
+        },
+        {
+          "time": 2049798.9000000004,
+          "ms": 6.756032
+        },
+        {
+          "time": 2050871.6999999993,
+          "ms": 7.240224
+        },
+        {
+          "time": 2051960.2999999989,
+          "ms": 6.690656
+        },
+        {
+          "time": 2052991.9000000004,
+          "ms": 8.146784
+        },
+        {
+          "time": 2053998.1999999993,
+          "ms": 6.91584
+        },
+        {
+          "time": 2055005.1999999993,
+          "ms": 7.488192
+        },
+        {
+          "time": 2056101.9000000004,
+          "ms": 7.575712
+        },
+        {
+          "time": 2057209.6999999993,
+          "ms": 7.492256
+        },
+        {
+          "time": 2058211.4000000004,
+          "ms": 6.99888
+        },
+        {
+          "time": 2059275.5,
+          "ms": 7.515744
+        },
+        {
+          "time": 2060323.4000000004,
+          "ms": 7.51584
+        },
+        {
+          "time": 2061429,
+          "ms": 6.369952
+        },
+        {
+          "time": 2062429.4000000004,
+          "ms": 6.949024
+        },
+        {
+          "time": 2063451,
+          "ms": 7.131584
+        },
+        {
+          "time": 2064451.6999999993,
+          "ms": 7.14544
+        },
+        {
+          "time": 2065492.4000000004,
+          "ms": 6.806784
+        },
+        {
+          "time": 2066664.5,
+          "ms": 6.43504
+        },
+        {
+          "time": 2067707.6999999993,
+          "ms": 11.779104
+        },
+        {
+          "time": 2068722.4000000004,
+          "ms": 6.60304
+        },
+        {
+          "time": 2069783.5,
+          "ms": 7.610944
+        },
+        {
+          "time": 2070824.6999999993,
+          "ms": 6.577952
+        },
+        {
+          "time": 2071906.5999999996,
+          "ms": 10.811264
+        },
+        {
+          "time": 2072988.5,
+          "ms": 11.300832
+        },
+        {
+          "time": 2074034.2999999989,
+          "ms": 9.228352
+        },
+        {
+          "time": 2075051.7999999989,
+          "ms": 6.818752
+        }
+      ],
+      "limitations": "Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card."
+    }
+  },
+  "valid": false,
+  "invalidReasons": [
+    "External CPU activity exceeded the 20% gate during capture"
+  ],
+  "samples": 159,
+  "timingSource": "CPU frame starts and async render-task completion; not GPU timestamps",
+  "frameIntervalMs": {
+    "mean": 125.86289308176072,
+    "median": 116.69999999995343,
+    "p95": 220.69999999995343,
+    "p99": 262.39999999990687,
+    "max": 270.89999999990687
+  },
+  "renderTaskMs": {
+    "mean": 125.22767295558796,
+    "median": 115.00000000046566,
+    "p95": 219.39999999990687,
+    "p99": 264.1999999987893,
+    "max": 269.2999999995809
+  },
+  "meanFps": 7.945153456391619,
+  "intervalsMs": [
+    137.5,
+    150,
+    154.19999999995343,
+    116.60000000009313,
+    70.79999999981374,
+    179.20000000018626,
+    174.89999999990687,
+    141.69999999995343,
+    70.80000000004657,
+    179.30000000004657,
+    162.5,
+    233.19999999995343,
+    100,
+    66.69999999995343,
+    100,
+    100.10000000009313,
+    83.19999999995343,
+    183.39999999990687,
+    83.30000000004657,
+    75,
+    54.199999999953434,
+    100,
+    125,
+    120.80000000004657,
+    129.10000000009313,
+    104.30000000004657,
+    66.5999999998603,
+    58.4000000001397,
+    66.5999999998603,
+    99.9000000001397,
+    83.5,
+    87.39999999990687,
+    54.199999999953434,
+    116.69999999995343,
+    150,
+    95.80000000004657,
+    91.69999999995343,
+    129.20000000018626,
+    99.89999999990687,
+    95.80000000004657,
+    120.89999999990687,
+    91.69999999995343,
+    100,
+    170.80000000004657,
+    133.30000000004657,
+    125.10000000009313,
+    112.39999999990687,
+    79.19999999995343,
+    141.60000000009313,
+    125,
+    125,
+    145.80000000004657,
+    112.5999999998603,
+    95.80000000004657,
+    95.80000000004657,
+    170.89999999990687,
+    229.10000000009313,
+    116.80000000004657,
+    137.39999999990687,
+    141.69999999995343,
+    129.19999999995343,
+    212.5,
+    141.5,
+    145.9000000001397,
+    116.69999999995343,
+    125,
+    166.69999999995343,
+    124.9000000001397,
+    95.89999999990687,
+    149.89999999990687,
+    87.5,
+    200.10000000009313,
+    99.89999999990687,
+    187.60000000009313,
+    154.19999999995343,
+    104,
+    208.4000000001397,
+    62.5,
+    95.79999999981374,
+    104.20000000018626,
+    70.89999999990687,
+    62.5,
+    95.80000000004657,
+    137.5,
+    258.30000000004657,
+    100,
+    120.79999999981374,
+    91.70000000018626,
+    129.19999999995343,
+    166.5999999998603,
+    125,
+    125,
+    104.30000000004657,
+    104.10000000009313,
+    91.5999999998603,
+    158.30000000004657,
+    179.19999999995343,
+    112.5,
+    212.5,
+    108.30000000004657,
+    241.69999999995343,
+    175,
+    108.4000000001397,
+    174.89999999990687,
+    179.19999999995343,
+    204.20000000018626,
+    125,
+    120.79999999981374,
+    162.5,
+    254.20000000018626,
+    100.0999999998603,
+    141.5,
+    91.60000000009313,
+    120.89999999990687,
+    179.19999999995343,
+    83.30000000004657,
+    66.60000000009313,
+    95.89999999990687,
+    108.4000000001397,
+    75,
+    74.89999999990687,
+    83.30000000004657,
+    100,
+    79.19999999995343,
+    108.39999999990687,
+    91.70000000018626,
+    262.39999999990687,
+    133.39999999990687,
+    166.70000000018626,
+    220.69999999995343,
+    270.89999999990687,
+    204.19999999995343,
+    133.30000000004657,
+    104.19999999995343,
+    116.70000000018626,
+    141.5,
+    100.0999999998603,
+    91.60000000009313,
+    87.5999999998603,
+    95.70000000018626,
+    70.89999999990687,
+    141.69999999995343,
+    133.30000000004657,
+    145.80000000004657,
+    108.30000000004657,
+    108.39999999990687,
+    129.10000000009313,
+    183.29999999981374,
+    95.9000000001397,
+    75,
+    162.5,
+    108.30000000004657,
+    87.5,
+    87.5,
+    108.39999999990687,
+    79.19999999995343,
+    162.4000000001397,
+    108.29999999981374,
+    112.60000000009313
+  ],
+  "endingCamera": [
+    0,
+    1.82,
+    96
+  ],
+  "resources": {
+    "before": {
+      "date": "2026-09-09T00:30:42.8179424Z",
+      "sampleCount": 4,
+      "validCounterSamples": 2348,
+      "clean": true,
+      "thresholdPercent": 5,
+      "busy": [],
+      "engines": [
+        {
+          "processId": 19296,
+          "process": "chrome.exe",
+          "engine": "3d",
+          "peakPercent": 59.3,
+          "meanPercent": 55.6,
+          "owned": true
+        },
+        {
+          "processId": 24044,
+          "process": "WindowsTerminal.exe",
+          "engine": "3d",
+          "peakPercent": 4.31,
+          "meanPercent": 4.12,
+          "owned": false
+        }
+      ],
+      "gpuCsvColumns": "name, driver, totalMiB, usedMiB, utilizationPercent, temperatureC, graphicsMHz, powerW, limitW",
+      "gpuBefore": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 24463, 10596, 81, 79, 2107, 144.27, 150.00",
+      "gpuAfter": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 24463, 10014, 67, 75, 1380, 109.57, 150.00",
+      "cpu": {
+        "measuredSeconds": 6.8671741,
+        "logicalProcessors": 24,
+        "method": "Process CPU-time deltas; processes present at both endpoints. meanCores may exceed one.",
+        "externalMeanPercent": 44.31,
+        "thresholdPercent": 20,
+        "clean": false,
+        "processes": [
+          {
+            "processId": 14028,
+            "process": "blender",
+            "meanCores": 4.007,
+            "meanPercent": 16.7,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 27348,
+            "process": "blender",
+            "meanCores": 2.869,
+            "meanPercent": 11.95,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 2344,
+            "process": "blender",
+            "meanCores": 2.182,
+            "meanPercent": 9.09,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 10884,
+            "process": "blender",
+            "meanCores": 0.83,
+            "meanPercent": 3.46,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 29924,
+            "process": "chrome",
+            "meanCores": 0.746,
+            "meanPercent": 3.11,
+            "owned": true,
+            "measurementProcess": false
+          },
+          {
+            "processId": 19296,
+            "process": "chrome",
+            "meanCores": 0.671,
+            "meanPercent": 2.8,
+            "owned": true,
+            "measurementProcess": false
+          },
+          {
+            "processId": 6828,
+            "process": "powershell",
+            "meanCores": 0.407,
+            "meanPercent": 1.7,
+            "owned": false,
+            "measurementProcess": true
+          },
+          {
+            "processId": 23252,
+            "process": "Discord",
+            "meanCores": 0.23,
+            "meanPercent": 0.96,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 7652,
+            "process": "Discord",
+            "meanCores": 0.143,
+            "meanPercent": 0.6,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 24044,
+            "process": "WindowsTerminal",
+            "meanCores": 0.123,
+            "meanPercent": 0.51,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 2064,
+            "process": "Discord",
+            "meanCores": 0.059,
+            "meanPercent": 0.25,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 28012,
+            "process": "codex",
+            "meanCores": 0.041,
+            "meanPercent": 0.17,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 12640,
+            "process": "explorer",
+            "meanCores": 0.036,
+            "meanPercent": 0.15,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 26240,
+            "process": "chrome",
+            "meanCores": 0.036,
+            "meanPercent": 0.15,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 21068,
+            "process": "chrome",
+            "meanCores": 0.03,
+            "meanPercent": 0.12,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 28196,
+            "process": "codex",
+            "meanCores": 0.025,
+            "meanPercent": 0.1,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 22444,
+            "process": "chrome",
+            "meanCores": 0.025,
+            "meanPercent": 0.1,
+            "owned": false,
+            "measurementProcess": false
+          }
+        ]
+      }
+    },
+    "during": {
+      "date": "2026-09-09T00:31:12.2597659Z",
+      "sampleCount": 20,
+      "validCounterSamples": 11740,
+      "clean": true,
+      "thresholdPercent": 5,
+      "busy": [],
+      "engines": [
+        {
+          "processId": 19296,
+          "process": "chrome.exe",
+          "engine": "3d",
+          "peakPercent": 24.65,
+          "meanPercent": 18.13,
+          "owned": true
+        },
+        {
+          "processId": 2344,
+          "process": "blender.exe",
+          "engine": "3d",
+          "peakPercent": 4.79,
+          "meanPercent": 1.03,
+          "owned": false
+        },
+        {
+          "processId": 24044,
+          "process": "WindowsTerminal.exe",
+          "engine": "3d",
+          "peakPercent": 3.83,
+          "meanPercent": 1.59,
+          "owned": false
+        },
+        {
+          "processId": 21268,
+          "process": "chrome.exe",
+          "engine": "videodecode",
+          "peakPercent": 2.87,
+          "meanPercent": 0.95,
+          "owned": false
+        },
+        {
+          "processId": 2136,
+          "process": "dwm.exe",
+          "engine": "3d",
+          "peakPercent": 2.77,
+          "meanPercent": 0.75,
+          "owned": false
+        },
+        {
+          "processId": 21268,
+          "process": "chrome.exe",
+          "engine": "3d",
+          "peakPercent": 2.11,
+          "meanPercent": 0.03,
+          "owned": false
+        },
+        {
+          "processId": 27348,
+          "process": "blender.exe",
+          "engine": "3d",
+          "peakPercent": 2.06,
+          "meanPercent": 0.35,
+          "owned": false
+        },
+        {
+          "processId": 14028,
+          "process": "blender.exe",
+          "engine": "3d",
+          "peakPercent": 1.13,
+          "meanPercent": 0.18,
+          "owned": false
+        },
+        {
+          "processId": 7652,
+          "process": "Discord.exe",
+          "engine": "3d",
+          "peakPercent": 0.55,
+          "meanPercent": 0.12,
+          "owned": false
+        }
+      ],
+      "gpuCsvColumns": "name, driver, totalMiB, usedMiB, utilizationPercent, temperatureC, graphicsMHz, powerW, limitW",
+      "gpuBefore": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 24463, 9766, 18, 70, 2242, 73.15, 150.00",
+      "gpuAfter": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 24463, 9528, 36, 70, 2445, 79.14, 150.00",
+      "cpu": {
+        "measuredSeconds": 23.198205899999998,
+        "logicalProcessors": 24,
+        "method": "Process CPU-time deltas; processes present at both endpoints. meanCores may exceed one.",
+        "externalMeanPercent": 73.28999999999999,
+        "thresholdPercent": 20,
+        "clean": false,
+        "processes": [
+          {
+            "processId": 10884,
+            "process": "blender",
+            "meanCores": 10.714,
+            "meanPercent": 44.64,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 2344,
+            "process": "blender",
+            "meanCores": 2.14,
+            "meanPercent": 8.92,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 27348,
+            "process": "blender",
+            "meanCores": 1.896,
+            "meanPercent": 7.9,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 14028,
+            "process": "blender",
+            "meanCores": 1.791,
+            "meanPercent": 7.46,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 29924,
+            "process": "chrome",
+            "meanCores": 0.891,
+            "meanPercent": 3.71,
+            "owned": true,
+            "measurementProcess": false
+          },
+          {
+            "processId": 24044,
+            "process": "WindowsTerminal",
+            "meanCores": 0.394,
+            "meanPercent": 1.64,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 19296,
+            "process": "chrome",
+            "meanCores": 0.138,
+            "meanPercent": 0.58,
+            "owned": true,
+            "measurementProcess": false
+          },
+          {
+            "processId": 23252,
+            "process": "Discord",
+            "meanCores": 0.137,
+            "meanPercent": 0.57,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 22444,
+            "process": "chrome",
+            "meanCores": 0.119,
+            "meanPercent": 0.49,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 36852,
+            "process": "powershell",
+            "meanCores": 0.116,
+            "meanPercent": 0.48,
+            "owned": false,
+            "measurementProcess": true
+          },
+          {
+            "processId": 28012,
+            "process": "codex",
+            "meanCores": 0.109,
+            "meanPercent": 0.45,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 21268,
+            "process": "chrome",
+            "meanCores": 0.084,
+            "meanPercent": 0.35,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 28196,
+            "process": "codex",
+            "meanCores": 0.06,
+            "meanPercent": 0.25,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 7652,
+            "process": "Discord",
+            "meanCores": 0.047,
+            "meanPercent": 0.2,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 2064,
+            "process": "Discord",
+            "meanCores": 0.036,
+            "meanPercent": 0.15,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 21068,
+            "process": "chrome",
+            "meanCores": 0.034,
+            "meanPercent": 0.14,
+            "owned": false,
+            "measurementProcess": false
+          },
+          {
+            "processId": 12640,
+            "process": "explorer",
+            "meanCores": 0.032,
+            "meanPercent": 0.13,
+            "owned": false,
+            "measurementProcess": false
+          }
+        ]
+      }
+    }
+  },
+  "cleanGpuWindow": true,
+  "cleanCpuWindow": false,
+  "errors": ""
+}

@@ -6,13 +6,17 @@ const [sky='ringworld',label='feedback',tierList='performance,balanced,high']=pr
 const tiers=tierList.split(',');
 if(!['earth','ringworld','shieldworld'].includes(sky)||!/^[a-z0-9_-]+$/.test(label)
     ||tiers.some(t=>!['performance','balanced','high'].includes(t)))throw new Error('Invalid route');
-const c=await connect(),run=promisify(execFile),records=[];
+const summaryFile=`artifacts/feedback-20260908/${label}-${sky}-benchmarks.json`;
+const records=JSON.parse(await readFile(summaryFile,'utf8').catch(error=>{
+    if(error.code==='ENOENT')return '[]';throw error;
+}));
+const c=await connect(),run=promisify(execFile);
 const task=async(name,...args)=>{
     const result=await run(process.execPath,[`qa/${name}.mjs`,...args],{windowsHide:true,timeout:360000,maxBuffer:4*1024*1024});
     return result.stdout;
 };
 const ready=async()=>{
-    const deadline=Date.now()+300000;
+    const deadline=Date.now()+480000;
     while(Date.now()<deadline){
         const s=await c.evaluate(`({ready:document.getElementById('boot')?.style.display==='none',
             errors:[...document.body.children].filter(e=>e.style?.zIndex==='99').map(e=>e.textContent).filter(Boolean)})`);
@@ -40,8 +44,10 @@ try{
                     fps:data.meanFps,ms:data.frameIntervalMs,renderTaskMs:data.renderTaskMs,
                     cpuBackground:data.resources.during.cpu.externalMeanPercent,
                     gpuBackground:data.resources.during.busy,gpuConstraint:data.metadata.gpuConstraint??null};
-                records.push(row);console.log(JSON.stringify(row));
-                await writeFile(`artifacts/feedback-20260908/${label}-${sky}-benchmarks.json`,JSON.stringify(records,null,2));
+                const existing=records.findIndex(record=>record.name===name);
+                if(existing<0)records.push(row);else records[existing]=row;
+                console.log(JSON.stringify(row));
+                await writeFile(summaryFile,JSON.stringify(records,null,2));
             }
         }
     }
