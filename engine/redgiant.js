@@ -33,16 +33,20 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
     const uFlareBoost = uniform(Number(opts.flareBoost ?? 0)); // lookdev: force eruptions to peak
     const STAR_R = opts.angularRadius ?? 0.28;
     const SIN_R = Math.sin(STAR_R), COS_R = Math.cos(STAR_R);
-    const GRAN = opts.granScale ?? 32;
+    const GRAN = opts.granScale ?? 52;
+    const plasmaTime=uStarT.mul(opts.plasmaSpeed??.15);
 
     // flare slots: JS-authored constants so the SAME deterministic schedule
     // drives the shader prominences and the JS-side shield coupling
     const FLARES = opts.flares ?? [
-        { th: 0.7, rate: 0.055, ph0: 0.13 },
-        { th: 2.3, rate: 0.075, ph0: 0.55 },
-        { th: 3.5, rate: 0.048, ph0: 0.82 },
-        { th: 4.6, rate: 0.068, ph0: 0.30 },
-        { th: 5.7, rate: 0.060, ph0: 0.68 },
+        { th: 0.7, rate: 0.018, ph0: 0.13 },
+        { th: 2.3, rate: 0.022, ph0: 0.55 },
+        { th: 3.5, rate: 0.015, ph0: 0.82 },
+        { th: 4.6, rate: 0.020, ph0: 0.30 },
+        { th: 5.7, rate: 0.017, ph0: 0.68 },
+        { th: 1.0, rate: 0.014, ph0: 0.32, center:[.31,.27] },
+        { th: 2.1, rate: 0.019, ph0: 0.66, center:[-.38,.08] },
+        { th: 4.8, rate: 0.012, ph0: 0.10, center:[.08,-.47] },
     ];
     const flareEnv = (f, t) => {
         const ph = (t * f.rate + f.ph0) % 1;
@@ -75,16 +79,16 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         const face = step(COS_R * 0.2, dot(dir, uStarDir));     // hemisphere guard
         const rho = length(vec2(lx, ly));
         // surface: convection granulation, slowly boiling — fine-grained
-        const p = vec2(lx, ly).mul(GRAN);
-        // boil rates ~18x the original: tuned for realtime seconds, they
-        // drifted 3% of the domain across a whole compressed day cycle and
-        // read as a fully static surface (Skye's catch)
+        const surfaceScale=T3.asin(rho.clamp(0,.9995)).div(rho.max(.001));
+        const p = vec2(lx, ly).mul(surfaceScale).mul(GRAN);
+        // Fine surface cells turn slowly within a smaller displacement. The
+        // radial surface coordinate also foreshortens detail near the limb.
         const w = vec2(
-            fbm3(p.mul(0.55).add(uStarT.mul(0.55))),
-            fbm3(p.mul(0.55).sub(uStarT.mul(0.43)).add(41.3)),
-        ).sub(0.5).mul(1.9);
-        const g = fbm3(p.add(w).add(vec2(uStarT.mul(0.22), 0))).mul(0.82)
-            .add(vn(p.mul(3.1).add(w.mul(2)).add(vec2(0, uStarT.mul(0.9)))).mul(0.18));
+            fbm3(p.mul(0.55).add(plasmaTime.mul(0.55))),
+            fbm3(p.mul(0.55).sub(plasmaTime.mul(0.43)).add(41.3)),
+        ).sub(0.5).mul(.85);
+        const g = fbm3(p.add(w).add(vec2(plasmaTime.mul(0.22), 0))).mul(0.82)
+            .add(vn(p.mul(3.1).add(w.mul(2)).add(vec2(0, plasmaTime.mul(0.9)))).mul(0.18));
         let sCol = mix(vec3(0.42, 0.050, 0.015), vec3(1.05, 0.32, 0.06), smoothstep(0.35, 0.75, g));
         sCol = mix(sCol, vec3(1.85, 1.05, 0.45), smoothstep(0.78, 0.95, g));
         // GIANT convection cells (Betelgeuse-class: a handful across the
@@ -102,6 +106,18 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
         const hotK = exp(dot(hpD, hpD).div(0.048).negate())
             .mul(vn(vec2(uStarT.mul(0.02), 3.7)).mul(0.4).add(0.8));
         sCol = sCol.add(vec3(0.55, 0.30, 0.12).mul(hotK));
+        // Small paired active regions: a cool irregular umbra surrounded by
+        // a softer penumbra. They form and decay slowly beneath front loops.
+        for(const f of FLARES.filter(f=>f.center)){
+            const q=vec2(lx,ly).sub(vec2(...f.center));
+            const tangent=vec2(-Math.sin(f.th),Math.cos(f.th));
+            const a=length(q.sub(tangent.mul(.055))),b=length(q.add(tangent.mul(.055)));
+            const spot=T3.min(a,b).mul(mix(.85,1.15,g));
+            const strength=sin(uStarT.mul(.009).add(f.ph0*6.28)).mul(.25).add(.65);
+            const penumbra=float(1).sub(smoothstep(.013,.038,spot)).mul(.38);
+            const umbra=float(1).sub(smoothstep(.006,.017,spot)).mul(.5);
+            sCol=sCol.mul(float(1).sub(penumbra.add(umbra).mul(strength)));
+        }
         // limb darkening — STRONG for a cool giant (u≈0.95: edge ~5% of
         // center) and the limb REDDENS (blue darkens first; center is the
         // hotter, yellower layer — TiO haze at the rim)
@@ -132,43 +148,32 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
             const cyc = floor(uStarT.mul(f.rate).add(f.ph0));
             const act = step(0.45, fract(sin(cyc.mul(12.9898).add(f.th * 78.233)).mul(43758.5453)));
             const env = f === FLARES[0] ? tmax(sin(clamp(ph.mul(1.3), 0, 1).mul(Math.PI)).pow(2).mul(act), uFlareBoost) : sin(clamp(ph.mul(1.3), 0, 1).mul(Math.PI)).pow(2).mul(act);
-            // PROMINENCE LOOP (Skye: radial edge-glow = eclipse corona, not a
-            // flare): an arch anchored on the limb — circle centered at the
-            // limb point, radius growing with the eruption, so the visible
-            // band is a handle standing on the star with both feet on the
-            // surface. Filaments ripple along the arc as it rises.
-            const c2 = vec2(Math.cos(f.th), Math.sin(f.th));
-            const p2 = vec2(lx, ly);
-            const loopR = env.mul(0.10).add(0.040);   // capped: full-size arcs read as cartoon crescents on the disc
-            // center sinks INSIDE the disc by ~60% of the loop radius: only
-            // the crown of the circle rises past the limb — an arch standing
-            // on the surface, not a ring dangling off it
-            const rel = p2.sub(c2.mul(float(1.0).sub(loopR.mul(0.6))));
-            const la = atan2f(rel.y, rel.x);
-            const fil = vn(vec2(la.mul(7.0), uStarT.mul(1.6).add(f.ph0 * 40))).mul(0.55).add(0.55);
-            const wobble = fil.sub(0.55).mul(0.035);
-            // NESTED arcs with a bright core and a wide soft glow — the thin
-            // single line read cheap (Skye). Radial streak noise keeps the
-            // fibrous texture of the original prominences.
-            const relLen = length(rel);
-            const streak = vn(vec2(la.mul(15), relLen.mul(9).sub(uStarT.mul(0.8)))).mul(0.6).add(0.55);
-            let band = float(0);
-            for (const [rk, ak] of [[0.82, 0.5], [1.0, 1.0], [1.16, 0.4]]) {
-                const dA = abs(relLen.sub(loopR.mul(rk).add(wobble)));
-                band = band.add(float(1).sub(smoothstep(0.008, 0.045, dA)).mul(ak));
+            // Projected magnetic arches with two surface footpoints. Several
+            // thin strands and plasma running down them replace broad nested
+            // circles. Front events use the same schedule as shield activity.
+            const radial=vec2(Math.cos(f.th),Math.sin(f.th));
+            const tangent=vec2(-Math.sin(f.th),Math.cos(f.th));
+            const anchor=f.center?vec2(...f.center):radial.mul(.984);
+            const rel=vec2(lx,ly).sub(anchor);
+            const x=dot(rel,tangent),y=dot(rel,radial);
+            const width=env.mul(.035).add(f.center?.055:.065);
+            const height=env.mul(f.center?.048:.11).add(.012);
+            const along=x.div(width);
+            const flow=vn(vec2(along.mul(9),uStarT.mul(.22).add(f.ph0*31))).mul(.65).add(.35);
+            let band=float(0);
+            for(const strand of [-1,0,1]){
+                const crown=height.mul(1+strand*.13).mul(float(1).sub(along.mul(along)));
+                const slope=height.mul(2).mul(x).div(width.mul(width));
+                const d=abs(y.sub(crown).sub(strand*.003)).div(sqrt(float(1).add(slope.mul(slope))));
+                const core=float(1).sub(smoothstep(.0015,.005,d));
+                const halo=exp(d.mul(-115)).mul(.17);
+                band=band.add(core.add(halo).mul(strand===0?1:.5));
             }
-            const glowA = abs(relLen.sub(loopR.add(wobble)));
-            band = band.add(float(1).sub(smoothstep(0.02, 0.12, glowA)).mul(0.4));
-            band = band.mul(streak).mul(fil)
-                .mul(smoothstep(float(0.955), float(1.000), rho));
-            // eruptive streamer at peak: a detached blob riding outward
-            const blobR = env.mul(env).mul(0.42).add(0.06);
-            const dBlob = length(p2.sub(c2.mul(blobR.add(1.0))));
-            const blob = float(1).sub(smoothstep(0.012, 0.05, dBlob)).mul(smoothstep(0.75, 0.95, env)).mul(0.45);
-            flare = flare.add(band.mul(env).mul(0.7).add(blob).mul(face));
-            // footpoints: the surface burns where the loop feet stand
-            const feet = float(1).sub(smoothstep(0.02, 0.10, abs(length(rel).sub(loopR)).add(abs(rho.sub(0.985)).mul(2))));
-            footpoint = footpoint.add(feet.mul(env).mul(0.6));
+            const ends=float(1).sub(smoothstep(.92,1.08,abs(along)));
+            const emergence=smoothstep(-.012,.005,y);
+            flare=flare.add(band.mul(ends).mul(emergence).mul(flow).mul(env).mul(face));
+            const feet=T3.min(length(rel.sub(tangent.mul(width))),length(rel.add(tangent.mul(width))));
+            footpoint=footpoint.add(exp(feet.mul(feet).mul(-2600)).mul(env).mul(.42));
         }
         const outside = float(1).sub(inDisc).mul(face).mul(step(1.0, rho));
         let out = mix(col, sCol, inDisc);                        // opaque body replaces sky (and stars)

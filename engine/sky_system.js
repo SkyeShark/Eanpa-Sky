@@ -22,6 +22,7 @@
 //   sky.applyToLights({ sun, hemi, fog: scene.fog });
 //   // per frame: sky.update(t, camera)
 import { makeCloudShadowMap } from './cloud_shadow_map.js';
+import { createCloudMotion } from './cloud_motion.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -240,6 +241,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             shaftDen: uniform(opts.shaftDensity ?? 3e-5),
             precipK: uniform(0),   // world rain: curtain density under dense weather cells (weather-system hook)
             precipLo: uniform(0.95), precipHi: uniform(1.55),
+            cloudDisplacement: uniform(V(0, 0, 0)),
             skyWind: uniform(V(0, 0, 10.3)), // ONE wind drives cloud drift, weather-cell motion, and (via weather system) rain shear
             wallCloud: uniform(new T3.Vector4(0, 0, 1, 0)), // (x, z, radius, strength): local cloud-base LOWERING (tornado wall cloud)
             fadeDist: uniform(opts.cloudFadeDist ?? 26000),
@@ -490,9 +492,9 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             const atmoH = atmoHeight(pIn);
             const ch = atmoH.sub(u.cloudStart.sub(wallLower(pIn).mul(260))).div(u.cloudHeight).clamp(0, 1);
             const zW = ringZShear(pIn, ch);
-            const p1 = p.add(vec3(u.skyWind.x.mul(u.time), 0, u.skyWind.z.mul(u.time)));
+            const p1 = p.add(vec3(u.cloudDisplacement.x.negate(), 0, u.cloudDisplacement.z.negate()));
             const largeWeather = clamp(wSampleL(vec2(p1.z.add(zW), p1.x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
-            const p2 = p1.add(vec3(u.skyWind.z.mul(u.time).mul(0.4), 0, u.skyWind.x.mul(u.time).mul(-0.4)));
+            const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
             const weather2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
             const weather = largeWeather.mul(weather2)
                 .mul(smoothstep(0.0, 0.5, ch))
@@ -513,9 +515,9 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             const atmoH = atmoHeight(pIn);
             const ch = atmoH.sub(u.cloudStart).div(u.cloudHeight).clamp(0, 1);
             const zW = ringZShear(pIn, ch);
-            const p1 = p.add(vec3(u.skyWind.x.mul(u.time), 0, u.skyWind.z.mul(u.time)));
+            const p1 = p.add(vec3(u.cloudDisplacement.x.negate(), 0, u.cloudDisplacement.z.negate()));
             const lw = clamp(wSampleL(vec2(p1.z.add(zW), p1.x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
-            const p2 = p1.add(vec3(u.skyWind.z.mul(u.time).mul(0.4), 0, u.skyWind.x.mul(u.time).mul(-0.4)));
+            const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
             const w2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
             const weather = lw.mul(w2)
                 .mul(smoothstep(0.0, 0.5, ch))
@@ -535,9 +537,9 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             const p = pIn.mul(u.stretch);
             const ch = atmoHeight(pIn).sub(u.cloudStart.sub(wallLower(pIn).mul(260))).div(u.cloudHeight).clamp(0, 1);
             const zW = ringZShear(pIn, ch);
-            const p1 = p.add(vec3(u.skyWind.x.mul(u.time), 0, u.skyWind.z.mul(u.time)));
+            const p1 = p.add(vec3(u.cloudDisplacement.x.negate(), 0, u.cloudDisplacement.z.negate()));
             const lw = clamp(wSampleL(vec2(p1.z.add(zW), p1.x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
-            const p2 = p1.add(vec3(u.skyWind.z.mul(u.time).mul(0.4), 0, u.skyWind.x.mul(u.time).mul(-0.4)));
+            const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
             const w2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
             const weather = lw.mul(w2)
                 .mul(smoothstep(0.0, 0.5, ch))
@@ -873,9 +875,9 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             );
 
             const drift = pIn.add(vec3(
-                u.skyWind.x.mul(u.time).mul(0.62),
+                u.cloudDisplacement.x.negate().mul(0.62),
                 u.time.mul(1.15),
-                u.skyWind.z.mul(u.time).mul(0.62),
+                u.cloudDisplacement.z.negate().mul(0.62),
             ));
             const warp = noise3A(
                 applyM(drift.mul(0.00031)).add(vec3(1.7, -3.1, 4.6)),
@@ -1104,7 +1106,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             // Both advect with the common world-space wind and supply the
             // same opacity field to visibility and celestial shadows.
             const wispAdvected = pC.add(vec3(
-                u.skyWind.x.mul(u.time), 0, u.skyWind.z.mul(u.time),
+                u.cloudDisplacement.x.negate(), 0, u.cloudDisplacement.z.negate(),
             ));
             const wispPatch = fbmE(wispAdvected.mul(0.00016).add(vec3(4.7, 1.3, -2.1)));
             const wispWarp = fbmE(wispAdvected.mul(0.00031).add(vec3(-1.7, 3.1, 5.3))).sub(0.44);
@@ -1157,29 +1159,12 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
         });
         const highCloudHit = Fn(([org, dir]) => {
             const flatY = u.cloudStart.add(u.cloudHeight).add(1000);
-            if (!RING_R) return vec2(shellFar(org, dir, flatY), 1);
-            const ringWispYAt = zq => ringDeckY(zq).sub(RING_BASE).add(flatY);
-            const dy = max(dir.y, 0.008);
-            const lo = max(flatY.sub(org.y), 0).div(dy).toVar();
-            const hi = max(flatY.add(RING_RISE).sub(org.y), 0).div(dy).toVar();
-            for (let step = 0; step < 8; step++) {
-                const mid = lo.add(hi).mul(0.5);
-                const p = org.add(dir.mul(mid));
-                If(p.y.lessThan(ringWispYAt(p.z)), () => { lo.assign(mid); })
-                    .Else(() => { hi.assign(mid); });
-            }
-            const t = lo.add(hi).mul(0.5);
-            const p = org.add(dir.mul(t));
-            const ringWispProgress = smoothstep(float(RING_ZFLAT), float(RING_VISIBLE_END), p.z.abs());
-            const ringWispHalf = mix(uLocalHalf, uWispCurveHalf, ringWispProgress);
-            const width = float(1).sub(smoothstep(ringWispHalf.mul(0.72), ringWispHalf.mul(1.22), p.x.abs()));
-            const ends = float(1).sub(smoothstep(float(RING_VISIBLE_END - RING_END_FADE), float(RING_VISIBLE_END), p.z.abs()));
-            // High ice trails span the upper atmosphere. Clipping them to
-            // the low deck's 140 m end feather exposed a rectangular edge
-            // across the horizon. Use the continuous high shell for cirrus;
-            // retain the confined low storm canopy during the crossfade.
-            return mix(vec2(t, width.mul(ends)),vec2(shellFar(org,dir,flatY),1),
-                smoothstep(.55,.85,u.wispFilament));
+            // Upper sheets share a continuous atmospheric cap for every
+            // preset. The former finite low-deck intersection exposed its
+            // rectangular end in cumulus accents and weather transitions too.
+            // The separate low volume and distant ring atlas remain confined
+            // to the ring; distance extinction feathers this upper layer.
+            return vec2(shellFar(org,dir,flatY),1);
         });
 
         const cloudBody = (
@@ -1565,8 +1550,8 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                     const vis = exp(od.mul(segL.div(6)).negate());
                     // rain curtains: dense macro cells rain; fine xz column
                     // noise gives the falling-shaft texture
-                    const cp1z = hp.z.add(u.skyWind.z.mul(u.time));
-                    const cp1x = hp.x.add(u.skyWind.x.mul(u.time));
+                    const cp1z = hp.z.add(u.cloudDisplacement.z.negate());
+                    const cp1x = hp.x.add(u.cloudDisplacement.x.negate());
                     const cellCov = clamp(wSampleL(vec2(cp1z, cp1x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
                     // column texture coarsened + faded to smooth murk with
                     // distance — fine detail must stay below the step size
@@ -1907,6 +1892,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             u.cloudLightDir.value.copy(nightK > 0.5 ? sys.moonDir : sys.sunDir);
         };
         const cloudShadowRoots = new Map();
+        const cloudMotion = createCloudMotion();
         let cloudShadowMap = null;
         let cloudShadowSun = null;
         let disposed = false;
@@ -2280,9 +2266,9 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                 const sc = 0.00005 * u.wScale.value;
                 const t = u.time.value;
                 const wrap = (v) => { let f = v % 1; if (f < 0) f += 1; return f; };
-                const wv = u.skyWind.value;
-                const uu = wrap(-((z + t * wv.z) * sc)) * WSZ;
-                const vv = wrap(-((x + t * wv.x) * sc)) * WSZ;
+                const drift = u.cloudDisplacement.value;
+                const uu = wrap(-((z - drift.z) * sc)) * WSZ;
+                const vv = wrap(-((x - drift.x) * sc)) * WSZ;
                 const x0 = Math.floor(uu) % WSZ, y0 = Math.floor(vv) % WSZ;
                 const x1 = (x0 + 1) % WSZ, y1 = (y0 + 1) % WSZ;
                 const fx = uu - Math.floor(uu), fy = vv - Math.floor(vv);
@@ -2298,7 +2284,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             // and the numerical height/projection review.
             tslCloudTransmittance(pWorld) {
                 return Fn(() => {
-                    const dy = max(u.cloudLightDir.y, 0.08);
+                    const dy = max(u.cloudLightDir.y, 0.008);
                     const stormK = clamp(u.stormCanopy, 0, 1);
                     const ordinaryBottom = RING_R ? ringDeckY(pWorld.z) : u.cloudStart;
                     const stormBottom = RING_R
@@ -2342,7 +2328,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                     const lowTransmission = float(1).sub(occ.mul(cloudMass));
                     const iceOpacity = float(0).toVar();
                     If(u.wispOn.greaterThan(0.0001).and(u.celestialVisibility.greaterThan(0.001))
-                        .and(u.cloudLightDir.y.greaterThan(0.02)), () => {
+                        .and(u.cloudLightDir.y.greaterThan(0.001)), () => {
                         const hit = highCloudHit(pWorld, u.cloudLightDir);
                         iceOpacity.assign(highCloudAlphaAt(pWorld.add(u.cloudLightDir.mul(hit.x)))
                             .mul(hit.y).mul(mix(0.22, 0.42, float(1).sub(u.wispFilament))));
@@ -2354,7 +2340,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
                 const transmittance = cloudShadowMap.sample(pWorld);
                 // Celestial visibility controls the background disc. Rain
                 // must not make an opaque cloud transparent to direct light.
-                const daylight = smoothstep(0.02, 0.16, u.cloudLightDir.y);
+                const daylight = smoothstep(-0.005, 0.012, u.cloudLightDir.y);
                 const belowDeck = float(1).sub(smoothstep(u.cloudStart,
                     u.cloudStart.add(u.cloudHeight), atmoHeight(pWorld)));
                 return float(1).sub(float(1).sub(transmittance).mul(strength)
@@ -2424,7 +2410,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             },
             // TSL coverage node for shader-side gating (xz = world coords):
             tslCoverage(xz) {
-                const uvW = vec2(xz.y.add(u.skyWind.z.mul(u.time)), xz.x.add(u.skyWind.x.mul(u.time))).mul(float(-0.00005).mul(u.wScale));
+                const uvW = vec2(xz.y.add(u.cloudDisplacement.z.negate()), xz.x.add(u.cloudDisplacement.x.negate())).mul(float(-0.00005).mul(u.wScale));
                 return clamp(weatherNode.sample(uvW).level(0).r.sub(u.largeT).mul(u.largeA), 0, 2);   // EANPA: explicit LOD
             },
             // MOVING per-pixel cloud reflections on metals. The hook raymarches
@@ -2785,6 +2771,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
             update(t, camera) {
                 const finiteT = Number.isFinite(t) ? t : 0;
                 u.time.value = finiteT;
+                u.cloudDisplacement.value.copy(cloudMotion.update(finiteT,u.skyWind.value));
                 if (sys._cloudTransition) {
                     const transition = sys._cloudTransition;
                     if (transition.t0 === null) transition.t0 = finiteT;
@@ -2862,7 +2849,7 @@ import { makeCloudShadowMap } from './cloud_shadow_map.js';
         };
         cloudShadowMap = makeCloudShadowMap(T3, {
             transmittance: p => sys.tslCloudTransmittance(p),
-            lightDirection: u.cloudLightDir, time: u.time,
+            lightDirection: u.cloudLightDir, time: u.time, displacement: u.cloudDisplacement,
             resolution: opts.cloudShadowResolution ?? 384,
             extent: opts.cloudShadowExtent ?? 6144,
             refreshSeconds: opts.cloudShadowRefreshSeconds ?? .1,

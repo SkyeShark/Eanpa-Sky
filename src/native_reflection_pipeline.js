@@ -4,15 +4,17 @@ import { createConvexReceiverIds } from './reflection_receiver_id.js';
 import { makeScreenSpaceTrace } from './screen_space_trace.js';
 import { makeLocalReflectionProbe } from './local_reflection_probe.js';
 import { makeSkyGeometryLayer } from './sky_geometry_layer.js';
+import { makeReflectionGeometry } from './reflection_geometry.js';
 
 // Resolve incoming radiance before Three evaluates each native material BRDF.
-// The previous HDR/depth frame supplies ray hits, reprojected through its camera.
-// Copying three GPU textures avoids a second traversal/draw of the entire scene.
+// Trace current unlit geometry; reproject only the previous HDR radiance.
+// Moving and skinned sources retain their reflections without stale self hits.
 // Fresnel, clearcoat, anisotropy and iridescence remain native Three lighting.
 export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, quality, fxaaFactory) {
     const skyLayers = (sky.depthLayers ?? []).map(options => makeSkyGeometryLayer(T,renderer,scene,camera,options));
     const localProbe = makeLocalReflectionProbe(T,renderer,scene,camera);
     const receiverIds = createConvexReceiverIds();
+    const geometry = makeReflectionGeometry(T,renderer,scene,camera,receiverIds);
     const receiverId = T.uniform(1).onObjectUpdate(({object}) => receiverIds(object));
     const sourceReceiverId = T.uniform(1).onObjectUpdate(({object,material}) =>
         object.userData?.noSSRSource || material.depthWrite === false ? 0 : receiverIds(object));
@@ -23,7 +25,9 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     history.texture.name = 'Reflection radiance history';
     history.texture.generateMipmaps = true;
     history.texture.minFilter = T.LinearMipmapLinearFilter;
-    history.textures[1].name = 'Reflection receiver history';
+    history.textures[1].name = 'Reflection source history';
+    history.textures[1].type = T.FloatType;
+    history.textures[1].minFilter=history.textures[1].magFilter=T.NearestFilter;
     history.depthTexture = new T.DepthTexture(1, 1, T.FloatType);
     // Explicit screen UVs avoid per-object texture-matrix uniforms. The local
     // TextureNode.clone() patch preserves this policy through sample/LOD chains.
@@ -31,16 +35,35 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const sourceDepth = T.texture(history.depthTexture,T.screenUV);
     const sourceIds = T.texture(history.textures[1],T.screenUV);
     for (const node of [sourceColor, sourceDepth, sourceIds]) node.updateMatrix = false;
+    const currentDepth=T.texture(geometry.target.depthTexture,T.screenUV);
+    const currentIds=T.texture(geometry.target.texture,T.screenUV);
+    const motion=T.texture(geometry.target.textures[1],T.screenUV);
+    for(const node of [currentDepth,currentIds,motion])node.updateMatrix=false;
+    for(const node of [sourceIds,currentIds,motion])node.setSampler(false);
     const previousView = shared(new T.Matrix4());
     const previousProjection = shared(camera.projectionMatrix.clone());
     const previousProjectionInverse = shared(camera.projectionMatrixInverse.clone());
     const previousNear = shared(camera.near), previousFar = shared(camera.far);
     const historyValid = shared(0);
+    const historySize=shared(new T.Vector2(1,1));
     const params = {maxDistance: shared(32), thickness: shared(0.15), quality: shared(1), coarseDepthGate: shared(1)};
-    const trace = makeScreenSpaceTrace({colorNode: sourceColor, depthNode: sourceDepth,
-        objectIdNode: T.sample(coord => sourceIds.load(coord.mul(T.textureSize(sourceIds)).floor()).a),
-        camera, projection: previousProjection, projectionInverse: previousProjectionInverse,
-        near: previousNear, far: previousFar, ...params,
+    const trace = makeScreenSpaceTrace({colorNode: sourceColor, depthNode: currentDepth,
+        objectIdNode: T.sample(coord => currentIds.load(coord.mul(historySize).floor()).a),
+        hitNormalNode:T.sample(coord=>currentIds.load(coord.mul(historySize).floor()).rgb.mul(2).sub(1)),
+        sampleRadiance:T.Fn(([coord,lod])=>{
+            const m=motion.load(coord.mul(historySize).floor()).toVar();
+            const uv=coord.sub(m.xy).toVar(),result=T.vec4(0).toVar();
+            T.If(uv.greaterThan(T.vec2(0)).all().and(uv.lessThan(T.vec2(1)).all()),()=>{
+                const old=sourceIds.load(uv.mul(historySize).floor()).toVar();
+                const z=T.perspectiveDepthToViewZ(sourceDepth.sample(uv).r,previousNear,previousFar);
+                const tolerance=m.z.abs().mul(.003).max(.03);
+                const valid=T.abs(old.a.sub(m.a)).lessThan(.25).and(T.abs(z.sub(m.z)).lessThan(tolerance));
+                T.If(valid,()=>{result.assign(sourceColor.sample(uv).level(lod));});
+            });
+            return result;
+        }),
+        camera, projection: T.cameraProjectionMatrix, projectionInverse: T.cameraProjectionMatrixInverse,
+        near: T.cameraNear, far: T.cameraFar, ...params,
         logarithmicDepthBuffer: renderer.logarithmicDepthBuffer});
     const ssrWeight = shared(1), skyWeight = shared(1), probeWeight = shared(1);
     const installed = new Map();
@@ -75,9 +98,9 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
                                     .add(probe.rgb.mul(influence)).toVar();
                                 const result = fallback.toVar();
                                 T.If(historyValid.greaterThan(0).and(ssrAllowed.greaterThan(0)).and(roughness.lessThan(0.8)), () => {
-                                    const origin = previousView.mul(T.vec4(T.positionWorld, 1)).xyz;
-                                    const ray = previousView.mul(T.cameraWorldMatrix.mul(T.vec4(direction, 0))).xyz;
-                                    const plane = previousView.mul(T.cameraWorldMatrix.mul(T.vec4(T.normalViewGeometry, 0))).xyz;
+                                    const origin = T.positionView;
+                                    const ray = direction;
+                                    const plane = T.normalViewGeometry;
                                     const hit = trace(origin, ray, plane, receiverId, roughness).toVar();
                                     const confidence = hit.a.mul(ssrWeight);
                                     result.assign(fallback.mul(confidence.oneMinus())
@@ -142,6 +165,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const invalidateHistory = () => { historyValid.value = 0; hasHistory = false; };
     const prepareHistory = () => {
         renderer.getDrawingBufferSize(bufferSize);
+        historySize.value.copy(bufferSize);
         if (history.width !== bufferSize.x || history.height !== bufferSize.y) {
             history.setSize(bufferSize.x, bufferSize.y);
             renderer.initRenderTarget(history);
@@ -154,10 +178,10 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
             || !camera.projectionMatrix.equals(previousProjection.value))) invalidateHistory();
     };
     const captureHistory = () => {
-        for (const [channel, target] of [['output', history.texture],
-            ['normal', history.textures[1]], ['depth', history.depthTexture]]) {
+        for (const [channel, target] of [['output', history.texture], ['depth', history.depthTexture]]) {
             renderer.copyTextureToTexture(scenePass.getTexture(channel), target);
         }
+        renderer.copyTextureToTexture(geometry.target.textures[1],history.textures[1]);
         previousView.value.copy(camera.matrixWorldInverse);
         previousProjection.value.copy(camera.projectionMatrix);
         previousProjectionInverse.value.copy(camera.projectionMatrixInverse);
@@ -166,8 +190,8 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
         hasHistory = true; historyValid.value = 1;
     };
     prepareHistory();
-    return {supported:true, mode:'native-pbr-screen-space-radiance', pipeline, scenePass, history, trace, localProbe, skyLayers, registerObject, invalidateHistory,
-        ssrImplementation:'reprojected-history-native-material-radiance', ssrNode:params,
+    return {supported:true, mode:'native-pbr-screen-space-radiance', pipeline, scenePass, history, trace, geometry, localProbe, skyLayers, registerObject, invalidateHistory,
+        ssrImplementation:'current-geometry-motion-reprojected-radiance', ssrNode:params,
         ssrMaterialResponse:'native-three-base-clearcoat-anisotropy-iridescence-specular-ior',
         nativeEnvironmentPbr:true, sceneColorAttachments:4, aoAvailable:true, aoQuality:'Medium',
         bloomAvailable:true, get aoEnabled(){return aoEnabled}, get bloomEnabled(){return bloomEnabled},
@@ -184,16 +208,16 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
             // Compile the actual receiving variant behind the boot screen.
             const savedContext=renderer.contextNode, savedTarget=renderer.getRenderTarget(), savedMrt=renderer.getMRT();
             try { for(const layer of skyLayers)await layer.compileAsync();
-                await localProbe.compileAsync(); for(const pass of [scenePass]) {
+                await localProbe.compileAsync(); await geometry.compileAsync(); for(const pass of [scenePass]) {
                 renderer.contextNode=pass.contextNode;
                 await pass.compileAsync(renderer);
             } return true; }
             finally {for(const layer of skyLayers)layer.restoreVisibility();renderer.contextNode=savedContext;renderer.setRenderTarget(savedTarget);renderer.setMRT(savedMrt);}
         },
         async render(){if(!disposed){try{prepareHistory();for(const layer of skyLayers)await layer.render();
-            if(!auditing)localProbe.update();pipeline.render();if(!auditing)captureHistory();
+            if(!auditing)localProbe.update();await geometry.render();pipeline.render();if(!auditing)captureHistory();
         }finally{for(const layer of skyLayers)layer.restoreVisibility();}}},
-        dispose(){if(disposed)return;disposed=true;pipeline.dispose();for(const layer of skyLayers)layer.dispose();localProbe.dispose();history.dispose();scenePass.dispose();n8ao.dispose();glow.dispose();
+        dispose(){if(disposed)return;disposed=true;pipeline.dispose();for(const layer of skyLayers)layer.dispose();localProbe.dispose();geometry.dispose();history.dispose();scenePass.dispose();n8ao.dispose();glow.dispose();
             display._quadMesh?.material?.dispose();display.renderTarget?.dispose();display.dispose();
             for(const [material,state]of installed){state.release();material.needsUpdate=true;}
             installed.clear();},

@@ -57,7 +57,7 @@ test('cloud-map refresh is amortized and a failed refresh retains the previous w
 
 test('ring cloud atlas shares captures, restores renderer state after failure and disposes once',async()=>{
     const {T,renderer}=fixture();
-    const u={wind:T.uniform(new T.Vector2()),cover:T.uniform(.5),grey:T.uniform(0),dens:T.uniform(1)};
+    const u={displacement:T.uniform(new T.Vector2()),cover:T.uniform(.5),grey:T.uniform(0),dens:T.uniform(1)};
     const field=makeRingCloudField(T,u,T.uniform(0)),context=renderer.contextNode;
     assert.equal(await field.prepare(renderer,0),true);
     assert.equal(await field.prepare(renderer,.05),false);

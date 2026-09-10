@@ -7,7 +7,7 @@ import { textureSize, perspectiveDepthToViewZ, orthographicDepthToViewZ,
     float, bool, int, vec2, vec3, vec4, Fn, If, Loop, Continue, Break, min, max, mix,
     abs, sub, dot, cross, normalize } from 'three/tsl';
 
-export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
+export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode, sampleRadiance, hitNormalNode,
     camera, projection, projectionInverse, near, far, maxDistance, thickness, quality,
     coarseDepthGate = float(1),
     logarithmicDepthBuffer = false }) {
@@ -112,9 +112,13 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 			const hi = float( 0 ).toVar();
 			const found = bool( false ).toVar();
 			const output = vec4( 0 ).toVar();
-			const isSelf = coord => receiverId !== null
-				? receiverId.greaterThan( 1.5 ).and( abs( objectIdNode.sample( coord ).sub( receiverId ) ).lessThan( 0.25 ) )
-				: bool( false );
+			const isSelf = Fn(([coord])=>{
+				const self=bool(false).toVar();
+				If(receiverId.greaterThan(1.5),()=>{
+					self.assign(abs(objectIdNode.sample(coord).sub(receiverId)).lessThan(.25));
+				});
+				return self;
+			});
 
 			Loop( { start: int( 1 ), end: totalStep.add( 1 ), type: 'int', condition: '<' }, ( { i } ) => {
 				// Quadratic spacing preserves nearby detail with a fixed cost.
@@ -161,6 +165,9 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 					.and( dot( separation, receiverPlane ).greaterThan( minHitSeparation ) ), () => {
 					// Test geometric orientation, not the hit's normal map. Bump
 					// normals describe shading and cannot punch holes in an occluder.
+					let normal;
+					if(hitNormalNode){normal=normalize(hitNormalNode.sample(coord)).toVar();}
+					else{
 					const dx = vec2( 1, 0 ).div( resolution );
 					const dy = vec2( 0, 1 ).div( resolution );
 					const at = uv => getViewPosition( uv, sampleDepth( uv ), projectionInverse );
@@ -172,7 +179,8 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 					const tangentY = up.toVar();
 					If( abs( right.z ).lessThan( abs( left.z ) ), () => { tangentX.assign( right ); } );
 					If( abs( down.z ).lessThan( abs( up.z ) ), () => { tangentY.assign( down ); } );
-					const normal = normalize( cross( tangentX, tangentY ) ).toVar();
+					normal = normalize( cross( tangentX, tangentY ) ).toVar();
+					}
 					If( dot( normal, hitPosition ).greaterThan( 0 ), () => { normal.mulAssign( - 1 ); } );
 					If( dot( normal, viewReflectDir ).lessThan( 0 ), () => {
 						// Filter incoming light over the projected specular cone, not
@@ -181,7 +189,7 @@ export function makeScreenSpaceTrace({ colorNode, depthNode, objectIdNode,
 						const footprint = rayRoughness.mul( rayRoughness ).mul( 2 )
 							.mul( separation.length() ).mul( focalPixels ).div( hitPosition.z.abs().max( 0.01 ) ).max( 1 );
 						const lod = footprint.log2().max( 0 );
-						const color = colorNode.sample( coord ).level( lod );
+						const color = sampleRadiance ? sampleRadiance(coord,lod) : colorNode.sample( coord ).level( lod );
 						const border = min( min( coord.x, coord.y ), min( coord.x.oneMinus(), coord.y.oneMinus() ) );
 						const fadeWidth = footprint.div( min( resolution.x, resolution.y ) ).mul( 2 ).clamp( 0.04, 0.15 );
 						const confidence = border.smoothstep( 0.003, fadeWidth )

@@ -54,6 +54,7 @@
     device.queue.writeBuffer(params,0,new Uint32Array([iterations,0,0,0]));
     const owner=_reflectionPipeline,original=owner.render;
     let disposed=false,pendingMeasurement=null;
+    const pipelined=globalThis.__gpuContentionPipelined===true,inFlight=[];
     const stop=()=>{if(disposed)return;disposed=true;if(owner.render===wrapped)owner.render=original;clearTimeout(watchdog);
         delete globalThis.__gpuContention;
         return Promise.allSettled([device.queue.onSubmittedWorkDone(),pendingMeasurement]).then(release);};
@@ -64,7 +65,10 @@
         const result=await original.apply(this,args);
         if(!disposed){
             const now=performance.now(),measure=now-lastMeasurement>1000;
-            dispatch(measure);await device.queue.onSubmittedWorkDone();
+            dispatch(measure);
+            const completion=device.queue.onSubmittedWorkDone();
+            if(pipelined){inFlight.push(completion);if(inFlight.length>=2)await inFlight.shift();}
+            else await completion;
             if(measure&&!disposed){
                 pendingMeasurement=(async()=>{
                     await read.mapAsync(GPUMapMode.READ);const ticks=new BigUint64Array(read.getMappedRange());
@@ -76,7 +80,7 @@
         return result;
     };
     owner.render=wrapped;installed=true;
-    const metadata={method:'Synthetic GPU memory-latency workload and per-frame completion fence',targetExtraGpuMs:targetMs,calibration,iterations,runtimeSamples,
+    const metadata={method:pipelined?'Synthetic GPU memory-latency workload, at most two submissions in flight':'Synthetic GPU memory-latency workload and per-frame completion fence',targetExtraGpuMs:targetMs,calibration,iterations,runtimeSamples,
         limitations:'Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card.'};
     globalThis.__gpuContention={stop,metadata};
     _eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;

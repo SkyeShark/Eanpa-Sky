@@ -1,7 +1,8 @@
 // A nearby, parallax-corrected radiance capture fills the geometry hidden from
 // SSR. Six faces refresh over six frames; only a completed cube is prefiltered
 // and published. The visible frame never reads a partially updated probe.
-export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size = 128, refreshSeconds = 3} = {}) {
+export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size = 128, refreshSeconds = 3,
+    blendSeconds=.45,now=()=>performance.now()} = {}) {
     const cube = new T.CubeRenderTarget(size, {type:T.HalfFloatType, generateMipmaps:false});
     cube.texture.name = 'output';
     const camera = new T.CubeCamera(.15, viewCamera.far, cube);
@@ -10,21 +11,23 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
     renderer.initRenderTarget(cube);
     const generator = new T.PMREMGenerator(renderer);
     const initialState = T.RendererUtils.saveRendererState(renderer);
-    let filtered;
-    try { renderer.setMRT(null); filtered = generator.fromCubemap(cube.texture); }
+    let filtered,back;
+    try { renderer.setMRT(null); filtered = generator.fromCubemap(cube.texture); back=generator.fromCubemap(cube.texture); }
     finally { T.RendererUtils.restoreRendererState(renderer, initialState); }
     filtered.texture.name = 'eanpa-local-probe-pmrem';
     const tex = T.texture(filtered.texture,T.screenUV);
     tex.updateMatrix = false;
+    const oldTex=T.texture(back.texture,T.screenUV);oldTex.updateMatrix=false;
     const shared = value => T.uniform(value).setGroup(T.renderGroup);
     const center = shared(new T.Vector3()), boxMin = shared(new T.Vector3()), boxMax = shared(new T.Vector3());
+    const oldCenter=shared(new T.Vector3()),oldMin=shared(new T.Vector3()),oldMax=shared(new T.Vector3()),blend=shared(1);
     const ready = shared(0);
     const excluded = new Set(), lights = new Set(), convex = new Set();
     const sourceContext = T.context({eanpaReflectionSurfacePass:false});
     const captureMrt = T.mrt({output:T.output});
     const point = new T.Vector3(), desired = new T.Vector3(), pending = new T.Vector3();
-    let environment = null, sampleGroundHeight = null, face = -1, deadline = 0, dirty = true, disposed = false;
-    const stats = {captures:0, faces:0, lastCaptureMs:0, lastCenter:[0,0,0]};
+    let environment = null, sampleGroundHeight = null, face = -1, deadline = 0, dirty = true, disposed = false,blendStart=-Infinity;
+    const stats = {captures:0, faces:0, lastCaptureMs:0, lastCenter:[0,0,0],blend:1};
 
     const registerObject = root => root.traverse(object => {
         if (object.isLight && object.shadow) lights.add(object);
@@ -88,13 +91,17 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
     };
     const finishCapture = () => {
         const state = T.RendererUtils.saveRendererState(renderer);
-        try { renderer.setMRT(null); generator.fromCubemap(cube.texture,filtered); }
+        try { renderer.setMRT(null); generator.fromCubemap(cube.texture,back); }
         finally { T.RendererUtils.restoreRendererState(renderer,state); }
+        const previous=filtered;filtered=back;back=previous;
+        tex.value=filtered.texture;oldTex.value=back.texture;
+        oldCenter.value.copy(center.value);oldMin.value.copy(boxMin.value);oldMax.value.copy(boxMax.value);
         center.value.copy(pending);
         boxMin.value.copy(pending).addScalar(-32); boxMax.value.copy(pending).addScalar(32);
         const ground = Number(sampleGroundHeight?.(pending.x,pending.z));
         if (Number.isFinite(ground) && ground < pending.y-.1 && ground > pending.y-32) boxMin.value.y=ground;
-        ready.value=1; face=-1; deadline=performance.now()+refreshSeconds*1000;
+        blend.value=ready.value?0:1;stats.blend=blend.value;blendStart=ready.value?now():-Infinity;
+        ready.value=1; face=-1; deadline=now()+refreshSeconds*1000;
         stats.captures++; stats.lastCenter=pending.toArray();
     };
     const captureFace = () => withCaptureState(() => {
@@ -114,15 +121,26 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
             // each sign independently, or seven octants get the wrong slab.
             const signs = T.vec3(...['x','y','z'].map(axis=>T.select(direction[axis].greaterThanEqual(0),1,-1)));
             const safeDirection = signs.mul(T.abs(direction).max(.00001));
-            const first = boxMin.sub(position).div(safeDirection);
-            const second = boxMax.sub(position).div(safeDirection);
+            const sampleBox=(source,captureCenter,minimum,maximum)=>{
+            const first = minimum.sub(position).div(safeDirection);
+            const second = maximum.sub(position).div(safeDirection);
             const far = T.max(first,second);
             const distance = T.min(far.x,T.min(far.y,far.z)).max(0);
-            const projected = position.add(direction.mul(distance)).sub(center).normalize();
+            const projected = position.add(direction.mul(distance)).sub(captureCenter).normalize();
             const uv = T.vec3(projected.x,projected.y.negate(),projected.z);
-            const radiance = T.textureCubeUV(tex,uv,roughness,1/filtered.width,1/filtered.height,Math.log2(filtered.height)-2);
-            const weight = position.distance(center).smoothstep(20,32).oneMinus().mul(ready);
+            const radiance = T.textureCubeUV(source,uv,roughness,1/filtered.width,1/filtered.height,Math.log2(filtered.height)-2);
+            const weight = position.distance(captureCenter).smoothstep(20,32).oneMinus().mul(ready);
             return T.vec4(radiance,weight);
+            };
+            return T.Fn(()=>{
+                const current=sampleBox(tex,center,boxMin,boxMax).toVar();
+                T.If(blend.lessThan(.999),()=>{
+                    const old=sampleBox(oldTex,oldCenter,oldMin,oldMax).toVar();
+                    const alpha=T.mix(old.a,current.a,blend);
+                    current.assign(T.vec4(T.mix(old.rgb.mul(old.a),current.rgb.mul(current.a),blend).div(alpha.max(.00001)),alpha));
+                });
+                return current;
+            })();
         },
         async compileAsync() {
             if (!environment || disposed) return;
@@ -140,9 +158,11 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
         },
         update() {
             if (!environment || disposed) return;
+            const progress=Math.max(0,Math.min(1,(now()-blendStart)/(Math.max(.001,blendSeconds)*1000)));
+            blend.value=progress*progress*(3-2*progress);stats.blend=blend.value;
             if (face<0) {
                 chooseCenter();
-                if (!dirty && performance.now()<deadline && desired.distanceToSquared(center.value)<36) return;
+                if (blend.value<1 || (!dirty && now()<deadline && desired.distanceToSquared(center.value)<36)) return;
                 beginCapture();
             }
             const started=performance.now();
@@ -150,6 +170,6 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
             if(face===6) finishCapture();
             stats.lastCaptureMs=performance.now()-started;
         },
-        dispose() { if(disposed)return;disposed=true;cube.dispose();filtered.dispose();generator.dispose();excluded.clear();lights.clear();convex.clear(); },
+        dispose() { if(disposed)return;disposed=true;cube.dispose();filtered.dispose();back.dispose();generator.dispose();excluded.clear();lights.clear();convex.clear(); },
     };
 }

@@ -15,3 +15,18 @@ export function ringSolarVisibility(point, sun, {radius=5000,centerY=4940,halfWi
     const k=Math.max(0,Math.min(1,(across-halfWidth+penumbra)/(2*penumbra)));
     return k*k*(3-2*k);
 }
+
+// Per-fragment counterpart for the visible ring. A scene-wide eclipse scalar
+// cannot describe a shadow sweeping over only part of a ten-kilometre arc.
+export function ringSolarVisibilityNode(T,point,sun,{radius=5000,center,halfWidth=483,angularRadius=.00465}={}){
+    return T.Fn(()=>{
+        const p=point.sub(center),a=T.dot(sun.yz,sun.yz).max(.000001);
+        const b=T.dot(p.yz,sun.yz),c=T.dot(p.yz,p.yz).sub(radius*radius);
+        const discriminant=b.mul(b).sub(a.mul(c));
+        const distance=b.negate().add(discriminant.max(0).sqrt()).div(a);
+        const across=T.abs(p.x.add(sun.x.mul(distance)));
+        const feather=distance.mul(Math.tan(angularRadius)).div(a.sqrt()).max(1);
+        const visible=T.smoothstep(T.float(halfWidth).sub(feather),T.float(halfWidth).add(feather),across);
+        return T.select(sun.y.greaterThan(0).and(discriminant.greaterThanEqual(0)).and(distance.greaterThan(1)),visible,1);
+    })();
+}

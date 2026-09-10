@@ -2,7 +2,7 @@
 // Project receivers along the light direction onto the capture plane: roofs,
 // slopes and the ground then sample the same cloud column without a ray march
 // in each PBR fragment. The host calls prepare() in its serialized frame.
-export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
+export function makeCloudShadowMap(T, {transmittance, lightDirection, time, displacement,
     resolution=384, extent=6144, refreshSeconds=.1}={}) {
     const size=Math.max(64,Math.round(resolution));
     const target=new T.RenderTarget(size,size,{type:T.HalfFloatType,depthBuffer:false,
@@ -10,6 +10,7 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
     target.texture.name='cloud-column-transmittance';
     const shared=value=>T.uniform(value).setGroup(T.renderGroup);
     const origin=shared(new T.Vector2()),captureLight=shared(new T.Vector3(0,1,0)),ready=shared(0);
+    const captureDisplacement=shared(new T.Vector3());
     const material=new T.MeshBasicNodeMaterial();
     material.name='Cloud shadow column integration';
     const p=T.vec3(T.uv().x.sub(.5).mul(extent).add(origin.x),0,
@@ -24,7 +25,8 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
     const texel=extent/size;
     return {target,stats,
         sample(world){
-            const hit=world.xz.sub(captureLight.xz.mul(world.y.div(T.max(captureLight.y,.02))));
+            const advection=displacement?displacement.xz.sub(captureDisplacement.xz):T.vec2(0);
+            const hit=world.xz.sub(captureLight.xz.mul(world.y.div(T.max(captureLight.y,.008)))).sub(advection);
             const uv=hit.sub(origin).div(extent).add(.5);
             const edge=T.max(T.abs(uv.x.sub(.5)),T.abs(uv.y.sub(.5)));
             const weight=T.smoothstep(.46,.5,edge).oneMinus().mul(ready);
@@ -36,15 +38,19 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
             if(typeof force==='object')force=force?.force===true;
             const light=lightDirection.value,t=time.value;
             camera.getWorldPosition(cameraWorld);
-            const x=Math.floor((cameraWorld.x-light.x*cameraWorld.y/Math.max(light.y,.02))/texel)*texel;
-            const z=Math.floor((cameraWorld.z-light.z*cameraWorld.y/Math.max(light.y,.02))/texel)*texel;
+            const x=Math.floor((cameraWorld.x-light.x*cameraWorld.y/Math.max(light.y,.008))/texel)*texel;
+            const z=Math.floor((cameraWorld.z-light.z*cameraWorld.y/Math.max(light.y,.008))/texel)*texel;
             const moved=Math.abs(origin.value.x-x)>extent*.125||Math.abs(origin.value.y-z)>extent*.125;
             const turned=captureLight.value.dot(light)<.9995;
             if(!force&&ready.value&&!moved&&!turned&&t>=lastTime&&t-lastTime<refreshSeconds)return false;
             const saved={target:renderer.getRenderTarget(),mrt:renderer.getMRT(),context:renderer.contextNode};
-            const oldOrigin=origin.value.clone(),oldLight=captureLight.value.clone();
+            const oldOrigin=origin.value.clone(),oldLight=captureLight.value.clone(),oldDisplacement=captureDisplacement.value.clone();
             try{
-                origin.value.set(x,z);captureLight.value.copy(light);
+                // Keep the sample lattice world-stable while the viewer walks.
+                // Recenter only at the guard band, not on every 10 Hz refresh.
+                if(!ready.value||moved||turned)origin.value.set(x,z);
+                captureLight.value.copy(light);
+                if(displacement)captureDisplacement.value.copy(displacement.value);
                 renderer.setMRT(null);renderer.contextNode=captureContext;renderer.setRenderTarget(target);
                 await quad.renderAsync(renderer);
                 ready.value=1;lastTime=t;stats.captures++;
@@ -52,7 +58,7 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time,
             }catch(error){
                 // A failed refresh must retain the projection belonging to
                 // the last successfully published texture.
-                origin.value.copy(oldOrigin);captureLight.value.copy(oldLight);
+                origin.value.copy(oldOrigin);captureLight.value.copy(oldLight);captureDisplacement.value.copy(oldDisplacement);
                 throw error;
             }finally{renderer.contextNode=saved.context;renderer.setRenderTarget(saved.target);renderer.setMRT(saved.mrt);}
         },

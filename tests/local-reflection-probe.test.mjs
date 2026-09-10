@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {Vector3, Scene, Mesh, BoxGeometry, MeshStandardMaterial, DirectionalLight, PerspectiveCamera} from '../vendor/three/three.core.js';
 import {makeLocalReflectionProbe} from '../src/local_reflection_probe.js';
 
-function fixture() {
+function fixture(options={}) {
     const resources=[];
     class Target {
         constructor(size) {this.width=size*3;this.height=size*4;this.texture={};this.disposals=0;resources.push(this)}
@@ -31,7 +31,7 @@ function fixture() {
     const hero=new Mesh(new BoxGeometry(),new MeshStandardMaterial());hero.position.set(0,4,-3);hero.userData.ssrConvexGroup='hero';
     const light=new DirectionalLight();light.shadow.autoUpdate=true;light.shadow.needsUpdate=true;
     scene.add(hero,light);scene.updateMatrixWorld(true);
-    const probe=makeLocalReflectionProbe(T,renderer,scene,camera);
+    const probe=makeLocalReflectionProbe(T,renderer,scene,camera,options);
     const environment={name:'sky'};probe.setEnvironment(environment);
     return {probe,renderer,scene,hero,light,environment,resources};
 }
@@ -53,6 +53,15 @@ test('local probe publishes six complete faces and restores visible-scene state'
     assert.equal(hero.visible,true);assert.equal(light.shadow.autoUpdate,true);assert.equal(light.shadow.needsUpdate,true);
     assert.equal(scene.background,null);assert.equal(renderer.contextNode,context);assert.equal(renderer.target,null);assert.equal(renderer.mrt,null);
     probe.update();assert.equal(renderer.draws.length,6,'settled capture is reused');
+    probe.dispose();
+});
+
+test('a refreshed probe blends over time and does not overwrite either capture during the blend',()=>{
+    let time=0;const {probe,renderer}=fixture({now:()=>time,blendSeconds:.4});
+    for(let i=0;i<6;i++)probe.update();assert.equal(probe.stats.blend,1);
+    time=4000;for(let i=0;i<6;i++)probe.update();assert.equal(probe.stats.captures,2);assert.equal(probe.stats.blend,0);
+    time=4200;probe.invalidate();probe.update();assert.equal(probe.stats.blend,.5);assert.equal(renderer.draws.length,12);
+    time=4400;probe.update();assert.equal(probe.stats.blend,1);assert.equal(renderer.draws.length,13);
     probe.dispose();
 });
 

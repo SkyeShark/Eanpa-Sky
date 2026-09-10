@@ -20,7 +20,7 @@ try {
         function descriptor(input,kind) {
             if(index>=2048) throw new Error('GPU profile query capacity exceeded');
             const target=pipeline.pipeline.renderer.getRenderTarget();
-            const targetName=target?.texture?.name|| (target ? target.width+'x'+target.height : 'screen');
+            const targetName=target?.name||target?.texture?.name|| (target ? target.width+'x'+target.height : 'screen');
             labels.push(kind+':'+targetName+(target?'#'+target.texture.id+'@'+target.width+'x'+target.height:'')+':'+globalThis._frameStage);
             const timestampWrites={querySet:queries,beginningOfPassWriteIndex:index++,endOfPassWriteIndex:index++};
             return {...input,timestampWrites};
@@ -56,9 +56,9 @@ try {
                 await new Promise(r=>setTimeout(r,20));
             }
             if(failure)throw new Error(failure);
-            return {date:new Date().toISOString(),sky:document.getElementById('skybox').value,
-                quality:document.getElementById('quality').value,clouds:document.getElementById('cloud-type').value,
-                weather:document.getElementById('weather').value,camera:_c.position.toArray(),verticalFov:_c.getEffectiveFOV(),
+            return {date:new Date().toISOString(),sky:document.getElementById('skybox')?.value??globalThis.__skyFixture?.kind,
+                quality:document.getElementById('quality')?.value??globalThis.__skyFixture?.tier,clouds:document.getElementById('cloud-type')?.value??_sky.state.preset,
+                weather:document.getElementById('weather')?.value??globalThis.__skyFixture?.weather.state.name,camera:_c.position.toArray(),verticalFov:_c.getEffectiveFOV(),
                 coarseDepthGate:_reflectionPipeline.ssrNode.coarseDepthGate?.value,records};
         }finally{
             proto.beginRenderPass=originalRender;proto.beginComputePass=originalCompute;pipeline.render=originalPipeline;

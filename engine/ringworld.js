@@ -15,7 +15,7 @@
 //   // Per serialized frame: ring.update(t); await ring.prepareFrame(renderer);
 import { makeRingTerrainGeometry } from './ring_terrain_geometry.js';
 import { makeRingCloudField } from './ring_cloud_field.js';
-import { ringSolarVisibility } from './ring_eclipse.js';
+import { ringSolarVisibility, ringSolarVisibilityNode } from './ring_eclipse.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -147,9 +147,10 @@ import { ringSolarVisibility } from './ring_eclipse.js';
         const arcShade = () => {
             const { vec3: v3, float: f, mix: mx, smoothstep: ss, clamp: cl } = T3;
             const Pw = T3.positionWorld;
+            const eclipse = ringSolarVisibilityNode(T3,Pw,uSunDirN,{center:uRingCN});
             const inward = T3.normalize(v3(f(0), uRingCN.y.sub(Pw.y), uRingCN.z.sub(Pw.z)));
             const dSun = T3.dot(inward, uSunDirN);
-            const litK = ss(f(-0.22), f(0.30), dSun);                                       // WIDE terminator — a penumbra that blends, never a hard line
+            const litK = ss(f(-0.22), f(0.30), dSun).mul(eclipse);
             const warmT = mx(v3(1.14, 0.82, 0.55), v3(1, 1, 1), cl(dSun.mul(2), f(0), f(1))); // golden band eases across the same width
             const pVis = ss(f(-0.38), f(0.48), T3.dot(inward, uMoonDirN)).pow(0.8);          // planet-shine terminator: WIDE + lifted toe — the dot compresses fast near planetrise, so the band must be generous to stay soft on screen
             const dayF = ss(f(-0.10), f(0.15), uSunElev);                                    // how "day" it is locally
@@ -217,7 +218,7 @@ import { ringSolarVisibility } from './ring_eclipse.js';
             const insc = uHazeCol.mul(f(1).sub(trans0)).mul(veil).mul(rainT)
                 .add(uHazeCol.mul(f(1).sub(rainT)).mul(veil).mul(f(0.55))
                     .mul(f(1.08).sub(curt.mul(0.22))))
-                .mul(inscNight);
+                .mul(inscNight).mul(mx(f(.12),f(1),eclipse));
             const gain = mx(f(0.15), f(1), dayF)                                             // NIGHT_GAIN..DAY_GAIN for fixed-exposure ACES
                 .mul(mx(f(0.4), f(1), ss(f(-0.05), f(0.12), uSunElev)));                     // extra twilight rolloff — no sunset spike
             // the far arc is STILL fully sunlit at local midnight — its lit
@@ -933,7 +934,7 @@ import { ringSolarVisibility } from './ring_eclipse.js';
             cover: uniform(0.45), grey: uniform(0), dens: uniform(1), rad: uniform(1),
             tintSun: uniform(new T3.Vector3(1, 0.97, 0.9)),
             tintAmb: uniform(new T3.Vector3(0.72, 0.78, 0.9)),
-            wind: uniform(new T3.Vector2(0.0035, 0.0008)),
+            displacement: uniform(new T3.Vector2()),
         };
         const cloudField=makeRingCloudField(T3,cu,tU,opts.cloudAtlas);
         const worldToRing=uniform(new T3.Matrix4()).setGroup(T3.renderGroup);
@@ -1221,7 +1222,10 @@ import { ringSolarVisibility } from './ring_eclipse.js';
                             const localWeight=float(1).sub(smoothstep(2500,5000,T3.positionWorld.distance(T3.cameraPosition)));
                             return transmission.mul(mix(float(1),localTransmission,localWeight));
                         })();
-                        data={...data,lightColor:data.lightColor.mul(shade)};
+                        const eclipse=data.lightNode?.light===bandSun
+                            ?ringSolarVisibilityNode(T3,T3.positionWorld,uSunDirN,{center:uRingCN})
+                            :float(1);
+                        data={...data,lightColor:data.lightColor.mul(shade).mul(eclipse)};
                     }
                     return direct.call(this,data,b);
                 };
@@ -1439,12 +1443,12 @@ import { ringSolarVisibility } from './ring_eclipse.js';
                     if (U.cloudRadiance) cu.rad.value = U.cloudRadiance.value;
                 }
                 if (sk && sk.state && sk.state.palette) {
-                    if (sk.uniforms.skyWind) {
-                        const w = sk.uniforms.skyWind.value;
-                        // TRUE-scale drift: the far side is km away, so its
-                        // clouds must crawl SLOWER than the local raymarch
-                        // deck, never faster.
-                        cu.wind.value.set(w.x / 31400 * 1.2, w.z / 31400 * 0.5);
+                    if (sk.uniforms.cloudDisplacement) {
+                        const d = sk.uniforms.cloudDisplacement.value;
+                        // At the near arc, +Z runs along the circumference
+                        // and +X across the 940 m ribbon. Use metres for both
+                        // axes; dividing both by circumference froze the width.
+                        cu.displacement.value.set(d.z/(Math.PI*2*R_REF),d.x/940);
                     }
                 }
             },
