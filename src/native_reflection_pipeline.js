@@ -207,15 +207,20 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
             for(const material of installed.keys())if(material.envMap!==texture){material.envMap=texture;material.needsUpdate=true;}
             texture.userData.eanpaReflectionMaterialCount=installed.size;return texture;},
         update(){}, resize(w,h){scenePass.setSize(w,h);n8ao.setSize(w,h);invalidateHistory();},
-        async compileAsync(){
-            // r184 PassNode.compileAsync does not install the pass context.
-            // Compile the actual receiving variant behind the boot screen.
+        async compileAsync(onProgress){
+            // The pinned PassNode uses the same merged context for compilation
+            // and rendering, so the warmed native-PBR variant is reusable.
             const savedContext=renderer.contextNode, savedTarget=renderer.getRenderTarget(), savedMrt=renderer.getMRT();
-            try { for(const layer of skyLayers)await layer.compileAsync();
-                await localProbe.compileAsync(); await geometry.compileAsync(); for(const pass of [scenePass]) {
-                renderer.contextNode=pass.contextNode;
-                await pass.compileAsync(renderer);
-            } return true; }
+            try {
+                onProgress?.('preparing distant sky geometry…');
+                for(const layer of skyLayers)await layer.compileAsync();
+                onProgress?.('preparing local reflections…');
+                await localProbe.compileAsync();
+                await geometry.compileAsync();
+                onProgress?.('preparing surface lighting and weather…');
+                await scenePass.compileAsync(renderer);
+                return true;
+            }
             finally {for(const layer of skyLayers)layer.restoreVisibility();renderer.contextNode=savedContext;renderer.setRenderTarget(savedTarget);renderer.setMRT(savedMrt);}
         },
         async render(){if(!disposed){try{prepareHistory();for(const layer of skyLayers)await layer.render();

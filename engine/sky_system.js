@@ -23,6 +23,7 @@
 //   // per frame: sky.update(t, camera)
 import { makeCloudShadowMap } from './cloud_shadow_map.js';
 import { createCloudMotion } from './cloud_motion.js';
+import { makeAnalyticSkyNoise } from './sky_noise.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -370,28 +371,7 @@ import { createCloudMotion } from './cloud_motion.js';
         // reaches ±250 lattice units and GPU sin() argument reduction breaks down
         // there, banding fract(sin(big)*43758) into straight-edged plates (bisect-
         // verified with wispOn=0). Bounded products only.
-        const hash3 = (pIn) => {
-            const q = fract(pIn.mul(0.3183099).add(vec3(0.1, 0.17, 0.13))).mul(17);
-            return fract(q.x.mul(q.y).mul(q.z).mul(q.x.add(q.y).add(q.z)));
-        };
-        const noise3A = (p) => {
-            const i = floor(p), f = fract(p);
-            const sm = f.mul(f).mul(float(3).sub(f.mul(2)));
-            const nx0 = mix(hash3(i), hash3(i.add(vec3(1, 0, 0))), sm.x);
-            const nx1 = mix(hash3(i.add(vec3(0, 1, 0))), hash3(i.add(vec3(1, 1, 0))), sm.x);
-            const nx2 = mix(hash3(i.add(vec3(0, 0, 1))), hash3(i.add(vec3(1, 0, 1))), sm.x);
-            const nx3 = mix(hash3(i.add(vec3(0, 1, 1))), hash3(i.add(vec3(1, 1, 1))), sm.x);
-            return mix(mix(nx0, nx1, sm.y), mix(nx2, nx3, sm.y), sm.z);
-        };
-        const fbm3A = (p) => {
-            const pp = p.toVar();
-            const f = noise3A(pp).mul(0.5).toVar();
-            pp.assign(applyM(pp).mul(2.02));
-            f.addAssign(noise3A(pp).mul(0.25));
-            pp.assign(applyM(pp).mul(2.03));
-            f.addAssign(noise3A(pp).mul(0.125));
-            return f;
-        };
+        const {noise3A, fbm3A} = makeAnalyticSkyNoise(T3);
         // Optional optimized-tier 3D density BASIS. This caches the random
         // lattice used by the erosion FBM, not the animated cloudsAt result:
         // weather, height, wind, both erosion stages, and all FBM octaves stay
@@ -1536,7 +1516,9 @@ import { createCloudMotion } from './cloud_motion.js';
                 const sy = max(u.cloudLightDir.y, 0.08);
                 const segL = u.cloudHeight.div(sy);
                 const hp = org.add(dir.mul(stepH).mul(baseJit.mul(0.5).add(0.3))).toVar();
-                for (let i = 0; i < 20; i++) {
+                // Keep the authored 20 × 6 samples, but express the march as
+                // GPU loops instead of duplicating its graph 120 times in JS.
+                Loop({ start: 0, end: 20, type: 'int' }, ({i}) => {
                     // ring mode: atmoHeight is a remapped PROFILE coordinate,
                     // not meters — the shaft/altitude math needs physical y
                     // (this is what silently killed the god rays)
@@ -1544,9 +1526,9 @@ import { createCloudMotion } from './cloud_motion.js';
                         ? max(float(RING_SLAB_LO + 20).sub(hp.y), 0).div(sy)
                         : max(u.cloudStart.sub(atmoHeight(hp)), 0).div(sy);
                     const od = float(0).toVar();
-                    for (let j = 0; j < 6; j++) {
-                        od.addAssign(smoothDensity(hp.add(u.cloudLightDir.mul(hEnter.add(segL.mul((j + 0.5) / 6))))));
-                    }
+                    Loop({ start: 0, end: 6, type: 'int' }, ({i: j}) => {
+                        od.addAssign(smoothDensity(hp.add(u.cloudLightDir.mul(hEnter.add(segL.mul(float(j).add(0.5).div(6)))))));
+                    });
                     const vis = exp(od.mul(segL.div(6)).negate());
                     // rain curtains: dense macro cells rain; fine xz column
                     // noise gives the falling-shaft texture
@@ -1555,7 +1537,7 @@ import { createCloudMotion } from './cloud_motion.js';
                     const cellCov = clamp(wSampleL(vec2(cp1z, cp1x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
                     // column texture coarsened + faded to smooth murk with
                     // distance — fine detail must stay below the step size
-                    const tCur = stepH.mul(i + 0.5);
+                    const tCur = stepH.mul(float(i).add(0.5));
                     const colTex = wSampleS(vec2(cp1z, cp1x).mul(0.0008).add(vec2(0.61, 0.23)));
                     const colMod = mix(colTex.mul(1.1).add(0.25), float(0.8), smoothstep(900, 2600, tCur));
                     const belowBase = RING_R
@@ -1578,7 +1560,8 @@ import { createCloudMotion } from './cloud_motion.js';
                         stormPrecipGate,
                         clamp(u.stormCanopy, 0, 1),
                     );
-                    const precip = u.precipK.mul(precipGate).mul(colMod).mul(2.1e-4 * (1 - (i / 20) * 0.5))
+                    const precip = u.precipK.mul(precipGate).mul(colMod)
+                        .mul(float(i).div(20).mul(0.5).oneMinus().mul(2.1e-4))
                         .mul(belowBase.mul(0.5).add(0.5));
                     const altPhys = RING_R ? hp.y : atmoHeight(hp);
                     // ring mode: curtains OFF pending their own tune — they were
@@ -1589,7 +1572,7 @@ import { createCloudMotion } from './cloud_motion.js';
                     shaft.addAssign(trH.mul(vis.mul(0.75).add(0.25)).mul(rho).mul(stepH));
                     trH.assign(trH.mul(exp(rho.mul(stepH).negate())));
                     hp.assign(hp.add(dir.mul(stepH)));
-                }
+                });
             });
             // curtains scatter AMBIENT skylight too — sun-only lighting rendered
             // distant rain as a black wall at the horizon. Under a sealed

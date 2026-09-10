@@ -40169,14 +40169,52 @@ class PassNode extends TempNode {
 
 		const currentRenderTarget = renderer.getRenderTarget();
 		const currentMRT = renderer.getMRT();
+		const currentContextNode = renderer.contextNode;
+		const currentOverrideMaterial = this.scene.overrideMaterial;
+		const currentMask = this.camera.layers.mask;
+		const currentTransparent = renderer.transparent;
+		const currentOpaque = renderer.opaque;
 
-		renderer.setRenderTarget( this.renderTarget );
-		renderer.setMRT( this._mrt );
+		try {
 
-		await renderer.compileAsync( this.scene, this.camera );
+			// Match setup/updateBefore, including the exact cached context node.
+			// A different context ID rebuilds every material at the first render.
+			this.setup( { renderer } );
+			renderer.setRenderTarget( this.renderTarget );
+			renderer.setMRT( this._mrt );
+			renderer.contextNode = this._getPassContext( renderer );
+			renderer.transparent = this.transparent;
+			renderer.opaque = this.opaque;
+			if ( this._layers !== null ) this.camera.layers.mask = this._layers.mask;
+			if ( this.overrideMaterial !== null ) this.scene.overrideMaterial = this.overrideMaterial;
+			await renderer.compileAsync( this.scene, this.camera );
 
-		renderer.setRenderTarget( currentRenderTarget );
-		renderer.setMRT( currentMRT );
+		} finally {
+
+			renderer.setRenderTarget( currentRenderTarget );
+			renderer.setMRT( currentMRT );
+			renderer.contextNode = currentContextNode;
+			renderer.transparent = currentTransparent;
+			renderer.opaque = currentOpaque;
+			this.scene.overrideMaterial = currentOverrideMaterial;
+			this.camera.layers.mask = currentMask;
+
+		}
+
+	}
+
+	_getPassContext( renderer ) {
+
+		if ( this.contextNode === null ) return renderer.contextNode;
+		if ( this._contextNodeCache === null || this._contextNodeCache.version !== this.version ) {
+
+			this._contextNodeCache = {
+				version: this.version,
+				context: context( { ...renderer.contextNode.getFlowContextData(), ...this.contextNode.getFlowContextData() } )
+			};
+
+		}
+		return this._contextNodeCache.context;
 
 	}
 
@@ -40264,20 +40302,7 @@ class PassNode extends TempNode {
 		renderer.transparent = this.transparent;
 		renderer.opaque = this.opaque;
 
-		if ( this.contextNode !== null ) {
-
-			if ( this._contextNodeCache === null || this._contextNodeCache.version !== this.version ) {
-
-				this._contextNodeCache = {
-					version: this.version,
-					context: context( { ...renderer.contextNode.getFlowContextData(), ...this.contextNode.getFlowContextData() } )
-				};
-
-			}
-
-			renderer.contextNode = this._contextNodeCache.context;
-
-		}
+		renderer.contextNode = this._getPassContext( renderer );
 
 		const currentSceneName = scene.name;
 
@@ -58798,59 +58823,74 @@ class Renderer {
 		this._handleObjectFunction = previousHandleObjectFunction;
 		this._compilationPromises = previousCompilationPromises;
 
-		// Process compilation work items sequentially to avoid freezing
-		// Yields between objects to keep animation smooth
+		// Build TSL graphs sequentially: their renderer/node state is shared.
+		// GPU pipeline creation can overlap without sharing that mutable state.
+		// Keep at most four objects in flight, including on lower-memory devices.
+		const pendingPipelines = [];
+		const finishPipelines = async () => {
 
-		for ( const item of compilationPromises ) {
+			const batch = pendingPipelines.splice( 0 );
+			const results = await Promise.all( batch.map( item => item.ready ) );
+			let failure;
+			for ( let i = 0; i < batch.length; i ++ ) {
 
-			const renderObject = this._objects.get( item.object, item.material, item.scene, item.camera, item.lightsNode, item.renderContext, item.clippingContext, item.passId );
-			renderObject.drawRange = item.object.geometry.drawRange;
-			renderObject.group = item.group;
+				if ( results[ i ] ) { failure ??= results[ i ]; continue; }
+				this._isPreCompiling = true;
+				try { this._nodes.updateAfter( batch[ i ].renderObject ); }
+				finally { this._isPreCompiling = false; }
 
-			// Use async node building to yield to main thread
-			await this._nodes.getForRenderAsync( renderObject );
+			}
+			if ( failure ) throw failure;
 
-			// No awaits are allowed while this flag is true: it is renderer-wide
-			// state consumed by update-before nodes such as ShadowNode.
-			this._isPreCompiling = true;
-			try {
+		};
 
-				this._nodes.updateBefore( renderObject );
-				// r184 called this before getForRenderAsync(). Geometries needs the
-				// node-builder state, so that order silently performed a synchronous
-				// build and defeated compileAsync's browser yielding.
-				this._geometries.updateForRender( renderObject );
-				this._nodes.updateForRender( renderObject );
-				this._bindings.updateForRender( renderObject );
+		try {
 
-			} finally {
+			for ( const item of compilationPromises ) {
 
-				this._isPreCompiling = false;
+				const renderObject = this._objects.get( item.object, item.material, item.scene, item.camera, item.lightsNode, item.renderContext, item.clippingContext, item.passId );
+				renderObject.drawRange = item.object.geometry.drawRange;
+				renderObject.group = item.group;
+
+				// Use async node building to yield to main thread
+				await this._nodes.getForRenderAsync( renderObject );
+
+				// No awaits are allowed while this flag is true: it is renderer-wide
+				// state consumed by update-before nodes such as ShadowNode.
+				this._isPreCompiling = true;
+				try {
+
+					this._nodes.updateBefore( renderObject );
+					// r184 called this before getForRenderAsync(). Geometries needs the
+					// node-builder state, so that order silently performed a synchronous
+					// build and defeated compileAsync's browser yielding.
+					this._geometries.updateForRender( renderObject );
+					this._nodes.updateForRender( renderObject );
+					this._bindings.updateForRender( renderObject );
+
+				} finally {
+
+					this._isPreCompiling = false;
+
+				}
+
+				// Submit independent driver compilation work before waiting. Waiting
+				// here per object serialized hundreds of slow driver compilations.
+				const pipelinePromises = [];
+				this._pipelines.getForRender( renderObject, pipelinePromises );
+				pendingPipelines.push( { renderObject,
+					ready: Promise.all( pipelinePromises ).then( () => null, error => error ) } );
+				if ( pendingPipelines.length >= 4 ) await finishPipelines();
+
+				// Yield between objects to allow animation frames
+				await yieldToMain();
 
 			}
 
-			// Wait for pipeline creation
-			const pipelinePromises = [];
-			this._pipelines.getForRender( renderObject, pipelinePromises );
-			if ( pipelinePromises.length > 0 ) {
+		} finally {
 
-				await Promise.all( pipelinePromises );
-
-			}
-
-			this._isPreCompiling = true;
-			try {
-
-				this._nodes.updateAfter( renderObject );
-
-			} finally {
-
-				this._isPreCompiling = false;
-
-			}
-
-			// Yield between objects to allow animation frames
-			await yieldToMain();
+			// Do not return (or dispose a failed scene) with unfinished pipelines.
+			await finishPipelines();
 
 		}
 
@@ -60905,7 +60945,7 @@ class Renderer {
 
 				const frustum = camera.isArrayCamera ? _frustumArray : _frustum;
 
-				if ( ! object.frustumCulled || frustum.intersectsSprite( object, camera ) ) {
+				if ( this._handleObjectFunction === this._createObjectPipeline || ! object.frustumCulled || frustum.intersectsSprite( object, camera ) ) {
 
 					if ( this.sortObjects === true ) {
 
@@ -60931,7 +60971,9 @@ class Renderer {
 
 				const frustum = camera.isArrayCamera ? _frustumArray : _frustum;
 
-				if ( ! object.frustumCulled || frustum.intersectsObject( object, camera ) ) {
+				// compileAsync promises all visible materials, including objects
+				// outside the last rendered camera's frustum (often a probe face).
+				if ( this._handleObjectFunction === this._createObjectPipeline || ! object.frustumCulled || frustum.intersectsObject( object, camera ) ) {
 
 					const { geometry, material } = object;
 
@@ -79070,25 +79112,21 @@ class WebGPUPipelineUtils {
 
 		} else {
 
-			const p = new Promise( async ( resolve /*, reject*/ ) => {
+			const compilation = device.createRenderPipelineAsync( pipelineDescriptor );
+			// Close this descriptor's scope before yielding. Overlapping async
+			// compilations must not pop one another's validation scopes.
+			const validation = device.popErrorScope();
+			const p = Promise.allSettled( [ compilation, validation ] ).then( ( [ result, scope ] ) => {
 
-				try {
-
-					pipelineData.pipeline = await device.createRenderPipelineAsync( pipelineDescriptor );
-
-				} catch ( err ) { }
-
-				const errorScope = await device.popErrorScope();
-
-				if ( errorScope !== null ) {
+				if ( result.status === 'fulfilled' ) pipelineData.pipeline = result.value;
+				const failure = result.status === 'rejected' ? result.reason
+					: scope.status === 'rejected' ? scope.reason : scope.value;
+				if ( failure ) {
 
 					pipelineData.error = true;
-
-					error( errorScope.message );
+					error( failure.message );
 
 				}
-
-				resolve();
 
 			} );
 

@@ -1449,6 +1449,7 @@ async function buildSkybox() {
         // Shieldworld synchronizes the red giant and hides its placeholder sun
         // in update(); initialize that state before baking the first reflection.
         active.update?.(0, 0);
+        document.getElementById('boot').textContent = 'preparing rain and cloud shadows…';
         await active.prepareFrame?.(renderer,camera);
         await globalThis._weather?.prepareFrame?.(renderer, camera, { force: true });
         // Project the active sky's moving cloud field onto every local PBR
@@ -1474,6 +1475,7 @@ async function buildSkybox() {
         });
         reflectionDirty = true;
         reflectionBakedHours = null;
+        document.getElementById('boot').textContent = 'preparing sky reflections…';
         await rebakeReflections(true);
         // The browser owns one explicit scene MRT in reflection_pipeline.js;
         // remove legacy partial MRT stamps while preserving complete material
@@ -1539,12 +1541,15 @@ async function buildSkybox() {
                 await globalThis._weather?.prepareFrame?.(renderer, camera, { force: true });
                 rainSurfaceWarmupMs = performance.now() - rainSurfaceStarted;
                 for (const object of warmupObjects) object.visible = true;
+                document.getElementById('boot').textContent = 'preparing clouds…';
                 await spatialClouds?.compileAsync?.();
                 reflectionPipeline.update();
                 if (typeof reflectionPipeline.compileAsync === 'function') {
                     const compileStarted = performance.now();
                     try {
-                        await reflectionPipeline.compileAsync();
+                        await reflectionPipeline.compileAsync((stage) => {
+                            document.getElementById('boot').textContent = stage;
+                        });
                         exactMrtCompileMs = performance.now() - compileStarted;
                         console.log('[perf] exact MRT async compile took',
                             Math.round(exactMrtCompileMs), 'ms');
@@ -1554,6 +1559,7 @@ async function buildSkybox() {
                 }
                 const finalGraphStarted = performance.now();
                 try {
+                    document.getElementById('boot').textContent = 'finishing lighting and the first frame…';
                     await reflectionPipeline.render();
                     // render() submits work; completion of GPU-side pipeline
                     // preparation must also remain behind the loading curtain.
