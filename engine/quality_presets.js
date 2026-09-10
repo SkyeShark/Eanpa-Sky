@@ -16,6 +16,7 @@ const QUALITY = {
     high: {
         name: 'high', label: 'High / Insane', fpsTarget: 30,
         skySamples: 60, lightSamples: 18, cloudPasses: 5, cloudDiv: 1,
+        cloudShadowResolution:384,
         reflectionBake: { width: 512, height: 256, cloudPasses: 4 },
         cloudReflectionRefreshSeconds: 10,
         weather: { rainCount: 16000, splashCount: 1100, transitionSeconds: 45, surfaceResolution: 1024, surfaceRefreshHz: 12 },
@@ -24,6 +25,7 @@ const QUALITY = {
     balanced: {
         name: 'balanced', label: 'Balanced', fpsTarget: 60,
         skySamples: 44, lightSamples: 14, cloudPasses: 3, cloudDiv: 2,
+        cloudShadowResolution:384,
         reflectionBake: { width: 384, height: 192, cloudPasses: 3 },
         cloudReflectionRefreshSeconds: 16,
         weather: { rainCount: 10000, splashCount: 700, transitionSeconds: 45, surfaceResolution: 768, surfaceRefreshHz: 8 },
@@ -32,6 +34,7 @@ const QUALITY = {
     performance: {
         name: 'performance', label: 'Performance', fpsTarget: 120,
         skySamples: 20, lightSamples: 6, cloudPasses: 2, cloudDiv: 3,
+        cloudShadowResolution:256,
         reflectionBake: { width: 256, height: 128, cloudPasses: 2 },
         cloudReflectionRefreshSeconds: 24,
         weather: { rainCount: 5500, splashCount: 320, transitionSeconds: 45, surfaceResolution: 512, surfaceRefreshHz: 6 },

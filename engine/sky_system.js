@@ -2854,6 +2854,7 @@ import { createCloudMotion } from './cloud_motion.js';
             lightDirection: u.cloudLightDir, time: u.time, displacement: u.cloudDisplacement,
             resolution: opts.cloudShadowResolution ?? 384,
             extent: opts.cloudShadowExtent ?? 6144,
+            verticalSpan: opts.cloudShadowVerticalSpan ?? 1024,
             refreshSeconds: opts.cloudShadowRefreshSeconds ?? .1,
         });
         sys.cloudShadowInfo.map = cloudShadowMap.stats;

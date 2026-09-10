@@ -3,6 +3,7 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
 const [name='fixture',level='native',seconds='15']=process.argv.slice(2);
 const levels={native:{cpu:1,gpu:0},moderate:{cpu:2,gpu:4},limited:{cpu:4,gpu:8}};
 if(!/^[a-z0-9_-]+$/i.test(name)||!levels[level]||Number(seconds)<5||Number(seconds)>60)throw new Error('Invalid benchmark arguments');
@@ -20,9 +21,13 @@ try{
     await c.evaluate(`(()=>{
         const f=__skyFixture,old=f.frame,starts=[],ends=[],completed=[];
         f.animateCamera=true;
+        // Include a real sky/PMREM refresh in every profile, including tiers
+        // whose regular cadence is longer than this short measurement window.
+        f.nextEnvironmentAt=f.time+${Number(seconds)*.5};
+        const initialBakes=f.environmentStats.bakes;
         const wrapper=async function(...args){const start=performance.now();starts.push(start);const value=await old.apply(this,args);
             ends.push(performance.now()-start);this.renderer.backend.device.queue.onSubmittedWorkDone().then(()=>completed.push(performance.now()));return value;};
-        f.frame=wrapper;globalThis.__fixtureCapture={starts,ends,completed,stop(){if(f.frame===wrapper)f.frame=old;f.animateCamera=false;}};
+        f.frame=wrapper;globalThis.__fixtureCapture={starts,ends,completed,initialBakes,stop(){if(f.frame===wrapper)f.frame=old;f.animateCamera=false;}};
     })()`);
     await new Promise(done=>setTimeout(done,Number(seconds)*1000));
     const result=await c.evaluate(`(async()=>{
@@ -38,6 +43,11 @@ try{
             surface:f.weather.surfaceField?.stats??null,quality:f.quality,geometry:f.pipeline.ssrImplementation};
     })()`);
     result.profile={name:level,...profile};result.resources={before,during:await during};
+    result.environment=await c.evaluate('({capturesDuringRun:__skyFixture.environmentStats.bakes-__fixtureCapture.initialBakes,regularCadenceSeconds:__skyFixture.quality.cloudReflectionRefreshSeconds,oneRefreshScheduledAtMidrun:true})');
+    const gitArgs=['-c',`safe.directory=${process.cwd().replaceAll('\\','/')}`];
+    result.revision=(await run('git',[...gitArgs,'rev-parse','HEAD'],{windowsHide:true})).stdout.trim();
+    const diff=(await run('git',[...gitArgs,'diff','HEAD','--','engine','src','vendor','qa/sky-fixture.mjs'],{windowsHide:true,maxBuffer:4e6})).stdout;
+    result.workingDiffSha256=createHash('sha256').update(diff).digest('hex');
     result.cleanCpuWindow=before.cpu.clean&&result.resources.during.cpu.clean;
     result.cleanGpuWindow=before.clean&&result.resources.during.clean;
     result.interpretation=level==='native'?'Local GPU at its current clocks; browser CPU unthrottled.':'Synthetic available-resource stress, not emulation or an FPS prediction for a named lower-end device. GPU work is calibrated in milliseconds, with two submissions allowed in flight.';

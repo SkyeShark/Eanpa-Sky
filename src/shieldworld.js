@@ -112,6 +112,7 @@ export async function makeShieldworld({
             cloudPasses: quality.cloudPasses,
             densityCache: quality.densityCache,
             lightCache: quality.lightCache,
+            cloudShadowResolution: quality.cloudShadowResolution,
             blueNoise,
             worldRayDir: !!worldRayDir,
             stableCloudPhase: !!worldRayDir,

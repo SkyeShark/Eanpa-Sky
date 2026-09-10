@@ -374,6 +374,7 @@ export async function makeWeatherSky({
             cloudPasses: quality.cloudPasses,
             densityCache: quality.densityCache,
             lightCache: quality.lightCache,
+            cloudShadowResolution: quality.cloudShadowResolution,
             blueNoise,
             worldRayDir: !!worldRayDir,
             stableCloudPhase: !!worldRayDir,
