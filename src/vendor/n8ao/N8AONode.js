@@ -383,7 +383,7 @@ export class N8AONode extends TempNode {
         else {
             this.frame = 0;
             this.needsFrame = false;
-            this.clearAccumulationTargets(renderer);
+            if (this.configuration.accumulate) this.clearAccumulationTargets(renderer);
         }
         this.lastViewMatrix.copy(this.camera.matrixWorldInverse);
         this.lastProjectionMatrix.copy(this.camera.projectionMatrix);
@@ -422,6 +422,7 @@ export class N8AONode extends TempNode {
                 readTarget = nextReadTarget;
                 writeTarget = nextWriteTarget;
             }
+            if (this.configuration.accumulate) {
             this.accumulationCurrentTextureNode.value = readTarget.texture;
             this.accumulationPreviousTextureNode.value =
                 this.accumulationTargetA.texture;
@@ -435,6 +436,11 @@ export class N8AONode extends TempNode {
             this.accumulationPreviousTextureNode.value =
                 this.accumulationTargetA.texture;
             this.compositeAoTextureNode.value = this.accumulationTargetA.texture;
+            } else {
+                // With no temporal accumulation the blend is exactly the
+                // current denoised AO. Avoid two clears and a full-screen copy.
+                this.compositeAoTextureNode.value = readTarget.texture;
+            }
         }
         renderer.setRenderTarget(this.outputTarget);
         this.quadMesh.material = this.compositeMaterial;

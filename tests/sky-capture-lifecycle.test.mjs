@@ -42,8 +42,10 @@ test('cloud-map refresh is amortized and a failed refresh retains the previous w
     const {T,renderer,uniforms}=fixture(),light=T.uniform(new T.Vector3(.2,1,.1).normalize()),time=T.uniform(0);
     const camera=new T.PerspectiveCamera(),parent=new T.Group();parent.position.set(100,10,300);parent.add(camera);parent.updateMatrixWorld(true);
     const map=makeCloudShadowMap(T,{transmittance:()=>T.float(.5),lightDirection:light,time});
-    const origin=uniforms[2],captureLight=uniforms[3];
-    await map.prepare(renderer,camera);assert.equal(map.stats.captures,1);assert.ok(origin.value.y>200,'nested camera uses its world position');
+    const {origin,light:captureLight,right,up}=map.projection;
+    await map.prepare(renderer,camera);assert.equal(map.stats.captures,1);
+    const relative=camera.getWorldPosition(new T.Vector3()).sub(origin.value);
+    assert.ok(Math.abs(relative.dot(right.value))<16&&Math.abs(relative.dot(up.value))<16,'nested camera uses its world position');
     assert.equal(await map.prepare(renderer,camera),false);
     const previous=origin.value.clone(),previousLight=captureLight.value.clone(),context=renderer.contextNode;
     camera.position.set(500,0,0);time.value=1;light.value.set(.4,1,.5).normalize();
@@ -53,6 +55,18 @@ test('cloud-map refresh is amortized and a failed refresh retains the previous w
     renderer.draw=null;assert.equal(await map.prepare(renderer,camera),true);assert.equal(map.stats.captures,2);
     let disposed=0;map.target.addEventListener('dispose',()=>disposed++);map.dispose();map.dispose();assert.equal(disposed,1);
     assert.equal(await map.prepare(renderer,camera,true),false);
+});
+
+test('near-horizontal cloud shadow columns cover roofs and preserve points along one light ray',async()=>{
+    const {T,renderer}=fixture(),light=T.uniform(new T.Vector3(.8,.008,-.6).normalize()),time=T.uniform(0);
+    const camera=new T.PerspectiveCamera();camera.position.set(30,2,70);camera.updateMatrixWorld(true);
+    const map=makeCloudShadowMap(T,{transmittance:()=>T.float(.5),lightDirection:light,time});await map.prepare(renderer,camera);
+    const {origin,right,up}=map.projection;
+    const project=p=>{const d=p.clone().sub(origin.value);return new T.Vector2(d.dot(right.value),d.dot(up.value));};
+    const ground=new T.Vector3(0,0,0),roof=new T.Vector3(0,180,0);
+    assert.ok(project(roof).length()<512,'tall roof remains inside the same map footprint at sunset');
+    assert.ok(project(ground).distanceTo(project(ground.clone().addScaledVector(light.value,20000)))<1e-8);
+    map.dispose();
 });
 
 test('ring cloud atlas shares captures, restores renderer state after failure and disposes once',async()=>{

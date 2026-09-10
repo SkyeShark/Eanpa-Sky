@@ -149,9 +149,14 @@ export function makeRainSurfaceField(T3, scene, options = {}) {
             // Continuous Y following would shift every world sample during a
             // jump. Quantize it too, with generous room above and below.
             center.y = Math.round(center.y / 8) * 8;
+            // Captures refresh moving geometry, but ordinary walking should
+            // not resample every static roof/terrain edge at that lower rate.
+            // Retain a world-stable footprint until the viewer uses its guard.
+            const recenter = !u.enabled.value || center.distanceToSquared(lastCenter) > (radius * .2) ** 2;
+            if (!recenter) center.copy(lastCenter);
             if (!force && u.enabled.value && time >= lastUpdate
                 && time - lastUpdate < 1 / stats.refreshHz
-                && center.distanceToSquared(lastCenter) < 4
+                && !recenter
                 && direction.dot(lastDirection) > 0.999) return false;
             camera.coordinateSystem = renderer.coordinateSystem;
             const oldProjection=u.viewProjection.value.clone();

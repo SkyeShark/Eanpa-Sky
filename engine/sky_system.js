@@ -2284,7 +2284,7 @@ import { createCloudMotion } from './cloud_motion.js';
             // and the numerical height/projection review.
             tslCloudTransmittance(pWorld) {
                 return Fn(() => {
-                    const dy = max(u.cloudLightDir.y, 0.008);
+                    const dy = max(u.cloudLightDir.y, 0.001);
                     const stormK = clamp(u.stormCanopy, 0, 1);
                     const ordinaryBottom = RING_R ? ringDeckY(pWorld.z) : u.cloudStart;
                     const stormBottom = RING_R
@@ -2292,8 +2292,10 @@ import { createCloudMotion } from './cloud_motion.js';
                         : stormLayerBottom();
                     const shadowBottom = mix(ordinaryBottom, stormBottom, stormK);
                     const shadowDepth = mix(RING_R ? float(RING_THICK) : u.cloudHeight, stormLayerDepth(), stormK);
-                    const hEnter = max(shadowBottom.sub(pWorld.y), 0).div(dy);
-                    const segL = shadowDepth.div(dy);
+                    const hEnter = RING_R?max(shadowBottom.sub(pWorld.y),0).div(dy)
+                        :max(shellFar(pWorld,u.cloudLightDir,shadowBottom),0);
+                    const segL = RING_R?shadowDepth.div(dy)
+                        :max(shellFar(pWorld,u.cloudLightDir,shadowBottom.add(shadowDepth)).sub(hEnter),0);
                     const od = float(0).toVar();
                     // Once a settled canopy has made celestial visibility zero,
                     // the real scene key is already exactly zero; skip every

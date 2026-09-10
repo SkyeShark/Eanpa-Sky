@@ -22,20 +22,27 @@ export function makeReflectionGeometry(T,renderer,scene,camera,receiverIds){
     // IDs are exact through 2048 in half float; use float for arbitrary host
     // object counts and previous depth at the kilometre scale.
     target.textures[1].type=T.FloatType;
-    const materials=new Map(),hidden=[],swapped=[];
+    const materials=new Map(),versions=new Map(),releases=new Map(),hidden=[],swapped=[];
     const context=T.context({eanpaReflectionSurfacePass:false});
     const size=new T.Vector2();let disposed=false;
     const skipMaterial=new T.MeshBasicNodeMaterial({visible:false});
     const captureMaterial=source=>{
         if(!source||!source.visible||!source.depthWrite)return skipMaterial;
-        let material=materials.get(source);if(material)return material;
+        let material=materials.get(source);
+        if(material && versions.get(source)!==source.version){releases.get(source)();material=null;}
+        if(material){
+            for(const k of ['displacementScale','displacementBias','alphaTest','opacity'])if(source[k]!==undefined)material[k]=source[k];
+            return material;
+        }
         material=new T.MeshBasicNodeMaterial({side:source.side,fog:false,toneMapped:false});
         material.name='reflection-geometry:'+source.name;
         for(const k of ['positionNode','vertexNode','displacementMap','displacementScale','displacementBias',
             'alphaTest','alphaTestNode','alphaMap','clippingPlanes','clipIntersection'])if(source[k]!==undefined)material[k]=source[k];
         if(source.alphaTest>0||source.alphaTestNode){material.map=source.map;material.opacityNode=source.opacityNode;}
         material.mrtNode=mrt;
-        materials.set(source,material);return material;
+        const release=()=>{material.dispose();materials.delete(source);versions.delete(source);releases.delete(source);source.removeEventListener('dispose',release);};
+        source.addEventListener('dispose',release);releases.set(source,release);
+        materials.set(source,material);versions.set(source,source.version);return material;
     };
     const resize=()=>{renderer.getDrawingBufferSize(size);if(size.x!==target.width||size.y!==target.height){
         target.setSize(size.x,size.y);renderer.initRenderTarget(target);}};
@@ -62,6 +69,6 @@ export function makeReflectionGeometry(T,renderer,scene,camera,receiverIds){
     return {target,objectId,
         render:()=>disposed?undefined:capture(()=>renderer.render(scene,camera)),
         compileAsync:()=>capture(()=>renderer.compileAsync(scene,camera)),
-        dispose(){if(disposed)return;disposed=true;target.dispose();skipMaterial.dispose();for(const m of materials.values())m.dispose();materials.clear();},
+        dispose(){if(disposed)return;disposed=true;target.dispose();skipMaterial.dispose();for(const release of [...releases.values()])release();},
     };
 }

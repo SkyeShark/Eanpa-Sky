@@ -80,7 +80,8 @@ const fixture=globalThis.__skyFixture={renderer,scene,camera,host,sky,weather,pi
         globalThis._frameStage='rain-surface';
         await weather.prepareFrame(renderer,camera);await sky.prepareCloudShadows(renderer,camera);
         globalThis._frameStage='spatial-clouds';
-        await spatial.render();await pipeline.render();state.completedFrames++;
+        await spatial.render();globalThis._frameStage='reflection-pipeline';
+        await pipeline.render();state.completedFrames++;
     },
 };
 document.getElementById('progress').textContent='Compiling sky, weather and reflection passes…';

@@ -968,9 +968,16 @@ import { ringSolarVisibility, ringSolarVisibilityNode } from './ring_eclipse.js'
             // local grey approximation is what makes the far sheet read as the
             // SAME weather as the deck overhead rather than a bright sheet
             // pasted behind a dark storm.
-            cloudMat.emissiveNode = bright.mul(cu.rad)
+            const localCloudLight = bright
                 .mul(float(0.22).add(Ac.litK.mul(0.78)))
-                .mul(Ac.trans).mul(Ac.expK)
+                .mul(Ac.expK);
+            // At local midnight the opposite clouds are still in sunlight.
+            // The local moon palette/exposure must not turn those sunlit
+            // clouds into dark opaque patches over the illuminated far arc.
+            const farDaylight = vec3(.90,.93,1).mul(.24)
+                .mul(mix(float(1),float(.7),smoothstep(.2,.9,field)));
+            cloudMat.emissiveNode = mix(localCloudLight,farDaylight,
+                float(1).sub(Ac.dayF).mul(Ac.litK)).mul(cu.rad).mul(Ac.trans)
                 .add(Ac.insc.mul(float(0.35)));
             // NEAR FADE: the sheet's local section would clip through the scene
             // floor (it passes ~ground level near the viewer) — and clouds HERE

@@ -5,6 +5,7 @@ import { makeScreenSpaceTrace } from './screen_space_trace.js';
 import { makeLocalReflectionProbe } from './local_reflection_probe.js';
 import { makeSkyGeometryLayer } from './sky_geometry_layer.js';
 import { makeReflectionGeometry } from './reflection_geometry.js';
+import { hasVisibleEmission } from './visible_emission.js';
 
 // Resolve incoming radiance before Three evaluates each native material BRDF.
 // Trace current unlit geometry; reproject only the previous HDR radiance.
@@ -40,9 +41,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const motion=T.texture(geometry.target.textures[1],T.screenUV);
     for(const node of [currentDepth,currentIds,motion])node.updateMatrix=false;
     for(const node of [sourceIds,currentIds,motion])node.setSampler(false);
-    const previousView = shared(new T.Matrix4());
     const previousProjection = shared(camera.projectionMatrix.clone());
-    const previousProjectionInverse = shared(camera.projectionMatrixInverse.clone());
     const previousNear = shared(camera.near), previousFar = shared(camera.far);
     const historyValid = shared(0);
     const historySize=shared(new T.Vector2(1,1));
@@ -55,7 +54,10 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
             const uv=coord.sub(m.xy).toVar(),result=T.vec4(0).toVar();
             T.If(uv.greaterThan(T.vec2(0)).all().and(uv.lessThan(T.vec2(1)).all()),()=>{
                 const old=sourceIds.load(uv.mul(historySize).floor()).toVar();
-                const z=T.perspectiveDepthToViewZ(sourceDepth.sample(uv).r,previousNear,previousFar);
+                const rawDepth=sourceDepth.sample(uv).r;
+                const z=renderer.logarithmicDepthBuffer ? T.logarithmicDepthToViewZ(rawDepth,previousNear,previousFar)
+                    : camera.isPerspectiveCamera ? T.perspectiveDepthToViewZ(rawDepth,previousNear,previousFar)
+                    : T.orthographicDepthToViewZ(rawDepth,previousNear,previousFar);
                 const tolerance=m.z.abs().mul(.003).max(.03);
                 const valid=T.abs(old.a.sub(m.a)).lessThan(.25).and(T.abs(z.sub(m.z)).lessThan(tolerance));
                 T.If(valid,()=>{result.assign(sourceColor.sample(uv).level(lod));});
@@ -159,6 +161,9 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     pipeline.outputNode = fxaaFactory(display);
     pipeline.outputColorTransform = false;
     let disposed = false, aoEnabled = true, bloomEnabled = true, auditing = false;
+    let emissionPresent = true;
+    const renderBloom = glow.updateBefore.bind(glow);
+    glow.updateBefore = frame => { if (bloomEnabled && emissionPresent) renderBloom(frame); };
     const bufferSize = new T.Vector2(), lastPosition = new T.Vector3();
     const lastOrientation = new T.Quaternion();
     let hasHistory = false;
@@ -182,9 +187,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
             renderer.copyTextureToTexture(scenePass.getTexture(channel), target);
         }
         renderer.copyTextureToTexture(geometry.target.textures[1],history.textures[1]);
-        previousView.value.copy(camera.matrixWorldInverse);
         previousProjection.value.copy(camera.projectionMatrix);
-        previousProjectionInverse.value.copy(camera.projectionMatrixInverse);
         previousNear.value = camera.near; previousFar.value = camera.far;
         lastPosition.copy(camera.position); lastOrientation.copy(camera.quaternion);
         hasHistory = true; historyValid.value = 1;
@@ -195,8 +198,9 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
         ssrMaterialResponse:'native-three-base-clearcoat-anisotropy-iridescence-specular-ior',
         nativeEnvironmentPbr:true, sceneColorAttachments:4, aoAvailable:true, aoQuality:'Medium',
         bloomAvailable:true, get aoEnabled(){return aoEnabled}, get bloomEnabled(){return bloomEnabled},
+        get bloomActive(){return bloomEnabled && emissionPresent},
         setAOEnabled(value){aoEnabled=!!value;aoWeight.value=aoEnabled?1:0;n8ao.enabled=aoEnabled;return aoEnabled;},
-        setBloomEnabled(value){bloomEnabled=!!value;bloomWeight.value=bloomEnabled?1:0;return bloomEnabled;},
+        setBloomEnabled(value){bloomEnabled=!!value;return bloomEnabled;},
         setAuditContributions({ssr=true,sky=true,probe=true}={}){ssrWeight.value=ssr?1:0;skyWeight.value=sky?1:0;probeWeight.value=probe?1:0;auditing=!ssr||!sky||!probe;},
         setSsrParams(values={}){for(const k of ['maxDistance','thickness','quality','coarseDepthGate'])if(values[k]!==undefined)params[k].value=values[k];},
         setEnvironment(texture){environmentTexture=texture;invalidateHistory();localProbe.setEnvironment(texture);
@@ -215,7 +219,10 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
             finally {for(const layer of skyLayers)layer.restoreVisibility();renderer.contextNode=savedContext;renderer.setRenderTarget(savedTarget);renderer.setMRT(savedMrt);}
         },
         async render(){if(!disposed){try{prepareHistory();for(const layer of skyLayers)await layer.render();
-            if(!auditing)localProbe.update();await geometry.render();pipeline.render();if(!auditing)captureHistory();
+            if(!auditing)localProbe.update();await geometry.render();
+            emissionPresent=hasVisibleEmission(scene,camera);
+            bloomWeight.value=bloomEnabled && emissionPresent ? 1 : 0;
+            pipeline.render();if(!auditing)captureHistory();
         }finally{for(const layer of skyLayers)layer.restoreVisibility();}}},
         dispose(){if(disposed)return;disposed=true;pipeline.dispose();for(const layer of skyLayers)layer.dispose();localProbe.dispose();geometry.dispose();history.dispose();scenePass.dispose();n8ao.dispose();glow.dispose();
             display._quadMesh?.material?.dispose();display.renderTarget?.dispose();display.dispose();

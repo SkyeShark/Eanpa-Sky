@@ -6,7 +6,7 @@
     }
     const T = globalThis.THREE;
     const renderer = _reflectionPipeline.pipeline.renderer;
-    const { makeRainSurfaceField } = await import('/engine/rain_surface_field.js');
+    const { makeRainSurfaceField } = await import('/engine/rain_surface_field.js?contract=' + Date.now());
     const { makeWeatherListener } = await import('/engine/weather_listener.js');
     const scene = new T.Scene();
     const resources = [];
@@ -97,6 +97,14 @@
         });
         const restored = roof.material === material && instances.material === material
             && raised.material === raisedMat && cutout.material === cutoutMat;
+        const fixedProjection=field.uniforms.viewProjection.value.clone();
+        view.position.x+=2;view.updateMatrixWorld(true);
+        await field.prepareFrame(renderer,view,{time:1});
+        const walkingGridStable=field.uniforms.viewProjection.value.equals(fixedProjection);
+        view.position.x+=14;view.updateMatrixWorld(true);
+        await field.prepareFrame(renderer,view,{time:2});
+        const guardRecenters=!field.uniforms.viewProjection.value.equals(fixedProjection);
+        view.position.set(0,3,0);view.updateMatrixWorld(true);
         await field.prepareFrame(renderer, view, { force: true, wind: { x: 4, z: 0 }, fallSpeed: 9 });
         renderer.setRenderTarget(output); quad.material = probeMat;
         await quad.renderAsync(renderer);
@@ -147,9 +155,9 @@
         field.invalidate();
         await field.prepareFrame(renderer, view, { force: true });
         const rebuiltSource = field.stats.captureMaterials === cachedBefore;
-        return { pass: restored && failureRestored && releasedSource && rebuiltSource
+        return { pass: restored && failureRestored && releasedSource && rebuiltSource && walkingGridStable && guardRecenters
                 && results.every(r => r.pass) && wind.every(r => r.pass)&&listenerResults.every(r=>r.pass),
-            restored, failureRestored, releasedSource, rebuiltSource, results, wind, listenerResults, stats: { ...field.stats } };
+            restored, failureRestored, releasedSource, rebuiltSource, walkingGridStable, guardRecenters, results, wind, listenerResults, stats: { ...field.stats } };
     } finally {
         T.RendererUtils.restoreRendererState(renderer, rendererState);
         listener.dispose();field.dispose(); output.dispose(); probeMat.dispose(); normalMat.dispose();

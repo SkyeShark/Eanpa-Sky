@@ -18539,7 +18539,10 @@ class SkinningNode extends Node {
 
 		_frameId.set( skeleton, frame.frameId );
 
-		if ( this.previousBoneMatricesNode !== null ) {
+		// A shadow/probe variant can be the first to update this skeleton.
+		// Preserve previous data once per frame whenever any material requested
+		// it, even if this particular variant does not output motion vectors.
+		if ( this.previousBoneMatricesNode !== null || skeleton.previousBoneMatrices != null ) {
 
 			if ( skeleton.previousBoneMatrices === null ) {
 

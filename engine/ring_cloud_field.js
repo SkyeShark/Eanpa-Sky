@@ -18,18 +18,17 @@ export function makeRingCloudField(T, uniforms, time, {width=2048,height=64,refr
         return mix(mix(at(0,0),at(1,0),s.x),mix(at(0,1),at(1,1),s.x),s.y);
     };
     const coordinate=T.uv(),drift=uniforms.displacement;
-    const octave=(n,weight,direction,warp)=>{
+    const octave=(n,weight,warp)=>{
         let p=coordinate.sub(drift).mul(vec2(n,n/33.4));
         if(warp)p=p.add(warp.mul(n*.012));
         return noise(p,vec2(n,1e6)).mul(weight);
     };
-    const macro=octave(6,1,1);
-    const warp=vec2(octave(10,1,.6).sub(.5),octave(10,1,-.7).sub(.5));
-    const filaments=octave(40,.38,1,warp).add(octave(80,.26,-.8,warp))
-        .add(octave(160,.19,1.3,warp)).add(octave(320,.12,-1.1,warp)).add(octave(640,.07,.9,warp));
+    const macro=octave(6,1);
+    const warp=vec2(octave(10,1).sub(.5),octave(10,1).sub(.5));
+    const filaments=octave(40,.38,warp).add(octave(80,.26,warp))
+        .add(octave(160,.19,warp)).add(octave(320,.12,warp)).add(octave(640,.07,warp));
     const field=macro.mul(.62).add(filaments.mul(.55));
     const threshold=float(.88).sub(uniforms.cover.mul(.55));
-    const edge=smoothstep(.02,.15,coordinate.y).mul(float(1).sub(smoothstep(.85,.98,coordinate.y)));
     const coverage=smoothstep(threshold,threshold.add(.15),field)
         .mul(float(.85).sub(uniforms.grey.mul(.12))).mul(uniforms.dens).clamp(0,1);
     const material=new T.MeshBasicNodeMaterial({toneMapped:false,fog:false});

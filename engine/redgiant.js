@@ -14,7 +14,7 @@
 //   rg.attach({ scene, sky });
 //   // per frame, after sky.update(t):
 //   rg.update(t);
-// opts: angularRadius (rad, default 0.28 ≈ 32° disc), granScale (32),
+// opts: angularRadius (rad, default 0.28 ≈ 32° disc), granScale (52),
 //       shield (true), hexScale (110), shieldRadius (19000), flares (slot array)
 globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
     const T3 = THREE;
@@ -156,8 +156,8 @@ globalThis.makeRedGiant = async function ({ opts = {} } = {}) {
             const anchor=f.center?vec2(...f.center):radial.mul(.984);
             const rel=vec2(lx,ly).sub(anchor);
             const x=dot(rel,tangent),y=dot(rel,radial);
-            const width=env.mul(.035).add(f.center?.055:.065);
-            const height=env.mul(f.center?.048:.11).add(.012);
+            const width=env.mul(.035).add(f.center ? .055 : .065);
+            const height=env.mul(f.center ? .048 : .11).add(.012);
             const along=x.div(width);
             const flow=vn(vec2(along.mul(9),uStarT.mul(.22).add(f.ph0*31))).mul(.65).add(.35);
             let band=float(0);
