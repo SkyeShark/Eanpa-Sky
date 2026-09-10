@@ -1,8 +1,9 @@
 # Ringworld eclipse and distant surface banding
 
-Local review after v0.2.1. The initial center/depth corrections are in
+Reviewed follow-up to v0.2.1. The initial center/depth corrections are in
 `a87c839`; the remaining solar-tangent cutoff correction is in `dfc9c94`.
-These changes have not been published to the live demo.
+Approved for publication on September 10; available in the
+[live demo](https://skyeshark.github.io/Eanpa-Sky/).
 
 [Before/after comparison, current captures and recordings](qa/review/ring-depth-20260910/index.html)
 

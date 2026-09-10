@@ -1,6 +1,6 @@
 # Release notes
 
-## Unreleased — Ringworld review fixes
+## 0.2.1 follow-up — 2026-09-10
 
 Correct the eclipse cylinder's center to match the displaced band. Keep valid
 short shadow rays at the local solar tangent, removing the remaining water-only
