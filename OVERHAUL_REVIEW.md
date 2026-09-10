@@ -9,9 +9,10 @@ CPU-only measurements did not establish that the requested overhaul was complete
 The current work replaces the reflection path, adds shared cloud shadows and
 geometry-aware rain, rebuilds the ring relief, and corrects the moon's motion.
 
-Everything is on local branch `overhaul/2026-09-06`. Checkpoint `e2e6496`
+This work is included in v0.2.0. It was reviewed on branch
+`overhaul/2026-09-06`. Checkpoint `e2e6496`
 preserves the 15 files already modified when work began. The implementation is
-saved in subsequent local commits; nothing has been pushed. Eidoverse porting
+saved in the subsequent commits. Eidoverse porting
 remains a later task.
 
 ## Reflections

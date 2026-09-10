@@ -1,6 +1,6 @@
 <img src="assets/brand/eanpa_wordmark.png" alt="Eanpa Engine" width="520">
 
-# Eanpa Sky Engine — v0.1
+# Eanpa Sky Engine — v0.2
 
 **[▶ Live demo](https://skyeshark.github.io/Eanpa-Sky/)** (WebGPU required — Chrome or Edge)
 
@@ -24,10 +24,12 @@ JavaScript/WASM content types explicitly. If the review server is already
 running, reuse it. The first load warms the WebGPU pipelines before revealing
 the world.
 
-Local overhaul details and retained measurements are in
+The v0.2 release includes the sky, reflection, weather and surface-water overhaul.
+See [the release notes](CHANGELOG.md) for its changes and remaining limits.
+Implementation details and retained measurements are in
 [OVERHAUL_REVIEW.md](OVERHAUL_REVIEW.md). The selected capture gallery is at
-[qa/review/index.html](qa/review/index.html). These local changes have not been
-pushed to the hosted demo.
+[qa/review/index.html](qa/review/index.html), with the latest red giant and rain
+corrections in [the September 10 report](REVIEW_2026-09-10.md).
 
 ## What to try
 
@@ -47,7 +49,7 @@ wetness and puddles use nearby surface geometry; see [engine/RAIN.md](engine/RAI
 
 ## State of the project
 
-This is an early, honest 0.1 — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
+This is an early 0.2 release — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 
 ## Credits & licenses
 

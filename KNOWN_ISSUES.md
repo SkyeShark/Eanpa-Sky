@@ -1,9 +1,10 @@
 # Known limitations and review targets
 
-The revised standalone overhaul and its measured evidence are documented in
+The v0.2 standalone overhaul and its measured evidence are documented in
 [OVERHAUL_REVIEW.md](OVERHAUL_REVIEW.md). The latest motion, lighting and
 sky-only benchmark pass is in [REVIEW_2026-09-09.md](REVIEW_2026-09-09.md).
-Changes are local pending review.
+The final red giant and rain-arrival corrections are in
+[REVIEW_2026-09-10.md](REVIEW_2026-09-10.md).
 
 - **Startup and sky/quality replacement are expensive.** Shader compilation and
   environment preparation can take tens of seconds behind the loading screen.

@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="application-version" content="0.2.0">
 <link rel="icon" type="image/png" href="./assets/brand/eanpa_favicon.png">
-<title>Eanpa Engine</title>
+<title>Eanpa Engine — v0.2</title>
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; background: #06080c; }
   #view { position: fixed; inset: 0; }
@@ -16,6 +17,7 @@
     backdrop-filter: blur(6px); user-select: none;
   }
   #panel h1 { font-size: 13px; margin: 0 0 8px; letter-spacing: 0.12em; color: #8fd8ff; }
+  #panel .version { float: right; font-size: 11px; letter-spacing: normal; color: #93a8b4; }
   #panel label { display: block; margin: 8px 0 2px; color: #7f95a3; font-size: 11px; letter-spacing: 0.04em; }
   #panel select, #panel input[type=range] { width: 100%; accent-color: #35b7ff; }
   #panel select { background: #0d141c; color: #cfe3ee; border: 1px solid #2a3844; border-radius: 6px; padding: 4px; }
@@ -63,7 +65,7 @@
 <body>
 <canvas id="view"></canvas>
 <div id="panel">
-  <h1><img src="./assets/brand/eanpa_favicon.png" alt="" width="20" height="20" style="vertical-align:-4px;margin-right:7px">EANPA ENGINE</h1>
+  <h1><img src="./assets/brand/eanpa_favicon.png" alt="" width="20" height="20" style="vertical-align:-4px;margin-right:7px">EANPA ENGINE <span class="version">v0.2</span></h1>
   <label>Skybox</label>
   <select id="skybox">
     <option value="earth" selected>Earth</option>
@@ -129,7 +131,7 @@
 <script type="module">
   // Pin one coherent graph revision. Long-lived Chromium module maps can retain
   // an already-instantiated dependency even after a cache-disabled page reload.
-  import('./src/main.js?rev=reflection-holdout-20260805').catch((e) => {
+  import('./src/main.js?rev=0.2.0').catch((e) => {
     document.getElementById('boot').textContent = 'boot failed: ' + e.message;
     console.error(e);
   });
