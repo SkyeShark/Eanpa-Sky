@@ -21,6 +21,8 @@ corrections, is available in the [live demo](https://skyeshark.github.io/Eanpa-S
 - Weather warmup, renderer resource ownership and shared sky caches reduce
   avoidable stalls and repeated work. Lighting, lightning and player contact
   fixes are included alongside the retained regression checks.
+- GitHub Pages now deploys a checked runtime package through Actions. Editor and
+  source duplicates stay in GitHub without consuming the hosted site's budget.
 
 Validation includes 70 Node tests, numerical GPU contracts, visual captures and
 normal-speed motion recordings. Shared sky/effects benchmarks include native

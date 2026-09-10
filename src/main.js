@@ -88,7 +88,7 @@ if (globalThis.GPUDevice) {
 
 // ---- console forwarding: mirror logs/errors to the dev server so the
 // assistant reads the page console directly (POST /__log, fire-and-forget)
-{
+if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
     const forwardLog = (level, parts) => {
         try {
             const text = parts.map((part) => {
