@@ -63,7 +63,11 @@ The standalone ring registers `sky.setSolarOcclusion(position =>
 ring.solarVisibilityNode(position))` before material warmup. This applies the
 same analytic cylinder shadow to each PBR receiver and the visible band. It
 adds no shadow texture, geometry search, or capture pass. The ring's geometry
-center, rather than the imported group's pivot, defines the cylinder.
+center, rather than the imported group's pivot, defines the cylinder. A radial
+roundoff tolerance retains zero-length surface exits at the local solar tangent;
+discarding short rays here incorrectly lights sea-level water. The authored
+night lighting remains in place, with its handoff blended over the last 0.05
+of solar elevation sine (about 2.9 degrees) before the local observer's sunset.
 
 With this hook installed, `applyToLights` leaves the daytime key at its normal
 intensity; the material shadows each surface. `solarVisibility` still controls

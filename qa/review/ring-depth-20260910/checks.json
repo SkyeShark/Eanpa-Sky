@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-10T14:19:25.321Z",
+  "date": "2026-09-10T18:41:09.153Z",
   "captures": [
     {
       "name": "reverse-detail",
@@ -100,6 +100,44 @@
       ],
       "look": [
         0.55,
+        3.141592653589793,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 1,
+        "skyVisibility": 1
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "tangent-detail",
+      "hours": 10.5,
+      "pitch": 0.506,
+      "yaw": 3.141592653589793,
+      "fov": 22,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        0.16242894347198716,
+        0.841327160852789,
+        0.515543835899489
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.506,
         3.141592653589793,
         0,
         "YXZ"
@@ -299,8 +337,274 @@
       "cloudDensity": 0,
       "weatherTransition": false,
       "solar": {
-        "solarVisibility": 0.39663081640856573,
+        "solarVisibility": 0.3966308164085657,
         "skyVisibility": 0.4931698857831952
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "egress-reverse",
+      "hours": 12.47,
+      "pitch": 0.28,
+      "yaw": 3.141592653589793,
+      "fov": 62,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        -0.055028971772267815,
+        0.8790771834518225,
+        0.47349246857801
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.28,
+        3.141592653589793,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 0.3966308164085657,
+        "skyVisibility": 0.4931698857831952
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "afternoon-forward",
+      "hours": 13.5,
+      "pitch": 0.55,
+      "yaw": 0,
+      "fov": 62,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        -0.21130700045137027,
+        0.841327160852789,
+        0.4975117686765107
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.55,
+        0,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 1,
+        "skyVisibility": 1
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "afternoon-reverse",
+      "hours": 13.5,
+      "pitch": 0.55,
+      "yaw": 3.141592653589793,
+      "fov": 62,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        -0.21130700045137027,
+        0.841327160852789,
+        0.4975117686765107
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.55,
+        3.141592653589793,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 1,
+        "skyVisibility": 1
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "sunrise-before",
+      "hours": 5.99,
+      "pitch": 0.55,
+      "yaw": 3.141592653589793,
+      "fov": 62,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        0.8854145641603166,
+        -0.002832934978594355,
+        0.46479352841041544
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.55,
+        3.141592653589793,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 1,
+        "skyVisibility": 1
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "sunrise-after",
+      "hours": 6.01,
+      "pitch": 0.55,
+      "yaw": 3.141592653589793,
+      "fov": 62,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        0.8829698441799058,
+        0.002832934978594355,
+        0.4694211635070579
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.55,
+        3.141592653589793,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 1,
+        "skyVisibility": 1
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "sunset-before",
+      "hours": 17.99,
+      "pitch": 0.55,
+      "yaw": 0,
+      "fov": 62,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        -0.9856204428315675,
+        0.0028329349785948515,
+        -0.16895063525157827
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.55,
+        0,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 1,
+        "skyVisibility": 1
+      },
+      "spatial": true,
+      "errors": []
+    },
+    {
+      "name": "sunset-after",
+      "hours": 18.01,
+      "pitch": 0.55,
+      "yaw": 0,
+      "fov": 62,
+      "center": [
+        0,
+        4921.660888671875,
+        -0.458740234375
+      ],
+      "sun": [
+        -0.9847219199266073,
+        -0.002832934978594587,
+        -0.17411121415768563
+      ],
+      "observer": [
+        0,
+        1.82,
+        96
+      ],
+      "look": [
+        0.55,
+        0,
+        0,
+        "YXZ"
+      ],
+      "cameraNear": 0.18,
+      "cloud": "clear",
+      "cloudDensity": 0,
+      "weatherTransition": false,
+      "solar": {
+        "solarVisibility": 1,
+        "skyVisibility": 1
       },
       "spatial": true,
       "errors": []
@@ -350,54 +654,108 @@
     "checks": [
       {
         "hours": 10.5,
-        "points": 33,
-        "partial": 1,
-        "maxError": 0.0002329877258263613
+        "points": 396,
+        "partial": 2,
+        "maxError": 0.0002329877258263613,
+        "tangentBlockedChecks": 75,
+        "tangentMax": 0
       },
       {
         "hours": 11.44,
-        "points": 33,
-        "partial": 3,
-        "maxError": 0.00045557549770669503
+        "points": 396,
+        "partial": 12,
+        "maxError": 0.00045557549770669503,
+        "tangentBlockedChecks": 75,
+        "tangentMax": 0
       },
       {
         "hours": 11.47,
-        "points": 33,
-        "partial": 4,
-        "maxError": 0.00018656820655016393
+        "points": 396,
+        "partial": 12,
+        "maxError": 0.0004049227658121657,
+        "tangentBlockedChecks": 75,
+        "tangentMax": 0
       },
       {
         "hours": 11.5,
-        "points": 33,
-        "partial": 4,
-        "maxError": 0.0004286768091901205
+        "points": 396,
+        "partial": 18,
+        "maxError": 0.00044788709377252545,
+        "tangentBlockedChecks": 75,
+        "tangentMax": 0
       },
       {
         "hours": 12,
-        "points": 33,
-        "partial": 10,
-        "maxError": 0.00018840760261629175
+        "points": 396,
+        "partial": 58,
+        "maxError": 0.00018840760261629175,
+        "tangentBlockedChecks": 75,
+        "tangentMax": 0
       },
       {
         "hours": 12.47,
-        "points": 33,
-        "partial": 4,
-        "maxError": 0.0002430249760396186
+        "points": 396,
+        "partial": 15,
+        "maxError": 0.0004036943657039771,
+        "tangentBlockedChecks": 75,
+        "tangentMax": 0
       },
       {
         "hours": 13,
-        "points": 33,
+        "points": 396,
+        "partial": 1,
+        "maxError": 0.00010122654680166931,
+        "tangentBlockedChecks": 75,
+        "tangentMax": 0
+      },
+      {
+        "hours": 13.5,
+        "points": 396,
+        "partial": 2,
+        "maxError": 0.00024556091548044723,
+        "tangentBlockedChecks": 0,
+        "tangentMax": null
+      },
+      {
+        "hours": 5.99,
+        "points": 396,
         "partial": 0,
-        "maxError": 0
+        "maxError": 0,
+        "tangentBlockedChecks": 0,
+        "tangentMax": null
+      },
+      {
+        "hours": 6.01,
+        "points": 396,
+        "partial": 189,
+        "maxError": 0.000010491486614805368,
+        "tangentBlockedChecks": 0,
+        "tangentMax": null
+      },
+      {
+        "hours": 17.99,
+        "points": 396,
+        "partial": 159,
+        "maxError": 0.00045461599431551036,
+        "tangentBlockedChecks": 0,
+        "tangentMax": null
+      },
+      {
+        "hours": 18.01,
+        "points": 396,
+        "partial": 0,
+        "maxError": 0,
+        "tangentBlockedChecks": 0,
+        "tangentMax": null
       },
       {
         "hours": 0,
-        "points": 33,
+        "points": 396,
         "partial": 0,
-        "maxError": 0
+        "maxError": 0,
+        "tangentBlockedChecks": 0,
+        "tangentMax": null
       }
     ]
-  },
-  "revision": "a87c839",
-  "scope": "Ring geometry depth and spatial eclipse; full standalone on one owned WebGPU browser"
+  }
 }

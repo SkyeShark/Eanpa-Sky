@@ -2,9 +2,12 @@
 
 ## Unreleased — Ringworld review fixes
 
-Correct the eclipse cylinder's center to match the displaced band, removing the
-one-sided lighting break. Give the existing celestial depth pass a suitable
-near plane to prevent distant land and water from producing stripes. Local PBR
+Correct the eclipse cylinder's center to match the displaced band. Keep valid
+short shadow rays at the local solar tangent, removing the remaining water-only
+lighting cutoff on the arc facing away from the temple. Smooth the existing
+twilight handoff to the authored night illumination. Give the existing celestial
+depth pass a suitable near plane to prevent distant land and water from producing
+stripes. Local PBR
 surfaces now receive the same moving eclipse shadow as the ring.
 
 See [the Ringworld validation and visual comparison](RING_REVIEW_2026-09-10.md).

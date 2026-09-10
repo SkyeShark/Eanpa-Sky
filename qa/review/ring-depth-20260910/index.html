@@ -2,51 +2,81 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ringworld — eclipse and surface review</title>
+<title>Ringworld &mdash; shadow cutoff follow-up</title>
 <style>
   :root{color-scheme:dark;font:16px/1.55 system-ui,sans-serif;background:#10171e;color:#e0e9f0}
   body{max-width:1500px;margin:auto;padding:24px}h1{font-size:28px}h2{font-size:21px;margin-top:32px}
   p{max-width:90ch;color:#b8c9d6}a{color:#8cd6ff}figure{margin:0}img,video{width:100%;display:block;background:#071018;border-radius:8px}
   figcaption{padding:10px 0;color:#b8c9d6}.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-  select{font:inherit;padding:8px;background:#1b2c3b;color:inherit;border:1px solid #6e8fa6;border-radius:5px;margin:0 0 16px 8px}
-  :focus-visible{outline:2px solid #8cd6ff;outline-offset:3px}video{max-height:80vh}
+  select,button{font:inherit;padding:8px;background:#1b2c3b;color:inherit;border:1px solid #6e8fa6;border-radius:5px;margin:0 8px 16px 0}
+  button{cursor:pointer}button[aria-pressed="true"]{background:#244b65;border-color:#8cd6ff}
+  :focus-visible{outline:2px solid #8cd6ff;outline-offset:3px}video{max-height:80vh}summary{cursor:pointer;color:#8cd6ff;margin:20px 0}
   @media(max-width:800px){.pair{grid-template-columns:1fr}body{padding:16px}}
 </style>
-<h1>Ringworld eclipse and distant surface review</h1>
-<p>Local changes after v0.2.1. The broad lighting break and fine surface stripes
-  had separate causes: the eclipse cylinder's center and distant depth precision.</p>
-<p><a href="../../../?skybox=ringworld">Open the engine</a> ·
-  <a href="../../../RING_REVIEW_2026-09-10.md">Technical report</a> · <a href="checks.json">GPU checks</a></p>
-<h2>Same frozen view, two isolated corrections</h2>
-<p>The left view has both artifacts. Compare the center correction alone with
-  both corrections to see which removes the broad break and which removes the
-  fine stripes. These diagnostic captures keep the camera, sun, and animation
-  time fixed. Click an image to inspect it at full size.</p>
-<label for="comparison">Right view</label>
-<select id="comparison"><option value="matched-center-depth">Center and depth corrected</option><option value="matched-center">Center corrected only</option></select>
-<div class="pair">
-  <figure><a href="matched-original.png"><img src="matched-original.png" alt="Original distant ring with a broad shadow break and fine depth stripes"></a><figcaption>Original center and depth range</figcaption></figure>
-  <figure><a id="result-link" href="matched-center-depth.png"><img id="result" src="matched-center-depth.png" alt="Ring after correcting its center and celestial depth range"></a><figcaption id="result-caption">Center and depth corrected</figcaption></figure>
-</div>
-<h2>Moving eclipse in the engine</h2>
-<p>The normal 120-second day cycle, recorded through eclipse entry and exit.
-  Surface lighting and environment updates use the regular frame loop.</p>
-<video src="eclipse.webm" poster="ingress-forward.png" controls preload="none" playsinline></video>
-<p><a href="motion.json">Recording metadata</a></p>
-<h2>Final implementation</h2>
+<h1>Ringworld shadow cutoff &mdash; follow-up review</h1>
+<p>The previous review missed the cutoff you pointed out. Correcting the cylinder
+  center and distant depth precision had left a separate error: short shadow rays
+  were discarded at the arc's solar tangent, lighting the water while the raised
+  land stayed shadowed. The revised intersection keeps that part of the ring opaque.</p>
+<p><a href="../../../?skybox=ringworld">Open the local engine</a> &middot;
+  <a href="../../../RING_REVIEW_2026-09-10.md">Technical report</a> &middot; <a href="checks.json">GPU checks</a></p>
+<h2>The arc facing away from the temple, at 10.5h</h2>
+<p>Switch between matched captures to inspect the former horizontal break in the
+  water. Camera, sun, and ring animation time match. Click the image for full size.
+  These are local changes; the live demo has not been updated.</p>
+<button id="before" aria-pressed="false">Before this correction</button>
+<button id="after" aria-pressed="true">Current correction</button>
+<figure><a id="comparison-link" href="tangent-after.png"><img id="comparison-image" src="tangent-after.png" alt="Corrected morning shadow on the arc facing away from the temple"></a><figcaption id="comparison-caption">Current correction &mdash; continuous shadow across water and land.</figcaption></figure>
+<details>
+  <summary>Isolated solar visibility: what caused the cutoff</summary>
+  <p>Black means blocked sunlight; white means visible sunlight. Previously,
+    water turned white abruptly across a horizontal boundary while land remained
+    black. The corrected mask retains the oblique shadow edge set by the ring width.</p>
+  <div class="pair">
+    <figure><a href="tangent-before-mask.png"><img src="tangent-before-mask.png" loading="lazy" alt="Old shadow mask with white water above a horizontal cutoff"></a><figcaption>Before: water incorrectly escapes its own ground shadow.</figcaption></figure>
+    <figure><a href="tangent-after-mask.png"><img src="tangent-after-mask.png" loading="lazy" alt="Corrected continuous dark mask at the same view"></a><figcaption>After: continuous occlusion through the tangent.</figcaption></figure>
+  </div>
+</details>
+<h2>Current engine captures</h2>
 <label for="view">Captured view</label>
 <select id="view">
-  <option value="ingress-forward">Eclipse entry — forward</option>
-  <option value="ingress-reverse">Eclipse entry — reverse</option>
-  <option value="egress-forward">Eclipse exit</option>
-  <option value="total-forward">Total eclipse</option>
-  <option value="morning-reverse">Morning — formerly broken arc</option>
-  <option value="night-glint">Night — sunlit ring and water reflection</option>
+  <option value="morning-reverse">Morning &mdash; away from the temple</option>
+  <option value="tangent-detail">Close-up of the former cutoff</option>
+  <option value="morning-forward">Morning &mdash; toward the temple</option>
+  <option value="ingress-forward">Eclipse entry &mdash; toward the temple</option>
+  <option value="ingress-reverse">Eclipse entry &mdash; away from the temple</option>
+  <option value="total-forward">Total eclipse &mdash; toward the temple</option>
+  <option value="total-reverse">Total eclipse &mdash; away from the temple</option>
+  <option value="egress-forward">Eclipse exit &mdash; toward the temple</option>
+  <option value="egress-reverse">Eclipse exit &mdash; away from the temple</option>
+  <option value="afternoon-forward">Afternoon &mdash; toward the temple</option>
+  <option value="afternoon-reverse">Afternoon &mdash; away from the temple</option>
+  <option value="sunrise-before">Just before sunrise</option>
+  <option value="sunrise-after">Just after sunrise</option>
+  <option value="sunset-before">Just before sunset</option>
+  <option value="sunset-after">Just after sunset</option>
+  <option value="night-glint">Night &mdash; sunlit ring and water reflection</option>
 </select>
-<figure><a id="view-link" href="ingress-forward.png"><img id="capture" src="ingress-forward.png" alt="Eclipse shadow crossing the ring and local terrain"></a><figcaption id="view-caption">Eclipse entry — forward</figcaption></figure>
-<p>82 tests pass, including camera framing and independent celestial/local-light
-  response. 264 GPU visibility comparisons pass. Frame-rate overlays in these
-  visual captures are not controlled benchmarks.</p>
+<figure><a id="view-link" href="morning-reverse.png"><img id="capture" src="morning-reverse.png" loading="lazy" alt="Morning shadow on the arc facing away from the temple"></a><figcaption id="view-caption">Morning &mdash; away from the temple</figcaption></figure>
+<h2>Moving eclipse in the engine</h2>
+<p>Both directions recorded with the normal 120-second day cycle and normal
+  surface lighting and environment updates. The brief twilight handoff is smooth;
+  midday darkness follows the geometric shadow.</p>
+<label for="motion">Recorded direction</label>
+<select id="motion"><option value="reverse">Away from the temple</option><option value="forward">Toward the temple</option></select>
+<video id="movie" src="eclipse-reverse.webm" poster="morning-reverse.png" controls preload="none" playsinline></video>
+<p><a id="motion-metadata" href="motion-reverse.json">Recording metadata</a></p>
+<p>86 tests pass, including rays against a triangulated ring independent of the
+  analytic shader. <span id="gpu-count">GPU results are available in the linked checks.</span>
+  Frame-rate overlays in these captures are not controlled benchmarks.</p>
+<details>
+  <summary>Earlier center and depth corrections (incomplete fix)</summary>
+  <p>Historical frozen captures isolate the first two corrections. They did not
+    address the short-ray cutoff found in this follow-up.</p>
+  <label for="earlier">Historical view</label>
+  <select id="earlier"><option value="matched-original">Original center and depth range</option><option value="matched-center">Center corrected only</option><option value="matched-center-depth">Center and depth corrected &mdash; tangent bug still present</option></select>
+  <figure><a id="earlier-link" href="matched-original.png"><img id="earlier-image" src="matched-original.png" loading="lazy" alt="Historical original ring shading"></a><figcaption id="earlier-caption">Original center and depth range</figcaption></figure>
+</details>
 <script type="module">
   const bind=(selectId,imageId,linkId,captionId)=>{
     const select=document.getElementById(selectId),image=document.getElementById(imageId);
@@ -55,6 +85,24 @@
       document.getElementById(linkId).href=image.src;document.getElementById(captionId).textContent=image.alt;
     });
   };
-  bind('comparison','result','result-link','result-caption');bind('view','capture','view-link','view-caption');
+  for(const state of ['before','after'])document.getElementById(state).addEventListener('click',()=>{
+    const image=document.getElementById('comparison-image');image.src='tangent-'+state+'.png';
+    image.alt=state==='before'?'Before correction: water shadow ends at a horizontal cutoff':'Current correction: continuous water and land shadow';
+    document.getElementById('comparison-link').href=image.src;
+    document.getElementById('comparison-caption').textContent=image.alt;
+    for(const button of ['before','after'])document.getElementById(button).setAttribute('aria-pressed',String(state===button));
+  });
+  bind('view','capture','view-link','view-caption');bind('earlier','earlier-image','earlier-link','earlier-caption');
+  document.getElementById('motion').addEventListener('change',event=>{
+    const reverse=event.target.value==='reverse',movie=document.getElementById('movie');movie.pause();
+    movie.src=reverse?'eclipse-reverse.webm':'eclipse.webm';movie.poster=reverse?'morning-reverse.png':'ingress-forward.png';
+    document.getElementById('motion-metadata').href=reverse?'motion-reverse.json':'motion.json';
+  });
+  try{
+    const {gpu}=await fetch('checks.json',{cache:'no-store'}).then(r=>r.json());
+    document.getElementById('gpu-count').textContent=String(gpu.checks.reduce((n,s)=>n+s.points,0))+
+      ' GPU/CPU comparisons '+(gpu.pass?'pass':'need attention')+', including '+
+      gpu.checks.reduce((n,s)=>n+(s.tangentBlockedChecks||0),0)+' independently expected blocked tangent samples.';
+  }catch{}
 </script>
 </html>
