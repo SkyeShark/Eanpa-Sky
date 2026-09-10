@@ -20,8 +20,9 @@ try{
         if(!new URL(location.href).searchParams.has('automated')||document.pointerLockElement)throw new Error('Expected an automated page without pointer capture');
         if(document.getElementById('boot').style.display!=='none'||document.getElementById('skybox').value!=='ringworld')throw new Error('Load Ringworld before review');
         if(globalThis.__ringDepthRestore)throw new Error('Reload to remove temporary diagnostic patches');
-        document.getElementById('cloud-type').value='clear';_sky.setClouds('clear');
+        const cloud=document.getElementById('cloud-type');cloud.value='clear';cloud.dispatchEvent(new Event('change',{bubbles:true}));
         document.getElementById('weather').value='none';__eanpaWeatherByScene.get(_c.parent).setWeather('none');
+        _sky.setClouds('clear');
         document.getElementById('cycle').checked=false;
     })()`);
     const captures=[];
@@ -56,6 +57,8 @@ try{
             if(errors.length)throw new Error(JSON.stringify(errors));
             return {hours:_sky.state.hours,center:_ringworld.arcLight.center.value.toArray(),sun:_sky.sunDir.toArray(),
                 observer:_c.position.toArray(),look:_c.rotation.toArray(),cameraNear:_c.near,
+                cloud:_sky.state.preset,cloudDensity:_sky.uniforms.finalMul.value,
+                weatherTransition:!!_weather.diagnostics?.transition?.active,
                 solar:_ringEclipse,spatial:!!_sky._solarOcclusion,errors};
         })()`);
         const shot=await c.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});

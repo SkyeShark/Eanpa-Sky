@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ringworld — eclipse and surface review</title>
+<style>
+  :root{color-scheme:dark;font:16px/1.55 system-ui,sans-serif;background:#10171e;color:#e0e9f0}
+  body{max-width:1500px;margin:auto;padding:24px}h1{font-size:28px}h2{font-size:21px;margin-top:32px}
+  p{max-width:90ch;color:#b8c9d6}a{color:#8cd6ff}figure{margin:0}img,video{width:100%;display:block;background:#071018;border-radius:8px}
+  figcaption{padding:10px 0;color:#b8c9d6}.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  select{font:inherit;padding:8px;background:#1b2c3b;color:inherit;border:1px solid #6e8fa6;border-radius:5px;margin:0 0 16px 8px}
+  :focus-visible{outline:2px solid #8cd6ff;outline-offset:3px}video{max-height:80vh}
+  @media(max-width:800px){.pair{grid-template-columns:1fr}body{padding:16px}}
+</style>
+<h1>Ringworld eclipse and distant surface review</h1>
+<p>Local changes after v0.2.1. The broad lighting break and fine surface stripes
+  had separate causes: the eclipse cylinder's center and distant depth precision.</p>
+<p><a href="../../../?skybox=ringworld">Open the engine</a> ·
+  <a href="../../../RING_REVIEW_2026-09-10.md">Technical report</a> · <a href="checks.json">GPU checks</a></p>
+<h2>Same frozen view, two isolated corrections</h2>
+<p>The left view has both artifacts. Compare the center correction alone with
+  both corrections to see which removes the broad break and which removes the
+  fine stripes. These diagnostic captures keep the camera, sun, and animation
+  time fixed. Click an image to inspect it at full size.</p>
+<label for="comparison">Right view</label>
+<select id="comparison"><option value="matched-center-depth">Center and depth corrected</option><option value="matched-center">Center corrected only</option></select>
+<div class="pair">
+  <figure><a href="matched-original.png"><img src="matched-original.png" alt="Original distant ring with a broad shadow break and fine depth stripes"></a><figcaption>Original center and depth range</figcaption></figure>
+  <figure><a id="result-link" href="matched-center-depth.png"><img id="result" src="matched-center-depth.png" alt="Ring after correcting its center and celestial depth range"></a><figcaption id="result-caption">Center and depth corrected</figcaption></figure>
+</div>
+<h2>Moving eclipse in the engine</h2>
+<p>The normal 120-second day cycle, recorded through eclipse entry and exit.
+  Surface lighting and environment updates use the regular frame loop.</p>
+<video src="eclipse.webm" poster="ingress-forward.png" controls preload="none" playsinline></video>
+<p><a href="motion.json">Recording metadata</a></p>
+<h2>Final implementation</h2>
+<label for="view">Captured view</label>
+<select id="view">
+  <option value="ingress-forward">Eclipse entry — forward</option>
+  <option value="ingress-reverse">Eclipse entry — reverse</option>
+  <option value="egress-forward">Eclipse exit</option>
+  <option value="total-forward">Total eclipse</option>
+  <option value="morning-reverse">Morning — formerly broken arc</option>
+  <option value="night-glint">Night — sunlit ring and water reflection</option>
+</select>
+<figure><a id="view-link" href="ingress-forward.png"><img id="capture" src="ingress-forward.png" alt="Eclipse shadow crossing the ring and local terrain"></a><figcaption id="view-caption">Eclipse entry — forward</figcaption></figure>
+<p>82 tests pass, including camera framing and independent celestial/local-light
+  response. 264 GPU visibility comparisons pass. Frame-rate overlays in these
+  visual captures are not controlled benchmarks.</p>
+<script type="module">
+  const bind=(selectId,imageId,linkId,captionId)=>{
+    const select=document.getElementById(selectId),image=document.getElementById(imageId);
+    select.addEventListener('change',()=>{
+      image.src=select.value+'.png';image.alt=select.selectedOptions[0].textContent;
+      document.getElementById(linkId).href=image.src;document.getElementById(captionId).textContent=image.alt;
+    });
+  };
+  bind('comparison','result','result-link','result-caption');bind('view','capture','view-link','view-caption');
+</script>
+</html>

@@ -1,5 +1,14 @@
 # Release notes
 
+## Unreleased — Ringworld review fixes
+
+Correct the eclipse cylinder's center to match the displaced band, removing the
+one-sided lighting break. Give the existing celestial depth pass a suitable
+near plane to prevent distant land and water from producing stripes. Local PBR
+surfaces now receive the same moving eclipse shadow as the ring.
+
+See [the Ringworld validation and visual comparison](RING_REVIEW_2026-09-10.md).
+
 ## 0.2.1 — 2026-09-10
 
 Startup prepares independent GPU pipelines in bounded groups instead of waiting
