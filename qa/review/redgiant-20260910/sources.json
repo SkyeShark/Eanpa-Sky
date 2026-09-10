@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-10T10:02:32.848Z",
+  "beforeRevision": "3708772",
+  "radiantReferenceRevision": "2cfca90",
+  "currentSource": "engine/redgiant.js",
+  "currentSha256": "e57d823a02a69254c4297e3cef7fbf2e2223093acbb18fb5b3ff0f0ad34e2cc1",
+  "tests": {
+    "passed": 67,
+    "failed": 0
+  },
+  "notes": "One owned headless browser; visual comparisons are serial. Videos use normal simulation speed. No hardware constraint is injected for these appearance checks."
+}

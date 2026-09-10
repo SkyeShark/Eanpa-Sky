@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Red giant flare and plasma correction</title>
+<style>body{margin:0;background:#111820;color:#e0e7ed;font:16px/1.5 system-ui}main{max-width:1400px;margin:auto;padding:24px}a{color:#8bc9ff}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:20px}figure{margin:0;background:#1b2732;padding:14px;border-radius:8px}video,img{display:block;width:100%;height:auto}figcaption{padding-top:12px}section{margin:32px 0}</style>
+<main><h1>Red giant flare and plasma correction</h1>
+<p>The earlier radiant flare shading is restored on the limb and extended to the front-facing events. Sunspots, finer surface scale, angular size and the pink rim remain. Plasma uses the earlier deformation strength at half its earlier animation speed.</p>
+<p><a href="/">Open Eanpa</a> · <a href="/REVIEW_2026-09-10.md">Changes and validation</a>. Videos play only when started.</p>
+<section><h2>Normal-speed comparison</h2><p>Both clips last eight seconds. These use the actual celestial shader in isolation, with identical exposure and field of view.</p>
+<div class="grid"><figure><video controls loop preload="none" poster="before-8.png" src="before.webm"></video><figcaption>Before: thin arches and strongly reduced plasma movement.</figcaption></figure>
+<figure><video controls loop preload="none" poster="current-8.png" src="current.webm"></video><figcaption>Corrected: broad, textured radiance on the limb and front, with visibly moving finer plasma.</figcaption></figure></div></section>
+<section><h2>Through the Shieldworld sky</h2><p>The shield remains visible. These run through the Balanced sky, weather, reflection and post-processing pipeline with generic host geometry.</p>
+<div class="grid"><figure><video controls loop preload="none" poster="redgiant-restored-clear.png" src="redgiant-restored-clear.webm"></video><figcaption>Clear sky, eight seconds at normal simulation speed.</figcaption></figure>
+<figure><video controls loop preload="none" poster="redgiant-restored-full.png" src="redgiant-restored-full.webm"></video><figcaption>With cumulus clouds, eight seconds at normal simulation speed.</figcaption></figure></div></section>
+<p><a href="radiant-8.png">Earlier radiant-flare reference</a> · <a href="comparison.json">Pixel comparison and motion measurements</a> · <a href="sources.json">Source revisions and validation</a></p>
+</main></html>

@@ -1,0 +1,83 @@
+{
+  "method": "8-bit displayed RGB; fixed camera; interior motion excludes the limb and lower/front flare region; limb restoration compared against 2cfca90 at matching times",
+  "motion": [
+    {
+      "version": "before",
+      "seconds": 0.5,
+      "pixels": 46424,
+      "meanChannelDifference": 2.31415503475214,
+      "maxChannelDifference": 53,
+      "changedAbove2": 20680
+    },
+    {
+      "version": "before",
+      "seconds": 1,
+      "pixels": 46424,
+      "meanChannelDifference": 4.354759032684243,
+      "maxChannelDifference": 75,
+      "changedAbove2": 28179
+    },
+    {
+      "version": "before",
+      "seconds": 2,
+      "pixels": 46424,
+      "meanChannelDifference": 7.445882876672985,
+      "maxChannelDifference": 108,
+      "changedAbove2": 33392
+    },
+    {
+      "version": "current",
+      "seconds": 0.5,
+      "pixels": 46424,
+      "meanChannelDifference": 10.661712332701477,
+      "maxChannelDifference": 119,
+      "changedAbove2": 35980
+    },
+    {
+      "version": "current",
+      "seconds": 1,
+      "pixels": 46424,
+      "meanChannelDifference": 14.809732035154232,
+      "maxChannelDifference": 138,
+      "changedAbove2": 38583
+    },
+    {
+      "version": "current",
+      "seconds": 2,
+      "pixels": 46424,
+      "meanChannelDifference": 18.75947067608708,
+      "maxChannelDifference": 157,
+      "changedAbove2": 40246
+    }
+  ],
+  "limb": [
+    {
+      "time": 8,
+      "pixels": 254772,
+      "meanChannelDifference": 0,
+      "maxChannelDifference": 0,
+      "changedAbove2": 0
+    },
+    {
+      "time": 9,
+      "pixels": 254772,
+      "meanChannelDifference": 0,
+      "maxChannelDifference": 0,
+      "changedAbove2": 0
+    },
+    {
+      "time": 12,
+      "pixels": 254772,
+      "meanChannelDifference": 0,
+      "maxChannelDifference": 0,
+      "changedAbove2": 0
+    },
+    {
+      "time": 16,
+      "pixels": 254772,
+      "meanChannelDifference": 0,
+      "maxChannelDifference": 0,
+      "changedAbove2": 0
+    }
+  ]
+}

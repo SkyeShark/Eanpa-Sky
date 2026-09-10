@@ -1,0 +1,56 @@
+{
+  "version": "radiant",
+  "date": "2026-09-10T09:57:55.679Z",
+  "frames": [
+    {
+      "time": 8
+    },
+    {
+      "time": 8.5
+    },
+    {
+      "time": 9
+    },
+    {
+      "time": 10
+    },
+    {
+      "time": 12
+    },
+    {
+      "time": 16
+    }
+  ],
+  "actualSeconds": null,
+  "simulationSpeed": 1,
+  "flares": [
+    {
+      "th": 0.7,
+      "rate": 0.055,
+      "ph0": 0.13
+    },
+    {
+      "th": 2.3,
+      "rate": 0.075,
+      "ph0": 0.55
+    },
+    {
+      "th": 3.5,
+      "rate": 0.048,
+      "ph0": 0.82
+    },
+    {
+      "th": 4.6,
+      "rate": 0.068,
+      "ph0": 0.3
+    },
+    {
+      "th": 5.7,
+      "rate": 0.06,
+      "ph0": 0.68
+    }
+  ],
+  "errors": [],
+  "scope": "Production celestial shader in isolation, ACES at exposure 1, 52 degree FOV",
+  "pointerLocked": false
+}

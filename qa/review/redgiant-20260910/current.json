@@ -1,0 +1,83 @@
+{
+  "version": "current",
+  "date": "2026-09-10T09:57:00.234Z",
+  "frames": [
+    {
+      "time": 8
+    },
+    {
+      "time": 8.5
+    },
+    {
+      "time": 9
+    },
+    {
+      "time": 10
+    },
+    {
+      "time": 12
+    },
+    {
+      "time": 16
+    }
+  ],
+  "actualSeconds": 8.02290000000014,
+  "simulationSpeed": 1,
+  "flares": [
+    {
+      "th": 0.7,
+      "rate": 0.055,
+      "ph0": 0.13
+    },
+    {
+      "th": 2.3,
+      "rate": 0.075,
+      "ph0": 0.55
+    },
+    {
+      "th": 3.5,
+      "rate": 0.048,
+      "ph0": 0.82
+    },
+    {
+      "th": 4.6,
+      "rate": 0.068,
+      "ph0": 0.3
+    },
+    {
+      "th": 5.7,
+      "rate": 0.06,
+      "ph0": 0.68
+    },
+    {
+      "th": 1,
+      "rate": 0.014,
+      "ph0": 0.32,
+      "center": [
+        0.31,
+        0.27
+      ]
+    },
+    {
+      "th": 2.1,
+      "rate": 0.019,
+      "ph0": 0.66,
+      "center": [
+        -0.38,
+        0.08
+      ]
+    },
+    {
+      "th": 4.8,
+      "rate": 0.012,
+      "ph0": 0.1,
+      "center": [
+        0.08,
+        -0.47
+      ]
+    }
+  ],
+  "errors": [],
+  "scope": "Production celestial shader in isolation, ACES at exposure 1, 52 degree FOV",
+  "pointerLocked": false
+}
