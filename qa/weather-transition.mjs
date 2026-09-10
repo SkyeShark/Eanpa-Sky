@@ -47,7 +47,8 @@ try{
         wetness:_weather.uniforms.wetness.value,water:_weather.uniforms.surfaceWater.value,
         warmup:globalThis._shaderWarmupStats,surfaceCapture:{...__eanpaWeatherByScene.get(_c.parent).surfaceField.stats}})`);
     await c.evaluate(`(()=>{
-        _benchmark.start({purpose:'Actual 45-second weather transition',sky:${JSON.stringify(sky)},revision:${JSON.stringify(revision)}});
+        _benchmark.start({purpose:'Actual 45-second weather transition',sky:${JSON.stringify(sky)},revision:${JSON.stringify(revision)},
+            runtimeUrl:location.href,runtimeVersion:document.querySelector('meta[name="application-version"]')?.content});
         const e=document.getElementById('weather');e.value='rain';e.dispatchEvent(new Event('change',{bubbles:true}));
     })()`);
     const start=Date.now();

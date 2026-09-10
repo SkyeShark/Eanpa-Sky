@@ -78,11 +78,22 @@ test('failed capture restores camera-independent scene state and can retry the s
 test('failed asynchronous probe warmup restores state and disposal releases each owned resource once',async()=>{
     const {probe,renderer,scene,hero,light,resources}=fixture();
     const context=renderer.contextNode;
-    renderer.onCompile=(scene,camera)=>{if(camera.face===2)throw new Error('compile failed')};
+    renderer.onCompile=()=>{throw new Error('compile failed')};
     await assert.rejects(probe.compileAsync(),/compile failed/);
     assert.equal(hero.visible,true);assert.equal(light.shadow.needsUpdate,true);assert.equal(scene.background,null);
     assert.equal(renderer.contextNode,context);assert.equal(renderer.target,null);assert.equal(renderer.mrt,null);
     probe.dispose();probe.dispose();
     assert.ok(resources.every(resource=>resource.disposals===1));
     probe.update();assert.equal(renderer.draws.length,0);
+});
+
+test('probe warmup compiles the shared cube variant once but captures all six faces',async()=>{
+    const {probe,renderer}=fixture();let compilations=0;
+    renderer.onCompile=()=>{compilations++};
+    await probe.compileAsync();
+    assert.equal(compilations,1);
+    assert.deepEqual(renderer.draws,[0,1,2,3,4,5]);
+    assert.equal(probe.stats.captures,1);
+    assert.equal(probe.stats.faces,6);
+    probe.dispose();
 });

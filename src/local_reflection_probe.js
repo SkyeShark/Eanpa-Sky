@@ -146,12 +146,11 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
             if (!environment || disposed) return;
             beginCapture();
             await withCaptureState(async () => {
-                // Different cube directions expose different materials. Warm
-                // these variants behind the boot curtain, never during walking.
-                for (let i=0;i<6;i++) {
-                    renderer.setRenderTarget(cube,i);
-                    await renderer.compileAsync(scene,camera.children[i]);
-                }
+                // The pinned compiler visits every visible material without
+                // frustum culling. All cube cameras share this shader variant;
+                // avoid five duplicate walks of already-prepared materials.
+                renderer.setRenderTarget(cube,0);
+                await renderer.compileAsync(scene,camera.children[0]);
             });
             for(let i=0;i<6;i++) captureFace();
             finishCapture();

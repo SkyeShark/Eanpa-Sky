@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="application-version" content="0.2.0">
+<meta name="application-version" content="0.2.1">
 <link rel="icon" type="image/png" href="./assets/brand/eanpa_favicon.png">
-<title>Eanpa Engine — v0.2</title>
+<title>Eanpa Engine — v0.2.1</title>
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; background: #06080c; }
   #view { position: fixed; inset: 0; }
@@ -65,7 +65,7 @@
 <body>
 <canvas id="view"></canvas>
 <div id="panel">
-  <h1><img src="./assets/brand/eanpa_favicon.png" alt="" width="20" height="20" style="vertical-align:-4px;margin-right:7px">EANPA ENGINE <span class="version">v0.2</span></h1>
+  <h1><img src="./assets/brand/eanpa_favicon.png" alt="" width="20" height="20" style="vertical-align:-4px;margin-right:7px">EANPA ENGINE <span class="version">v0.2.1</span></h1>
   <label>Skybox</label>
   <select id="skybox">
     <option value="earth" selected>Earth</option>
@@ -117,7 +117,7 @@
   click to lock look &nbsp;·&nbsp; Esc release &nbsp;·&nbsp; wheel zoom &nbsp;·&nbsp; F flashlight
   &nbsp;·&nbsp; <span id="flashlight-status">flashlight off</span>
 </div>
-<div id="boot">initializing WebGPU…</div>
+<div id="boot" role="status" aria-live="polite">initializing WebGPU…</div>
 <script type="importmap">
 {
   "imports": {
@@ -131,7 +131,7 @@
 <script type="module">
   // Pin one coherent graph revision. Long-lived Chromium module maps can retain
   // an already-instantiated dependency even after a cache-disabled page reload.
-  import('./src/main.js?rev=0.2.0').catch((e) => {
+  import('./src/main.js?rev=0.2.1').catch((e) => {
     document.getElementById('boot').textContent = 'boot failed: ' + e.message;
     console.error(e);
   });

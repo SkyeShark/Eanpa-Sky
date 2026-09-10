@@ -1,0 +1,1423 @@
+{
+  "version": "0.2.1",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU",
+    "driver": "610.88",
+    "devicePixelRatio": 1,
+    "viewport": [
+      1258,
+      646
+    ],
+    "browserWindow": [
+      1280,
+      800
+    ]
+  },
+  "methodology": [
+    "One isolated headless browser, one local HTTP server; no pointer lock.",
+    "All startup runs use Balanced quality, Cumulus, None, 10.5h.",
+    "CPU throttling does not emulate a lower-end GPU. GPU and memory remain the physical 5090.",
+    "Driver caches are uncontrolled; these are individual observations, not a statistical hardware comparison.",
+    "Some runs predate final runtime scheduling changes, as labeled. Hosted post-deployment validation is attached to the release.",
+    "A later controlled throughput preflight found heavy external shader compilation. None of the earlier uncensored timing runs should be treated as a clean causal speedup/regression comparison.",
+    "Successful HTTP 200 transfers sometimes ended with CDP ERR_ABORTED. Original reports retain those observations; Resource Timing and actual rendered asset presence were checked."
+  ],
+  "runs": [
+    {
+      "label": "live-baseline",
+      "codeState": "Hosted 0.2.0; initial visit with CPU sampling enabled; HTTP cache bypass; uncontrolled shader/driver cache.",
+      "url": "https://skyeshark.github.io/Eanpa-Sky/?automated=1",
+      "recordedAt": "2026-09-10T12:26:48.344Z",
+      "mode": "cpu",
+      "cpuThrottleRate": 1,
+      "httpCacheDisabled": true,
+      "shaderCache": "not explicitly cleared; driver cache uncontrolled",
+      "readyMs": 132178.80000000075,
+      "warmup": {
+        "rainSurfaceWarmupMs": 120.4,
+        "exactMrtCompileMs": 77415.2,
+        "finalGraphRenderMs": 19617.4,
+        "totalMs": 117702.6,
+        "weatherGraphReady": true
+      },
+      "network": {
+        "requests": 180,
+        "bytes": 345495310,
+        "failed": [
+          {
+            "url": "https://skyeshark.github.io/Eanpa-Sky/assets/vegetation/joshuaTree_seed555.glb",
+            "type": "Fetch",
+            "start": 10837.441088,
+            "wallTime": 1789043085.543266,
+            "response": 10838.379785,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 10837.44143,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": -1,
+              "dnsEnd": -1,
+              "connectStart": -1,
+              "connectEnd": -1,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.232,
+              "sendEnd": 0.361,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 937.373,
+              "receiveHeadersEnd": 937.472
+            },
+            "error": "net::ERR_ABORTED"
+          }
+        ]
+      },
+      "browserErrors": [],
+      "failedPipelines": [],
+      "shaderModuleCount": 538,
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 181.80000000074506
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 655.9000000003725
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 1399.0999999996275
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 9023.599999999627
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 9788.800000000745
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 11147.5
+        },
+        {
+          "text": "building skybox…",
+          "at": 13139.400000000373
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 13642.599999999627
+        },
+        {
+          "text": "building skybox…",
+          "at": 13829.900000000373
+        },
+        {
+          "text": "ready",
+          "at": 132178.80000000075
+        }
+      ]
+    },
+    {
+      "label": "live-before-cold",
+      "codeState": "Hosted 0.2.0; controlled repeat, browser shader cache cleared, HTTP cache bypass.",
+      "url": "https://skyeshark.github.io/Eanpa-Sky/?automated=1",
+      "recordedAt": "2026-09-10T12:51:31.957Z",
+      "mode": "cold",
+      "cpuThrottleRate": 1,
+      "httpCacheDisabled": true,
+      "shaderCache": "browser shader cache cleared via CDP; driver cache uncontrolled",
+      "readyMs": 77832.5,
+      "warmup": {
+        "rainSurfaceWarmupMs": 127.3,
+        "exactMrtCompileMs": 33739.2,
+        "finalGraphRenderMs": 11203.7,
+        "totalMs": 58360.2,
+        "weatherGraphReady": true
+      },
+      "network": {
+        "requests": 180,
+        "bytes": 345492918,
+        "failed": [
+          {
+            "url": "https://skyeshark.github.io/Eanpa-Sky/assets/vegetation/joshuaTree_seed555.glb",
+            "type": "Fetch",
+            "start": 12380.323884,
+            "wallTime": 1789044628.426062,
+            "response": 12381.30095,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12380.324221,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": -1,
+              "dnsEnd": -1,
+              "connectStart": -1,
+              "connectEnd": -1,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.627,
+              "sendEnd": 0.758,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 975.725,
+              "receiveHeadersEnd": 975.838
+            },
+            "error": "net::ERR_ABORTED"
+          }
+        ]
+      },
+      "browserErrors": [],
+      "visibleErrors": [],
+      "failedPipelines": [],
+      "shaderModuleCount": 538,
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 130.39999999850988
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 646.7999999988824
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 2606.5
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 10453.599999999627
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 11453.299999998882
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 14379.699999999255
+        },
+        {
+          "text": "building skybox…",
+          "at": 17398.299999998882
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 18509.5
+        },
+        {
+          "text": "building skybox…",
+          "at": 18770.599999999627
+        },
+        {
+          "text": "ready",
+          "at": 77832.5
+        }
+      ]
+    },
+    {
+      "label": "shaft-loops-fixed",
+      "codeState": "Local working tree with compact cloud code and compiler/context fixes, before final target and scheduling fixes. Not the final patch timing.",
+      "url": "http://127.0.0.1:8378/?automated=1&benchmark=1",
+      "recordedAt": "2026-09-10T12:47:47.203Z",
+      "mode": "cpu",
+      "cpuThrottleRate": 1,
+      "httpCacheDisabled": true,
+      "shaderCache": "not explicitly cleared; driver cache uncontrolled",
+      "readyMs": 44897.39999999851,
+      "warmup": {
+        "rainSurfaceWarmupMs": 121.3,
+        "exactMrtCompileMs": 23925.3,
+        "finalGraphRenderMs": 7157.3,
+        "totalMs": 38675.3,
+        "weatherGraphReady": true
+      },
+      "network": {
+        "requests": 217,
+        "bytes": 328331862,
+        "failed": [
+          {
+            "url": "http://127.0.0.1:8378/assets/player/runtime/Aletheia_Chrome_1p_arms_viewmodel.glb?v=65336553bd9ad4ec",
+            "type": "Fetch",
+            "start": 12172.549857,
+            "wallTime": 1789044420.652058,
+            "response": 12172.552525,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12172.550265,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.272,
+              "dnsEnd": 0.287,
+              "connectStart": 0.287,
+              "connectEnd": 0.809,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.88,
+              "sendEnd": 0.964,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 1.778,
+              "receiveHeadersEnd": 1.816
+            },
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "url": "http://127.0.0.1:8378/vendor/three/addons/libs/basis/basis_transcoder.wasm",
+            "type": "Fetch",
+            "start": 12173.262174,
+            "wallTime": 1789044421.364328,
+            "response": 12173.266101,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12173.262585,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.945,
+              "dnsEnd": 0.949,
+              "connectStart": 0.949,
+              "connectEnd": 1.231,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 1.405,
+              "sendEnd": 1.45,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 2.488,
+              "receiveHeadersEnd": 2.505
+            },
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "url": "http://127.0.0.1:8378/assets/temple/inanna_orb.glb",
+            "type": "Fetch",
+            "start": 12176.681771,
+            "wallTime": 1789044424.783933,
+            "response": 12176.752329,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12176.703784,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 16.688,
+              "dnsEnd": 16.691,
+              "connectStart": 16.691,
+              "connectEnd": 17.131,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 17.992,
+              "sendEnd": 18.044,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 18.5,
+              "receiveHeadersEnd": 18.517
+            },
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "url": "http://127.0.0.1:8378/assets/vegetation/joshuaTree_seed555.glb",
+            "type": "Fetch",
+            "start": 12177.390013,
+            "wallTime": 1789044425.492189,
+            "response": 12177.392719,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12177.390345,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.109,
+              "dnsEnd": 0.122,
+              "connectStart": 0.122,
+              "connectEnd": 0.694,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.762,
+              "sendEnd": 0.816,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 1.677,
+              "receiveHeadersEnd": 1.707
+            },
+            "error": "net::ERR_ABORTED"
+          }
+        ]
+      },
+      "browserErrors": [],
+      "visibleErrors": [],
+      "failedPipelines": [],
+      "shaderModuleCount": 548,
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 374.69999999925494
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 515.1999999992549
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 859.5999999996275
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 4647.39999999851
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 4981.5
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 5273.89999999851
+        },
+        {
+          "text": "building skybox…",
+          "at": 5608.89999999851
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 5834.89999999851
+        },
+        {
+          "text": "preparing rain and cloud shadows…",
+          "at": 5855.699999999255
+        },
+        {
+          "text": "preparing sky reflections…",
+          "at": 6102.39999999851
+        },
+        {
+          "text": "preparing clouds…",
+          "at": 6343
+        },
+        {
+          "text": "preparing local reflections…",
+          "at": 13818.39999999851
+        },
+        {
+          "text": "preparing surface lighting and weather…",
+          "at": 24186.799999998882
+        },
+        {
+          "text": "finishing lighting and the first frame…",
+          "at": 37747.39999999851
+        },
+        {
+          "text": "ready",
+          "at": 44897.39999999851
+        }
+      ]
+    },
+    {
+      "label": "final-ringworld",
+      "codeState": "Local working tree with compact cloud code and compiler/context fixes, before final target and scheduling fixes. Not the final patch timing.",
+      "url": "http://127.0.0.1:8378/?automated=1&benchmark=1&skybox=ringworld",
+      "recordedAt": "2026-09-10T12:53:10.328Z",
+      "mode": "cold",
+      "cpuThrottleRate": 1,
+      "httpCacheDisabled": true,
+      "shaderCache": "browser shader cache cleared via CDP; driver cache uncontrolled",
+      "readyMs": 82300.30000000075,
+      "warmup": {
+        "rainSurfaceWarmupMs": 117.5,
+        "exactMrtCompileMs": 59344,
+        "finalGraphRenderMs": 7611.1,
+        "totalMs": 76170.5,
+        "weatherGraphReady": true
+      },
+      "network": {
+        "requests": 236,
+        "bytes": 330255479,
+        "failed": [
+          {
+            "url": "http://127.0.0.1:8378/assets/terrain/Desert_Cliff_Wide_Mesa_Low_runtime_2k_lods.glb",
+            "type": "Fetch",
+            "start": 12458.763248,
+            "wallTime": 1789044706.865411,
+            "response": 12458.774957,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12458.764112,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.279,
+              "dnsEnd": 0.285,
+              "connectStart": 0.285,
+              "connectEnd": 0.61,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.646,
+              "sendEnd": 0.699,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 2.036,
+              "receiveHeadersEnd": 2.059
+            },
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "url": "http://127.0.0.1:8378/assets/terrain/Desert_rock_chunks_12_pieces_runtime_2k_lods.glb",
+            "type": "Fetch",
+            "start": 12458.763685,
+            "wallTime": 1789044706.865839,
+            "response": 12458.777062,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12458.764284,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 1.025,
+              "dnsEnd": 1.029,
+              "connectStart": 1.029,
+              "connectEnd": 1.522,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 2.012,
+              "sendEnd": 2.065,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 2.832,
+              "receiveHeadersEnd": 2.844
+            },
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "url": "http://127.0.0.1:8378/assets/vegetation/saguaro_seed555.glb",
+            "type": "Fetch",
+            "start": 12462.896967,
+            "wallTime": 1789044710.999147,
+            "response": 12462.899213,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12462.897234,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.206,
+              "dnsEnd": 0.214,
+              "connectStart": 0.214,
+              "connectEnd": 0.946,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.991,
+              "sendEnd": 1.065,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 1.493,
+              "receiveHeadersEnd": 1.517
+            },
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "url": "http://127.0.0.1:8378/assets/vegetation/joshuaTree_seed555.glb",
+            "type": "Fetch",
+            "start": 12462.973056,
+            "wallTime": 1789044711.075224,
+            "response": 12462.975698,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12462.97335,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.113,
+              "dnsEnd": 0.126,
+              "connectStart": 0.126,
+              "connectEnd": 0.672,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.746,
+              "sendEnd": 0.813,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 1.684,
+              "receiveHeadersEnd": 1.716
+            },
+            "error": "net::ERR_ABORTED"
+          },
+          {
+            "url": "http://127.0.0.1:8378/assets/vegetation/joshuaTree_seed555.glb",
+            "type": "Fetch",
+            "start": 12462.975982,
+            "wallTime": 1789044711.078154,
+            "response": 12462.978137,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12462.976238,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.216,
+              "dnsEnd": 0.225,
+              "connectStart": 0.225,
+              "connectEnd": 0.598,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.642,
+              "sendEnd": 0.7,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 1.553,
+              "receiveHeadersEnd": 1.58
+            },
+            "error": "net::ERR_ABORTED"
+          }
+        ]
+      },
+      "browserErrors": [],
+      "visibleErrors": [],
+      "failedPipelines": [],
+      "shaderModuleCount": 563,
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 74.40000000037253
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 235
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 517.9000000003725
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 3992.0999999996275
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 4357.5999999996275
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 4651
+        },
+        {
+          "text": "building skybox…",
+          "at": 4997.5999999996275
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 5669.0999999996275
+        },
+        {
+          "text": "preparing rain and cloud shadows…",
+          "at": 5695.5999999996275
+        },
+        {
+          "text": "preparing sky reflections…",
+          "at": 5970.5999999996275
+        },
+        {
+          "text": "preparing clouds…",
+          "at": 6247.0999999996275
+        },
+        {
+          "text": "preparing distant sky geometry…",
+          "at": 15356.900000000373
+        },
+        {
+          "text": "preparing local reflections…",
+          "at": 15628.900000000373
+        },
+        {
+          "text": "preparing surface lighting and weather…",
+          "at": 42268.09999999963
+        },
+        {
+          "text": "finishing lighting and the first frame…",
+          "at": 74689.80000000075
+        },
+        {
+          "text": "ready",
+          "at": 82300.30000000075
+        }
+      ]
+    },
+    {
+      "label": "final-shieldworld-cpu4",
+      "codeState": "Local Shieldworld with target fix, before budgeted yields and shared cube-probe compilation. CPU throttled 4x.",
+      "url": "http://127.0.0.1:8378/?automated=1&benchmark=1&skybox=shieldworld",
+      "recordedAt": "2026-09-10T13:00:50.786Z",
+      "mode": "cold",
+      "cpuThrottleRate": 4,
+      "httpCacheDisabled": true,
+      "shaderCache": "browser shader cache cleared via CDP; driver cache uncontrolled",
+      "readyMs": 328052,
+      "warmup": {
+        "rainSurfaceWarmupMs": 791.6,
+        "exactMrtCompileMs": 246752.5,
+        "finalGraphRenderMs": 59956.6,
+        "totalMs": 312032,
+        "weatherGraphReady": true
+      },
+      "network": {
+        "requests": 245,
+        "bytes": 367084511,
+        "failed": [
+          {
+            "url": "http://127.0.0.1:8378/assets/vegetation/joshuaTree_seed555.glb",
+            "type": "Fetch",
+            "start": 12683.042041,
+            "wallTime": 1789044931.144384,
+            "response": 12683.045677,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 12683.043212,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.102,
+              "dnsEnd": 0.115,
+              "connectStart": 0.115,
+              "connectEnd": 0.654,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.723,
+              "sendEnd": 0.781,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 1.602,
+              "receiveHeadersEnd": 1.631
+            },
+            "error": "net::ERR_ABORTED"
+          }
+        ]
+      },
+      "browserErrors": [],
+      "visibleErrors": [],
+      "failedPipelines": [],
+      "shaderModuleCount": 552,
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 306.80000000074506
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 587.4000000003725
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 1141.9000000003725
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 9402.200000001118
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 10651.10000000149
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 11800.200000001118
+        },
+        {
+          "text": "building skybox…",
+          "at": 12868.10000000149
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 13479.800000000745
+        },
+        {
+          "text": "preparing rain and cloud shadows…",
+          "at": 13576.10000000149
+        },
+        {
+          "text": "preparing sky reflections…",
+          "at": 15164.800000000745
+        },
+        {
+          "text": "preparing clouds…",
+          "at": 16802.5
+        },
+        {
+          "text": "preparing distant sky geometry…",
+          "at": 21330.900000000373
+        },
+        {
+          "text": "preparing local reflections…",
+          "at": 21353.400000000373
+        },
+        {
+          "text": "preparing surface lighting and weather…",
+          "at": 145994
+        },
+        {
+          "text": "finishing lighting and the first frame…",
+          "at": 268088.2000000011
+        },
+        {
+          "text": "ready",
+          "at": 328051.9000000004
+        }
+      ]
+    },
+    {
+      "label": "shieldworld-cpu4-final",
+      "codeState": "Final runtime patch, local Shieldworld. CPU throttled 4x.",
+      "url": "http://127.0.0.1:8378/?automated=1&benchmark=1&skybox=shieldworld",
+      "recordedAt": "2026-09-10T13:05:13.208Z",
+      "mode": "cold",
+      "cpuThrottleRate": 4,
+      "httpCacheDisabled": true,
+      "shaderCache": "browser shader cache cleared via CDP; driver cache uncontrolled",
+      "readyMs": 183793.59999999963,
+      "warmup": {
+        "rainSurfaceWarmupMs": 1200.5,
+        "exactMrtCompileMs": 96675.4,
+        "finalGraphRenderMs": 56234.1,
+        "totalMs": 157775.6,
+        "weatherGraphReady": true
+      },
+      "network": {
+        "requests": 245,
+        "bytes": 367084731,
+        "failed": [
+          {
+            "url": "http://127.0.0.1:8378/assets/vegetation/joshuaTree_seed555.glb",
+            "type": "Fetch",
+            "start": 13097.160579,
+            "wallTime": 1789045345.263503,
+            "response": 13097.193785,
+            "status": 200,
+            "fromDiskCache": false,
+            "fromServiceWorker": false,
+            "timing": {
+              "requestTime": 13097.163107,
+              "proxyStart": -1,
+              "proxyEnd": -1,
+              "dnsStart": 0.121,
+              "dnsEnd": 0.134,
+              "connectStart": 0.134,
+              "connectEnd": 0.814,
+              "sslStart": -1,
+              "sslEnd": -1,
+              "workerStart": -1,
+              "workerReady": -1,
+              "workerFetchStart": -1,
+              "workerRespondWithSettled": -1,
+              "sendStart": 0.885,
+              "sendEnd": 0.962,
+              "pushStart": 0,
+              "pushEnd": 0,
+              "receiveHeadersStart": 13.782,
+              "receiveHeadersEnd": 13.821
+            },
+            "error": "net::ERR_ABORTED"
+          }
+        ]
+      },
+      "browserErrors": [],
+      "visibleErrors": [],
+      "failedPipelines": [],
+      "shaderModuleCount": 552,
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 468.2999999988824
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 1114.699999999255
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 2213.5999999996275
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 15861.799999998882
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 17793.900000000373
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 19290
+        },
+        {
+          "text": "building skybox…",
+          "at": 21354.400000000373
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 22381.900000000373
+        },
+        {
+          "text": "preparing rain and cloud shadows…",
+          "at": 22492.299999998882
+        },
+        {
+          "text": "preparing sky reflections…",
+          "at": 24786.299999998882
+        },
+        {
+          "text": "preparing clouds…",
+          "at": 27212.900000000373
+        },
+        {
+          "text": "preparing distant sky geometry…",
+          "at": 30873.299999998882
+        },
+        {
+          "text": "preparing local reflections…",
+          "at": 30921.5
+        },
+        {
+          "text": "preparing surface lighting and weather…",
+          "at": 63193.5
+        },
+        {
+          "text": "finishing lighting and the first frame…",
+          "at": 127571.90000000037
+        },
+        {
+          "text": "ready",
+          "at": 183793.59999999963
+        }
+      ]
+    },
+    {
+      "label": "live-shield-before-cold",
+      "codeState": "Hosted 0.2.0 Shieldworld; background load uncontrolled.",
+      "url": "https://skyeshark.github.io/Eanpa-Sky/?automated=1&benchmark=1&skybox=shieldworld",
+      "recordedAt": "2026-09-10T13:17:45.348Z",
+      "mode": "cold",
+      "cpuThrottleRate": 1,
+      "httpCacheDisabled": true,
+      "shaderCache": "browser shader cache cleared via CDP; driver cache uncontrolled",
+      "readyMs": 278980.2999999989,
+      "warmup": {
+        "rainSurfaceWarmupMs": 123.2,
+        "exactMrtCompileMs": 168138.6,
+        "finalGraphRenderMs": 36361.1,
+        "totalMs": 257811.8,
+        "weatherGraphReady": true
+      },
+      "settings": {
+        "viewport": [
+          1258,
+          646
+        ],
+        "devicePixelRatio": 1,
+        "sky": "shieldworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "quality": "balanced"
+      },
+      "network": {
+        "requests": 185,
+        "bytes": 346541014,
+        "reportedCancellations": [
+          {
+            "url": "https://skyeshark.github.io/Eanpa-Sky/assets/vegetation/joshuaTree_seed555.glb",
+            "status": 200,
+            "error": "net::ERR_ABORTED",
+            "resourceTiming": [
+              {
+                "name": "https://skyeshark.github.io/Eanpa-Sky/assets/vegetation/joshuaTree_seed555.glb",
+                "start": 17452.099999999627,
+                "end": 18440.599999999627,
+                "bytes": 300,
+                "duration": 988.5
+              },
+              {
+                "name": "https://skyeshark.github.io/Eanpa-Sky/assets/vegetation/joshuaTree_seed555.glb",
+                "start": 18441.599999999627,
+                "end": 18778.299999998882,
+                "bytes": 20268262,
+                "duration": 336.69999999925494
+              }
+            ]
+          }
+        ]
+      },
+      "browserErrors": [],
+      "visibleErrors": [],
+      "failedPipelines": [],
+      "validationNote": "Profiler initially rejected a successful 200 response cancellation. HEAD probe / transferred GLB inspected against resource timing and a rendered scene. Raw rejection retained in local artifact; no browser/shader error. Not a clean hardware benchmark.",
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 155.39999999850988
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 1031.3999999985099
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 3227
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 13996.799999998882
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 14978.099999999627
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 16627.599999999627
+        },
+        {
+          "text": "building skybox…",
+          "at": 19266.699999999255
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 20314.799999998882
+        },
+        {
+          "text": "building skybox…",
+          "at": 20521.199999999255
+        },
+        {
+          "text": "ready",
+          "at": 278980.2999999989
+        }
+      ]
+    },
+    {
+      "label": "shieldworld-final-normal",
+      "codeState": "Final runtime patch, local Shieldworld; CPU rate 1, background load uncontrolled.",
+      "url": "http://127.0.0.1:8378/?automated=1&benchmark=1&skybox=shieldworld",
+      "recordedAt": "2026-09-10T13:20:23.931Z",
+      "mode": "cold",
+      "cpuThrottleRate": 1,
+      "httpCacheDisabled": true,
+      "shaderCache": "browser shader cache cleared via CDP; driver cache uncontrolled",
+      "readyMs": 42184.800000000745,
+      "warmup": {
+        "rainSurfaceWarmupMs": 159.4,
+        "exactMrtCompileMs": 24886.9,
+        "finalGraphRenderMs": 6326,
+        "totalMs": 35990.3,
+        "weatherGraphReady": true
+      },
+      "settings": {
+        "viewport": [
+          1258,
+          646
+        ],
+        "devicePixelRatio": 1,
+        "sky": "shieldworld",
+        "clouds": "cumulus",
+        "weather": "none",
+        "quality": "balanced"
+      },
+      "network": {
+        "requests": 223,
+        "bytes": 334891699,
+        "reportedCancellations": [
+          {
+            "url": "http://127.0.0.1:8378/assets/player/runtime/Aletheia_Chrome_1p_arms_viewmodel.glb?v=65336553bd9ad4ec",
+            "status": 200,
+            "error": "net::ERR_ABORTED",
+            "method": "GET",
+            "resourceTiming": [
+              {
+                "name": "http://127.0.0.1:8378/assets/player/runtime/Aletheia_Chrome_1p_arms_viewmodel.glb?v=65336553bd9ad4ec",
+                "start": 309.59999999962747,
+                "end": 353.40000000037253,
+                "bytes": 32190864,
+                "duration": 43.80000000074506
+              }
+            ]
+          }
+        ]
+      },
+      "browserErrors": [],
+      "visibleErrors": [],
+      "failedPipelines": [],
+      "validationNote": "Profiler initially rejected a successful 200 response cancellation. HEAD probe / transferred GLB inspected against resource timing and a rendered scene. Raw rejection retained in local artifact; no browser/shader error. Not a clean hardware benchmark.",
+      "stages": [
+        {
+          "text": "initializing WebGPU…",
+          "at": 111.09999999962747
+        },
+        {
+          "text": "rigging Aletheia explorer hands…",
+          "at": 309.7000000011176
+        },
+        {
+          "text": "building the alluvial valley…",
+          "at": 672.9000000003725
+        },
+        {
+          "text": "assembling the Eidoverse compound…",
+          "at": 4447.300000000745
+        },
+        {
+          "text": "dressing rock, scree, and desert scrub…",
+          "at": 4796.700000001118
+        },
+        {
+          "text": "planting SeedThree desert LODs…",
+          "at": 5114.300000000745
+        },
+        {
+          "text": "building skybox…",
+          "at": 5480.800000000745
+        },
+        {
+          "text": "loading weather engine…",
+          "at": 5703.5999999996275
+        },
+        {
+          "text": "preparing rain and cloud shadows…",
+          "at": 5733.5999999996275
+        },
+        {
+          "text": "preparing sky reflections…",
+          "at": 6025.800000000745
+        },
+        {
+          "text": "preparing clouds…",
+          "at": 6353.700000001118
+        },
+        {
+          "text": "preparing distant sky geometry…",
+          "at": 10971.400000000373
+        },
+        {
+          "text": "preparing local reflections…",
+          "at": 10976.200000001118
+        },
+        {
+          "text": "preparing surface lighting and weather…",
+          "at": 21428.300000000745
+        },
+        {
+          "text": "finishing lighting and the first frame…",
+          "at": 35858.59999999963
+        },
+        {
+          "text": "ready",
+          "at": 42184.800000000745
+        }
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "name": "earth-rain-startup-verified",
+      "codeState": "Before final target and scheduling fixes",
+      "quality": "balanced",
+      "clouds": "cumulus",
+      "camera": [
+        0,
+        1.82,
+        96
+      ],
+      "pass": true,
+      "responsivenessPass": true,
+      "frameIntervalMs": {
+        "mean": 8.232080291970803,
+        "median": 8.30000000000291,
+        "p95": 12.5,
+        "p99": 16.59999999999127,
+        "max": 20.80000000000291
+      },
+      "timingSource": "CPU frame starts and async render-task completion; not GPU timestamps",
+      "meanFps": 121.47597746044272,
+      "pipelineCreates": 0,
+      "last": {
+        "wallSeconds": 45.104,
+        "transition": {
+          "active": false,
+          "from": "none",
+          "target": "rain",
+          "durationSeconds": 45,
+          "elapsedSeconds": 45.0035000000023,
+          "rawProgress": 1,
+          "easedProgress": 1
+        },
+        "wetness": 0.7660315559338634,
+        "water": 0.301139424905176,
+        "rain": 0.7,
+        "completedFrames": 6141,
+        "errors": [],
+        "pointerLocked": false
+      }
+    },
+    {
+      "name": "ringworld-rain-startup-ringworld",
+      "codeState": "Before final target and scheduling fixes",
+      "quality": "balanced",
+      "clouds": "cumulus",
+      "camera": [
+        0,
+        1.82,
+        96
+      ],
+      "pass": true,
+      "responsivenessPass": true,
+      "frameIntervalMs": {
+        "mean": 9.395691090757701,
+        "median": 8.39999999999418,
+        "p95": 12.60000000000582,
+        "p99": 16.69999999999709,
+        "max": 20.900000000023283
+      },
+      "timingSource": "CPU frame starts and async render-task completion; not GPU timestamps",
+      "meanFps": 106.43176647044879,
+      "pipelineCreates": 0,
+      "last": {
+        "wallSeconds": 45.129,
+        "transition": {
+          "active": false,
+          "from": "none",
+          "target": "rain",
+          "durationSeconds": 45,
+          "elapsedSeconds": 45.016000000001824,
+          "rawProgress": 1,
+          "easedProgress": 1
+        },
+        "wetness": 0.7663847138446709,
+        "water": 0.3015501512965064,
+        "rain": 0.7,
+        "completedFrames": 5391,
+        "errors": [],
+        "pointerLocked": false
+      }
+    },
+    {
+      "name": "shieldworld-rain-startup-shieldworld",
+      "codeState": "Final runtime patch",
+      "quality": "balanced",
+      "clouds": "cumulus",
+      "camera": [
+        0,
+        1.82,
+        96
+      ],
+      "pass": true,
+      "responsivenessPass": true,
+      "frameIntervalMs": {
+        "mean": 23.272170781892992,
+        "median": 21,
+        "p95": 33.29999999993015,
+        "p99": 37.5,
+        "max": 116.60000000009313
+      },
+      "timingSource": "CPU frame starts and async render-task completion; not GPU timestamps",
+      "meanFps": 42.969777481095754,
+      "pipelineCreates": 0,
+      "last": {
+        "wallSeconds": 45.211,
+        "transition": {
+          "active": false,
+          "from": "none",
+          "target": "rain",
+          "durationSeconds": 45,
+          "elapsedSeconds": 45.0203999999994,
+          "rawProgress": 1,
+          "easedProgress": 1
+        },
+        "wetness": 0.7672186016147917,
+        "water": 0.30252213398121547,
+        "rain": 0.7,
+        "completedFrames": 2213,
+        "errors": [],
+        "pointerLocked": false
+      }
+    },
+    {
+      "name": "shieldworld-rain-startup-hosted-shield-before",
+      "codeState": "Hosted 0.2.0; background load uncontrolled",
+      "quality": "balanced",
+      "clouds": "cumulus",
+      "camera": [
+        0,
+        1.82,
+        96
+      ],
+      "pass": true,
+      "responsivenessPass": true,
+      "frameIntervalMs": {
+        "mean": 8.691045638359325,
+        "median": 8.300000000046566,
+        "p95": 12.5,
+        "p99": 16.599999999976717,
+        "max": 20.79999999998836
+      },
+      "timingSource": "CPU frame starts and async render-task completion; not GPU timestamps",
+      "meanFps": 115.06095372302953,
+      "pipelineCreates": 0,
+      "last": {
+        "wallSeconds": 45.131,
+        "transition": {
+          "active": false,
+          "from": "none",
+          "target": "rain",
+          "durationSeconds": 45,
+          "elapsedSeconds": 45.01180000000212,
+          "rawProgress": 1,
+          "easedProgress": 1
+        },
+        "wetness": 0.7662811561782953,
+        "water": 0.30143167095452955,
+        "rain": 0.7,
+        "completedFrames": 5912,
+        "errors": [],
+        "pointerLocked": false
+      }
+    },
+    {
+      "name": "shieldworld-rain-startup-shield-normal",
+      "codeState": "Final runtime patch, fresh normal-CPU load; background load uncontrolled",
+      "quality": "balanced",
+      "clouds": "cumulus",
+      "camera": [
+        0,
+        1.82,
+        96
+      ],
+      "pass": true,
+      "responsivenessPass": true,
+      "frameIntervalMs": {
+        "mean": 10.377729257641919,
+        "median": 8.400000000008731,
+        "p95": 16.69999999999709,
+        "p99": 20.80000000000291,
+        "max": 54.20000000001164
+      },
+      "timingSource": "CPU frame starts and async render-task completion; not GPU timestamps",
+      "meanFps": 96.36019356196088,
+      "pipelineCreates": 0,
+      "last": {
+        "wallSeconds": 45.144,
+        "transition": {
+          "active": false,
+          "from": "none",
+          "target": "rain",
+          "durationSeconds": 45,
+          "elapsedSeconds": 45.00770000000148,
+          "rawProgress": 1,
+          "easedProgress": 1
+        },
+        "wetness": 0.7665532200476788,
+        "water": 0.3017483425009045,
+        "rain": 0.7,
+        "completedFrames": 4923,
+        "errors": [],
+        "pointerLocked": false
+      }
+    }
+  ],
+  "noise": {
+    "samples": 32768,
+    "maxNoiseError": 0,
+    "maxFbmError": 0,
+    "nonFinite": 0,
+    "pass": true
+  },
+  "nodeTests": {
+    "passed": 77,
+    "failed": 0
+  },
+  "visuals": {
+    "before-earth.png": "Hosted v0.2.0 baseline",
+    "earth.png": "Valid compact cloud shaders; before final scheduling fixes",
+    "ringworld-rain.png": "Ringworld rain, before final scheduling fixes",
+    "shieldworld-star.png": "Final runtime patch; close star view",
+    "shieldworld-rain.png": "Final runtime patch after fresh normal-CPU startup; individual FPS label is not a benchmark"
+  },
+  "gpuTiming": {
+    "scene": "shieldworld",
+    "weather": "rain",
+    "quality": "balanced",
+    "summary": {
+      "samples": 120,
+      "meanMs": 3.7218946666666666,
+      "medianMs": 3.5748160000000007,
+      "p95Ms": 5.028991999999997,
+      "maxMs": 6.262656
+    },
+    "timingSource": "Sum of WebGPU begin/end timestamps across each application frame’s render and compute passes; excludes queue idle time. Readback overhead makes this separate from throughput benchmarks."
+  },
+  "controlledBenchmark": {
+    "recordedAt": "2026-09-10T13:23:51.0904490Z",
+    "accepted": false,
+    "reason": "Resource preflight rejected external CPU/GPU contention before steady throughput capture",
+    "externalCpuMeanPercent": 68.46,
+    "externalCpuThresholdPercent": 5,
+    "externalGpuPeakPercent": 5.36,
+    "externalGpuThresholdPercent": 5
+  }
+}

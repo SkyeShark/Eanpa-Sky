@@ -6,7 +6,11 @@ export async function connect() {
     let target;
     for (let i=0;i<40&&!target;i++) {
         const targets = await fetch('http://127.0.0.1:9223/json/list').then(r => r.json());
-        target = targets.find(t => t.type === 'page' && t.url.startsWith('http://127.0.0.1:8378/'));
+        const pages = targets.filter(t => t.type === 'page');
+        if (pages.length > 1) throw new Error('Expected one owned inspection page');
+        target = pages.find(t => t.url.startsWith('http://127.0.0.1:8378/')
+            || (t.url.startsWith('https://skyeshark.github.io/Eanpa-Sky/')
+                && new URL(t.url).searchParams.has('automated')));
         if (!target) await new Promise(r=>setTimeout(r,250));
     }
     if (!target) throw new Error('Owned Eanpa QA page not found');

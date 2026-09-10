@@ -58739,8 +58739,12 @@ class Renderer {
 
 		//
 
-		renderContext.depth = this.depth;
-		renderContext.stencil = this.stencil;
+		// Use the same attachment contract as render(), including sky targets
+		// without a depth buffer. Otherwise the first draw creates a second
+		// pipeline after its supposedly matching asynchronous precompilation.
+		renderContext.renderTarget = renderTarget;
+		renderContext.depth = renderTarget !== null ? renderTarget.depthBuffer : this.depth;
+		renderContext.stencil = renderTarget !== null ? renderTarget.stencilBuffer : this.stencil;
 
 		if ( ! renderContext.clippingContext ) renderContext.clippingContext = new ClippingContext();
 		renderContext.clippingContext.updateGlobal( sceneRef, camera );
@@ -58827,6 +58831,7 @@ class Renderer {
 		// GPU pipeline creation can overlap without sharing that mutable state.
 		// Keep at most four objects in flight, including on lower-memory devices.
 		const pendingPipelines = [];
+		let nextYield = performance.now() + 8;
 		const finishPipelines = async () => {
 
 			const batch = pendingPipelines.splice( 0 );
@@ -58882,8 +58887,14 @@ class Renderer {
 					ready: Promise.all( pipelinePromises ).then( () => null, error => error ) } );
 				if ( pendingPipelines.length >= 4 ) await finishPipelines();
 
-				// Yield between objects to allow animation frames
-				await yieldToMain();
+				// New node graphs already yield during their build. Cached draws
+				// need only a bounded CPU slice, not one task per material/face.
+				if ( performance.now() >= nextYield ) {
+
+					await yieldToMain();
+					nextYield = performance.now() + 8;
+
+				}
 
 			}
 

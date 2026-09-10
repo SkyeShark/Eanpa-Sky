@@ -78,6 +78,18 @@ test('a failed compilation drains outstanding driver work and restores the rende
     assert.deepEqual(f.stats.after, [0, 1, 3]);
 });
 
+test('offscreen compilation uses the target depth and stencil contract', async () => {
+    const f = compilerFixture({count: 1});
+    const target = {depthBuffer: false, stencilBuffer: true};
+    Object.assign(f.renderer, {depth: true, stencil: false, _renderTarget: target,
+        _textures: {updateRenderTarget() {}, get: () => ({textures: [], depthTexture: null})}});
+    await WebGPURenderer.prototype.compileAsync.call(f.renderer, f.scene, f.camera);
+    const context = f.renderer._renderContexts.get();
+    assert.equal(context.renderTarget, target);
+    assert.equal(context.depth, false);
+    assert.equal(context.stencil, true);
+});
+
 function passFixture() {
     const scene = new Scene(), camera = new PerspectiveCamera();
     const pass = TSL.pass(scene, camera, {samples: 0});

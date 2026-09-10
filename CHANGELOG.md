@@ -1,5 +1,20 @@
 # Release notes
 
+## 0.2.1 — 2026-09-10
+
+Startup prepares independent GPU pipelines in bounded groups instead of waiting
+for each one individually. Offscreen targets and native PBR now precompile with
+the same attachment settings and pass context used by the first render.
+
+The sky's 20-by-6 light-shaft/rain march uses GPU loops instead of duplicated
+shader code. Reusable analytic noise functions keep the existing arithmetic;
+32,768 GPU comparisons matched the original noise and FBM exactly. Cloud sample
+counts, materials, weather options and the default Earth scene remain intact.
+
+The loading screen reports the active preparation stage. See
+[startup validation](STARTUP_REVIEW.md) for timings, cache conditions and the
+remaining download/compilation costs.
+
 ## 0.2.0 — 2026-09-10
 
 The standalone sky and weather overhaul, including the subsequent visual-review

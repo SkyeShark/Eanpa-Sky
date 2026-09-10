@@ -15,6 +15,11 @@ are recorded relative to local starting checkpoint `e2e6496`:
   throwing, and visits visible objects independently of the last draw's frustum.
   Precompile flags never remain set across an await. Geometry initialization
   follows asynchronous node building, avoiding an implicit synchronous rebuild.
+  Offscreen depth/stencil settings come from the actual render target, matching
+  the pipeline used by the subsequent draw.
+  Cached draws yield on an 8 ms CPU budget instead of scheduling a separate
+  task for each reused material. The local cube probe can consequently compile
+  all visible materials once and then render its six faces.
 - `PassNode.compileAsync()` uses the same merged context, attachment format,
   visibility layers and override material as rendering. State is restored even
   when compilation fails. This avoids rebuilding native PBR for a different

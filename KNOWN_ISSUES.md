@@ -8,6 +8,9 @@ The final red giant and rain-arrival corrections are in
 
 - **Startup and sky/quality replacement are expensive.** Shader compilation and
   environment preparation can take tens of seconds behind the loading screen.
+  Version 0.2.1 reduces serialized compilation and redundant pass variants;
+  [startup validation](STARTUP_REVIEW.md) separates this cost from downloads.
+  A fresh default demo visit still transfers about 345 MB of runtime assets.
   These costs are separate from steady-state frame rates. Final rain capture
   variants now warm after all material wrapping, before the scene is revealed.
 - **Reflection visibility is approximate.** Native PBR receives screen-space,

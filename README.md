@@ -1,6 +1,6 @@
 <img src="assets/brand/eanpa_wordmark.png" alt="Eanpa Engine" width="520">
 
-# Eanpa Sky Engine — v0.2
+# Eanpa Sky Engine — v0.2.1
 
 **[▶ Live demo](https://skyeshark.github.io/Eanpa-Sky/)** (WebGPU required — Chrome or Edge)
 
@@ -25,6 +25,7 @@ running, reuse it. The first load warms the WebGPU pipelines before revealing
 the world.
 
 The v0.2 release includes the sky, reflection, weather and surface-water overhaul.
+The 0.2.1 patch reduces shader preparation delays and shows each startup stage.
 See [the release notes](CHANGELOG.md) for its changes and remaining limits.
 Implementation details and retained measurements are in
 [OVERHAUL_REVIEW.md](OVERHAUL_REVIEW.md). The selected capture gallery is at
