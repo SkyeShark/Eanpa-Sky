@@ -14,6 +14,8 @@ const weather = await makeWeatherSystem({ scene, sky, opts: {
     splashCount: 700,
     surfaceResolution: 768,
     surfaceRefreshHz: 8,
+    moistureRadius: 1024,
+    moistureResolution: 256,
 } });
 weather.wrapScene({ budget: Infinity });
 weather.transitionTo('rain', 1, 45);
@@ -82,6 +84,23 @@ the reflected scene. Porous ground darkens moderately; metallic surfaces retain
 their conductor response. Thin wetness builds faster than puddles, and puddles
 outlast the rain instead of disappearing with the weather selector.
 
+Moisture accumulates from the local rain cell, rather than starting everywhere
+as soon as a rainy weather transition begins. A world-aligned GPU history stores
+thin wetness and pooled water separately. Drops and listener audio retain their
+local cloud gating; an initially dry surface starts wetting when rain reaches
+its area, then develops puddles. Water stays behind after that cloud passes.
+Rain-free overcast humidity can still damp surfaces without creating puddles.
+
+The history uses two 256-square RGBA16F textures (1 MiB total), or 128-square
+textures (0.25 MiB) on Performance. It refreshes four times per simulation second;
+receivers advance the cached moisture analytically every displayed frame, so
+that cadence does not step the wetness animation. Its snapped world grid stays
+fixed during ordinary walking, and recentering retains overlapping history.
+No per-object update or CPU readback is needed for accumulation. The 1024 m
+half-width is configurable with `moistureRadius`; `moistureResolution` controls
+its spatial sampling. `weather.accumulation.reset()` explicitly clears history
+when resetting a scene; normal weather changes preserve it.
+
 Falling drops use independent PCG random channels and a denser near-camera
 population. Cloud coverage at the upwind emission position gates precipitation;
 the same captured surface stops the falling streak and places its impact.
@@ -95,9 +114,13 @@ listener-exposure sample for rain gain and shelter filtering in the standalone.
 The capture covers a camera-local region (72 m half-width by default), refreshed
 at a bounded rate. Its world grid remains fixed within a guard area while the
 camera walks; moving occluders still refresh at the configured cadence.
-It is a surface approximation, not a fluid solver: moisture
-timing is shared, exposure is local, and it does not simulate runoff, trapped
-volumes or water carried by moving objects. A host that aggressively removes
+It is a surface approximation, not a fluid solver. Rainfall history is tracked
+in horizontal columns at reference height zero, while obstruction, incidence
+and material masks remain surface-specific. The column approximation can differ
+from the exact rain cell on very tall structures under strong wind. Newly entered
+regions outside the retained history start dry; moisture fades at its outer edge.
+It does not simulate runoff, trapped volumes, persistent per-object water, or
+water carried by moving objects. A host that aggressively removes
 off-screen geometry must retain nearby roof/occluder geometry for this pass.
 Puddles blend the native PBR surface parameters toward water; this is not a
 separate refractive water volume or a complete optical model of two material
@@ -105,6 +128,10 @@ layers. The surface field resolves the first obstruction along the rain ray.
 
 The GPU fixture in `qa/rain-surface-contract.js` checks open/sheltered surfaces,
 slopes, instances, skinned/deformed roofs, cutout openings, wind and state rollback.
+`qa/rain-accumulation-contract.js` checks dry/raining columns, filling and drying,
+continuous response between history updates, recentering and simulation rewind.
+`node qa/rain-timing.mjs <label>` records a real-time 45-second None-to-Rain
+transition in the running sky fixture, with GPU moisture probes and screenshots.
 `qa/final-pass.mjs` uses the existing owned browser for visual and performance
 review; it never launches another browser.
 

@@ -36,6 +36,7 @@
 // Omit any of them to keep the state's authored colour.
 import { makeRainSurfaceField } from './rain_surface_field.js';
 import { makeWeatherListener } from './weather_listener.js';
+import { makeRainAccumulationField } from './rain_accumulation_field.js';
 import { makeImpactSmoke } from './impact_smoke.js';
 
 (function () {
@@ -362,6 +363,8 @@ import { makeImpactSmoke } from './impact_smoke.js';
                 clamp(sky.uniforms.stormCanopy,0,1));
         });
         const listener=makeWeatherListener(T3,{surfaceField,cellAt:rainCellAt,rain:u.rainK});
+        const accumulation=makeRainAccumulationField(T3,{cellAt:rainCellAt,rain:u.rainK,wetTarget:u.wetTarget,
+            radius:opts.moistureRadius??1024,resolution:opts.moistureResolution??((opts.surfaceResolution??768)<=512?128:256)});
 
         // ---------------- world-space rain (instanced streaks) ----------------
         // deterministic: every streak's world position is a pure function of
@@ -1308,7 +1311,8 @@ import { makeImpactSmoke } from './impact_smoke.js';
             const incidence = clamp(dot(normalWorldGeometry, surfaceField.uniforms.sourceDirection), 0, 1);
             const exposure = surfaceField.visibilityAt(positionWorld,
                 float(0.06).add(float(1).sub(incidence).mul(0.28)));
-            const wetAmount = incidence.pow(0.75).mul(u.wetness).mul(wetGate).mul(exposure);
+            const moisture=accumulation.sample(positionWorld).toVar();
+            const wetAmount = incidence.pow(0.75).mul(moisture.x).mul(wetGate).mul(exposure);
             const flat = smoothstep(0.985, 0.998, normalWorldGeometry.y);
             // puddle mask: threshold value noise near its MIDDLE, never its
             // max — near-max iso-contours of value noise are blobs centered
@@ -1332,7 +1336,7 @@ import { makeImpactSmoke } from './impact_smoke.js';
             // Authored cavity masks can replace the procedural fallback on
             // arbitrary assets; 1 marks a depression that fills first.
             const cavity = mat.userData?.puddleMaskNode ?? clamp(pn.div(1.6), 0, 1);
-            const fillLevel = mix(float(0.79), float(0.56), u.surfaceWater);
+            const fillLevel = mix(float(0.79), float(0.56), moisture.y);
             const pShape = smoothstep(fillLevel, fillLevel.add(0.055), cavity)
                 .mul(flat).mul(u.puddleK).mul(puddleGate).mul(wetGate).mul(exposure)
                 .mul(float(1).sub(smoothstep(160, 450, pDist)));
@@ -1345,7 +1349,7 @@ import { makeImpactSmoke } from './impact_smoke.js';
             const baseRough = mat.roughnessNode ?? materialRoughness;
             const baseMetal = mat.metalnessNode ?? materialMetalness;
             const baseNormal = mat.normalNode ?? T3.materialNormal;
-            const puddleAmount = pShape.mul(smoothstep(0.06, 0.42, u.surfaceWater))
+            const puddleAmount = pShape.mul(smoothstep(0.06, 0.42, moisture.y))
                 .mul(float(1).sub(baseMetal));
             const wetMasks = Fn(() => {
                 // Keep shared geometric-normal evaluation outside the dry
@@ -1575,6 +1579,7 @@ import { makeImpactSmoke } from './impact_smoke.js';
             },
             wetness: wetnessStats,
             surfaceCapture: surfaceField.stats,
+            accumulation:accumulation.stats,
             listener:listener.stats,
         };
         // ---- smooth weather transitions: lerp every uniform setWeather touches
@@ -1795,7 +1800,7 @@ import { makeImpactSmoke } from './impact_smoke.js';
                 return Math.max(0.08, 1 - (1 - target) * state.k);
             },
             wrapMaterial, wrapScene,
-            surfaceField,listener,
+            surfaceField,listener,accumulation,
             async prepareFrame(renderer, camera, captureOptions = {}) {
                 if (disposed) return false;
                 renderer.getDrawingBufferSize(drawingBufferSize);
@@ -1808,6 +1813,10 @@ import { makeImpactSmoke } from './impact_smoke.js';
                     wind: u.windVec.value,
                     fallSpeed: u.fallSpeed.value * u.fallMul.value,
                     ...captureOptions,
+                });
+                await accumulation.prepare(renderer,camera,u.time.value,{
+                    active:u.rainK.value>.001||u.wetness.value>.001||u.surfaceWater.value>.001,
+                    force:!!captureOptions.force,
                 });
                 if(u.rainK.value>.001||captureOptions.force){
                     await listener.prepare(renderer,camera,u.time.value,!!captureOptions.force);
@@ -2322,6 +2331,7 @@ import { makeImpactSmoke } from './impact_smoke.js';
                 }
                 surfaceField.dispose();
                 listener.dispose();
+                accumulation.dispose();
                 wrapped.clear();
                 // drop any outstanding wrap queue too, so a disposed system
                 // stops holding references to the scene's materials

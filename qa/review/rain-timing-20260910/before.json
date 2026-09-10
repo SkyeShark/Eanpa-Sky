@@ -1,0 +1,260 @@
+{
+  "date": "2026-09-10T10:56:05.773Z",
+  "sky": "earth",
+  "quality": "balanced",
+  "weather": "none-to-rain",
+  "transitionSeconds": 45,
+  "simulationSpeed": 1,
+  "samples": [
+    {
+      "seconds": 0.0005,
+      "rain": 2.5925733880804063e-10,
+      "wet": 2.2485802842544688e-14,
+      "water": 1.2311476295413498e-22,
+      "listener": {
+        "ready": false,
+        "exposure": 1,
+        "cell": 1,
+        "rain": 0,
+        "samples": 0,
+        "error": null
+      },
+      "surface": {
+        "wet": 0,
+        "puddle": 0,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 5.028900000000372,
+      "rain": 0.024272563557121637,
+      "wet": 0.006146513642183205,
+      "water": 0.00006127293513647142,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0,
+        "rain": 0.023529411764705882,
+        "samples": 16,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.006146163679659367,
+        "puddle": null,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 10.016200000000186,
+      "rain": 0.08860167651191383,
+      "wet": 0.03874188844333311,
+      "water": 0.0012421592392004043,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0,
+        "rain": 0.08627450980392157,
+        "samples": 35,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.03871304169297218,
+        "puddle": null,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 15.041100000000558,
+      "rain": 0.18233450878374627,
+      "wet": 0.10572478820835382,
+      "water": 0.006849973381367302,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0,
+        "rain": 0.1803921568627451,
+        "samples": 54,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.1053905189037323,
+        "puddle": null,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 20.01610000000056,
+      "rain": 0.2922777801466512,
+      "wet": 0.2022992612621109,
+      "water": 0.021518404732051067,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0,
+        "rain": 0.28627450980392155,
+        "samples": 73,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.20067766308784485,
+        "puddle": null,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 25.00810000000056,
+      "rain": 0.40827993756216413,
+      "wet": 0.320637483705595,
+      "water": 0.04995524661834657,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0,
+        "rain": 0.40784313725490196,
+        "samples": 93,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.3156142830848694,
+        "puddle": null,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 30.03290000000037,
+      "rain": 0.5192005141753626,
+      "wet": 0.4498798294548884,
+      "water": 0.09516306101782686,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0,
+        "rain": 0.5176470588235295,
+        "samples": 112,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.43876373767852783,
+        "puddle": null,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 35.04090000000037,
+      "rain": 0.6123186291543531,
+      "wet": 0.5759522442258072,
+      "water": 0.15605191421573547,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0,
+        "rain": 0.611764705882353,
+        "samples": 131,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.5564032793045044,
+        "puddle": null,
+        "cell": 0
+      }
+    },
+    {
+      "seconds": 40.0115,
+      "rain": 0.676100414567855,
+      "wet": 0.6850954807230674,
+      "water": 0.22716071335120558,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0.06274509803921569,
+        "rain": 0.6745098039215687,
+        "samples": 150,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.6571160554885864,
+        "puddle": null,
+        "cell": 0.07011341207908117
+      }
+    },
+    {
+      "seconds": 45.0075,
+      "rain": 0.7,
+      "wet": 0.7651276467805688,
+      "water": 0.3000973532006546,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0.18823529411764706,
+        "rain": 0.6980392156862745,
+        "samples": 170,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.731722354888916,
+        "puddle": null,
+        "cell": 0.18981187106692232
+      }
+    },
+    {
+      "seconds": 50.040700000000186,
+      "rain": 0.7,
+      "wet": 0.808648039631082,
+      "water": 0.3650485759561632,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0.20784313725490197,
+        "rain": 0.6980392156862745,
+        "samples": 189,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.7733426094055176,
+        "puddle": null,
+        "cell": 0.20841784711228684
+      }
+    },
+    {
+      "seconds": 55.03090000000037,
+      "rain": 0.7,
+      "wet": 0.8297281319369415,
+      "water": 0.42010857255306727,
+      "listener": {
+        "ready": true,
+        "exposure": 1,
+        "cell": 0.20784313725490197,
+        "rain": 0.6980392156862745,
+        "samples": 209,
+        "error": null
+      },
+      "surface": {
+        "wet": 0.7935023307800293,
+        "puddle": null,
+        "cell": 0.20819311468221713
+      }
+    }
+  ],
+  "frames": [
+    {
+      "seconds": 0.0005
+    },
+    {
+      "seconds": 10.016200000000186
+    },
+    {
+      "seconds": 20.01610000000056
+    },
+    {
+      "seconds": 30.03290000000037
+    },
+    {
+      "seconds": 40.0115
+    },
+    {
+      "seconds": 50.040700000000186
+    }
+  ],
+  "errors": [],
+  "pointerLocked": false
+}

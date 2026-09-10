@@ -1,0 +1,328 @@
+{
+  "pass": true,
+  "checks": [
+    {
+      "name": "dry cloud cell despite rainy global target contains finite values",
+      "pass": true
+    },
+    {
+      "name": "dry cells do not accumulate water",
+      "pass": true
+    },
+    {
+      "name": "rain arrival contains finite values",
+      "pass": true
+    },
+    {
+      "name": "rain arrives before water accumulates",
+      "pass": true
+    },
+    {
+      "name": "subframe 0.05 contains finite values",
+      "pass": true
+    },
+    {
+      "name": "subframe 0.1 contains finite values",
+      "pass": true
+    },
+    {
+      "name": "subframe 0.15 contains finite values",
+      "pass": true
+    },
+    {
+      "name": "wetness evolves between captures",
+      "pass": true
+    },
+    {
+      "name": "thin wetness precedes pooled water",
+      "pass": true
+    },
+    {
+      "name": "sustained rain contains finite values",
+      "pass": true
+    },
+    {
+      "name": "rain fills exposed columns",
+      "pass": true
+    },
+    {
+      "name": "nearby dry column stays dry",
+      "pass": true
+    },
+    {
+      "name": "upper surfaces share local rainfall",
+      "pass": true
+    },
+    {
+      "name": "outside the tracked footprint remains dry",
+      "pass": true
+    },
+    {
+      "name": "cloud has passed contains finite values",
+      "pass": true
+    },
+    {
+      "name": "same-time refresh does not add or remove water",
+      "pass": true
+    },
+    {
+      "name": "drying after five seconds contains finite values",
+      "pass": true
+    },
+    {
+      "name": "puddles persist and dry gradually",
+      "pass": true
+    },
+    {
+      "name": "camera leaves guard area contains finite values",
+      "pass": true
+    },
+    {
+      "name": "camera recenter preserves overlapping water history",
+      "pass": true
+    },
+    {
+      "name": "newly tracked dry columns start dry",
+      "pass": true
+    },
+    {
+      "name": "time rewind contains finite values",
+      "pass": true
+    },
+    {
+      "name": "time rewind clears future water history",
+      "pass": true
+    }
+  ],
+  "measurements": [
+    {
+      "name": "dry cloud cell despite rainy global target",
+      "values": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 2
+    },
+    {
+      "name": "rain arrival",
+      "values": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 3
+    },
+    {
+      "name": "subframe 0.05",
+      "values": [
+        [
+          0.006047016009688377,
+          0.0011648611398413777
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.006047016009688377,
+          0.0011648611398413777
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 3
+    },
+    {
+      "name": "subframe 0.1",
+      "values": [
+        [
+          0.01205099280923605,
+          0.002327903639525175
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.01205099280923605,
+          0.002327903639525175
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 3
+    },
+    {
+      "name": "subframe 0.15",
+      "values": [
+        [
+          0.018012236803770065,
+          0.003489130176603794
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.018012236803770065,
+          0.003489130176603794
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 3
+    },
+    {
+      "name": "sustained rain",
+      "values": [
+        [
+          0.837890625,
+          0.453857421875
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.837890625,
+          0.453857421875
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 4
+    },
+    {
+      "name": "cloud has passed",
+      "values": [
+        [
+          0.837890625,
+          0.453857421875
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.837890625,
+          0.453857421875
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 5
+    },
+    {
+      "name": "drying after five seconds",
+      "values": [
+        [
+          0.77978515625,
+          0.43896484375
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.77978515625,
+          0.43896484375
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 6
+    },
+    {
+      "name": "camera leaves guard area",
+      "values": [
+        [
+          0.77978515625,
+          0.43896484375
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0.77978515625,
+          0.43896484375
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 7
+    },
+    {
+      "name": "time rewind",
+      "values": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "captures": 8
+    }
+  ],
+  "stats": {
+    "captures": 8,
+    "resolution": 128,
+    "radiusMeters": 256,
+    "refreshSeconds": 0.25,
+    "historyBytes": 262144,
+    "ready": true,
+    "lastUpdateSeconds": 10
+  }
+}

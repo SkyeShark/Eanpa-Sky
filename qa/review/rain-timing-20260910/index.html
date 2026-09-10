@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>Rain arrival and surface water — September 10</title>
+<style>
+body{font:17px/1.5 system-ui,sans-serif;color:#dce7ee;background:#121b22;max-width:1300px;margin:40px auto;padding:0 24px}
+h1,h2{font-weight:600}p{max-width:85ch}a{color:#8ccef3}figure{margin:24px 0}img{width:100%;height:auto;border-radius:8px}
+figcaption{margin-top:8px;color:#bbcad4}.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+</style>
+<h1>Rain arrives before puddles build</h1>
+<p>The previous surface response followed the global weather fade, even when the local cloud cell was still dry.
+Surface water now accumulates from local rainfall and remains in place after that cloud passes.</p>
+<p>These are normal-speed, 45-second None-to-Rain transitions using the Balanced Earth sky with generic host geometry.
+The two runs have different cloud phases, so their arrival times are not a matched timing comparison.</p>
+<h2>Corrected sequence</h2>
+<div class="frames">
+<figure><a href="current-2.png"><img src="current-2.png" alt="Dry ground under building rain clouds"></a><figcaption>20 seconds: local rain cell 0; surface wetness and puddle response both 0.</figcaption></figure>
+<figure><a href="current-3.png"><img src="current-3.png" alt="First falling rain streaks with little wetness on the ground"></a><figcaption>30 seconds: drops have arrived. Surface wetness 0.083; puddle response still 0.</figcaption></figure>
+<figure><a href="current-5.png"><img src="current-5.png" alt="Established rain and accumulated reflective puddles"></a><figcaption>50 seconds: sustained rain, wetness 0.747 and accumulated puddles.</figcaption></figure>
+</div>
+<p>Moisture values are GPU probe averages over a small horizontal receiver near the camera. The probe uses a full cavity mask;
+visible host geometry uses the normal procedural mask.</p>
+<h2>Reproduced earlier behavior</h2>
+<figure><a href="before-3.png"><img src="before-3.png" alt="Earlier reflective wet ground despite no local rain"></a><figcaption>Earlier code at 30 seconds: local rain cell 0, but measured surface wetness already 0.439.</figcaption></figure>
+<p>The earlier puddle-mask probe returned non-finite values because its diagnostic material lacked the required PBR parameter.
+Those values are retained as null in the raw baseline and are excluded from conclusions. The corrected probe checks all channels for finite values.</p>
+<h2>Standalone compatibility</h2>
+<figure><a href="standalone-rain.png"><img src="standalone-rain.png" alt="The full Earth standalone with falling rain and wet terrain in front of the temple"></a><figcaption>The complete Balanced Earth scene renders rain and puddles with its authored materials and no shader errors.</figcaption></figure>
+<p><a href="standalone.json">Standalone state</a>: audio context running, all 38 assets loaded, local rain supply 0.7 and no pointer lock.
+Audio was checked through runtime state; these still captures are not a listening test.</p>
+<p><a href="current.json">Current transition data</a> · <a href="before.json">Earlier transition data</a> ·
+<a href="accumulation-contract.json">GPU accumulation checks</a> · <a href="gpu-profile.json">Native GPU pass timings</a></p>
+</html>

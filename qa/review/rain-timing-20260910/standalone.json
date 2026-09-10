@@ -1,0 +1,60 @@
+{
+  "date": "2026-09-10T11:39:17.289Z",
+  "sky": "earth",
+  "quality": "balanced",
+  "weather": "rain",
+  "frames": 23598,
+  "precipitation": {
+    "fieldShape": "camera-centred-circular-feather",
+    "darkstormCoverage": "sealed-canopy-independent",
+    "volumetricCurtains": true,
+    "featherInnerRadius": 31.499999999999996,
+    "featherOuterRadius": 45,
+    "opacityBaseRange": [
+      0.46,
+      0.84
+    ],
+    "sceneLightResponsive": true,
+    "rainPopulation": 10000,
+    "splashPopulation": 700,
+    "rainVisible": true,
+    "intensity": 0.7,
+    "sceneLight": 0.39330025607973446,
+    "sceneColor": [
+      0.5780948493124659,
+      0.6864527301899493,
+      0.86
+    ]
+  },
+  "listener": {
+    "ready": true,
+    "exposure": 1,
+    "cell": 1,
+    "rain": 0.6980392156862745,
+    "samples": 564,
+    "error": null
+  },
+  "accumulation": {
+    "captures": 565,
+    "resolution": 256,
+    "radiusMeters": 1024,
+    "refreshSeconds": 0.25,
+    "historyBytes": 1048576,
+    "ready": true,
+    "lastUpdateSeconds": 142.380200000021
+  },
+  "audio": {
+    "state": "running",
+    "unlocked": true,
+    "loaded": 38,
+    "expected": 38,
+    "localRain": 0.7
+  },
+  "camera": [
+    0,
+    1.82,
+    96
+  ],
+  "pointerLocked": false,
+  "errors": ""
+}
