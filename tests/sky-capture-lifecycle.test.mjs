@@ -11,7 +11,7 @@ function fixture(){
     const renderer={target:null,mrt:null,contextNode:{original:true},toneMapping:1,outputColorSpace:'display',
         getRenderTarget(){return this.target},setRenderTarget(v){this.target=v},getMRT(){return this.mrt},setMRT(v){this.mrt=v},
         getDrawingBufferSize(v){return v.set(800,450)},setClearColor(){},
-        render(scene){this.draw?.(scene)},async compileAsync(scene){this.draw?.(scene)}};
+        render(scene,camera){this.draw?.(scene,camera)},async compileAsync(scene,camera){this.draw?.(scene,camera)}};
     const T={...WebGPU,...WebGPU.TSL,uniform(value){const node=WebGPU.TSL.uniform(value);uniforms.push(node);return node},
         QuadMesh:class{constructor(material){this.material=material}async renderAsync(r){r.draw?.(this.material)}},
         RendererUtils:{saveRendererState:r=>({target:r.target,mrt:r.mrt,contextNode:r.contextNode,toneMapping:r.toneMapping,outputColorSpace:r.outputColorSpace}),
@@ -55,6 +55,20 @@ test('cloud-map refresh is amortized and a failed refresh retains the previous w
     renderer.draw=null;assert.equal(await map.prepare(renderer,camera),true);assert.equal(map.stats.captures,2);
     let disposed=0;map.target.addEventListener('dispose',()=>disposed++);map.dispose();map.dispose();assert.equal(disposed,1);
     assert.equal(await map.prepare(renderer,camera,true),false);
+});
+
+test('celestial warmup and rendering use the same private camera without copying the player hierarchy',async()=>{
+    const {T,renderer}=fixture(),scene=new T.Scene(),camera=new T.PerspectiveCamera(62,1.6,.18,60000);
+    camera.add(new T.Object3D());camera.position.set(4,2,90);camera.updateMatrixWorld(true);
+    const mesh=new T.Mesh(new T.BoxGeometry(),new T.MeshStandardMaterial());scene.add(mesh);
+    const layer=makeSkyGeometryLayer(T,renderer,scene,camera,{objects:[mesh],near:20}),captures=[];
+    renderer.draw=(_,capture)=>{
+        captures.push(capture);assert.notEqual(capture,camera);assert.equal(capture.near,20);
+        assert.equal(capture.children.length,0);assert.ok(capture.matrixWorld.equals(camera.matrixWorld));
+    };
+    await layer.compileAsync();camera.position.x+=10;await layer.render();
+    assert.equal(captures[0],captures[1]);assert.equal(camera.near,.18);assert.equal(camera.children.length,1);
+    layer.dispose();
 });
 
 test('near-horizontal cloud shadow columns cover roofs and preserve points along one light ray',async()=>{

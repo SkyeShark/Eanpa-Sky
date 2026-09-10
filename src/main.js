@@ -1775,7 +1775,8 @@ async function tick(now, dt) {
     // Fixtures respond to ambient illumination, so storms and eclipses can
     // switch them on without changing the stable scene light topology.
     const luma=color=>color.r*.2126+color.g*.7152+color.b*.0722;
-    temple.setAmbientLight?.(luma(sun.color)*sun.intensity*.25+luma(hemi.color)*hemi.intensity);
+    const observerSunVisibility=active?.sky?.uniforms.solarVisibility?.value??1;
+    temple.setAmbientLight?.(luma(sun.color)*sun.intensity*.25*observerSunVisibility+luma(hemi.color)*hemi.intensity);
     const shadowHz={high:60,balanced:30,performance:20}[document.getElementById('quality').value]??30;
     sunShadowRefresh.update(t,shadowHz);
     updateWeatherStatus();

@@ -1289,14 +1289,16 @@ import { ringSolarVisibility, ringSolarVisibilityNode } from './ring_eclipse.js'
             update(t) {
                 tU.value = t;
                 const wx = sys._wx, sk = sys._sky;
-                // arc lighting self-drives: center from the group's world pose
-                // (once), the terminator from the bound sky's TRUE sun vector —
+                // Arc lighting follows the cylinder's world center and the
+                // terminator follows the bound sky's TRUE sun vector —
                 // consumers wire nothing per frame (engine behavior, not scene)
                 if (sysArcLight) {
-                    if (!sysArcLight._centered) {
-                        group.getWorldPosition(sysArcLight.center.value);
-                        sysArcLight._centered = true;
-                    }
+                    // The displaced cylinder is centered in the terrain
+                    // mesh's local frame. The export's wall-bounds recentering
+                    // offsets that frame from the group by about 18 metres.
+                    // Using the group made the sea intersect its own analytic
+                    // eclipse cylinder on only one arc, producing hard bands.
+                    terrain.getWorldPosition(sysArcLight.center.value);
                     if (sk?.sunDir) {
                         sysArcLight.sunDir.value.copy(sk.sunDir).normalize();
                         sysArcLight.sunElev.value = sk.sunDir.y;
@@ -1480,8 +1482,13 @@ import { ringSolarVisibility, ringSolarVisibilityNode } from './ring_eclipse.js'
             // classic ringworld sun-eclipse ("arch night"), soft penumbra.
             eclipseK(dir, originY = 0) {
                 const p=typeof originY==='object'?originY:{x:0,y:originY,z:0};
-                return ringSolarVisibility({x:p.x-group.position.x,y:p.y,z:p.z-group.position.z},dir,
-                    {radius:R_REF,centerY:group.position.y,halfWidth:483});
+                terrain.getWorldPosition(uRingC);
+                return ringSolarVisibility(p,dir,{radius:R_REF,center:uRingC,halfWidth:483});
+            },
+            // Share the band's exact moving shadow with arbitrary local PBR
+            // receivers. Uniforms follow the same cylinder center and sun.
+            solarVisibilityNode(point) {
+                return ringSolarVisibilityNode(T3,point,uSunDirN,{radius:R_REF,center:uRingCN,halfWidth:483});
             },
         };
         return sys;

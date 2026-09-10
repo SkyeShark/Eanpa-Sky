@@ -1881,6 +1881,7 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
         let disposed = false;
         const sys = {
             uniforms: u, state, cloudTransitionInfo,
+            _solarOcclusion: null,
             domes: [bgDome, cloudDome],
             sunDir: V(0, 1, 0), moonDir: V(0, -1, 0),
             stormCanopyInfo: {
@@ -2209,7 +2210,10 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
                         (pal.sun[2] * (1 - nightK) + ml[2] * nightK) * SKY_COLOR.sun[2],
                     );
                     const moonUp = Math.max(0, Math.min(1, sys.moonDir.y / 0.12));
-                    sun.intensity = Math.max(0.08, pal.int * 1.15) * (1 - nightK) * u.solarVisibility.value
+                    // A spatial occluder shadows each receiver in its material.
+                    // Camera coverage still dims the sky, not every sunlit roof.
+                    const solarGain = sys._solarOcclusion ? 1 : u.solarVisibility.value;
+                    sun.intensity = Math.max(0.08, pal.int * 1.15) * (1 - nightK) * solarGain
                         + (opts.moonLightIntensity ?? 0.35) * nightK * moonUp * moonUp * (3 - 2 * moonUp);
                     const d = nightK > 0.5 ? sys.moonDir : sys.sunDir;
                     sun.position.copy(d).multiplyScalar(120);
@@ -2334,6 +2338,16 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
             async prepareCloudShadows(renderer, camera, force = false) {
                 return cloudShadowMap.prepare(renderer, camera, force);
             },
+            // Optional world-space solar visibility, e.g. a megastructure's
+            // moving shadow. Returns a TSL scalar (0 blocked, 1 clear) for the
+            // receiver. Call when attaching/detaching an occluder, not per frame.
+            setSolarOcclusion(nodeFactory = null) {
+                if (nodeFactory !== null && typeof nodeFactory !== 'function') throw new TypeError('Expected a solar visibility node factory');
+                if (sys._solarOcclusion === nodeFactory) return;
+                sys._solarOcclusion = nodeFactory;
+                for (const material of cloudShadowRoots.keys()) material.needsUpdate = true;
+                sys.wrapCloudShadows(scene);
+            },
             // Preserve native material response, including indirect sky light,
             // emissive, wetness and alpha tests. Only the scene's celestial key
             // receives cloud attenuation; flashlights and temple lights remain local.
@@ -2341,7 +2355,8 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
                 const done = new Set();
                 let n = 0;
                 (sceneRoot || scene).traverse((o) => {
-                    if (!o.isMesh || o.userData.noCloudShadow) return;
+                    if (!o.isMesh || (o.userData.noCloudShadow
+                        && (!sys._solarOcclusion || o.userData.noSolarShadow))) return;
                     if (sys.domes.includes(o)) return;
                     const mats = Array.isArray(o.material) ? o.material : [o.material];
                     for (const m of mats) {
@@ -2366,10 +2381,15 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
                             const model = setup.call(this, builder);
                             const direct = model.direct;
                             model.direct = function (lightData, lightBuilder) {
-                                if (lightData.lightNode?.light === cloudShadowSun
-                                    && !lightBuilder.object?.userData?.noCloudShadow) {
-                                    const shade = sys.tslCloudShadow(T3.positionWorld, strength);
-                                    lightData = { ...lightData, lightColor: lightData.lightColor.mul(shade) };
+                                if (lightData.lightNode?.light === cloudShadowSun) {
+                                    const flags = lightBuilder.object?.userData;
+                                    let color = lightData.lightColor;
+                                    if (!flags?.noCloudShadow) color = color.mul(sys.tslCloudShadow(T3.positionWorld, strength));
+                                    if (sys._solarOcclusion && !flags?.noSolarShadow) {
+                                        const visibility = T3.mix(sys._solarOcclusion(T3.positionWorld), 1, u.moonLightK);
+                                        color = color.mul(visibility);
+                                    }
+                                    if (color !== lightData.lightColor) lightData = { ...lightData, lightColor: color };
                                 }
                                 return direct.call(this, lightData, lightBuilder);
                             };
@@ -2814,6 +2834,7 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
                     material.needsUpdate = true;
                 }
                 cloudShadowRoots.clear();
+                sys._solarOcclusion = null;
                 cloudShadowMap.dispose();
                 scene.remove(bgDome, cloudDome);
                 cloudDome.geometry.dispose();

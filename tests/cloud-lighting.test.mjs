@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import {ringSolarVisibility} from '../engine/ring_eclipse.js';
 
 const source = await readFile(new URL('../engine/sky_system.js', import.meta.url), 'utf8');
-const start = source.indexOf('wrapCloudShadows(sceneRoot,');
+const start = source.indexOf('setSolarOcclusion(nodeFactory');
 const end = source.indexOf('// JS: sun dimming factor', start);
 assert.ok(start >= 0 && end > start);
-const makeWrapper = Function('scene', 'sys', 'T3', 'cloudShadowSun', 'cloudShadowRoots', 'console',
+const makeWrapper = Function('scene', 'sys', 'T3', 'cloudShadowSun', 'cloudShadowRoots', 'console', 'u',
     `return ({ ${source.slice(start, end)} });`);
 const restoreStart = source.indexOf('for (const [material, roots] of cloudShadowRoots)');
 const restoreEnd = source.indexOf('cloudShadowRoots.clear();', restoreStart) + 'cloudShadowRoots.clear();'.length;
@@ -21,15 +22,17 @@ function harness() {
         } };
     const root = { traverse(callback) { callback({ isMesh: true, material, userData: {} }); } };
     const celestial = {}, localLight = {}, roots = new Map();
-    const wrapper = makeWrapper(root, { domes: [], tslCloudShadow: () => 0.4 }, { positionWorld: {} },
-        celestial, roots, { log() {} });
+    const sys = { domes: [], tslCloudShadow: () => 0.4 }, u = {moonLightK:{value:0}};
+    const T3 = {positionWorld:{x:0,y:1.82,z:96}, mix:(a,b,k)=>a*(1-k.value)+b*k.value};
+    const wrapper = makeWrapper(root, sys, T3, celestial, roots, { log() {} }, u);
+    Object.assign(sys,wrapper);
     const original = material.setupLightingModel;
     wrapper.wrapCloudShadows(root, 1);
     const model = material.setupLightingModel({});
     const lightColor = { mul(factor) { return factor; } };
     const data = light => ({ lightNode: { light }, lightColor, reflectedLight: {} });
     return { material, colorNode, alphaTestNode, emissiveNode, celestial, localLight, roots, root,
-        wrapper, original, model, data };
+        wrapper, original, model, data, sys, T3, u };
 }
 
 test('cloud shadows attenuate the celestial direct light and preserve native material/indirect response', () => {
@@ -92,4 +95,26 @@ test('imported PBR materials carry cloud lighting through renderer node conversi
         restore(roots);
         assert.equal(Object.hasOwn(material, 'setupLightingModel'), false);
     }
+});
+
+test('spatial eclipse follows each receiver, composes with clouds, and leaves local lights and moonlight intact',()=>{
+    const h=harness(),color=value=>({value,mul(factor){return color(value*factor)}});
+    const sun={x:.049,y:Math.sqrt(1-.049**2),z:0};
+    h.wrapper.setSolarOcclusion(point=>ringSolarVisibility(point,sun));
+    const wrapped=h.material.setupLightingModel;
+    const input={lightNode:{light:h.celestial},lightColor:color(1)};
+    const sample=(x,y,flags={})=>{
+        Object.assign(h.T3.positionWorld,{x,y,z:96});
+        return h.model.direct(input,{object:{userData:flags}}).lightColor.value;
+    };
+    assert.equal(sample(-200,0),0,'ground inside the moving shadow');
+    assert.equal(sample(200,0),.4,'sunlit ground retains only cloud attenuation');
+    assert.ok(sample(0,500)<sample(0,0),'roof uses its own ray through the ring');
+    assert.equal(sample(200,0,{noCloudShadow:true}),1,'cloud opt-out does not remove solar coverage');
+    assert.equal(sample(-200,0,{noSolarShadow:true}),.4,'solar opt-out retains cloud shading');
+    const local={...input,lightNode:{light:h.localLight}};
+    assert.equal(h.model.direct(local,{object:{userData:{}}}),local);
+    h.u.moonLightK.value=1;assert.equal(sample(-200,0),.4,'planetshine remains cloud-shadowed, never eclipsed');
+    h.wrapper.setSolarOcclusion(null);
+    assert.equal(sample(-200,0),.4);assert.equal(h.material.setupLightingModel,wrapped,'changing an occluder never stacks wrappers');
 });

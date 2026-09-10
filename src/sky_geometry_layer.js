@@ -2,7 +2,31 @@
 // then composited behind local geometry and beneath the existing cloud layers.
 // This lets mountains occlude valleys and moon fragments occlude each other
 // without placing the reconstruction shell behind their main-scene depth.
-export function makeSkyGeometryLayer(T,renderer,scene,camera,{objects,renderOrder=-99,opacity=null}){
+export function syncSkyCaptureCamera(source,target,near){
+    source.updateWorldMatrix(true,false);
+    // Copy only view state: Camera.clone() also clones children in this Three
+    // revision, including a host's attached hands, lights and player rig.
+    for(const key of ['fov','aspect','zoom','far','focus','filmGauge','filmOffset','coordinateSystem'])target[key]=source[key];
+    target._reversedDepth=source.reversedDepth;
+    target.layers.mask=source.layers.mask;
+    if(source.view){target.view??={};Object.assign(target.view,source.view);}else target.view=null;
+    // Preserve the view even when the host parents its camera to a player rig.
+    target.matrix.copy(source.matrixWorld);
+    target.matrixWorld.copy(source.matrixWorld);
+    target.matrixWorldInverse.copy(source.matrixWorldInverse);
+    source.matrixWorld.decompose(target.position,target.quaternion,target.scale);
+    target.matrixAutoUpdate=false;
+    target.near=Math.max(source.near,Math.min(near,source.far*.5));
+    target.updateProjectionMatrix();
+    return target;
+}
+
+export function makeSkyGeometryLayer(T,renderer,scene,camera,{objects,renderOrder=-99,opacity=null,near=null}){
+    // A private depth buffer also needs a depth range suited to its geometry.
+    // The first-person near plane quantizes ten-kilometre land/water depths
+    // into metre-wide steps. A host can raise this layer's near plane without
+    // clipping hands or changing the view's projection/SSR depth convention.
+    const captureCamera=near!==null&&camera.isPerspectiveCamera?new T.PerspectiveCamera():camera;
     const target=new T.RenderTarget(1,1,{type:T.HalfFloatType,depthBuffer:true});
     target.texture.name='output';
     const captureScene=new T.Scene(),context=T.context({eanpaReflectionSurfacePass:false});
@@ -36,6 +60,7 @@ export function makeSkyGeometryLayer(T,renderer,scene,camera,{objects,renderOrde
         const state=T.RendererUtils.saveRendererState(renderer),savedContext=renderer.contextNode;
         const parents=objects.map(o=>[o,o.parent]);
         try{
+            if(captureCamera!==camera)syncSkyCaptureCamera(camera,captureCamera,near);
             resize();for(const [o]of parents)captureScene.attach(o);
             renderer.contextNode=context;renderer.setMRT(mrt);renderer.setRenderTarget(target);
             renderer.setClearColor(0,0);renderer.toneMapping=T.NoToneMapping;
@@ -48,8 +73,8 @@ export function makeSkyGeometryLayer(T,renderer,scene,camera,{objects,renderOrde
     };
     let disposed=false;
     return {target,proxy,restoreVisibility,
-        async compileAsync(){await inCapture(()=>renderer.compileAsync(captureScene,camera));hide();},
-        async render(){if(disposed)return;restoreVisibility();await inCapture(()=>renderer.render(captureScene,camera));hide();},
+        async compileAsync(){await inCapture(()=>renderer.compileAsync(captureScene,captureCamera));hide();},
+        async render(){if(disposed)return;restoreVisibility();await inCapture(()=>renderer.render(captureScene,captureCamera));hide();},
         dispose(){if(disposed)return;disposed=true;restoreVisibility();scene.remove(proxy);geometry.dispose();material.dispose();target.dispose();
             for(const [m,write]of materialDepth)m.depthWrite=write;
             for(const [o,previous]of exclusions){if(previous===undefined)delete o.userData.noSSRSource;else o.userData.noSSRSource=previous;}

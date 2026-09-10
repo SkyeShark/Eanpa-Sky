@@ -56,3 +56,24 @@ Cloud visibility and the map use the same wind, extinction, celestial light
 direction, weather transition, and high-cloud field. Cirrus uses a periodic
 linear-opacity texture from `assets/weather/cirrus_ice_trails.png`; supply
 `textures.cirrus` to override it. A supplied texture remains host-owned.
+
+## Ring eclipses on local surfaces
+
+The standalone ring registers `sky.setSolarOcclusion(position =>
+ring.solarVisibilityNode(position))` before material warmup. This applies the
+same analytic cylinder shadow to each PBR receiver and the visible band. It
+adds no shadow texture, geometry search, or capture pass. The ring's geometry
+center, rather than the imported group's pivot, defines the cylinder.
+
+With this hook installed, `applyToLights` leaves the daytime key at its normal
+intensity; the material shadows each surface. `solarVisibility` still controls
+the observer's sun disc, and `solarSkyVisibility` controls the surrounding sky
+and ambient fill. Moonlight and local lamps retain their separate response.
+`object.userData.noSolarShadow` opts out independently of cloud shadows. Use
+`setSolarOcclusion(null)` to detach the occluder; adding/removing the hook
+invalidates the registered shaders once.
+
+The standalone celestial geometry layer uses its own camera/depth buffer. Its
+Ringworld near plane is 20 metres, keeping metre-scale shoreline depth distinct
+ten kilometres away. The first-person camera remains at 0.18 metres; framing,
+zoom, and the local reflection depth convention are unchanged.

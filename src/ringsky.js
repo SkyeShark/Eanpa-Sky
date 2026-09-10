@@ -116,16 +116,19 @@ export async function makeRingworld({
     ring.group.traverse((o) => {
         if (!o.isMesh) return;
         o.userData.noCloudShadow = true;
+        o.userData.noSolarShadow = true;
         o.userData.noWet = true;
         o.renderOrder = -99;
         const mats = Array.isArray(o.material) ? o.material : [o.material];
         for (const m of mats) if (m) m.depthWrite = false;
     });
     scene.add(ring.group);
+    sky.setSolarOcclusion(point => ring.solarVisibilityNode(point));
+    const observer = new THREE.Vector3();
     // The clouds must be in the same depth layer as their land. Leaving them
     // in the main scene drew them before the opaque band reconstruction and
     // erased their contribution, even though their coverage atlas was valid.
-    sky.depthLayers = [{objects:[ring.band,ring.walls,ring.clouds].filter(Boolean),renderOrder:-99}];
+    sky.depthLayers = [{objects:[ring.band,ring.walls,ring.clouds].filter(Boolean),renderOrder:-99,near:20}];
 
     // The band lights itself. The engine owns a real directional "underground
     // sun" plus planetshine that track the sky's TRUE sun vector, so the arc
@@ -184,7 +187,7 @@ export async function makeRingworld({
         weatherWarmupObjects(){return weatherAttachment.weatherWarmupObjects();},
         prepareFrame(renderer){return ring.prepareFrame(renderer);},
         update(t) {
-            const solar=ring.eclipseK(sky.sunDir,camera.position);
+            const solar=ring.eclipseK(sky.sunDir,camera.getWorldPosition(observer));
             sky.uniforms.solarVisibility.value=solar;
             sky.uniforms.solarSkyVisibility.value=.16+.84*solar;
             globalThis._ringEclipse={solarVisibility:solar,skyVisibility:sky.uniforms.solarSkyVisibility.value};

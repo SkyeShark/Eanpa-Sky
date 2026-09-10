@@ -16,3 +16,13 @@ test('eclipse follows the observer and crosses the finite solar disc continuousl
     assert.ok(values.every(Number.isFinite));
     for(let i=1;i<values.length;i++)assert.ok(values[i]>=values[i-1]&&values[i]-values[i-1]<.03);
 });
+
+test('translated cylinder and observer retain the same eclipse, including both arcs',()=>{
+    const center={x:83,y:4921.660888671875,z:-.458740234375};
+    for(const z of [-3500,-96,96,3500])for(const angle of [-.06,0,.06]){
+        const local={x:0,y:4940-Math.sqrt(5000**2-z*z)+2,z};
+        const moved={x:local.x+center.x,y:local.y+center.y-4940,z:local.z+center.z};
+        assert.ok(Math.abs(ringSolarVisibility(moved,direction(angle),{center})
+            -ringSolarVisibility(local,direction(angle)))<1e-10);
+    }
+});
