@@ -28,6 +28,7 @@ export async function makeShieldworld({
     worldRayDir,
     cloudPreset = 'cumulus',
     weatherState = 'none',
+    weatherOptions = {},
 }) {
     await loadEngine('sky_system.js');
     await loadEngine('redgiant.js');
@@ -147,6 +148,7 @@ export async function makeShieldworld({
         quality,
         baseCloudPreset: cloudPreset,
         initialWeatherState: weatherState,
+        weatherOptions,
     });
 
     return {

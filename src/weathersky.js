@@ -39,6 +39,7 @@ export async function makeLazyWeatherAttachment({
     quality,
     baseCloudPreset = 'cumulus',
     initialWeatherState = 'none',
+    weatherOptions = {},
 }) {
     let selectedCloudPreset = resolveCloudPreset(baseCloudPreset);
     let requestedWeatherState = initialWeatherState || 'none';
@@ -151,6 +152,9 @@ export async function makeLazyWeatherAttachment({
                                 ));
                             }
                         },
+                        // Hosts can supply their own collision roots, surface
+                        // sampler and impact callback without demo globals.
+                        ...weatherOptions,
                     },
                 });
                 updateNoneTarget(made);
@@ -354,6 +358,7 @@ export async function makeWeatherSky({
     worldRayDir,
     cloudPreset,
     weatherState: contextualWeatherState,
+    weatherOptions = {},
 }, preset = cloudPreset, weatherState = contextualWeatherState) {
     await loadEngine('sky_system.js');
     const selectedPreset = resolveCloudPreset(preset);
@@ -404,6 +409,7 @@ export async function makeWeatherSky({
             quality,
             baseCloudPreset: selectedPreset,
             initialWeatherState: selectedWeather,
+            weatherOptions,
         });
     } catch (error) {
         disposeWeatherSky();

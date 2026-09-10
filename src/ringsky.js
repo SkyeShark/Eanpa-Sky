@@ -30,6 +30,7 @@ export async function makeRingworld({
     worldRayDir,
     cloudPreset = 'cumulus',
     weatherState = 'none',
+    weatherOptions = {},
 }) {
     await loadEngine('sky_system.js');
     await loadEngine('ringworld.js');
@@ -151,6 +152,7 @@ export async function makeRingworld({
         quality,
         baseCloudPreset: cloudPreset,
         initialWeatherState: weatherState,
+        weatherOptions,
     });
     // bindWeather keeps this stable facade. Its getters proxy the real system
     // after lazy activation, so the far Ringworld cloud/rain layers transition

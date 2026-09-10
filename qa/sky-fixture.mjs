@@ -54,8 +54,10 @@ const textures=new Map();globalThis.loadImageTexture=async(url,{srgb=false,mipma
 };
 const loadEngine=name=>import('/engine/'+name);
 const factory={earth:makeWeatherSky,ringworld:makeRingworld,shieldworld:makeShieldworld}[kind];
+const impacts=[];
 const active=await factory({THREE:T,scene,camera,renderer,sun,hemi,loadEngine,quality,
-    hours:Number(search.get('tod')??11),worldRayDir:true,cloudPreset:'cumulus',weatherState:'none'});
+    hours:Number(search.get('tod')??11),worldRayDir:true,cloudPreset:'cumulus',weatherState:'none',
+    weatherOptions:{strikeTargets:()=>[host],strikeHeightAt:null,onLocalStrike:impact=>impacts.push(impact)}});
 await active.preloadWeather();const sky=active.sky,weather=__eanpaWeatherByScene.get(scene);
 weather.wrapScene();for(let i=0;i<30;i++)weather.update(i*.01,camera);
 weather.setWeather(search.get('weather')??'rain');
@@ -70,7 +72,7 @@ pipeline.setEnvironment(environment.update(baked));pipeline.localProbe.configure
 globalThis._sky=sky;globalThis._c=camera;globalThis._reflectionPipeline=pipeline;globalThis._spatialClouds=spatial;
 const state=globalThis._eanpaTest={paused:true,pauseAfterFrame:false,completedFrames:0};
 const fixture=globalThis.__skyFixture={renderer,scene,camera,host,sky,weather,pipeline,spatial,active,errors,
-    kind,tier,quality,ready:false,time:0,mode:'effects',animateCamera:false,moving,
+    kind,tier,quality,ready:false,time:0,mode:'effects',animateCamera:false,moving,impacts,
     environmentStats:environment.stats,nextEnvironmentAt:quality.cloudReflectionRefreshSeconds,
     async frame(time=this.time+1/60){
         globalThis._frameStage='sky-update';

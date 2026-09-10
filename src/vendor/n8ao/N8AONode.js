@@ -423,19 +423,19 @@ export class N8AONode extends TempNode {
                 writeTarget = nextWriteTarget;
             }
             if (this.configuration.accumulate) {
-            this.accumulationCurrentTextureNode.value = readTarget.texture;
-            this.accumulationPreviousTextureNode.value =
-                this.accumulationTargetA.texture;
-            renderer.setRenderTarget(this.accumulationTargetB);
-            this.quadMesh.material = this.accumulationMaterial;
-            this.quadMesh.name = "N8AO.Accumulation";
-            this.quadMesh.render(renderer);
-            const previousAccumulationTarget = this.accumulationTargetA;
-            this.accumulationTargetA = this.accumulationTargetB;
-            this.accumulationTargetB = previousAccumulationTarget;
-            this.accumulationPreviousTextureNode.value =
-                this.accumulationTargetA.texture;
-            this.compositeAoTextureNode.value = this.accumulationTargetA.texture;
+                this.accumulationCurrentTextureNode.value = readTarget.texture;
+                this.accumulationPreviousTextureNode.value =
+                    this.accumulationTargetA.texture;
+                renderer.setRenderTarget(this.accumulationTargetB);
+                this.quadMesh.material = this.accumulationMaterial;
+                this.quadMesh.name = "N8AO.Accumulation";
+                this.quadMesh.render(renderer);
+                const previousAccumulationTarget = this.accumulationTargetA;
+                this.accumulationTargetA = this.accumulationTargetB;
+                this.accumulationTargetB = previousAccumulationTarget;
+                this.accumulationPreviousTextureNode.value =
+                    this.accumulationTargetA.texture;
+                this.compositeAoTextureNode.value = this.accumulationTargetA.texture;
             } else {
                 // With no temporal accumulation the blend is exactly the
                 // current denoised AO. Avoid two clears and a full-screen copy.

@@ -40,10 +40,11 @@ try{
             completedFps:(c.completed.length-1)*1000/(c.completed.at(-1)-c.completed[0]),
             cpuAndSubmitMedianMs:cpu[Math.floor(cpu.length*.5)],intervalsMs:intervals,errors:[...f.errors],
             constraints:globalThis.__gpuContention?.metadata??null,cloudShadows:f.sky.cloudShadowMap.stats,
-            surface:f.weather.surfaceField?.stats??null,quality:f.quality,geometry:f.pipeline.ssrImplementation};
+            surface:f.weather.surfaceField?.stats??null,quality:f.quality,geometry:f.pipeline.ssrImplementation,
+            environment:{capturesDuringRun:f.environmentStats.bakes-c.initialBakes,
+                regularCadenceSeconds:f.quality.cloudReflectionRefreshSeconds,oneRefreshScheduledAtMidrun:true}};
     })()`);
     result.profile={name:level,...profile};result.resources={before,during:await during};
-    result.environment=await c.evaluate('({capturesDuringRun:__skyFixture.environmentStats.bakes-__fixtureCapture.initialBakes,regularCadenceSeconds:__skyFixture.quality.cloudReflectionRefreshSeconds,oneRefreshScheduledAtMidrun:true})');
     const gitArgs=['-c',`safe.directory=${process.cwd().replaceAll('\\','/')}`];
     result.revision=(await run('git',[...gitArgs,'rev-parse','HEAD'],{windowsHide:true})).stdout.trim();
     const diff=(await run('git',[...gitArgs,'diff','HEAD','--','engine','src','vendor','qa/sky-fixture.mjs'],{windowsHide:true,maxBuffer:4e6})).stdout;
