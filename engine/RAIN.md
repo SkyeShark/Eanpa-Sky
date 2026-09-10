@@ -27,6 +27,26 @@ await renderer.renderAsync(scene, camera);
 weather.dispose();
 ```
 
+The three sky factories in `src/weathersky.js`, `src/ringsky.js` and
+`src/shieldworld.js` also accept `weatherOptions`. A host can supply its own
+lightning collision roots and impact callback:
+
+```js
+const active = await makeRingworld({
+    // ...scene, camera, lights, loader, quality and sky options...
+    weatherOptions: {
+        strikeTargets: () => [worldGeometry],
+        strikeHeightAt: null, // use the actual meshes for strike collision
+        onLocalStrike: impact => damageSystem.lightning(impact),
+    },
+});
+```
+
+`impact.point` and `impact.normal` are world-space arrays. Supplying an optional
+`strikeHeightAt(x, z)` is useful for a host's GPU-only heightfield fallback;
+return a finite height only where that surface exists. Rain exposure, puddles,
+splashes and cloud-shadow receivers do not require this lightning callback.
+
 `prepareFrame` captures the first surface seen along the incoming rain direction.
 One depth/normal target serves rain visibility, slope-aligned impacts and material
 exposure. Ordinary meshes, instances, skinning, vertex deformation, displacement
@@ -73,7 +93,9 @@ coverage compensation prevents oversized distant dots. The surface field also pr
 listener-exposure sample for rain gain and shelter filtering in the standalone.
 
 The capture covers a camera-local region (72 m half-width by default), refreshed
-at a bounded rate. It is a surface approximation, not a fluid solver: moisture
+at a bounded rate. Its world grid remains fixed within a guard area while the
+camera walks; moving occluders still refresh at the configured cadence.
+It is a surface approximation, not a fluid solver: moisture
 timing is shared, exposure is local, and it does not simulate runoff, trapped
 volumes or water carried by moving objects. A host that aggressively removes
 off-screen geometry must retain nearby roof/occluder geometry for this pass.

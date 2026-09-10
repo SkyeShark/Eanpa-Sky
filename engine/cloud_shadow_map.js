@@ -1,64 +1,50 @@
-// A sun-column transmittance field shared by every receiving material.
-// Project receivers along the light direction onto the capture plane: roofs,
-// slopes and the ground then sample the same cloud column without a ray march
-// in each PBR fragment. The host calls prepare() in its serialized frame.
+// One light-column field for every receiving material. Two completed captures
+// share an atlas and sampler, so temporal blending does not repeatedly filter
+// or resample the previous field. The host serializes prepare() with rendering.
 export function makeCloudShadowMap(T, {transmittance, lightDirection, time, displacement,
     resolution=384, extent=6144, verticalSpan=1024, refreshSeconds=.1}={}) {
     const size=Math.max(64,Math.round(resolution));
-    const targets=Array.from({length:2},()=>{
-        const target=new T.RenderTarget(size,size,{type:T.HalfFloatType,depthBuffer:false,
-            minFilter:T.LinearFilter,magFilter:T.LinearFilter,generateMipmaps:false});
-        target.texture.name='cloud-column-transmittance';return target;
-    });
-    let current=0;
+    const target=new T.RenderTarget(size*2,size,{type:T.HalfFloatType,depthBuffer:false,
+        minFilter:T.LinearFilter,magFilter:T.LinearFilter,generateMipmaps:false});
+    target.texture.name='cloud-column-transmittance';
     const shared=value=>T.uniform(value).setGroup(T.renderGroup);
     const origin=shared(new T.Vector3()),captureLight=shared(new T.Vector3(0,1,0)),ready=shared(0);
     const right=shared(new T.Vector3(1,0,0)),up=shared(new T.Vector3(0,0,-1));
-    const span=shared(new T.Vector2(extent,extent));
-    const captureDisplacement=shared(new T.Vector3());
-    const capturedAt=shared(0),historyReady=shared(0),historyBlend=shared(1),referenceHeight=shared(0);
+    const span=shared(new T.Vector2(extent,extent)),captureDisplacement=shared(new T.Vector3());
     const oldOrigin=shared(new T.Vector3()),oldRight=shared(new T.Vector3(1,0,0)),oldUp=shared(new T.Vector3(0,0,-1));
     const oldSpan=shared(new T.Vector2(extent,extent)),oldDisplacement=shared(new T.Vector3());
-    const history=T.texture(targets[current].texture,T.screenUV);
-    const material=new T.MeshBasicNodeMaterial();
-    material.name='Cloud shadow column integration';
+    const tile=shared(0),oldTile=shared(1),capturedAt=shared(0),historyReady=shared(0);
+    const material=new T.MeshBasicNodeMaterial();material.name='Cloud shadow column integration';
     const p=origin.add(right.mul(T.uv().x.sub(.5).mul(span.x)))
         .add(up.mul(T.uv().y.sub(.5).mul(span.y)));
-    material.fragmentNode=T.Fn(()=>{
-        const next=transmittance(p).toVar(),previous=next.toVar();
-        T.If(historyReady.greaterThan(0),()=>{
-            // Reproject the prior field at a nearby reference height. Using
-            // the integration plane far behind a low sun magnifies tiny light
-            // rotations into large reprojection errors.
-            const q=p.add(lightDirection.mul(referenceHeight.sub(p.y).div(lightDirection.y.max(.001))));
-            const drift=displacement?displacement.sub(oldDisplacement):T.vec3(0);
-            const relative=q.sub(oldOrigin).sub(drift);
-            const uv=T.vec2(T.dot(relative,oldRight),T.dot(relative,oldUp)).div(oldSpan).add(.5);
-            T.If(uv.greaterThan(T.vec2(.001)).all().and(uv.lessThan(T.vec2(.999)).all()),()=>{
-                const value=history.sample(uv).level(0).rg;
-                previous.assign(T.mix(value.g,value.r,historyBlend));
-            });
-        });
-        return T.vec4(next,previous,0,1);
-    })();
-    const quad=new T.QuadMesh(material);
-    const captureContext=T.context({});
-    const map=T.texture(targets[current].texture,T.screenUV);
-    const stats={resolution:size,extent,refreshSeconds,captures:0,projection:'orthographic-light-columns'};
+    material.fragmentNode=T.vec4(transmittance(p),0,0,1);
+    const quad=new T.QuadMesh(material),captureContext=T.context({});
+    const map=T.texture(target.texture,T.screenUV);
+    const stats={resolution:size,extent,refreshSeconds,captures:0,projection:'orthographic-light-columns',
+        publication:'two-capture-atlas',receiverTextureReads:'one when settled, two during blending'};
     const cameraWorld=new T.Vector3(),nextOrigin=new T.Vector3(),nextRight=new T.Vector3(),nextUp=new T.Vector3();
-    let lastTime=-Infinity,disposed=false;
-    return {get target(){return targets[current]},stats,projection:{origin,right,up,span,light:captureLight},
-        sample(world){
-            const advection=displacement?displacement.sub(captureDisplacement):T.vec3(0);
-            const relative=world.sub(origin).sub(advection);
-            const uv=T.vec2(T.dot(relative,right),T.dot(relative,up)).div(span).add(.5);
-            const edge=T.max(T.abs(uv.x.sub(.5)),T.abs(uv.y.sub(.5)));
-            const weight=T.smoothstep(.46,.5,edge).oneMinus().mul(ready);
-            // QuadMesh already uses top-left UVs, matching WebGPU textures.
-            const values=map.sample(uv).level(0).rg;
+    let current=0,lastTime=-Infinity,disposed=false;
+    const sampleField=(world,center,basisRight,basisUp,bounds,driftAtCapture,index)=>{
+        const drift=displacement?displacement.sub(driftAtCapture):T.vec3(0);
+        const relative=world.sub(center).sub(drift);
+        const uv=T.vec2(T.dot(relative,basisRight),T.dot(relative,basisUp)).div(bounds).add(.5);
+        const edge=T.max(T.abs(uv.x.sub(.5)),T.abs(uv.y.sub(.5)));
+        const weight=T.smoothstep(.46,.5,edge).oneMinus();
+        // Linear filtering must stay within this tile's texel centres.
+        const safeUV=uv.clamp(.5/size,1-.5/size);
+        const atlasUV=T.vec2(safeUV.x.add(index).mul(.5),safeUV.y);
+        return T.mix(1,map.sample(atlasUV).level(0).r,weight);
+    };
+    return {target,stats,projection:{origin,right,up,span,light:captureLight},
+        sample(world){return T.Fn(()=>{
+            const value=sampleField(world,origin,right,up,span,captureDisplacement,tile).toVar();
             const blend=time.sub(capturedAt).div(refreshSeconds).clamp();
-            return T.mix(1,T.mix(values.g,values.r,blend),weight);
-        },
+            T.If(historyReady.greaterThan(0).and(blend.lessThan(1)),()=>{
+                const previous=sampleField(world,oldOrigin,oldRight,oldUp,oldSpan,oldDisplacement,oldTile);
+                value.assign(T.mix(previous,value,blend));
+            });
+            return T.mix(1,value,ready);
+        })();},
         async prepare(renderer,camera,force=false){
             if(disposed||!camera)return false;
             if(typeof force==='object')force=force?.force===true;
@@ -67,62 +53,48 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time, disp
             nextRight.set(light.z,0,-light.x);
             if(nextRight.lengthSq()<.000001)nextRight.set(1,0,0);else nextRight.normalize();
             nextUp.crossVectors(light,nextRight).normalize();
-            // Project the host volume's bounds, not a square on the light
-            // plane. At sunset a square wastes most rows above/below the host
-            // and gives its ground shadows only a handful of useful texels.
+            // Project the ground footprint and host height instead of wasting
+            // most of a square light-plane map's rows above/below the host.
             const spanY=Math.max(verticalSpan,extent*Math.abs(light.y)+verticalSpan*Math.abs(nextUp.y));
             const texelX=extent/size,texelY=spanY/size;
             const x=Math.floor(cameraWorld.dot(nextRight)/texelX)*texelX;
             const y=Math.floor(cameraWorld.dot(nextUp)/texelY)*texelY;
-            // Keep the whole integration plane below the local cloud deck.
-            // Its distance along the light does not change the sampled column.
-            // Unlike projection onto Y=0, roofs remain in this footprint even
-            // when a near-horizontal sun casts kilometre-long shadows.
             const along=cameraWorld.dot(light)-(cameraWorld.y+64+spanY*.5*Math.abs(nextUp.y))/Math.max(light.y,.001);
             nextOrigin.copy(nextRight).multiplyScalar(x).addScaledVector(nextUp,y).addScaledVector(light,along);
             const relative=cameraWorld.clone().sub(origin.value);
             const moved=Math.abs(relative.dot(right.value))>span.value.x*.125||Math.abs(relative.dot(up.value))>span.value.y*.125;
-            const lightAlignment=captureLight.value.dot(light);
-            const turned=lightAlignment<1-1e-10;
-            // Keep each published basis perpendicular to its integration rays.
-            // Small day-cycle steps used to update captureLight without the
-            // basis, so incremental rotation could leave it stale indefinitely.
-            // Ordinary sun motion still respects the shared capture cadence;
-            // a large time-of-day jump refreshes immediately.
+            const lightAlignment=captureLight.value.dot(light),turned=lightAlignment<1-1e-10;
             const lightJump=lightAlignment<.995;
-            if(!force&&ready.value&&!moved&&!lightJump&&t>=lastTime&&t-lastTime<refreshSeconds)return false;
-            const saved={target:renderer.getRenderTarget(),mrt:renderer.getMRT(),context:renderer.contextNode};
-            const savedOrigin=origin.value.clone(),oldLight=captureLight.value.clone(),savedDisplacement=captureDisplacement.value.clone();
-            const savedRight=right.value.clone(),savedUp=up.value.clone();
-            const savedSpan=span.value.clone();
+            // Retain the older tile until its blend finishes. Normal movement
+            // has a generous guard band and can wait for this cadence.
+            if(!force&&ready.value&&!lightJump&&t>=lastTime&&t-lastTime<refreshSeconds)return false;
+            const saved={target:renderer.getRenderTarget(),mrt:renderer.getMRT(),context:renderer.contextNode,autoClear:renderer.autoClear};
+            const savedOrigin=origin.value.clone(),savedLight=captureLight.value.clone(),savedDisplacement=captureDisplacement.value.clone();
+            const savedRight=right.value.clone(),savedUp=up.value.clone(),savedSpan=span.value.clone();
             const next=1-current;
             try{
-                if(!ready.value)renderer.initRenderTarget?.(targets[current]);
-                oldOrigin.value.copy(origin.value);oldRight.value.copy(right.value);oldUp.value.copy(up.value);
-                oldSpan.value.copy(span.value);oldDisplacement.value.copy(captureDisplacement.value);
-                history.value=targets[current].texture;
-                historyReady.value=!force&&ready.value&&t>=lastTime?1:0;
-                historyBlend.value=Math.min(1,Math.max(0,(t-capturedAt.value)/refreshSeconds));
-                referenceHeight.value=cameraWorld.y;
-                // Keep the sample lattice world-stable while the viewer walks.
-                // Recenter only at the guard band, not on every 10 Hz refresh.
+                // Fixed-sun walking retains a world-stable lattice. On a day
+                // cycle, each completed capture matches its current ray direction.
                 if(!ready.value||moved||turned){origin.value.copy(nextOrigin);right.value.copy(nextRight);up.value.copy(nextUp);span.value.set(extent,spanY);}
                 captureLight.value.copy(light);
                 if(displacement)captureDisplacement.value.copy(displacement.value);
-                renderer.setMRT(null);renderer.contextNode=captureContext;renderer.setRenderTarget(targets[next]);
-                await quad.renderAsync(renderer);
-                current=next;map.value=targets[current].texture;capturedAt.value=t;
-                ready.value=1;lastTime=t;stats.captures++;
-                return true;
+                target.viewport.set(next*size,0,size,size);target.scissor.copy(target.viewport);target.scissorTest=true;
+                renderer.setMRT(null);renderer.contextNode=captureContext;renderer.setRenderTarget(target);
+                // The opaque quad overwrites its tile; retain the other half.
+                renderer.autoClear=false;await quad.renderAsync(renderer);
+                oldOrigin.value.copy(savedOrigin);oldRight.value.copy(savedRight);oldUp.value.copy(savedUp);
+                oldSpan.value.copy(savedSpan);oldDisplacement.value.copy(savedDisplacement);oldTile.value=current;
+                historyReady.value=!force&&ready.value&&!lightJump&&t>=lastTime?1:0;
+                current=next;tile.value=current;capturedAt.value=t;
+                ready.value=1;lastTime=t;stats.captures++;return true;
             }catch(error){
-                // A failed refresh must retain the projection belonging to
-                // the last successfully published texture.
-                origin.value.copy(savedOrigin);captureLight.value.copy(oldLight);captureDisplacement.value.copy(savedDisplacement);
-                right.value.copy(savedRight);up.value.copy(savedUp);
-                span.value.copy(savedSpan);
-                throw error;
-            }finally{renderer.contextNode=saved.context;renderer.setRenderTarget(saved.target);renderer.setMRT(saved.mrt);}
+                origin.value.copy(savedOrigin);captureLight.value.copy(savedLight);captureDisplacement.value.copy(savedDisplacement);
+                right.value.copy(savedRight);up.value.copy(savedUp);span.value.copy(savedSpan);throw error;
+            }finally{
+                renderer.autoClear=saved.autoClear;renderer.contextNode=saved.context;
+                renderer.setRenderTarget(saved.target);renderer.setMRT(saved.mrt);
+            }
         },
-        dispose(){if(disposed)return;disposed=true;for(const target of targets)target.dispose();material.dispose();},
+        dispose(){if(disposed)return;disposed=true;target.dispose();material.dispose();},
     };
 }
