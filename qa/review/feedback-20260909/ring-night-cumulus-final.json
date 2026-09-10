@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-10T08:31:27.450Z",
+  "sky": "ringworld",
+  "quality": "balanced",
+  "hours": 0,
+  "cloud": "cumulus",
+  "pose": "overhead",
+  "time": 52.14470000000297,
+  "camera": [
+    0,
+    1.82,
+    96
+  ],
+  "fov": 62,
+  "errors": [],
+  "pointerLocked": false
+}

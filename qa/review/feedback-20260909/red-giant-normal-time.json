@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-10T08:39:11.142Z",
+  "sky": "shieldworld",
+  "weather": "none",
+  "quality": "balanced",
+  "camera": [
+    0,
+    1.82,
+    96
+  ],
+  "fov": 62,
+  "start": 48.80310000000147,
+  "duration": 12,
+  "simulationSpeed": 1,
+  "actualSeconds": 12.1075,
+  "errors": [],
+  "pointerLocked": false,
+  "frames": [
+    {
+      "time": 48.80310000000147
+    },
+    {
+      "time": 51.80310000000147
+    },
+    {
+      "time": 54.80310000000147
+    },
+    {
+      "time": 57.80310000000147
+    },
+    {
+      "time": 60.76976666666814
+    }
+  ]
+}

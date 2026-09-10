@@ -1,0 +1,135 @@
+{
+  "date": "2026-09-10T08:52:46.948Z",
+  "implementation": "current-geometry-motion-reprojected-radiance",
+  "armId": 1,
+  "records": [
+    {
+      "pose": 0,
+      "samples": 15060,
+      "meanRelative": 0.00007046211384950418,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.05154289589691421
+    },
+    {
+      "pose": 1,
+      "samples": 15061,
+      "meanRelative": 0.00006647652375637646,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.07691819911223843
+    },
+    {
+      "pose": 2,
+      "samples": 15062,
+      "meanRelative": 0.00005482064811692196,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.10090525045262523
+    },
+    {
+      "pose": 3,
+      "samples": 15061,
+      "meanRelative": 0.000040309655860545225,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.09632786885245902
+    },
+    {
+      "pose": 4,
+      "samples": 15061,
+      "meanRelative": 0.00005557314620178933,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.1293282805766087
+    },
+    {
+      "pose": 5,
+      "samples": 15061,
+      "meanRelative": 0.00005357869785408782,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.12754152081626574
+    },
+    {
+      "pose": 6,
+      "samples": 15062,
+      "meanRelative": 0.00009939466682499838,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.12436434340412802
+    },
+    {
+      "pose": 7,
+      "samples": 15061,
+      "meanRelative": 0.00007690103759539143,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.12589605734767026
+    },
+    {
+      "pose": 8,
+      "samples": 15061,
+      "meanRelative": 0.00009093873163783785,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.12630597014925374
+    },
+    {
+      "pose": 9,
+      "samples": 15061,
+      "meanRelative": 0.000053901506087389394,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.035681610247026534
+    },
+    {
+      "pose": 10,
+      "samples": 15061,
+      "meanRelative": 0.00006032227250972179,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.09185284118504128
+    },
+    {
+      "pose": 11,
+      "samples": 15061,
+      "meanRelative": 0.00010716414743796134,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.09405940594059406
+    }
+  ],
+  "frames": [
+    {
+      "pose": 0,
+      "phase": "moving"
+    },
+    {
+      "pose": 0,
+      "phase": "settled"
+    },
+    {
+      "pose": 4,
+      "phase": "moving"
+    },
+    {
+      "pose": 4,
+      "phase": "settled"
+    },
+    {
+      "pose": 8,
+      "phase": "moving"
+    },
+    {
+      "pose": 8,
+      "phase": "settled"
+    }
+  ],
+  "material": {
+    "type": "MeshStandardMaterial",
+    "metalness": 1,
+    "roughness": 1,
+    "hasRoughnessMap": true
+  }
+}

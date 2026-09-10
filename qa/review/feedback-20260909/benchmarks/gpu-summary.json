@@ -1,0 +1,203 @@
+[
+  {
+    "tier": "performance",
+    "summary": {
+      "samples": 120,
+      "meanMs": 1.1776485333333335,
+      "medianMs": 1.1463039999999998,
+      "p95Ms": 1.2273600000000002,
+      "maxMs": 2.4940799999999994
+    },
+    "groups": [
+      {
+        "label": "render:output#@1578x846:reflection-pipeline",
+        "meanMs": 0.5567893333333328,
+        "captures": 120
+      },
+      {
+        "label": "render:1578x846#@1578x846:reflection-pipeline",
+        "meanMs": 0.3011682666666665,
+        "captures": 600
+      },
+      {
+        "label": "render:eanpa_current_spatial_clouds#@526x282:spatial-clouds",
+        "meanMs": 0.2270810666666667,
+        "captures": 120
+      },
+      {
+        "label": "render:screen:reflection-pipeline",
+        "meanMs": 0.04614719999999991,
+        "captures": 1320
+      },
+      {
+        "label": "render:reflection-current-geometry#@1578x846:reflection-pipeline",
+        "meanMs": 0.0240368,
+        "captures": 120
+      },
+      {
+        "label": "render:eanpa_current_spatial_background#@526x282:spatial-clouds",
+        "meanMs": 0.00774293333333333,
+        "captures": 120
+      },
+      {
+        "label": "render:ShadowMap#@1024x1024:reflection-pipeline",
+        "meanMs": 0.007493600000000001,
+        "captures": 120
+      },
+      {
+        "label": "render:cloud-column-transmittance#@512x256:rain-surface",
+        "meanMs": 0.005934666666666667,
+        "captures": 10
+      },
+      {
+        "label": "compute:screen:spatial-clouds",
+        "meanMs": 0.0007610666666666668,
+        "captures": 3
+      },
+      {
+        "label": "render:rain-surface-world-normal#@512x512:rain-surface",
+        "meanMs": 0.00030000000000000003,
+        "captures": 6
+      },
+      {
+        "label": "render:listener-weather#@1x1:rain-surface",
+        "meanMs": 0.0001936,
+        "captures": 4
+      }
+    ]
+  },
+  {
+    "tier": "balanced",
+    "summary": {
+      "samples": 120,
+      "meanMs": 1.7789919999999997,
+      "medianMs": 1.7374079999999996,
+      "p95Ms": 1.951808,
+      "maxMs": 2.7137919999999998
+    },
+    "groups": [
+      {
+        "label": "render:eanpa_current_spatial_clouds#@789x423:spatial-clouds",
+        "meanMs": 0.7488592000000002,
+        "captures": 120
+      },
+      {
+        "label": "render:output#@1578x846:reflection-pipeline",
+        "meanMs": 0.5933594666666667,
+        "captures": 120
+      },
+      {
+        "label": "render:1578x846#@1578x846:reflection-pipeline",
+        "meanMs": 0.3173205333333336,
+        "captures": 600
+      },
+      {
+        "label": "render:screen:reflection-pipeline",
+        "meanMs": 0.05312106666666686,
+        "captures": 1320
+      },
+      {
+        "label": "render:reflection-current-geometry#@1578x846:reflection-pipeline",
+        "meanMs": 0.025996799999999994,
+        "captures": 120
+      },
+      {
+        "label": "render:eanpa_current_spatial_background#@789x423:spatial-clouds",
+        "meanMs": 0.01480053333333334,
+        "captures": 120
+      },
+      {
+        "label": "render:cloud-column-transmittance#@768x384:rain-surface",
+        "meanMs": 0.010010400000000001,
+        "captures": 7
+      },
+      {
+        "label": "render:ShadowMap#@1024x1024:reflection-pipeline",
+        "meanMs": 0.009134133333333332,
+        "captures": 120
+      },
+      {
+        "label": "compute:screen:spatial-clouds",
+        "meanMs": 0.005583466666666666,
+        "captures": 4
+      },
+      {
+        "label": "render:rain-surface-world-normal#@768x768:rain-surface",
+        "meanMs": 0.0006215999999999999,
+        "captures": 7
+      },
+      {
+        "label": "render:listener-weather#@1x1:rain-surface",
+        "meanMs": 0.00018480000000000002,
+        "captures": 3
+      }
+    ]
+  },
+  {
+    "tier": "high",
+    "summary": {
+      "samples": 120,
+      "meanMs": 4.994818666666666,
+      "medianMs": 4.809824000000001,
+      "p95Ms": 5.634335999999999,
+      "maxMs": 6.239551999999999
+    },
+    "groups": [
+      {
+        "label": "render:eanpa_current_spatial_clouds#@1578x846:spatial-clouds",
+        "meanMs": 3.912151733333333,
+        "captures": 120
+      },
+      {
+        "label": "render:output#@1578x846:reflection-pipeline",
+        "meanMs": 0.5771469333333336,
+        "captures": 120
+      },
+      {
+        "label": "render:1578x846#@1578x846:reflection-pipeline",
+        "meanMs": 0.3112823999999999,
+        "captures": 600
+      },
+      {
+        "label": "compute:screen:spatial-clouds",
+        "meanMs": 0.05376533333333333,
+        "captures": 11
+      },
+      {
+        "label": "render:screen:reflection-pipeline",
+        "meanMs": 0.048936800000000225,
+        "captures": 1320
+      },
+      {
+        "label": "render:eanpa_current_spatial_background#@1578x846:spatial-clouds",
+        "meanMs": 0.031796266666666656,
+        "captures": 120
+      },
+      {
+        "label": "render:reflection-current-geometry#@1578x846:reflection-pipeline",
+        "meanMs": 0.025033333333333335,
+        "captures": 120
+      },
+      {
+        "label": "render:cloud-column-transmittance#@768x384:rain-surface",
+        "meanMs": 0.02376213333333333,
+        "captures": 13
+      },
+      {
+        "label": "render:ShadowMap#@1024x1024:reflection-pipeline",
+        "meanMs": 0.009159200000000001,
+        "captures": 120
+      },
+      {
+        "label": "render:rain-surface-world-normal#@1024x1024:rain-surface",
+        "meanMs": 0.0015898666666666664,
+        "captures": 15
+      },
+      {
+        "label": "render:listener-weather#@1x1:rain-surface",
+        "meanMs": 0.0001946666666666667,
+        "captures": 5
+      }
+    ]
+  }
+]

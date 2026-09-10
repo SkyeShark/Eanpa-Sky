@@ -1,0 +1,73 @@
+{
+  "pass": true,
+  "weather": "sunshower",
+  "time": 832.9079999999999,
+  "wetness": 0.999892869896947,
+  "water": 0.9999267729886465,
+  "candidates": {
+    "wet": {
+      "p": [
+        -276.5625,
+        2,
+        604.6875
+      ],
+      "cell": 0.9811248779296875,
+      "distance": 664.9314168111625
+    },
+    "dry": {
+      "p": [
+        -4.6875,
+        2,
+        -4.6875
+      ],
+      "cell": 0,
+      "distance": 6.629126073623883
+    }
+  },
+  "results": [
+    {
+      "name": "wet",
+      "advance": 0,
+      "dry": 0,
+      "wet": 65536,
+      "leaks": 0,
+      "nonzero": 16216,
+      "maxSlope": 0.0248633632762888,
+      "finite": true,
+      "pass": true
+    },
+    {
+      "name": "wet",
+      "advance": 0.27,
+      "dry": 0,
+      "wet": 65536,
+      "leaks": 0,
+      "nonzero": 16478,
+      "maxSlope": 0.025339941420574698,
+      "finite": true,
+      "pass": true
+    },
+    {
+      "name": "dry",
+      "advance": 0,
+      "dry": 65536,
+      "wet": 0,
+      "leaks": 0,
+      "nonzero": 0,
+      "maxSlope": 0,
+      "finite": true,
+      "pass": true
+    },
+    {
+      "name": "dry",
+      "advance": 0.27,
+      "dry": 65536,
+      "wet": 0,
+      "leaks": 0,
+      "nonzero": 0,
+      "maxSlope": 0,
+      "finite": true,
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "samples": [
+    {
+      "label": "initial",
+      "time": 0,
+      "value": 0.199951171875
+    },
+    {
+      "label": "new capture published",
+      "time": 0.1,
+      "value": 0.199951171875
+    },
+    {
+      "label": "halfway",
+      "time": 0.15,
+      "value": 0.4998779296875
+    },
+    {
+      "label": "settled",
+      "time": 0.2,
+      "value": 0.7998046875
+    }
+  ]
+}

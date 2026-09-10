@@ -1,0 +1,8 @@
+{
+  "ssrOffChangedPixels": 1811,
+  "ssrOffArmsRegionChangedPixels": 1069,
+  "maxChannelChange": 94,
+  "restoredChangedPixels": 0,
+  "restoredMaxChannelChange": 0,
+  "method": "All / SSR off / all restored at identical camera, scene and simulation time; chrome materials and probe/sky enabled throughout."
+}

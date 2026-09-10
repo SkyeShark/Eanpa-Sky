@@ -1,7 +1,9 @@
 # Known limitations and review targets
 
 The revised standalone overhaul and its measured evidence are documented in
-[OVERHAUL_REVIEW.md](OVERHAUL_REVIEW.md). Changes are local pending review.
+[OVERHAUL_REVIEW.md](OVERHAUL_REVIEW.md). The latest motion, lighting and
+sky-only benchmark pass is in [REVIEW_2026-09-09.md](REVIEW_2026-09-09.md).
+Changes are local pending review.
 
 - **Startup and sky/quality replacement are expensive.** Shader compilation and
   environment preparation can take tens of seconds behind the loading screen.
@@ -23,8 +25,8 @@ The revised standalone overhaul and its measured evidence are documented in
   runs are much slower than unrestricted runs. They retain the 5090 Laptop GPU's
   architecture and memory and do not stand in for a named lower-power device.
   The High sky tier and detailed terrain also carry substantial GPU/memory costs.
-  The last receiver-correction run overlapped with heavy Blender CPU activity;
-  a CPU-idle throughput baseline for that final correction is not established.
+  Benchmark files record unrelated CPU/GPU activity. Contended runs must not
+  be used to rank quality tiers against quiet runs or to claim a speedup.
 - **The ring's sharper relief increases the asset payload.** Compressed terrain
   height/normal data and albedo total approximately 19.3 MB after the terrain
   slope correction. The current standalone

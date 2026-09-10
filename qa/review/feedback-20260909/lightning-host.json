@@ -1,0 +1,186 @@
+{
+  "forced": true,
+  "pass": true,
+  "impacts": [
+    {
+      "id": 830825003,
+      "interval": 3,
+      "time": 830.8246666666666,
+      "point": [
+        -2.9110970420783877,
+        0.04000000298023223,
+        -32.135696921459875
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "kind": "upward_surface",
+      "colorKey": "purple",
+      "colorHex": 11693311,
+      "radiusMeters": 4.5,
+      "scorchLifetimeSeconds": 90
+    }
+  ],
+  "diagnostics": {
+    "schedule": "deterministic-separated-events-bounded-return-strokes",
+    "palette": "darkstorm",
+    "paletteWeights": {
+      "standard": [
+        [
+          "white",
+          0.52
+        ],
+        [
+          "blue",
+          0.44
+        ],
+        [
+          "purple",
+          0.04
+        ]
+      ],
+      "darkstorm": [
+        [
+          "white",
+          0.4
+        ],
+        [
+          "blue",
+          0.36
+        ],
+        [
+          "purple",
+          0.16
+        ],
+        [
+          "red",
+          0.04
+        ],
+        [
+          "green",
+          0.04
+        ]
+      ]
+    },
+    "cadence": {
+      "standard": {
+        "referenceLevel": 0.3,
+        "minGapSeconds": 16,
+        "maxGapSeconds": 38,
+        "maxStrokes": 2,
+        "clusterThresholds": [
+          0.72
+        ],
+        "strokeGapMinSeconds": 0.085,
+        "strokeGapMaxSeconds": 0.19
+      },
+      "darkstorm": {
+        "referenceLevel": 0.85,
+        "initialGapMinSeconds": 6,
+        "initialGapMaxSeconds": 9,
+        "minGapSeconds": 12,
+        "maxGapSeconds": 28,
+        "maxStrokes": 2,
+        "clusterThresholds": [
+          0.68
+        ],
+        "strokeGapMinSeconds": 0.075,
+        "strokeGapMaxSeconds": 0.17,
+        "firstLocalCandidateWithinEvents": 1,
+        "maxRemoteEventsBetweenLocalCandidates": 6
+      }
+    },
+    "eventCount": 3,
+    "activeEvent": false,
+    "activeStrokeCount": 0,
+    "eventElapsedSeconds": 0,
+    "nextEventAtSeconds": 854.2285461655258,
+    "lastEventGapSeconds": 23.40387949885917,
+    "activeStyle": "purple",
+    "flash": 0,
+    "lastStrike": {
+      "id": 830825003,
+      "interval": 3,
+      "time": 830.8246666666666,
+      "x": -2.9110970420783877,
+      "y": 0.04000000298023223,
+      "z": -32.135696921459875,
+      "cloudY": 500,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "kind": "upward_surface",
+      "colorKey": "purple",
+      "colorHex": 11693311,
+      "local": true,
+      "flash": 0
+    },
+    "sceneLight": {
+      "peakIntensity": 12000,
+      "distance": 900,
+      "decay": 2,
+      "shadows": false
+    },
+    "localImpact": {
+      "cooldownSeconds": 45,
+      "playerGuardMeters": 28,
+      "upwardNormalMinimum": 0.72,
+      "effectSlots": 2,
+      "sparkInstancesPerSlot": 40,
+      "puffInstancesPerSlot": 12,
+      "scorchSlots": 4,
+      "scorchLifetimeSeconds": 90,
+      "strikes": 2,
+      "candidateAttempts": 2,
+      "forcedCandidates": 2,
+      "firstCandidateWithinEvents": 1,
+      "maxRemoteEvents": 6,
+      "remoteEventsSinceStrike": 0,
+      "raycastMisses": 0,
+      "lastSurfaceDamage": {
+        "id": 830825003,
+        "interval": 3,
+        "time": 830.8246666666666,
+        "point": [
+          -2.9110970420783877,
+          0.04000000298023223,
+          -32.135696921459875
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "kind": "upward_surface",
+        "colorKey": "purple",
+        "colorHex": 11693311,
+        "radiusMeters": 4.5,
+        "scorchLifetimeSeconds": 90
+      }
+    }
+  },
+  "frames": [
+    {
+      "time": 830.8246666666666
+    },
+    {
+      "time": 830.9246666666667
+    },
+    {
+      "time": 831.2246666666666
+    },
+    {
+      "time": 831.8246666666666
+    }
+  ],
+  "errors": [],
+  "point": [
+    -2.9110970420783877,
+    0.04000000298023223,
+    -32.135696921459875
+  ]
+}

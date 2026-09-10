@@ -1,0 +1,173 @@
+[
+  {
+    "tier": "performance",
+    "level": "native",
+    "file": "final-effects-performance-native.json",
+    "fps": 167.15570373853419,
+    "medianMs": 6,
+    "p95Ms": 6.100000001490116,
+    "maxMs": 16.600000001490116,
+    "quiet": false,
+    "externalCpuPercent": [
+      15.069999999999999,
+      28.660000000000004
+    ],
+    "gpuQuiet": true,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": null
+  },
+  {
+    "tier": "performance",
+    "level": "moderate",
+    "file": "final-effects-performance-moderate.json",
+    "fps": 118.2825789300187,
+    "medianMs": 6.100000001490116,
+    "p95Ms": 15.199999995529652,
+    "maxMs": 32.19999999552965,
+    "quiet": false,
+    "externalCpuPercent": [
+      33.54,
+      20.9
+    ],
+    "gpuQuiet": false,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": [
+      3.733344,
+      5.454304
+    ]
+  },
+  {
+    "tier": "performance",
+    "level": "limited",
+    "file": "final-effects-performance-limited.json",
+    "fps": 61.84196054512453,
+    "medianMs": 12.100000001490116,
+    "p95Ms": 35.100000001490116,
+    "maxMs": 67,
+    "quiet": false,
+    "externalCpuPercent": [
+      25.410000000000004,
+      20.730000000000008
+    ],
+    "gpuQuiet": true,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": [
+      6.874336,
+      9.728928
+    ]
+  },
+  {
+    "tier": "balanced",
+    "level": "native",
+    "file": "final-effects-balanced-native.json",
+    "fps": 167.1696077059769,
+    "medianMs": 6,
+    "p95Ms": 6.200000002980232,
+    "maxMs": 23.299999997019768,
+    "quiet": false,
+    "externalCpuPercent": [
+      25.75,
+      21.73
+    ],
+    "gpuQuiet": false,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": null
+  },
+  {
+    "tier": "balanced",
+    "level": "moderate",
+    "file": "final-effects-balanced-moderate.json",
+    "fps": 112.77706649594222,
+    "medianMs": 6.100000001490116,
+    "p95Ms": 16.599999994039536,
+    "maxMs": 29.899999998509884,
+    "quiet": false,
+    "externalCpuPercent": [
+      23.679999999999996,
+      19.700000000000003
+    ],
+    "gpuQuiet": true,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": [
+      3.750976,
+      5.01872
+    ]
+  },
+  {
+    "tier": "balanced",
+    "level": "limited",
+    "file": "final-effects-balanced-limited.json",
+    "fps": 57.70807913106975,
+    "medianMs": 13.399999998509884,
+    "p95Ms": 38.70000000298023,
+    "maxMs": 75.39999999850988,
+    "quiet": false,
+    "externalCpuPercent": [
+      17.790000000000003,
+      21.119999999999997
+    ],
+    "gpuQuiet": false,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": [
+      6.40672,
+      9.382528
+    ]
+  },
+  {
+    "tier": "high",
+    "level": "native",
+    "file": "final-effects-high-native.json",
+    "fps": 160.24311369462646,
+    "medianMs": 6,
+    "p95Ms": 7.800000004470348,
+    "maxMs": 18,
+    "quiet": false,
+    "externalCpuPercent": [
+      10.559999999999999,
+      18.630000000000003
+    ],
+    "gpuQuiet": true,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": null
+  },
+  {
+    "tier": "high",
+    "level": "moderate",
+    "file": "final-effects-high-moderate.json",
+    "fps": 96.07694153404614,
+    "medianMs": 11.699999995529652,
+    "p95Ms": 17.899999998509884,
+    "maxMs": 28.200000002980232,
+    "quiet": false,
+    "externalCpuPercent": [
+      24.890000000000004,
+      26.749999999999996
+    ],
+    "gpuQuiet": true,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": [
+      2.584,
+      3.95552
+    ]
+  },
+  {
+    "tier": "high",
+    "level": "limited",
+    "file": "final-effects-high-limited.json",
+    "fps": 50.20698492790065,
+    "medianMs": 17.799999997019768,
+    "p95Ms": 42.70000000298023,
+    "maxMs": 93.89999999850988,
+    "quiet": false,
+    "externalCpuPercent": [
+      24.47,
+      18.740000000000006
+    ],
+    "gpuQuiet": true,
+    "revision": "a1e720a6dc72828998f5c2af69f064e535d9018f",
+    "injectedGpuRangeMs": [
+      6.24336,
+      10.450496
+    ]
+  }
+]

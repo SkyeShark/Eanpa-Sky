@@ -51,7 +51,7 @@ try {
         result.valid=false;result.invalidReasons.push('External GPU activity exceeded the 5% gate during capture');
     }
     if(!result.cleanCpuWindow){
-        result.valid=false;result.invalidReasons.push('External CPU activity exceeded the 20% gate during capture');
+        result.valid=false;result.invalidReasons.push(`External CPU activity exceeded the ${result.resources.during.cpu.thresholdPercent}% gate before or during capture`);
     }
     if(result.errors){result.valid=false;result.invalidReasons.push('Browser reported a render error');}
     await mkdir('artifacts/overhaul/benchmarks',{recursive:true});

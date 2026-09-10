@@ -1,0 +1,81 @@
+{
+  "date": "2026-09-10T07:30:55.686Z",
+  "mode": "sky",
+  "duration": 8,
+  "simulationSpeed": 8,
+  "actualSeconds": 8.03220000000298,
+  "baseTime": 83.1233000000078,
+  "sky": "ringworld",
+  "weather": "none",
+  "camera": [
+    0,
+    1.82,
+    96
+  ],
+  "finalCamera": [
+    0,
+    1.82,
+    96
+  ],
+  "wind": [
+    2,
+    0,
+    6
+  ],
+  "displacement": [
+    293.7132666666823,
+    0,
+    881.1398000000493
+  ],
+  "pointerLocked": false,
+  "probe": {
+    "captures": 40,
+    "faces": 240,
+    "lastCaptureMs": 4.899999998509884,
+    "lastCenter": [
+      0,
+      1.82,
+      96
+    ],
+    "blend": 1
+  },
+  "errors": [],
+  "frames": [
+    {
+      "index": 0,
+      "time": 83.1233000000078
+    },
+    {
+      "index": 30,
+      "time": 91.1233000000078
+    },
+    {
+      "index": 60,
+      "time": 99.1233000000078
+    },
+    {
+      "index": 90,
+      "time": 107.1233000000078
+    },
+    {
+      "index": 120,
+      "time": 115.1233000000078
+    },
+    {
+      "index": 150,
+      "time": 123.1233000000078
+    },
+    {
+      "index": 180,
+      "time": 131.12330000000782
+    },
+    {
+      "index": 210,
+      "time": 139.12330000000782
+    },
+    {
+      "index": 239,
+      "time": 146.85663333334114
+    }
+  ]
+}
