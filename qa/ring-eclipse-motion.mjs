@@ -4,13 +4,17 @@ import {connect} from './cdp.mjs';
 import {mkdir,writeFile} from 'node:fs/promises';
 const c=await connect(),directory=process.argv[2]??'artifacts/ring-eclipse-motion';
 try{
+    const direction=process.argv[3]??'forward';
+    if(!['forward','reverse'].includes(direction))throw new Error('Use forward or reverse');
+    const view=direction==='reverse'?{pitch:.55,yaw:Math.PI,hours:10.5}:{pitch:.28,yaw:0,hours:11.2};
     const result=await c.evaluate(`(async()=>{
         if(!new URL(location.href).searchParams.has('automated')||document.pointerLockElement
             ||!_eanpaTest.paused||document.getElementById('skybox').value!=='ringworld')throw new Error('Pause the automated Ringworld page first');
-        _c.position.set(0,1.82,96);_c.rotation.set(.28,0,0,'YXZ');_c.fov=62;
-        _c.updateProjectionMatrix();_c.updateMatrixWorld(true);Object.assign(_look,{pitch:.28,yaw:0,vpitch:0,vyaw:0});
+        const view=${JSON.stringify(view)};
+        _c.position.set(0,1.82,96);_c.rotation.set(view.pitch,view.yaw,0,'YXZ');_c.fov=62;
+        _c.updateProjectionMatrix();_c.updateMatrixWorld(true);Object.assign(_look,{pitch:view.pitch,yaw:view.yaw,vpitch:0,vyaw:0});
         Object.assign(_movementState,{physicalEyeY:1.82,verticalVelocity:0,grounded:true,bobOffset:0,stepViewOffset:0});
-        const tod=document.getElementById('tod');tod.value=11.2;tod.dispatchEvent(new Event('input',{bubbles:true}));
+        const tod=document.getElementById('tod');tod.value=view.hours;tod.dispatchEvent(new Event('input',{bubbles:true}));
         document.getElementById('cyclespeed').value='120';document.getElementById('cycle').checked=true;
         const canvas=document.getElementById('view'),stream=canvas.captureStream(30),chunks=[],frames=[];
         const recorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8',videoBitsPerSecond:5000000});
@@ -31,7 +35,7 @@ try{
         const video=await new Promise(resolve=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);
             reader.readAsDataURL(new Blob(chunks,{type:recorder.mimeType}));});
         const errors=[...document.body.children].filter(e=>e.style?.zIndex==='99').map(e=>e.textContent).filter(Boolean);
-        return {video,frames,metadata:{date:new Date().toISOString(),dayCycleSeconds:120,errors,
+        return {video,frames,metadata:{date:new Date().toISOString(),dayCycleSeconds:120,direction:${JSON.stringify(direction)},view,errors,
             pointerLocked:!!document.pointerLockElement,normalFrameLoop:true}};
     })()`);
     await mkdir(directory,{recursive:true});

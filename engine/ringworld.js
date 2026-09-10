@@ -130,7 +130,7 @@ import { ringSolarVisibility, ringSolarVisibilityNode } from './ring_eclipse.js'
         // tracks the day cycle instead of blazing constant-noon (Halo Infinite
         // behavior, not classic-Halo baked textures).
         const uSunDir = new T3.Vector3(0, 1, 0);      // TRUE astronomical sun (fed by update() from the bound sky)
-        const uRingC = new T3.Vector3(0, 4940, 0);    // ring center world (read from the group's world pose)
+        const uRingC = new T3.Vector3(0, 4940, 0);    // cylinder center in world space (terrain mesh frame)
         const uSunDirN = T3.uniform(uSunDir);
         const uRingCN = T3.uniform(uRingC);
         const uHazeCol = T3.uniform(new T3.Color(0.55, 0.62, 0.72));   // local HORIZON palette (fed per frame)

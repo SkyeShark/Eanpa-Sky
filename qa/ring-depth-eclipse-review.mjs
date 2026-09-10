@@ -7,11 +7,19 @@ const samples=[
     {name:'reverse-detail',hours:11.9,pitch:.85,yaw:Math.PI,fov:32},
     {name:'morning-forward',hours:10.5,pitch:.55,yaw:0,fov:62},
     {name:'morning-reverse',hours:10.5,pitch:.55,yaw:Math.PI,fov:62},
+    {name:'tangent-detail',hours:10.5,pitch:.506,yaw:Math.PI,fov:22},
     {name:'ingress-forward',hours:11.47,pitch:.28,yaw:0,fov:62},
     {name:'ingress-reverse',hours:11.47,pitch:.28,yaw:Math.PI,fov:62},
     {name:'total-forward',hours:12,pitch:.55,yaw:0,fov:62},
     {name:'total-reverse',hours:12,pitch:.55,yaw:Math.PI,fov:62},
     {name:'egress-forward',hours:12.47,pitch:.28,yaw:0,fov:62},
+    {name:'egress-reverse',hours:12.47,pitch:.28,yaw:Math.PI,fov:62},
+    {name:'afternoon-forward',hours:13.5,pitch:.55,yaw:0,fov:62},
+    {name:'afternoon-reverse',hours:13.5,pitch:.55,yaw:Math.PI,fov:62},
+    {name:'sunrise-before',hours:5.99,pitch:.55,yaw:Math.PI,fov:62},
+    {name:'sunrise-after',hours:6.01,pitch:.55,yaw:Math.PI,fov:62},
+    {name:'sunset-before',hours:17.99,pitch:.55,yaw:0,fov:62},
+    {name:'sunset-after',hours:18.01,pitch:.55,yaw:0,fov:62},
     {name:'night-glint',hours:0,pitch:1.3,yaw:0,fov:32,glint:true},
 ];
 try{
@@ -73,6 +81,16 @@ try{
         for(const z of [-4000,-2000,2000,4000])for(const x of [-450,0,450]){
             points.push(new T.Vector3(x,center.y-Math.sqrt(5000**2-z*z)+2,center.z+z));
         }
+        // Include sea-level receivers on the cylinder itself. Sampling only
+        // elevated positions missed the valid zero-length exit at the tangent.
+        for(let i=0;i<32;i++)for(const height of [0,.01,85])for(const x of [-450,0,450]){
+            const angle=i*Math.PI/16,radius=5000-height;
+            points.push(new T.Vector3(x,center.y+radius*Math.cos(angle),center.z+radius*Math.sin(angle)));
+        }
+        const tangentStart=points.length,tangents=[];
+        for(const delta of [-.003,-.0001,0,.0001,.003])for(const height of [0,.01,.1,2,85])for(const x of [-250,0,250]){
+            tangents.push({delta,height,x});points.push(new T.Vector3());
+        }
         const p=T.uniformArray(points,'vec3').element(T.screenCoordinate.x.floor().toInt());
         const material=new T.MeshBasicNodeMaterial({depthTest:false,depthWrite:false,fog:false});
         material.colorNode=T.vec3(_ringworld.solarVisibilityNode(p));material.toneMapped=false;
@@ -81,22 +99,35 @@ try{
         try{
             r.contextNode=T.context({eanpaReflectionSurfacePass:false});r.setMRT(null);r.setRenderTarget(target);
             r.toneMapping=T.NoToneMapping;r.outputColorSpace=T.LinearSRGBColorSpace;
-            for(const h of [10.5,11.44,11.47,11.5,12,12.47,13,0]){
+            for(const h of [10.5,11.44,11.47,11.5,12,12.47,13,13.5,5.99,6.01,17.99,18.01,0]){
                 _sky.setTime(h);_ringworld.update(_sky.uniforms.time.value);
+                const tangent=Math.atan2(_sky.sunDir.y,-_sky.sunDir.z);
+                for(const [i,sample] of tangents.entries()){
+                    const angle=tangent+sample.delta,radius=5000-sample.height;
+                    points[tangentStart+i].set(sample.x,center.y+radius*Math.cos(angle),center.z+radius*Math.sin(angle));
+                }
                 await quad.renderAsync(r);
                 const data=await r.readRenderTargetPixelsAsync(target,0,0,points.length,1);
-                let maxError=0,partial=0;
+                let maxError=0,partial=0,tangentMax=0;
                 for(let i=0;i<points.length;i++){
                     const expected=ringSolarVisibility(points[i],_sky.sunDir,{center}),actual=T.DataUtils.fromHalfFloat(data[i*4]);
                     maxError=Math.max(maxError,Math.abs(expected-actual));if(expected>0&&expected<1)partial++;
+                    if(i>=tangentStart)tangentMax=Math.max(tangentMax,actual);
                 }
-                checks.push({hours:h,points:points.length,partial,maxError});
+                // At these high sun angles the entire tangent test region is
+                // behind opaque ring ground. Assert that independently of the
+                // CPU helper, not just parity between two versions of a formula.
+                const tangentMustBeBlocked=_sky.sunDir.y>.1&&Math.abs(_sky.sunDir.x)<.2;
+                checks.push({hours:h,points:points.length,partial,maxError,
+                    tangentBlockedChecks:tangentMustBeBlocked?tangents.length:0,
+                    tangentMax:tangentMustBeBlocked?tangentMax:null});
             }
         }finally{
             _sky.setTime(hours);_ringworld.update(_sky.uniforms.time.value);
             r.contextNode=context;T.RendererUtils.restoreRendererState(r,saved);material.dispose();target.dispose();
         }
-        return {pass:checks.every(s=>s.maxError<.001)&&checks.some(s=>s.partial>0),checks};
+        return {pass:checks.every(s=>s.maxError<.001&&(s.tangentMax===null||s.tangentMax===0))
+            &&checks.some(s=>s.partial>0)&&checks.some(s=>s.tangentBlockedChecks>0),checks};
     })()`);
     await writeFile(`${directory}/checks.json`,JSON.stringify({date:new Date().toISOString(),captures,gpu},null,2));
     console.log(JSON.stringify(gpu));if(!gpu.pass)process.exitCode=1;
