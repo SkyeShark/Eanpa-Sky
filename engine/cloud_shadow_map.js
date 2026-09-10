@@ -82,8 +82,15 @@ export function makeCloudShadowMap(T, {transmittance, lightDirection, time, disp
             nextOrigin.copy(nextRight).multiplyScalar(x).addScaledVector(nextUp,y).addScaledVector(light,along);
             const relative=cameraWorld.clone().sub(origin.value);
             const moved=Math.abs(relative.dot(right.value))>span.value.x*.125||Math.abs(relative.dot(up.value))>span.value.y*.125;
-            const turned=captureLight.value.dot(light)<.9995;
-            if(!force&&ready.value&&!moved&&!turned&&t>=lastTime&&t-lastTime<refreshSeconds)return false;
+            const lightAlignment=captureLight.value.dot(light);
+            const turned=lightAlignment<1-1e-10;
+            // Keep each published basis perpendicular to its integration rays.
+            // Small day-cycle steps used to update captureLight without the
+            // basis, so incremental rotation could leave it stale indefinitely.
+            // Ordinary sun motion still respects the shared capture cadence;
+            // a large time-of-day jump refreshes immediately.
+            const lightJump=lightAlignment<.995;
+            if(!force&&ready.value&&!moved&&!lightJump&&t>=lastTime&&t-lastTime<refreshSeconds)return false;
             const saved={target:renderer.getRenderTarget(),mrt:renderer.getMRT(),context:renderer.contextNode};
             const savedOrigin=origin.value.clone(),oldLight=captureLight.value.clone(),savedDisplacement=captureDisplacement.value.clone();
             const savedRight=right.value.clone(),savedUp=up.value.clone();

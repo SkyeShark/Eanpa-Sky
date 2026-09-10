@@ -69,6 +69,23 @@ test('near-horizontal cloud shadow columns cover roofs and preserve points along
     map.dispose();
 });
 
+test('gradual sun motion keeps capture rays perpendicular without increasing refresh frequency',async()=>{
+    const {T,renderer}=fixture(),light=T.uniform(new T.Vector3(.8,.6,0)),time=T.uniform(0);
+    const camera=new T.PerspectiveCamera();camera.updateMatrixWorld(true);
+    const map=makeCloudShadowMap(T,{transmittance:()=>T.float(.5),lightDirection:light,time,refreshSeconds:.1});
+    await map.prepare(renderer,camera);
+    for(let i=1;i<=12;i++){
+        const angle=.6-i*.008;light.value.set(Math.cos(angle),Math.sin(angle),0);
+        time.value=(i-1)*.101+.05;
+        assert.equal(await map.prepare(renderer,camera),false,'small rotations wait for the next shared refresh');
+        time.value=i*.101;assert.equal(await map.prepare(renderer,camera),true);
+        const {right,up}=map.projection;
+        assert.ok(Math.abs(right.value.dot(light.value))<1e-9);
+        assert.ok(Math.abs(up.value.dot(light.value))<1e-9,'published plane matches the current sun, not an earlier step');
+    }
+    assert.equal(map.stats.captures,13);map.dispose();
+});
+
 test('ring cloud atlas shares captures, restores renderer state after failure and disposes once',async()=>{
     const {T,renderer}=fixture();
     const u={displacement:T.uniform(new T.Vector2()),cover:T.uniform(.5),grey:T.uniform(0),dens:T.uniform(1)};

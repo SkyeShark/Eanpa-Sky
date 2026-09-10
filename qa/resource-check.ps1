@@ -1,4 +1,4 @@
-param([int] $SampleCount = 4, [double] $BusyThresholdPercent = 5)
+param([int] $SampleCount = 4, [double] $BusyThresholdPercent = 5, [double] $ExternalCpuThresholdPercent = 5)
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $session = Get-Content -LiteralPath (Join-Path $taskRoot '.artifacts/overhaul-20260906/processes.json') -Raw | ConvertFrom-Json
@@ -64,6 +64,6 @@ $gpuAfter = & nvidia-smi --query-gpu=name,driver_version,memory.total,memory.use
     gpuBefore = $gpuBefore; gpuAfter = $gpuAfter
     cpu = [pscustomobject]@{ measuredSeconds = $taskCpuSeconds; logicalProcessors = $taskLogicalProcessors
         method = 'Process CPU-time deltas; processes present at both endpoints. meanCores may exceed one.'
-        externalMeanPercent = $taskExternalCpu; thresholdPercent = 20; clean = ($taskExternalCpu -lt 20)
+        externalMeanPercent = $taskExternalCpu; thresholdPercent = $ExternalCpuThresholdPercent; clean = ($taskExternalCpu -lt $ExternalCpuThresholdPercent)
         processes = @($taskCpuRows | Sort-Object meanCores -Descending) }
 } | ConvertTo-Json -Depth 6 -Compress
