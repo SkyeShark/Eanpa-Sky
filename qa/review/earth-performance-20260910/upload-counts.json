@@ -1,0 +1,1622 @@
+{
+  "ms": 4005.9000000059605,
+  "frames": 311,
+  "writes": 257837,
+  "bytes": 885788960,
+  "groups": {
+    "frame:frame:frame:176": {
+      "count": 348,
+      "ranges": 385,
+      "min": 1,
+      "max": 2,
+      "uniforms": 24
+    },
+    "frame:frame:frame:368": {
+      "count": 311,
+      "ranges": 622,
+      "min": 2,
+      "max": 2,
+      "uniforms": 44
+    },
+    "UniformBuffer_492:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_484:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:512": {
+      "count": 1555,
+      "ranges": 2177,
+      "min": 1,
+      "max": 2,
+      "uniforms": 16
+    },
+    "UniformBuffer_434:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_435:object:object:8960": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:576": {
+      "count": 1555,
+      "ranges": 1555,
+      "min": 1,
+      "max": 1,
+      "uniforms": 17
+    },
+    "UniformBuffer_438:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_439:object:object:15360": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_476:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_384:object:object:3008": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_366:object:object:320": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_396:object:object:3328": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_400:object:object:3136": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_372:object:object:6336": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_374:object:object:3200": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_382:object:object:3008": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_398:object:object:3328": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_370:object:object:4096": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_386:object:object:3904": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_402:object:object:3136": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_392:object:object:4032": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_378:object:object:1792": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_406:object:object:1728": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_380:object:object:1792": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_442:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_443:object:object:15360": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_404:object:object:5632": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_390:object:object:5312": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_388:object:object:5312": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_368:object:object:192": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_376:object:object:3200": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_430:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_431:object:object:8960": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_394:object:object:4032": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_408:object:object:1728": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_454:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_486:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_470:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_478:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_480:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_472:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_488:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_450:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_451:object:object:20480": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_494:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_496:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_446:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_447:object:object:20480": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_466:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_468:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_462:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_458:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_464:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_460:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_456:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_426:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_427:object:object:2560": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_490:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_482:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_474:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:480": {
+      "count": 933,
+      "ranges": 4665,
+      "min": 5,
+      "max": 5,
+      "uniforms": 11
+    },
+    "UniformBuffer_410:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_414:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_418:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_422:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_412:object:object:384": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_416:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_420:object:object:384": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_424:object:object:448": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_364:object:object:2368": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "frame:frame:frame:160": {
+      "count": 317,
+      "ranges": 951,
+      "min": 3,
+      "max": 3,
+      "uniforms": 21
+    },
+    "render:render:render:1536": {
+      "count": 21148,
+      "ranges": 162996,
+      "min": 7,
+      "max": 13,
+      "uniforms": 102
+    },
+    "UniformBuffer_644:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_678:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:768": {
+      "count": 933,
+      "ranges": 933,
+      "min": 1,
+      "max": 1,
+      "uniforms": 32
+    },
+    "UniformBuffer_680:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_681:object:object:8960": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:880": {
+      "count": 1555,
+      "ranges": 1555,
+      "min": 1,
+      "max": 1,
+      "uniforms": 34
+    },
+    "UniformBuffer_690:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_691:object:object:15360": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_684:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_710:object:object:3008": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_752:object:object:320": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_720:object:object:3328": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_718:object:object:3136": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_714:object:object:6336": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_724:object:object:3200": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_722:object:object:3008": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_746:object:object:3328": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_712:object:object:4096": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_716:object:object:3904": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_750:object:object:3136": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_740:object:object:4032": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_726:object:object:1792": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_728:object:object:1728": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_738:object:object:1792": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_706:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_707:object:object:15360": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_748:object:object:5632": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_744:object:object:5312": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_742:object:object:5312": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_760:object:object:192": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_756:object:object:3200": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_702:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_703:object:object:8960": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_754:object:object:4032": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_758:object:object:1728": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_762:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_694:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_696:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_698:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_688:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_686:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_700:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_774:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_775:object:object:20480": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_734:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_736:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_778:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_779:object:object:20480": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_730:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_732:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "render:render:render:1568": {
+      "count": 622,
+      "ranges": 4794,
+      "min": 7,
+      "max": 13,
+      "uniforms": 106
+    },
+    "UniformBuffer_764:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_766:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_768:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_770:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_772:object:object:48640": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_786:object:object:64": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_787:object:object:2560": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_782:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_784:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_790:object:object:27520": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "render:render:render:992": {
+      "count": 311,
+      "ranges": 2086,
+      "min": 6,
+      "max": 12,
+      "uniforms": 74
+    },
+    "frame:frame:frame:64": {
+      "count": 311,
+      "ranges": 622,
+      "min": 2,
+      "max": 2,
+      "uniforms": 6
+    },
+    "UniformBuffer_792:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_794:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_796:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_798:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_800:object:object:384": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_802:object:object:512": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_804:object:object:384": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_806:object:object:448": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:720": {
+      "count": 311,
+      "ranges": 622,
+      "min": 2,
+      "max": 2,
+      "uniforms": 27
+    },
+    "frame:frame:frame:128": {
+      "count": 311,
+      "ranges": 622,
+      "min": 2,
+      "max": 2,
+      "uniforms": 17
+    },
+    "render:render:render:768": {
+      "count": 311,
+      "ranges": 346,
+      "min": 1,
+      "max": 2,
+      "uniforms": 42
+    },
+    "UniformBuffer_808:object:object:2368": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_822:object:object:256": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:320": {
+      "count": 622,
+      "ranges": 622,
+      "min": 1,
+      "max": 1,
+      "uniforms": 11
+    },
+    "UniformBuffer_824:object:object:128": {
+      "count": 622,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:224": {
+      "count": 3416,
+      "ranges": 3416,
+      "min": 1,
+      "max": 1,
+      "uniforms": 6
+    },
+    "UniformBuffer_826:object:object:96": {
+      "count": 622,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_828:object:object:160": {
+      "count": 622,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_830:object:object:224": {
+      "count": 622,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_832:object:object:288": {
+      "count": 622,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_834:object:object:352": {
+      "count": 622,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_836:object:object:80": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_837:object:object:80": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_643:object:object:96": {
+      "count": 311,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "render:render:render:336": {
+      "count": 102,
+      "ranges": 102,
+      "min": 1,
+      "max": 1,
+      "uniforms": 10
+    },
+    "UniformBuffer_841:object:object:48640": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_843:object:object:48640": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_663:object:object:48640": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_661:object:object:48640": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_657:object:object:48640": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_659:object:object:48640": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_849:object:object:27520": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_851:object:object:27520": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_649:object:object:27520": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_651:object:object:27520": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_645:object:object:64": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_646:object:object:8960": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_653:object:object:64": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_654:object:object:15360": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_665:object:object:64": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_666:object:object:20480": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:112": {
+      "count": 204,
+      "ranges": 204,
+      "min": 1,
+      "max": 1,
+      "uniforms": 4
+    },
+    "object:object:object:160": {
+      "count": 102,
+      "ranges": 102,
+      "min": 1,
+      "max": 1,
+      "uniforms": 5
+    },
+    "UniformBuffer_669:object:object:384": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_862:object:object:512": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_671:object:object:384": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_865:object:object:448": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_673:object:object:512": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_868:object:object:512": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_675:object:object:512": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_871:object:object:512": {
+      "count": 102,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "frame:frame:frame:96": {
+      "count": 18,
+      "ranges": 36,
+      "min": 2,
+      "max": 2,
+      "uniforms": 12
+    },
+    "render:render:render:208": {
+      "count": 6,
+      "ranges": 6,
+      "min": 1,
+      "max": 1,
+      "uniforms": 5
+    },
+    "render:render:render:1232": {
+      "count": 317,
+      "ranges": 3604,
+      "min": 10,
+      "max": 15,
+      "uniforms": 79
+    },
+    "UniformBuffer_348:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_340:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_356:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "render:render:render:1248": {
+      "count": 6,
+      "ranges": 68,
+      "min": 10,
+      "max": 15,
+      "uniforms": 83
+    },
+    "UniformBuffer_328:object:object:48640": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "render:render:render:1264": {
+      "count": 12,
+      "ranges": 136,
+      "min": 10,
+      "max": 15,
+      "uniforms": 83
+    },
+    "UniformBuffer_324:object:object:48640": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_326:object:object:48640": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_330:object:object:48640": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_322:object:object:48640": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_358:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_346:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_352:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_344:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_336:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_350:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_338:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_354:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_342:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:864": {
+      "count": 30,
+      "ranges": 30,
+      "min": 1,
+      "max": 1,
+      "uniforms": 32
+    },
+    "UniformBuffer_312:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_313:object:object:20480": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:736": {
+      "count": 18,
+      "ranges": 18,
+      "min": 1,
+      "max": 1,
+      "uniforms": 29
+    },
+    "UniformBuffer_308:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_309:object:object:15360": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_316:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_317:object:object:20480": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_260:object:object:4032": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_236:object:object:4096": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_268:object:object:3136": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_246:object:object:1792": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_256:object:object:5312": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_270:object:object:5632": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_254:object:object:5312": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_266:object:object:3136": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_234:object:object:192": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_240:object:object:3200": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_262:object:object:3328": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_248:object:object:3008": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_332:object:object:48640": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_334:object:object:48640": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_360:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_362:object:object:27520": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_244:object:object:1792": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_272:object:object:1728": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_232:object:object:320": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_252:object:object:3904": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_258:object:object:4032": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_274:object:object:1728": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_242:object:object:3200": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_238:object:object:6336": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_250:object:object:3008": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_264:object:object:3328": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_292:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_293:object:object:2560": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_304:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_305:object:object:15360": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_300:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_301:object:object:8960": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_320:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_296:object:object:64": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_297:object:object:8960": {
+      "count": 6,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_276:object:object:512": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_280:object:object:512": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_284:object:object:512": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_288:object:object:512": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_278:object:object:384": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_282:object:object:512": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_286:object:object:384": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "UniformBuffer_290:object:object:448": {
+      "count": 1,
+      "ranges": 0,
+      "min": 0,
+      "max": 0
+    },
+    "object:object:object:176": {
+      "count": 18,
+      "ranges": 36,
+      "min": 2,
+      "max": 2,
+      "uniforms": 5
+    }
+  },
+  "stages": {
+    "rain-surface": {
+      "writes": 74,
+      "bytes": 592
+    },
+    "spatial-clouds": {
+      "writes": 969,
+      "bytes": 6508
+    },
+    "reflection-pipeline": {
+      "writes": 256794,
+      "bytes": 885781860
+    }
+  }
+}
