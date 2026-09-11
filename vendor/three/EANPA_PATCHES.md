@@ -43,5 +43,9 @@ Renderer resource retirement, shadow-material variants, and environment-target
 ownership are implemented in standalone adapters with tests. They depend on the
 pinned renderer's internal interfaces and must be reviewed during a Three upgrade.
 
+Host integrations using a separate Three build must carry the relevant renderer
+patches too. Importing only Eanpa's sky/weather modules does not apply the native
+shadow-uniform optimization to an unpatched renderer.
+
 Upstream Three source and license remain authoritative; these notes do not
 describe an upstream release or imply that the changes have been submitted there.

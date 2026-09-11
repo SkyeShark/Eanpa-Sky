@@ -1,0 +1,7 @@
+{
+  "date": "2026-09-11T06:36:58.291Z",
+  "baseline": false,
+  "identical": true,
+  "passed": false,
+  "error": "Error: Error: Stale light values between renders: {\"filter\":\"PCF\",\"first\":[82,1,1,255,1,1,82,255],\"second\":[82,1,1,255,1,1,82,255]}\n    at <anonymous>:46:98"
+}

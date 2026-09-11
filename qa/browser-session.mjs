@@ -19,6 +19,12 @@ const listening = port => new Promise(resolvePort => {
     socket.once('timeout', () => finish(false));
 });
 const sleep = ms => new Promise(resolveWait => setTimeout(resolveWait, ms));
+const alive = pid => {
+    if (pid === null || pid === undefined) return false;
+    if (!Number.isSafeInteger(pid) || pid <= 0) throw new Error('Invalid owned process ID');
+    try { process.kill(pid, 0); return true; }
+    catch (error) { if (error.code === 'ESRCH') return false; throw error; }
+};
 const action = process.argv[2] ?? 'status';
 if (action === 'start' || action === 'preview') {
     let existing = null;
@@ -27,10 +33,7 @@ if (action === 'start' || action === 'preview') {
         if (existing.serverPort !== serverPort || existing.cdpPort !== cdpPort
             || !await listening(serverPort)) throw new Error('Existing owned server not available');
         process.kill(existing.serverPid, 0);
-        try {
-            process.kill(existing.browserPid, 0);
-            throw new Error('Owned browser is still alive; no second browser launched');
-        } catch (error) { if (error.code !== 'ESRCH') throw error; }
+        if (alive(existing.browserPid)) throw new Error('Owned browser is still alive; no second browser launched');
     }
     if ((!existing && await listening(serverPort)) || await listening(cdpPort)) {
         throw new Error('QA port already occupied; inspect/reuse the existing session. No process launched.');
@@ -66,7 +69,7 @@ if (action === 'start' || action === 'preview') {
             '--headless=new', `--remote-debugging-port=${cdpPort}`,
             '--remote-debugging-address=127.0.0.1', `--user-data-dir=${profile}`,
             '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
-            '--enable-unsafe-webgpu', '--window-size=1600,1000',
+            '--enable-unsafe-webgpu', '--mute-audio', '--window-size=1600,1000',
             `http://127.0.0.1:${serverPort}/?benchmark=1&automated=1`,
         ], 'chrome');
         owned.push(browser);
@@ -89,9 +92,6 @@ if (action === 'start' || action === 'preview') {
     reviewUrl.searchParams.delete('automated');
     const state = JSON.parse(await readFile(stateFile, 'utf8'));
     if (!await listening(serverPort)) throw new Error('Existing owned server unavailable. Nothing launched.');
-    const alive = pid => { try { process.kill(pid, 0); return true; } catch (error) {
-        if (error.code === 'ESRCH') return false; throw error;
-    } };
     // A slow WebGPU shutdown can outlive the first handoff attempt. Resume
     // only after both the recorded browser PID and its CDP listener are gone.
     if (await listening(cdpPort)) {

@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-11T06:41:00.457Z",
+  "steadyStateApplied": true,
+  "sky": "earth",
+  "cloud": "stratus",
+  "weather": "rain",
+  "hours": 11,
+  "camera": [
+    38,
+    1.82,
+    40
+  ],
+  "look": {
+    "pitch": -0.38,
+    "yaw": 0.45
+  },
+  "time": 183.87430000001248,
+  "wetness": 0.85,
+  "water": 0.746369813472316,
+  "shadows": {
+    "mode": "cached-world-space-sun-column",
+    "samples": 44,
+    "followsCloudWind": true,
+    "arbitraryGeometry": true,
+    "qualityAffectsBudgetOnly": true,
+    "densityField": "same-extinction-as-visible-clouds",
+    "map": {
+      "resolution": 384,
+      "extent": 6144,
+      "refreshSeconds": 0.1,
+      "captures": 1774,
+      "projection": "orthographic-light-columns",
+      "publication": "two-capture-atlas",
+      "receiverTextureReads": "one when settled, two during blending"
+    },
+    "materials": 43,
+    "installedWithoutWeather": true,
+    "quality": "balanced"
+  },
+  "errors": []
+}

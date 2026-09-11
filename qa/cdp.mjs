@@ -19,9 +19,10 @@ export async function connect() {
         socket.addEventListener('open', done, { once: true });
         socket.addEventListener('error', reject, { once: true });
     });
-    const pending = new Map(); let nextId = 0;
+    const pending = new Map(),listeners=new Map(); let nextId = 0;
     socket.addEventListener('message', ({ data }) => {
         const message = JSON.parse(data), call = pending.get(message.id);
+        if(message.method)for(const listener of listeners.get(message.method)??[])listener(message.params);
         if (!call) return;
         clearTimeout(call.timeout); pending.delete(message.id);
         if (message.error) call.reject(new Error(JSON.stringify(message.error)));
@@ -38,9 +39,12 @@ export async function connect() {
         if (result.exceptionDetails) throw new Error(result.exceptionDetails.exception?.description ?? result.exceptionDetails.text);
         return result.result.value;
     };
-    return { send, evaluate, close() {
+    return { send, evaluate, on(method,listener){
+        const set=listeners.get(method)??new Set();listeners.set(method,set);set.add(listener);
+        return ()=>{set.delete(listener);if(!set.size)listeners.delete(method);};
+    }, close() {
         for (const call of pending.values()) { clearTimeout(call.timeout); call.reject(new Error('CDP closed')); }
-        pending.clear(); socket.close();
+        pending.clear();listeners.clear(); socket.close();
     } };
 }
 

@@ -1,0 +1,134 @@
+{
+  "date": "2026-09-11T06:36:28.118Z",
+  "sky": "earth",
+  "quality": "balanced",
+  "sun": [
+    -0.9912761526876082,
+    0.08479895213815995,
+    -0.10089958785408437
+  ],
+  "method": "Same world receiver and simulation time immediately before/after each new cloud capture; ground and 25 m roofs across 2400 m.",
+  "pass": true,
+  "records": [
+    {
+      "time": 134.98789999999107,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 934
+    },
+    {
+      "time": 135.09789999999109,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 932
+    },
+    {
+      "time": 135.2078999999911,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 928
+    },
+    {
+      "time": 135.3178999999911,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 934
+    },
+    {
+      "time": 135.42789999999113,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 955
+    },
+    {
+      "time": 135.53789999999114,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 958
+    },
+    {
+      "time": 135.64789999999115,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 969
+    },
+    {
+      "time": 135.75789999999117,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 947
+    },
+    {
+      "time": 135.86789999999118,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 946
+    },
+    {
+      "time": 135.9778999999912,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 934
+    },
+    {
+      "time": 136.0878999999912,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 912
+    },
+    {
+      "time": 136.19789999999122,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 907
+    },
+    {
+      "time": 136.30789999999124,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 904
+    },
+    {
+      "time": 136.41789999999125,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 902
+    },
+    {
+      "time": 136.52789999999126,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 899
+    },
+    {
+      "time": 136.63789999999128,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 893
+    },
+    {
+      "time": 136.7478999999913,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 900
+    },
+    {
+      "time": 136.8578999999913,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 904
+    },
+    {
+      "time": 136.96789999999132,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 905
+    },
+    {
+      "time": 137.07789999999133,
+      "maxPublicationChange": 0,
+      "meanPublicationChange": 0,
+      "nontrivialReceivers": 903
+    }
+  ]
+}

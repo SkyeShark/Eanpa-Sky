@@ -1,0 +1,301 @@
+{
+  "date": "2026-09-11T05:34:18.958Z",
+  "frames": 208,
+  "ms": 3018.9000000059605,
+  "writes": 175292,
+  "bytes": 597696188,
+  "groups": {
+    "frame:176": {
+      "checks": 236,
+      "updates": 236,
+      "uniformsCompared": 4208
+    },
+    "render:128": {
+      "checks": 3985,
+      "updates": 3837,
+      "uniformsCompared": 7674
+    },
+    "object:320": {
+      "checks": 630,
+      "updates": 630,
+      "uniformsCompared": 6086
+    },
+    "render:144": {
+      "checks": 416,
+      "updates": 416,
+      "uniformsCompared": 1248
+    },
+    "frame:368": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 9152
+    },
+    "object:4800": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 21008
+    },
+    "render:240": {
+      "checks": 21216,
+      "updates": 208,
+      "uniformsCompared": 1248
+    },
+    "object:544": {
+      "checks": 7488,
+      "updates": 7488,
+      "uniformsCompared": 138944
+    },
+    "object:512": {
+      "checks": 1070,
+      "updates": 1070,
+      "uniformsCompared": 19736
+    },
+    "object:576": {
+      "checks": 1248,
+      "updates": 1248,
+      "uniformsCompared": 23088
+    },
+    "object:480": {
+      "checks": 16016,
+      "updates": 16016,
+      "uniformsCompared": 176176
+    },
+    "object:608": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 2704
+    },
+    "render:176": {
+      "checks": 416,
+      "updates": 282,
+      "uniformsCompared": 1410
+    },
+    "object:192": {
+      "checks": 1600,
+      "updates": 1600,
+      "uniformsCompared": 12944
+    },
+    "frame:32": {
+      "checks": 4292,
+      "updates": 74,
+      "uniformsCompared": 296
+    },
+    "render:336": {
+      "checks": 4292,
+      "updates": 74,
+      "uniformsCompared": 740
+    },
+    "object:208": {
+      "checks": 546,
+      "updates": 546,
+      "uniformsCompared": 5292
+    },
+    "object:288": {
+      "checks": 148,
+      "updates": 148,
+      "uniformsCompared": 1628
+    },
+    "object:224": {
+      "checks": 2304,
+      "updates": 2304,
+      "uniformsCompared": 15610
+    },
+    "object:112": {
+      "checks": 148,
+      "updates": 148,
+      "uniformsCompared": 592
+    },
+    "object:144": {
+      "checks": 2220,
+      "updates": 2220,
+      "uniformsCompared": 16872
+    },
+    "object:160": {
+      "checks": 74,
+      "updates": 74,
+      "uniformsCompared": 370
+    },
+    "frame:160": {
+      "checks": 20747,
+      "updates": 214,
+      "uniformsCompared": 4494
+    },
+    "render:1536": {
+      "checks": 19968,
+      "updates": 14144,
+      "uniformsCompared": 1442688
+    },
+    "object:768": {
+      "checks": 3346,
+      "updates": 3346,
+      "uniformsCompared": 120484
+    },
+    "object:880": {
+      "checks": 3952,
+      "updates": 3952,
+      "uniformsCompared": 134368
+    },
+    "object:784": {
+      "checks": 5201,
+      "updates": 5201,
+      "uniformsCompared": 156033
+    },
+    "render:1568": {
+      "checks": 416,
+      "updates": 416,
+      "uniformsCompared": 44096
+    },
+    "object:832": {
+      "checks": 416,
+      "updates": 416,
+      "uniformsCompared": 16224
+    },
+    "object:800": {
+      "checks": 624,
+      "updates": 624,
+      "uniformsCompared": 18096
+    },
+    "object:672": {
+      "checks": 2080,
+      "updates": 2080,
+      "uniformsCompared": 60320
+    },
+    "render:992": {
+      "checks": 624,
+      "updates": 208,
+      "uniformsCompared": 15392
+    },
+    "frame:64": {
+      "checks": 624,
+      "updates": 208,
+      "uniformsCompared": 1248
+    },
+    "object:240": {
+      "checks": 416,
+      "updates": 416,
+      "uniformsCompared": 5824
+    },
+    "object:720": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 5616
+    },
+    "frame:128": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 3536
+    },
+    "render:768": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 8736
+    },
+    "object:912": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 6656
+    },
+    "object:816": {
+      "checks": 220,
+      "updates": 220,
+      "uniformsCompared": 7932
+    },
+    "object:304": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 2704
+    },
+    "object:80": {
+      "checks": 624,
+      "updates": 624,
+      "uniformsCompared": 1664
+    },
+    "object:336": {
+      "checks": 208,
+      "updates": 208,
+      "uniformsCompared": 1664
+    },
+    "render:192": {
+      "checks": 28,
+      "updates": 28,
+      "uniformsCompared": 168
+    },
+    "frame:96": {
+      "checks": 13,
+      "updates": 13,
+      "uniformsCompared": 156
+    },
+    "object:1376": {
+      "checks": 13,
+      "updates": 13,
+      "uniformsCompared": 390
+    },
+    "render:208": {
+      "checks": 6,
+      "updates": 6,
+      "uniformsCompared": 30
+    },
+    "render:1232": {
+      "checks": 345,
+      "updates": 317,
+      "uniformsCompared": 25043
+    },
+    "object:752": {
+      "checks": 228,
+      "updates": 228,
+      "uniformsCompared": 6780
+    },
+    "render:1248": {
+      "checks": 6,
+      "updates": 6,
+      "uniformsCompared": 498
+    },
+    "render:1264": {
+      "checks": 12,
+      "updates": 12,
+      "uniformsCompared": 972
+    },
+    "object:864": {
+      "checks": 30,
+      "updates": 30,
+      "uniformsCompared": 960
+    },
+    "object:736": {
+      "checks": 18,
+      "updates": 18,
+      "uniformsCompared": 522
+    },
+    "object:848": {
+      "checks": 14,
+      "updates": 14,
+      "uniformsCompared": 434
+    },
+    "object:640": {
+      "checks": 10,
+      "updates": 10,
+      "uniformsCompared": 260
+    },
+    "object:128": {
+      "checks": 1,
+      "updates": 1,
+      "uniformsCompared": 2
+    },
+    "object:176": {
+      "checks": 18,
+      "updates": 18,
+      "uniformsCompared": 90
+    }
+  },
+  "lastRenderInfo": {
+    "calls": 632573,
+    "frameCalls": 23,
+    "drawCalls": 219,
+    "triangles": 10354911,
+    "points": 0,
+    "lines": 0,
+    "timestamp": 0
+  },
+  "sky": "earth",
+  "errors": "",
+  "interpretation": "Instrumented operation counts, not throughput; all browser hooks restored after capture."
+}
