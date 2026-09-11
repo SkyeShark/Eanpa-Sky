@@ -1,13 +1,13 @@
 # Release notes
 
-## Unreleased — CPU submission optimization
+## 0.2.1 CPU follow-up — 2026-09-11
 
 Reuse native shadow-filter parameter nodes across receiving materials so the
 renderer can share equivalent lighting buffers. The default Earth/Balanced
 comparison performs about 65% fewer buffer-upload calls and 58% fewer uniform
 comparisons, without changing visual quality or demonstration assets.
 
-See [CPU measurements, resource-stress results and validation limits](qa/review/cpu-optimization-20260910/README.md).
+See [CPU measurements, resource-stress results and validation limits](https://github.com/SkyeShark/Eanpa-Sky/blob/main/qa/review/cpu-optimization-20260910/README.md).
 
 ## 0.2.1 follow-up — 2026-09-10
 

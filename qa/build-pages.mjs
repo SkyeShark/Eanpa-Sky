@@ -18,6 +18,9 @@ const tracked=git('ls-files','-z').split('\0').filter(Boolean);
 const include=p=>/^(assets|engine|src|vendor|docs)\//.test(p)||p.startsWith('qa/review/')
     ||/^(index\.html|VERSION|package\.json|\.nojekyll|LICENSE|[^/]+\.md)$/.test(p);
 const sourceOnly=p=>/\.(?:blend\d*|psd|xcf|kra|mtlx|usdc|tres)$/.test(p)
+    // Full CPU investigation archives stay in GitHub; the release notes link
+    // there so benchmark captures do not consume the demo's asset budget.
+    ||/^qa\/review\/(?:earth-performance|cpu-optimization)-[^/]+\//.test(p)
     ||/^assets\/pbr\/eanpa_southwest_ground_v3\/runtime\/[^/]+_(?:AlbedoGrade|PackedNxyRoughAO)_2K\.png$/.test(p)
     ||/^assets\/terrain\/Desert_(?:rock_chunks_12_pieces|Cliff_Mesa_High|Cliff_Wide_Mesa_Low)_runtime_2k\.glb$/.test(p);
 const files=tracked.filter(p=>include(p)&&!sourceOnly(p)),selected=new Set(files);

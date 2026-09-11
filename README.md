@@ -60,6 +60,8 @@ checks its version, module dependencies and size. The package retains the comple
 demo, compressed terrain arrays, PNG fallbacks and review galleries. Editor
 files, unused 2K source PNGs and the superseded non-LOD terrain exports remain in
 GitHub but are excluded from the hosted package to fit Pages' 1 GB site limit.
+Full CPU investigation archives also remain in GitHub, linked from the release
+notes; the hosted package retains the existing visual review galleries.
 The output directory must be new; use a different output path for a second build.
 `release-manifest.json` identifies the deployed commit and packaged files.
 
