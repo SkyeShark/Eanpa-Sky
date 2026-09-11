@@ -6,6 +6,11 @@ are recorded relative to local starting checkpoint `e2e6496`:
 - `TextureNode.clone()` copies the explicit `updateMatrix` policy. Chained
   screen-buffer and PMREM sampling must not reintroduce per-object UV matrices.
   `tests/texture-node-policy.test.mjs` covers chained sample/LOD clones.
+- PCF, PCFSoft and point-shadow filters reuse map-size/radius reference nodes
+  per `LightShadow`. Previously each material's filter expansion created fresh
+  references, preventing sharing of the entire native render uniform buffer.
+  The referenced properties remain live, including replacement of `mapSize`;
+  no filter samples, coordinates or lighting equations change.
 - `ShadowNode` initializes its shadow target before materials bind the depth
   view. Otherwise a zero-intensity light's first later shadow render can replace
   the attachment and leave compiled bind groups referring to a destroyed view.

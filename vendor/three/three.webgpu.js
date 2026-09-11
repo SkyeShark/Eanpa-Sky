@@ -43680,6 +43680,28 @@ var RendererUtils = /*#__PURE__*/Object.freeze({
 
 const shadowMaterialLib = /*@__PURE__*/ new WeakMap();
 
+// EANPA: filter functions are expanded for each material. Creating their
+// shadow-only references inside each expansion gives otherwise identical
+// render groups different uniform IDs and prevents buffer sharing. Cache the
+// reference nodes (not their values), so resizing/replacing mapSize still
+// propagates and different LightShadow instances remain independent.
+const _shadowFilterUniforms = new WeakMap();
+function getShadowFilterUniforms( shadow ) {
+
+	let uniforms = _shadowFilterUniforms.get( shadow );
+	if ( uniforms === undefined ) {
+
+		uniforms = {
+			mapSize: reference( 'mapSize', 'vec2', shadow ).setGroup( renderGroup ),
+			radius: reference( 'radius', 'float', shadow ).setGroup( renderGroup )
+		};
+		_shadowFilterUniforms.set( shadow, uniforms );
+
+	}
+	return uniforms;
+
+}
+
 /**
  * A shadow filtering function performing basic filtering. This is in fact an unfiltered version of the shadow map
  * with a binary `[0,1]` result.
@@ -43734,8 +43756,7 @@ const PCFShadowFilter = /*@__PURE__*/ Fn( ( { depthTexture, shadowCoord, shadow,
 
 	};
 
-	const mapSize = reference( 'mapSize', 'vec2', shadow ).setGroup( renderGroup );
-	const radius = reference( 'radius', 'float', shadow ).setGroup( renderGroup );
+	const { mapSize, radius } = getShadowFilterUniforms( shadow );
 
 	const texelSize = vec2( 1 ).div( mapSize );
 	const radiusScaled = radius.mul( texelSize.x );
@@ -43781,7 +43802,7 @@ const PCFSoftShadowFilter = /*@__PURE__*/ Fn( ( { depthTexture, shadowCoord, sha
 	};
 
 
-	const mapSize = reference( 'mapSize', 'vec2', shadow ).setGroup( renderGroup );
+	const { mapSize } = getShadowFilterUniforms( shadow );
 
 	const texelSize = vec2( 1 ).div( mapSize );
 	const dx = texelSize.x;
@@ -44869,8 +44890,7 @@ const BasicPointShadowFilter = /*@__PURE__*/ Fn( ( { depthTexture, bd3D, dp } ) 
  */
 const PointShadowFilter = /*@__PURE__*/ Fn( ( { depthTexture, bd3D, dp, shadow } ) => {
 
-	const radius = reference( 'radius', 'float', shadow ).setGroup( renderGroup );
-	const mapSize = reference( 'mapSize', 'vec2', shadow ).setGroup( renderGroup );
+	const { radius, mapSize } = getShadowFilterUniforms( shadow );
 
 	const texelSize = radius.div( mapSize.x );
 
