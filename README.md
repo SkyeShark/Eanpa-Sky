@@ -52,19 +52,6 @@ wetness and puddles use nearby surface geometry; see [engine/RAIN.md](engine/RAI
 
 This is an early 0.2 release — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 
-## Publishing the demo
-
-Pushes to `main` run the Node tests and deploy through GitHub Actions to Pages.
-`node qa/build-pages.mjs` creates the static site in `.artifacts/pages/site` and
-checks its version, module dependencies and size. The package retains the complete
-demo, compressed terrain arrays, PNG fallbacks and review galleries. Editor
-files, unused 2K source PNGs and the superseded non-LOD terrain exports remain in
-GitHub but are excluded from the hosted package to fit Pages' 1 GB site limit.
-Full CPU investigation archives also remain in GitHub, linked from the release
-notes; the hosted package retains the existing visual review galleries.
-The output directory must be new; use a different output path for a second build.
-`release-manifest.json` identifies the deployed commit and packaged files.
-
 ## Credits & licenses
 
 - Code: MIT (see LICENSE)
