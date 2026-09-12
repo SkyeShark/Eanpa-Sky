@@ -31,7 +31,7 @@ import {
 // Reproducible scene links also let visual QA open the requested sky directly
 // instead of compiling Earth first and immediately rebuilding the whole scene.
 const launchSettings = new URLSearchParams(location.search);
-for (const id of ['skybox','cloud-type','weather','quality']) {
+for (const id of ['skybox','cloud-type','weather','quality','effects-quality']) {
     const control=document.getElementById(id),value=launchSettings.get(id);
     if(value&&[...control.options].some(option=>option.value===value))control.value=value;
 }
@@ -1482,9 +1482,9 @@ async function buildSkybox() {
         // overrides that merge intentional receiver weights into this contract.
         globalThis.eanpaStripMrt(scene);
         reflectionPipeline = makeReflectionPipeline(
-            // The sky selector must not degrade local reflections, N8AO, SSR,
-            // or bloom. Keep that scene pipeline at its authored setting.
-            THREE, renderer, scene, camera, active.sky, 'balanced',
+            // Scene effects have their own budget, independent of sky quality.
+            THREE, renderer, scene, camera, active.sky,
+            document.getElementById('effects-quality').value,
             requiredFxaaFactory, globalThis._reflectionEnv,
         );
         reflectionPipeline.setAOEnabled?.(aoPreference);
@@ -1633,6 +1633,7 @@ async function buildSkybox() {
 
 document.getElementById('skybox').addEventListener('change', buildSkybox);
 document.getElementById('quality').addEventListener('change', buildSkybox);
+document.getElementById('effects-quality').addEventListener('change', buildSkybox);
 cloudTypeControl.addEventListener('change', () => {
     const { cloudType } = syncSceneSelection();
     if (building) {

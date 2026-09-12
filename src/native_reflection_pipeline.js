@@ -1,3 +1,4 @@
+import { effectsQuality } from './effects_quality.js';
 import { N8AONode } from './vendor/n8ao/N8AONode.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { createConvexReceiverIds } from './reflection_receiver_id.js';
@@ -12,6 +13,7 @@ import { hasVisibleEmission } from './visible_emission.js';
 // Moving and skinned sources retain their reflections without stale self hits.
 // Fresnel, clearcoat, anisotropy and iridescence remain native Three lighting.
 export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, quality, fxaaFactory) {
+    const effects = effectsQuality(quality);
     const skyLayers = (sky.depthLayers ?? []).map(options => makeSkyGeometryLayer(T,renderer,scene,camera,options));
     const localProbe = makeLocalReflectionProbe(T,renderer,scene,camera);
     const receiverIds = createConvexReceiverIds();
@@ -45,7 +47,8 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const previousNear = shared(camera.near), previousFar = shared(camera.far);
     const historyValid = shared(0);
     const historySize=shared(new T.Vector2(1,1));
-    const params = {maxDistance: shared(32), thickness: shared(0.15), quality: shared(1), coarseDepthGate: shared(1)};
+    const params = {maxDistance: shared(effects.ssrDistance), thickness: shared(0.15),
+        quality: shared(effects.ssrQuality), coarseDepthGate: shared(1)};
     const trace = makeScreenSpaceTrace({colorNode: sourceColor, depthNode: currentDepth,
         objectIdNode: T.sample(coord => currentIds.load(coord.mul(historySize).floor()).a),
         hitNormalNode:T.sample(coord=>currentIds.load(coord.mul(historySize).floor()).rgb.mul(2).sub(1)),
@@ -150,9 +153,9 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const n8ao = new N8AONode({beautyNode:sceneColor, beautyTexture:scenePass.getTexture('output'),
         depthNode:scenePass.getTextureNode('depth'), depthTexture:scenePass.getTexture('depth'),
         normalNode:scenePass.getTextureNode('normal'), normalTexture:scenePass.getTexture('normal'), scene, camera});
-    Object.assign(n8ao.configuration, {halfRes:false, gammaCorrection:false, transparencyAware:false, accumulate:false});
+    Object.assign(n8ao.configuration, {halfRes:effects.aoHalfRes, gammaCorrection:false, transparencyAware:false, accumulate:false});
     n8ao.autoDetectTransparency = false;
-    n8ao.setQualityMode('Medium');
+    n8ao.setQualityMode(effects.aoQuality);
     const aoWeight = T.uniform(1), bloomWeight = T.uniform(1);
     const beauty = T.mix(sceneColor, n8ao.getTextureNode(), aoWeight.mul(scenePass.getTextureNode('metalrough').b));
     const glow = bloom(scenePass.getTextureNode('emissive'), .28, .42);
@@ -196,7 +199,8 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     return {supported:true, mode:'native-pbr-screen-space-radiance', pipeline, scenePass, history, trace, geometry, localProbe, skyLayers, registerObject, invalidateHistory,
         ssrImplementation:'current-geometry-motion-reprojected-radiance', ssrNode:params,
         ssrMaterialResponse:'native-three-base-clearcoat-anisotropy-iridescence-specular-ior',
-        nativeEnvironmentPbr:true, sceneColorAttachments:4, aoAvailable:true, aoQuality:'Medium',
+        nativeEnvironmentPbr:true, sceneColorAttachments:4, aoAvailable:true, aoQuality:effects.aoQuality,
+        effectsQuality:effects,
         bloomAvailable:true, get aoEnabled(){return aoEnabled}, get bloomEnabled(){return bloomEnabled},
         get bloomActive(){return bloomEnabled && emissionPresent},
         setAOEnabled(value){aoEnabled=!!value;aoWeight.value=aoEnabled?1:0;n8ao.enabled=aoEnabled;return aoEnabled;},

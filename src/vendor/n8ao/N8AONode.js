@@ -608,13 +608,16 @@ export class N8AONode extends TempNode {
             });
             const chosenDepth = depthNode.sample(chosenUv).r.toVar();
             const chosenNormal = getNormalFromDepthWithResolution(chosenUv, depthTexture, projectionMatrixInverse, fullResolution).toVar();
-            return mrt({
-                [depthOutputName]: vec4(chosenDepth, 0, 0, 1),
-                [normalOutputName]: vec4(chosenNormal, 0),
-            });
+            return vec4(chosenNormal, chosenDepth);
         });
-        this.downsampleMaterial.fragmentNode =
-            this.applySharedContext(fragmentNode());
+        // NodeMaterial must see the output struct at the root. Wrapping MRT
+        // inside Fn/context made r184 declare a single color output while the
+        // body wrote output.m0/m1, producing invalid WGSL in half-res mode.
+        const sample = fragmentNode().toVar();
+        this.downsampleMaterial.fragmentNode = mrt({
+            [depthOutputName]: this.applySharedContext(vec4(sample.a, 0, 0, 1)),
+            [normalOutputName]: this.applySharedContext(vec4(sample.rgb, 0)),
+        });
         this.downsampleMaterial.needsUpdate = true;
     }
     configureAOPass() {
