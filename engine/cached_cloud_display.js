@@ -119,7 +119,6 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
         const recycled = previous;previous = current;current = staging;staging = recycled;
         publishView(newView,current);publishView(oldView,previous);
         publishedAt = ready ? time : time-blendSeconds;blend.value = ready ? 0 : 1;
-        if(ready)bandSeconds=Math.max(.01,Math.min(refreshSeconds,time-current.time));
         lastUpdateTime = time;
         ready = true;band = -1;stats.band = -1;stats.captures++;
         stats.publishedTime = current.time;stats.blend = blend.value;
@@ -215,7 +214,12 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
                 if(band<0 && (1-blend.value)*duration<=lead && (age>=cadence-lead || age<0)) {
                     if(!await begin())return;
                 }
-                if(band>=0 && band<bands)await renderBand(false);
+                if(band>=0 && band<bands && await renderBand(false) && band>=bands) {
+                    // Measure drawing, not time waiting for the previous fade.
+                    // Otherwise a slow frame period permanently schedules all
+                    // later captures too early after the frame rate recovers.
+                    bandSeconds=Math.max(.01,Math.min(refreshSeconds,time-staging.time));
+                }
                 if(band>=bands && blend.value>=1)publish(time);
             })().finally(()=>{updating=null;release();});
             return updating;

@@ -56,6 +56,16 @@
   check('publication does not break world alignment',publicationErrors.every(e=>e<.012),{publicationErrors});
   check('distance storage is one extra half-float channel',cache.records.every(r=>r.target.textures[1].format===T.RedFormat)
    &&cache.stats.textureBytes===1024*512*10*3);
+  // Recover from the deliberately slow capture cadence above. Waiting for a
+  // fade is not drawing time and must not keep later snapshots seconds old.
+  const publicationDelays=[];let count=cache.stats.captures;
+  for(let i=1;i<=1800;i++){
+   const time=30+i/60;u.time.value=time;u.cloudDisplacement.value.set(time*2,0,time*3);
+   await cache.update();
+   if(cache.stats.captures!==count){count=cache.stats.captures;publicationDelays.push(time-cache.stats.publishedTime);}
+  }
+  check('capture latency recovers when host frame rate improves',publicationDelays.length>=3
+   &&publicationDelays.slice(-2).every(delay=>delay<.25),{publicationDelays});
   return{pass:checks.every(c=>c.pass),date:new Date().toISOString(),checks,samples};
  }finally{cache.dispose();target.dispose();m.dispose();r.contextNode=oldContext;T.RendererUtils.restoreRendererState(r,saved);}
 })()
