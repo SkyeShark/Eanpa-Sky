@@ -1,10 +1,11 @@
-// Current-frame spatial sky downsampling for optimized quality tiers.
+import { makeCachedCloudDisplay } from '../engine/cached_cloud_display.js';
+
+// Current-frame spatial sky downsampling, or Performance's world panorama.
 //
-// This deliberately has NO temporal history, reprojection, or previous-frame
-// texture. The former cloudgraph accumulated the same screen UV while the
-// camera moved, producing the pinned/skipping cloud copies reported by the
-// user. Here the real world cloud dome is rendered for the current camera at
-// reduced resolution and immediately composited once in that same frame. The
+// Balanced/High render the world cloud dome for the current camera at reduced
+// resolution. Performance uses completed world-direction cloud panoramas with
+// wind/translation correction; neither path accumulates screen-space history.
+// The
 // background and cloud volume use separate targets so authored layers can
 // remain between them (Ringworld background -100, structure -99, cloud -98,
 // curved high cloud -97) instead of being flattened into the wrong order.
@@ -91,11 +92,13 @@ export function makeSpatialCloudPass(THREE, renderer, camera, { div = 2 } = {}) 
     let originalBackgroundToneMapped = null;
     let originalCloudToneMapped = null;
     let disposed = false;
+    let cachedClouds = null;
 
     return {
         proxy,
         backgroundProxy,
-        mode: 'spatial-current-frame-sky',
+        get mode() { return cachedClouds ? 'banded-world-direction-cloud-panorama' : 'spatial-current-frame-sky'; },
+        get captureStats() { return cachedClouds?.stats ?? null; },
         attach(scene, skyRef) {
             if (disposed) return false;
             // One pass owns one pair of domes. Refusing a second attachment
@@ -108,6 +111,13 @@ export function makeSpatialCloudPass(THREE, renderer, camera, { div = 2 } = {}) 
             cloudDome = nextCloudDome;
             sky = skyRef;
             attachedScene = scene;
+            if (sky.cloudCaptureOptions) {
+                cachedClouds = makeCachedCloudDisplay(T3,renderer,sky,camera,sky.cloudCaptureOptions);
+                sky.setCachedCloudDisplay(cachedClouds);
+                const dir = T3.positionWorld.sub(T3.cameraPosition).normalize();
+                const rgba = T3.Fn(() => cachedClouds.sample(dir,T3.cameraPosition))();
+                proxyMaterial.colorNode = rgba.rgb;proxyMaterial.opacityNode = rgba.a;
+            }
             // MeshBasicNodeMaterial normally tone-maps its output. Doing that
             // in this HDR target and again in the main scene made the high/2D
             // layer converge toward the same dull grey in optimized modes.
@@ -134,27 +144,28 @@ export function makeSpatialCloudPass(THREE, renderer, camera, { div = 2 } = {}) 
                 // A clear initial sky hides this mesh. It must nevertheless
                 // compile before play, or the first cloudy preset pays for
                 // the entire volume shader on the interaction thread.
-                await sky.prepareOptimizedCaches?.(renderer,camera,true);
+                if(cachedClouds)await cachedClouds.ensureReady();
+                else await sky.prepareOptimizedCaches?.(renderer,camera,true);
                 cloudDome.visible=true;renderer.setMRT(null);
                 renderer.setRenderTarget(backgroundTarget);
                 await renderer.compileAsync(backgroundScene,camera);
                 await renderer.renderAsync(backgroundScene,camera);
-                renderer.setRenderTarget(cloudTarget);
+                if(!cachedClouds){renderer.setRenderTarget(cloudTarget);
                 await renderer.compileAsync(cloudScene,camera);
                 // compileAsync alone does not exercise every final render
                 // context variant in the pinned renderer. Submit this exact
                 // transparent pass and finish its GPU work before revealing
                 // the scene, including when the initial preset is clear.
-                await renderer.renderAsync(cloudScene,camera);
+                await renderer.renderAsync(cloudScene,camera);}
                 await renderer.backend.device.queue.onSubmittedWorkDone();
             }finally{cloudDome.visible=visible;T3.RendererUtils.restoreRendererState(renderer,state);}
         },
         async render() {
             if (disposed || !backgroundDome || !cloudDome) return;
-            await sky.prepareOptimizedCaches?.(renderer, camera);
-            // The proxy only establishes draw order/depth. Its content is the
-            // just-rendered current camera texture, so centering it avoids any
-            // large-world geometry drift without introducing temporal state.
+            if(cachedClouds)await cachedClouds.update();
+            else await sky.prepareOptimizedCaches?.(renderer, camera);
+            // Center the shells on the observer. Their content uses either
+            // current screen UV or a world ray, independently of shell position.
             backgroundProxy.position.copy(camera.position);
             proxy.position.copy(camera.position);
             if (sky.uniforms?.frameJit) sky.uniforms.frameJit.value = 0;
@@ -165,9 +176,9 @@ export function makeSpatialCloudPass(THREE, renderer, camera, { div = 2 } = {}) 
                 renderer.setRenderTarget(backgroundTarget);
                 renderer.setClearColor(0x000000, 1);
                 await renderer.renderAsync(backgroundScene, camera);
-                renderer.setRenderTarget(cloudTarget);
+                if(!cachedClouds){renderer.setRenderTarget(cloudTarget);
                 renderer.setClearColor(0x000000, 0);
-                await renderer.renderAsync(cloudScene, camera);
+                await renderer.renderAsync(cloudScene, camera);}
             } finally {
                 renderer.setRenderTarget(previousTarget);
                 renderer.setClearColor(savedClearColor, previousAlpha);
@@ -193,6 +204,8 @@ export function makeSpatialCloudPass(THREE, renderer, camera, { div = 2 } = {}) 
         dispose() {
             if (disposed) return;
             disposed = true;
+            if(cachedClouds && sky?.cachedCloudDisplay===cachedClouds)sky.setCachedCloudDisplay(null);
+            cachedClouds?.dispose();cachedClouds=null;
             backgroundScene.remove(backgroundDome);
             cloudScene.remove(cloudDome);
             if (backgroundDome?.material && originalBackgroundToneMapped !== null) {

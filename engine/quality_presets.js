@@ -1,6 +1,5 @@
-// The optimized tiers retain Eidoverse's world-space cloud dome. Their speed
-// comes from bounded march counts and density/light caches, never from the old
-// screen-space history proxy that pinned cloud copies to camera pixels.
+// Balanced/High render live cloud volumes. Performance samples the same volume
+// into a world-direction panorama, while shadows and weather stay live.
 export function skyQualityPresets(cacheMode='all'){
 const CACHE_MODE = cacheMode;
 const useDensityCache = CACHE_MODE === 'all' || CACHE_MODE === 'density';
@@ -33,6 +32,7 @@ const QUALITY = {
     },
     performance: {
         name: 'performance', label: 'Performance', fpsTarget: 120,
+        cloudDisplayCapture: {width:2048,height:1024,bands:32,refreshSeconds:3,blendSeconds:.5},
         skySamples: 20, lightSamples: 6, cloudPasses: 2, cloudDiv: 3,
         cloudShadowResolution:256,
         reflectionBake: { width: 256, height: 128, cloudPasses: 2 },

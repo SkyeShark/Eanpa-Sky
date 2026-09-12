@@ -42,6 +42,8 @@ try{
             frameWorkDefinition:'Elapsed frame function including submission and any intentional GPU-budget waits; not isolated CPU execution time.',
             intervalsMs:intervals,errors:[...f.errors],
             constraints:globalThis.__gpuContention?.metadata??null,cloudShadows:f.sky.cloudShadowMap.stats,
+            cloudDisplay:{mode:f.spatial.mode,capture:f.spatial.captureStats??null},
+            sourceRevision:globalThis.__sourceRevision??null,
             surface:f.weather.surfaceField?.stats??null,quality:f.quality,geometry:f.pipeline.ssrImplementation,
             environment:{capturesDuringRun:f.environmentStats.bakes-c.initialBakes,
                 regularCadenceSeconds:f.quality.cloudReflectionRefreshSeconds,oneRefreshScheduledAtMidrun:true}};

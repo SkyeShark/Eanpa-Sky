@@ -24,6 +24,7 @@
 import { makeCloudShadowMap } from './cloud_shadow_map.js';
 import { createCloudMotion } from './cloud_motion.js';
 import { makeAnalyticSkyNoise } from './sky_noise.js';
+import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
 
 (function () {
     const T3 = globalThis.THREE;
@@ -1881,6 +1882,29 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
         let disposed = false;
         const sys = {
             uniforms: u, state, cloudTransitionInfo,
+            cloudCaptureOptions: opts.cloudDisplayCapture ?? null,
+            cachedCloudDisplay: null,
+            setCachedCloudDisplay(display) {
+                if(sys.cachedCloudDisplay === display)return;
+                sys._envBake?.dispose();sys._envBake = null;
+                sys.cachedCloudDisplay = display;
+                sys.reflectionInfo.cloudSamplePhase = display
+                    ? 'published-cloud-panorama' : 'quality-budgeted-multipass-bake';
+            },
+            createCloudCaptureMaterial(origin) {
+                const snapshot = makeCloudUniformSnapshot(T3,u);
+                const material = new T3.NodeMaterial();
+                material.name = 'Frozen cloud panorama bands';
+                material.depthTest = material.depthWrite = material.toneMapped = false;
+                material.fragmentNode = Fn(() => {
+                    const texcoord = T3.uv();
+                    const lon = texcoord.x.sub(.5).mul(Math.PI*2);
+                    const lat = float(.5).sub(texcoord.y).mul(Math.PI);
+                    const dir = vec3(cos(lat).mul(cos(lon)),sin(lat),cos(lat).mul(sin(lon)));
+                    return cloudBody(dir,origin,opts.cloudPasses,null,float(0));
+                })().context({eanpaCloudSnapshot:true});
+                return {material,snapshot};
+            },
             _solarOcclusion: null,
             domes: [bgDome, cloudDome],
             sunDir: V(0, 1, 0), moonDir: V(0, -1, 0),
@@ -2641,7 +2665,8 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
             // reflections/env-IBL carry the arc.
             async bakeEnv(renderer, bopts = {}) {
                 const W = bopts.width ?? 512, H = bopts.height ?? 256;
-                if (lightCacheCompute && state.preset !== 'clear' && u.finalMul.value > 0.0001
+                if (sys.cachedCloudDisplay) await sys.cachedCloudDisplay.ensureReady();
+                if (!sys.cachedCloudDisplay && lightCacheCompute && state.preset !== 'clear' && u.finalMul.value > 0.0001
                     && u.lightCacheDirect.value < 0.999) {
                     await sys.prepareOptimizedCaches(renderer, bopts.camera ?? globalThis._c, true);
                 }
@@ -2689,7 +2714,7 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
                 // graph and synchronously compiled it again during play.
                 // cloudBody already skips its volume/wisps at zero density.
                 const cloudsOn = bopts.includeClouds !== false;
-                const bakeKey = `${W}x${H}|p${bopts.cloudPasses ?? 'd'}|c${cloudsOn ? 1 : 0}`;
+                const bakeKey = `${W}x${H}|p${bopts.cloudPasses ?? 'd'}|c${cloudsOn ? 1 : 0}|cached${!!sys.cachedCloudDisplay}`;
                 let bake = sys._envBake;
                 if (!bake || bake.key !== bakeKey || bake.rw !== (rw ?? null)) {
                     bake?.dispose();
@@ -2712,6 +2737,8 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
                         }
                         const cld = !cloudsOn
                             ? vec4(0, 0, 0, 0)
+                            : sys.cachedCloudDisplay
+                            ? sys.cachedCloudDisplay.sample(dir,sys.cachedCloudDisplay.originNode,false)
                             // Do not freeze a millisecond lightning pulse into the
                             // PMREM for an entire refresh interval. The visible
                             // cloud layer and bounded scene PointLight still flash;
@@ -2812,6 +2839,8 @@ import { makeAnalyticSkyNoise } from './sky_noise.js';
             dispose() {
                 if (disposed) return;
                 disposed = true;
+                sys.cachedCloudDisplay?.dispose();
+                sys.setCachedCloudDisplay(null);
                 if (globalThis._autoEnhanceCloudReflectHook === sys._reflectionHook) {
                     globalThis._autoEnhanceCloudReflectHook = null;
                 }

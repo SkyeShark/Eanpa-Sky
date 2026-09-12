@@ -111,6 +111,7 @@ export async function makeShieldworld({
             skySamples: quality.skySamples,
             lightSamples: quality.lightSamples,
             cloudPasses: quality.cloudPasses,
+            cloudDisplayCapture: quality.cloudDisplayCapture,
             densityCache: quality.densityCache,
             lightCache: quality.lightCache,
             cloudShadowResolution: quality.cloudShadowResolution,
