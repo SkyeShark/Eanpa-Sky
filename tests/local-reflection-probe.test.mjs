@@ -87,11 +87,19 @@ test('failed asynchronous probe warmup restores state and disposal releases each
     probe.update();assert.equal(renderer.draws.length,0);
 });
 
-test('probe warmup compiles the shared cube variant once but captures all six faces',async()=>{
+test('probe warmup compiles once and publishes only after six progressive updates',async()=>{
     const {probe,renderer}=fixture();let compilations=0;
     renderer.onCompile=()=>{compilations++};
     await probe.compileAsync();
     assert.equal(compilations,1);
+    assert.deepEqual(renderer.draws,[]);
+    assert.equal(probe.stats.captures,0);
+    for(let i=0;i<5;i++){
+        probe.update();
+        assert.equal(renderer.draws.length,i+1);
+        assert.equal(probe.stats.captures,0,'an incomplete cube must not be published');
+    }
+    probe.update();
     assert.deepEqual(renderer.draws,[0,1,2,3,4,5]);
     assert.equal(probe.stats.captures,1);
     assert.equal(probe.stats.faces,6);
