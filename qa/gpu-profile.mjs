@@ -56,7 +56,10 @@ try {
                 await new Promise(r=>setTimeout(r,20));
             }
             if(failure)throw new Error(failure);
-            return {date:new Date().toISOString(),sky:document.getElementById('skybox')?.value??globalThis.__skyFixture?.kind,
+            return {date:new Date().toISOString(),sourceRevision:globalThis.__sourceRevision??null,
+                size:[pipeline.pipeline.renderer.domElement.width,pipeline.pipeline.renderer.domElement.height],
+                cloudDisplay:{mode:globalThis._spatialClouds?.mode,capture:globalThis._spatialClouds?.captureStats??null},
+                sky:document.getElementById('skybox')?.value??globalThis.__skyFixture?.kind,
                 quality:document.getElementById('quality')?.value??globalThis.__skyFixture?.tier,clouds:document.getElementById('cloud-type')?.value??_sky.state.preset,
                 weather:document.getElementById('weather')?.value??globalThis.__skyFixture?.weather.state.name,camera:_c.position.toArray(),verticalFov:_c.getEffectiveFOV(),
                 coarseDepthGate:_reflectionPipeline.ssrNode.coarseDepthGate?.value,records};

@@ -1,0 +1,476 @@
+{
+  "date": "2026-09-12T22:17:59.051Z",
+  "method": "1578 x 846, Earth rain at 11 h, six generic receiver meshes, Three r186, RTX 5090 Laptop GPU; 12 s moving-camera throughput runs, one scheduled environment refresh; separate 600-frame GPU pass timestamp sums.",
+  "caveats": [
+    "All throughput windows include other CPU activity; native cached/High also flagged external GPU activity. Do not infer a reliable percentage FPS gain.",
+    "Limited means 4x browser CPU throttling and a synthetic GPU workload calibrated to 8 ms, with actual measured costs listed. It is not emulation of another GPU architecture or its memory bandwidth/capacity.",
+    "GPU timestamp totals include the fixture rendering and ground effects; cloud-generation pass totals exclude the small panorama lookup/composite cost, which remains in the full total.",
+    "GPU profiling is separate from throughput because query readback changes pacing. The live timestamp window includes one sky environment refresh; cached includes none. Its measured contribution was below 0.002 ms/frame."
+  ],
+  "measurements": [
+    {
+      "variant": "live",
+      "level": "native",
+      "source": "31a107f",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:04:36.069Z",
+      "tier": "performance",
+      "fps": 167.7351585227302,
+      "medianMs": 4.300000011920929,
+      "p95Ms": 12.599999994039536,
+      "maxMs": 125.59999999403954,
+      "frameWorkMedianMs": 1.2999999821186066,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "gpuContention": null,
+      "externalCpuPercent": 7.88,
+      "errors": [],
+      "file": "clouds-final-live-native.json"
+    },
+    {
+      "variant": "live",
+      "level": "limited",
+      "source": "31a107f",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:05:10.844Z",
+      "tier": "performance",
+      "fps": 70.63336530042113,
+      "medianMs": 12.700000017881393,
+      "p95Ms": 18.80000001192093,
+      "maxMs": 26.399999976158142,
+      "frameWorkMedianMs": 11.900000005960464,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "gpuContention": {
+        "minMs": 7.378528,
+        "maxMs": 10.789088,
+        "meanMs": 8.874851999999999
+      },
+      "externalCpuPercent": 8.82,
+      "errors": [],
+      "file": "clouds-final-live-limited.json"
+    },
+    {
+      "variant": "cached",
+      "level": "native",
+      "source": "working tree",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:06:11.883Z",
+      "tier": "performance",
+      "fps": 210.53770781139474,
+      "medianMs": 4.199999988079071,
+      "p95Ms": 7.699999988079071,
+      "maxMs": 20.099999994039536,
+      "frameWorkMedianMs": 1.0999999940395355,
+      "cleanCpu": false,
+      "cleanGpu": false,
+      "gpuContention": null,
+      "externalCpuPercent": 8.690000000000001,
+      "errors": [],
+      "file": "clouds-final-cached-native.json"
+    },
+    {
+      "variant": "cached",
+      "level": "limited",
+      "source": "working tree",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:06:50.654Z",
+      "tier": "performance",
+      "fps": 72.02881152450247,
+      "medianMs": 12.699999988079071,
+      "p95Ms": 17.400000005960464,
+      "maxMs": 29.399999976158142,
+      "frameWorkMedianMs": 11.900000005960464,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "gpuContention": {
+        "minMs": 7.233952,
+        "maxMs": 10.820416,
+        "meanMs": 9.03501696
+      },
+      "externalCpuPercent": 7.66,
+      "errors": [],
+      "file": "clouds-final-cached-limited.json"
+    },
+    {
+      "variant": "balanced",
+      "level": "native",
+      "source": "working tree",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:09:02.260Z",
+      "tier": "balanced",
+      "fps": 172.07759741333408,
+      "medianMs": 4.300000011920929,
+      "p95Ms": 12.800000011920929,
+      "maxMs": 30.19999998807907,
+      "frameWorkMedianMs": 1.5,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "gpuContention": null,
+      "externalCpuPercent": 8.61,
+      "errors": [],
+      "file": "clouds-final-balanced-native.json"
+    },
+    {
+      "variant": "balanced",
+      "level": "limited",
+      "source": "working tree",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:10:37.499Z",
+      "tier": "balanced",
+      "fps": 40.416666666666664,
+      "medianMs": 24.400000005960464,
+      "p95Ms": 38.10000002384186,
+      "maxMs": 65.40000000596046,
+      "frameWorkMedianMs": 22.80000001192093,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "gpuContention": {
+        "minMs": 7.300416,
+        "maxMs": 9.803136,
+        "meanMs": 8.269988740740741
+      },
+      "externalCpuPercent": 9.890000000000002,
+      "errors": [],
+      "file": "clouds-final-balanced-limited.json"
+    },
+    {
+      "variant": "high",
+      "level": "native",
+      "source": "working tree",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:12:09.580Z",
+      "tier": "high",
+      "fps": 169.76131742133006,
+      "medianMs": 5.5999999940395355,
+      "p95Ms": 8.800000011920929,
+      "maxMs": 17.30000001192093,
+      "frameWorkMedianMs": 1.7999999821186066,
+      "cleanCpu": false,
+      "cleanGpu": false,
+      "gpuContention": null,
+      "externalCpuPercent": 7.05,
+      "errors": [],
+      "file": "clouds-final-high-native.json"
+    },
+    {
+      "variant": "high",
+      "level": "limited",
+      "source": "working tree",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:13:05.087Z",
+      "tier": "high",
+      "fps": 60.310716814527886,
+      "medianMs": 16.599999994039536,
+      "p95Ms": 20.900000005960464,
+      "maxMs": 30.599999994039536,
+      "frameWorkMedianMs": 15,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "gpuContention": {
+        "minMs": 6.695456,
+        "maxMs": 10.480064,
+        "meanMs": 8.47444452173913
+      },
+      "externalCpuPercent": 7.84,
+      "errors": [],
+      "file": "clouds-final-high-limited.json"
+    },
+    {
+      "variant": "balanced-repeat",
+      "level": "limited",
+      "source": "working tree",
+      "revision": "8a8ad67c5d3bf8caf30d0d0621b8c87c235bb04d",
+      "date": "2026-09-12T22:16:01.241Z",
+      "tier": "balanced",
+      "fps": 59.24160743885788,
+      "medianMs": 16.69999998807907,
+      "p95Ms": 21,
+      "maxMs": 32.69999998807907,
+      "frameWorkMedianMs": 14.900000005960464,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "gpuContention": {
+        "minMs": 7.445152,
+        "maxMs": 9.802976,
+        "meanMs": 8.455684000000002
+      },
+      "externalCpuPercent": 10.149999999999999,
+      "errors": [],
+      "file": "clouds-final-balanced-repeat-limited.json"
+    }
+  ],
+  "gpu": [
+    {
+      "variant": "live",
+      "file": "clouds-final-live-gpu.json.gz",
+      "samples": 600,
+      "meanMs": 1.1169886400000004,
+      "medianMs": 1.0807999999999998,
+      "p95Ms": 1.241632,
+      "maxMs": 2.652544,
+      "source": "31a107f",
+      "date": "2026-09-12T22:05:29.559Z",
+      "groups": [
+        {
+          "name": "render:eanpa_current_spatial_background:spatial-clouds",
+          "perFrameMs": 0.008433280000000008,
+          "perDrawMs": 0.008433280000000008,
+          "maxMs": 0.164576,
+          "count": 600
+        },
+        {
+          "name": "render:eanpa_current_spatial_clouds:spatial-clouds",
+          "perFrameMs": 0.20631146666666664,
+          "perDrawMs": 0.20631146666666664,
+          "maxMs": 0.460768,
+          "count": 600
+        },
+        {
+          "name": "render:reflection-current-geometry:reflection-pipeline",
+          "perFrameMs": 0.025896266666666657,
+          "perDrawMs": 0.025896266666666657,
+          "maxMs": 0.85776,
+          "count": 600
+        },
+        {
+          "name": "render:1578x846:reflection-pipeline",
+          "perFrameMs": 0.28657226666666674,
+          "perDrawMs": 0.07164306666666669,
+          "maxMs": 0.347392,
+          "count": 2400
+        },
+        {
+          "name": "render:Current normal, ambient visibility and receiver:reflection-pipeline",
+          "perFrameMs": 0.014689920000000007,
+          "perDrawMs": 0.014689920000000007,
+          "maxMs": 0.02544,
+          "count": 600
+        },
+        {
+          "name": "render:screen:reflection-pipeline",
+          "perFrameMs": 0.0503009066666662,
+          "perDrawMs": 0.0045728096969696545,
+          "maxMs": 0.231168,
+          "count": 6600
+        },
+        {
+          "name": "render:output:reflection-pipeline",
+          "perFrameMs": 0.5059163733333332,
+          "perDrawMs": 0.49599644444444424,
+          "maxMs": 2.057248,
+          "count": 612
+        },
+        {
+          "name": "render:ShadowMap:reflection-pipeline",
+          "perFrameMs": 0.007931199999999994,
+          "perDrawMs": 0.007931199999999994,
+          "maxMs": 0.013568,
+          "count": 600
+        },
+        {
+          "name": "render:cloud-column-transmittance:rain-surface",
+          "perFrameMs": 0.004818719999999999,
+          "perDrawMs": 0.07413415384615384,
+          "maxMs": 0.081632,
+          "count": 39
+        },
+        {
+          "name": "render:rainfall-wetness-water-history:rain-surface",
+          "perFrameMs": 0.00018543999999999999,
+          "perDrawMs": 0.006953999999999999,
+          "maxMs": 0.009024,
+          "count": 16
+        },
+        {
+          "name": "render:listener-weather:rain-surface",
+          "perFrameMs": 0.00012064000000000001,
+          "perDrawMs": 0.004524,
+          "maxMs": 0.006048,
+          "count": 16
+        },
+        {
+          "name": "render:rain-surface-world-normal:rain-surface",
+          "perFrameMs": 0.00025792,
+          "perDrawMs": 0.006728347826086957,
+          "maxMs": 0.007104,
+          "count": 23
+        },
+        {
+          "name": "compute:screen:spatial-clouds",
+          "perFrameMs": 0.00045946666666666665,
+          "perDrawMs": 0.02506181818181818,
+          "maxMs": 0.035776,
+          "count": 11
+        },
+        {
+          "name": "render:PMREM.cubeUv:reflection-pipeline",
+          "perFrameMs": 0.0033586133333333335,
+          "perDrawMs": 0.07197028571428572,
+          "maxMs": 0.133504,
+          "count": 28
+        },
+        {
+          "name": "compute:screen:sky-reflection-bake",
+          "perFrameMs": 0.00003866666666666667,
+          "perDrawMs": 0.0232,
+          "maxMs": 0.0232,
+          "count": 1
+        },
+        {
+          "name": "render:sky_system_env:sky-reflection-bake",
+          "perFrameMs": 0.00013050666666666665,
+          "perDrawMs": 0.078304,
+          "maxMs": 0.078304,
+          "count": 1
+        },
+        {
+          "name": "render:eanpa-owned-sky-pmrem:sky-reflection-bake",
+          "perFrameMs": 0.000059839999999999996,
+          "perDrawMs": 0.0039893333333333334,
+          "maxMs": 0.005312,
+          "count": 9
+        },
+        {
+          "name": "render:PMREM.cubeUv:sky-reflection-bake",
+          "perFrameMs": 0.0014329066666666666,
+          "perDrawMs": 0.107468,
+          "maxMs": 0.114144,
+          "count": 8
+        },
+        {
+          "name": "render:eanpa-local-probe-pmrem:reflection-pipeline",
+          "perFrameMs": 0.00007424,
+          "perDrawMs": 0.0044544,
+          "maxMs": 0.006016,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "variant": "cached",
+      "file": "clouds-final-cached-gpu.json.gz",
+      "samples": 600,
+      "meanMs": 0.9354138133333327,
+      "medianMs": 0.8994879999999998,
+      "p95Ms": 1.0838719999999997,
+      "maxMs": 1.959456,
+      "source": "working tree",
+      "date": "2026-09-12T22:07:03.458Z",
+      "groups": [
+        {
+          "name": "render:eanpa_current_spatial_background:spatial-clouds",
+          "perFrameMs": 0.008076000000000007,
+          "perDrawMs": 0.008076000000000007,
+          "maxMs": 0.014272,
+          "count": 600
+        },
+        {
+          "name": "render:reflection-current-geometry:reflection-pipeline",
+          "perFrameMs": 0.023967626666666665,
+          "perDrawMs": 0.023967626666666665,
+          "maxMs": 0.25488,
+          "count": 600
+        },
+        {
+          "name": "render:1578x846:reflection-pipeline",
+          "perFrameMs": 0.2824748266666674,
+          "perDrawMs": 0.07061870666666685,
+          "maxMs": 1.00016,
+          "count": 2400
+        },
+        {
+          "name": "render:Current normal, ambient visibility and receiver:reflection-pipeline",
+          "perFrameMs": 0.015429173333333353,
+          "perDrawMs": 0.015429173333333353,
+          "maxMs": 0.03568,
+          "count": 600
+        },
+        {
+          "name": "render:screen:reflection-pipeline",
+          "perFrameMs": 0.04840399999999959,
+          "perDrawMs": 0.004400363636363599,
+          "maxMs": 0.035616,
+          "count": 6600
+        },
+        {
+          "name": "render:output:reflection-pipeline",
+          "perFrameMs": 0.5313706133333334,
+          "perDrawMs": 0.5209515816993465,
+          "maxMs": 1.3848,
+          "count": 612
+        },
+        {
+          "name": "render:ShadowMap:reflection-pipeline",
+          "perFrameMs": 0.00789610666666666,
+          "perDrawMs": 0.00789610666666666,
+          "maxMs": 0.009728,
+          "count": 600
+        },
+        {
+          "name": "render:cloud-column-transmittance:rain-surface",
+          "perFrameMs": 0.005196533333333333,
+          "perDrawMs": 0.07250976744186045,
+          "maxMs": 0.079264,
+          "count": 43
+        },
+        {
+          "name": "render:rainfall-wetness-water-history:rain-surface",
+          "perFrameMs": 0.0001956266666666667,
+          "perDrawMs": 0.00652088888888889,
+          "maxMs": 0.00736,
+          "count": 18
+        },
+        {
+          "name": "render:listener-weather:rain-surface",
+          "perFrameMs": 0.00014330666666666664,
+          "perDrawMs": 0.004776888888888889,
+          "maxMs": 0.005856,
+          "count": 18
+        },
+        {
+          "name": "render:rain-surface-world-normal:rain-surface",
+          "perFrameMs": 0.0002979199999999999,
+          "perDrawMs": 0.00687507692307692,
+          "maxMs": 0.007296,
+          "count": 26
+        },
+        {
+          "name": "compute:screen:spatial-clouds",
+          "perFrameMs": 0.00008069333333333333,
+          "perDrawMs": 0.024208,
+          "maxMs": 0.024672,
+          "count": 2
+        },
+        {
+          "name": "render:eanpa-cloud-panorama-0:spatial-clouds",
+          "perFrameMs": 0.004195680000000001,
+          "perDrawMs": 0.07866900000000002,
+          "maxMs": 0.170528,
+          "count": 32
+        },
+        {
+          "name": "render:eanpa-local-probe-pmrem:reflection-pipeline",
+          "perFrameMs": 0.00007845333333333332,
+          "perDrawMs": 0.0047072,
+          "maxMs": 0.005856,
+          "count": 10
+        },
+        {
+          "name": "render:PMREM.cubeUv:reflection-pipeline",
+          "perFrameMs": 0.0033626666666666666,
+          "perDrawMs": 0.07205714285714285,
+          "maxMs": 0.137184,
+          "count": 28
+        },
+        {
+          "name": "render:eanpa-cloud-panorama-2:spatial-clouds",
+          "perFrameMs": 0.004244586666666668,
+          "perDrawMs": 0.07958600000000002,
+          "maxMs": 0.168832,
+          "count": 32
+        }
+      ]
+    }
+  ]
+}

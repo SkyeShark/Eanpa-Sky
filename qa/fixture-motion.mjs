@@ -2,15 +2,16 @@
 // keyframes. Simulation speed is explicit in every evidence file.
 import {connect} from './cdp.mjs';
 import {mkdir,writeFile} from 'node:fs/promises';
-const [name='fixture-motion',duration='12',speed='1']=process.argv.slice(2);
-if(!/^[a-z0-9_-]+$/i.test(name)||Number(duration)>20||Number(duration)<1||Number(speed)<.1)throw new Error('Invalid motion capture');
+const [name='fixture-motion',duration='12',speed='1',kbps='8000']=process.argv.slice(2);
+if(!/^[a-z0-9_-]+$/i.test(name)||Number(duration)>20||Number(duration)<1||Number(speed)<.1
+ ||![duration,speed,kbps].every(v=>Number.isFinite(Number(v)))||Number(kbps)<500||Number(kbps)>16000)throw new Error('Invalid motion capture');
 const c=await connect();
 try{
     const result=await c.evaluate(`(async()=>{
         const f=__skyFixture;
         if(!_eanpaTest.paused){_eanpaTest.pauseAfterFrame=true;while(!_eanpaTest.paused)await new Promise(r=>setTimeout(r,10));}
         const canvas=f.renderer.domElement,stream=canvas.captureStream(30),chunks=[],frames=[];
-        const recorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8',videoBitsPerSecond:8000000});
+        const recorder=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp8',videoBitsPerSecond:${Number(kbps)*1000}});
         recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
         const finished=new Promise(done=>recorder.onstop=done),duration=${Number(duration)},speed=${Number(speed)};
         const start=f.time,total=Math.ceil(duration*30),wall=performance.now();recorder.start();
@@ -21,7 +22,7 @@ try{
         }}finally{recorder.stop();await finished;stream.getTracks().forEach(t=>t.stop());}
         const video=await new Promise(done=>{const r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(new Blob(chunks,{type:recorder.mimeType}));});
         return{date:new Date().toISOString(),sky:f.kind,weather:f.weather.state.name,quality:f.tier,
-            camera:f.camera.position.toArray(),fov:f.camera.fov,start,duration,simulationSpeed:speed,actualSeconds:(performance.now()-wall)/1000,
+            camera:f.camera.position.toArray(),fov:f.camera.fov,start,duration,simulationSpeed:speed,videoKbps:${Number(kbps)},actualSeconds:(performance.now()-wall)/1000,
             errors:[...f.errors],pointerLocked:!!document.pointerLockElement,video,frames};
     })()`);
     const directory='artifacts/feedback-20260909/motion';await mkdir(directory,{recursive:true});

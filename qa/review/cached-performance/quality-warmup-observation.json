@@ -1,0 +1,12 @@
+{
+  "completedQuality": "balanced",
+  "observedDuringFollowingSwitchTo": "performance",
+  "source": "globalThis._shaderWarmupStats, after the integration runner reported its completed Balanced step",
+  "warmup": {
+    "rainSurfaceWarmupMs": 144,
+    "exactMrtCompileMs": 160891.2,
+    "finalGraphRenderMs": 10768.6,
+    "totalMs": 175685,
+    "weatherGraphReady": true
+  }
+}

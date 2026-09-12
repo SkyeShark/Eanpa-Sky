@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eanpa — Performance cloud capture review</title>
+<style>
+  :root{color-scheme:dark;font:17px/1.55 system-ui,sans-serif;background:#101820;color:#dfebf2}
+  body{max-width:1240px;margin:auto;padding:30px 24px 60px}h1{font-size:2rem;line-height:1.2;margin:0 0 12px}
+  h2{font-size:1.35rem;margin:36px 0 12px}p{max-width:94ch}a{color:#94d5ff}small,.note{color:#b6c7d3}
+  nav{display:flex;flex-wrap:wrap;gap:22px;margin:22px 0}select{font:inherit;background:#1d2b38;color:inherit;border:1px solid #7794aa;border-radius:6px;padding:9px 12px;margin:0 0 15px 10px;max-width:95%}
+  figure{margin:0}img,video{width:100%;height:auto;display:block;border-radius:8px;background:#080d12}figcaption{padding:9px 0;color:#b6c7d3}
+  .scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}th,td{text-align:left;padding:11px 14px;border-bottom:1px solid #314452}th{background:#1c2b36}
+  .metric{padding:17px 22px;background:#1c2b36;border-left:4px solid #8fdbbc;margin:20px 0}.metric strong{color:#b1edce}
+  code{font-size:.88em}li{margin-bottom:6px}@media(max-width:650px){body{padding:22px 14px}select{margin-left:0;display:block}h1{font-size:1.65rem}}
+</style>
+<h1>Performance cloud capture</h1>
+<p>The same three quality settings. Performance periodically captures the volumetric clouds;
+  Balanced and High keep the live cloud pass. Shadows, rain, puddles, lightning and local reflections remain active.</p>
+<nav><a href="../../../?quality=performance">Open the engine in Performance</a><a href="README.md">Implementation and validation</a><a href="measurements.json">Measurements and qualifications</a></nav>
+<label for="view">Captured view</label>
+<select id="view">
+  <option value="main-day">Full demo — Performance, cumulus after rain</option>
+  <option value="main-rain">Full demo — Performance, rain</option>
+  <option value="earth-day">Earth — cumulus and chrome receivers</option>
+  <option value="earth-cirrus">Earth — cirrus</option>
+  <option value="earth-rain">Earth — rain and wet surfaces</option>
+  <option value="earth-darkstorm">Earth — dark storm</option>
+  <option value="earth-night">Earth — night</option>
+  <option value="ring-day">Ringworld — daytime clouds</option>
+  <option value="ring-eclipse">Ringworld — midday eclipse</option>
+  <option value="ring-cirrus">Ringworld — cirrus and distant ring</option>
+  <option value="shield-day">Shieldworld — clouds and lighting</option>
+  <option value="shield-star">Shieldworld — cirrus and red giant</option>
+</select>
+<figure><img id="capture" src="main-day.jpg" alt="Full demo — Performance, cumulus after rain"><figcaption id="caption">Full demo — Performance, cumulus after rain</figcaption></figure>
+<p class="note">The fixture uses ordinary roofs, slopes and chrome surfaces to check the reusable effects. Capture metadata is saved next to the images. These are representative views, not exhaustive flight testing.</p>
+<h2>Cloud motion at normal speed</h2>
+<video controls playsinline preload="none" poster="earth-motion-view.jpg" src="cloud-motion.webm"></video>
+<p class="note">Nine seconds, 30 FPS recording, normal simulation speed. Cloud wind motion continues between completed captures. Four keyframes were separately inspected.</p>
+<h2>What changes visually</h2>
+<p>A 2048 × 1024 cloud panorama refreshes every three seconds, sooner for significant changes.
+  Captures render in 32 bands and publish only when complete, with a half-second crossfade.
+  Camera rotation stays immediate. Wind and camera translation approximately reproject the image;
+  current lighting and eclipse visibility remain live.</p>
+<p>The tradeoff is softer fine detail, approximate cloud parallax and less continuous shape evolution.
+  Fast cloud fly-throughs suit Balanced or High better. The three HDR cloud targets add 48 MiB.
+  Cloud shadows use current density, so they can differ slightly from the displayed approximation between captures.</p>
+<h2>Measured GPU work</h2>
+<div class="metric">Whole fixture: <strong>1.117 → 0.935 ms</strong> per frame, about <strong>16% less GPU pass time</strong>.<br>
+  Cloud generation: <strong>0.2063 → 0.00844 ms</strong>, about 96% less. Panorama lookup and compositing remain in the whole-fixture total.</div>
+<p>Separate 600-frame WebGPU timestamp captures on the RTX 5090 Laptop GPU, Earth rain at 1578 × 846.
+  They measure GPU pass work, excluding queue idle time. The live capture included one sky environment refresh;
+  the cached capture did not. That difference contributed under 0.002 ms per frame.</p>
+<h2>Throughput and constrained resources</h2>
+<p>Each 12-second run moves the camera and includes a real environment refresh.
+  Constrained runs apply 4× browser CPU throttling and synthetic GPU contention calibrated to 8 ms;
+  its actual cost varies and is recorded in the JSON. This is resource stress, not emulation of a named low-end device.</p>
+<p><strong>Background CPU activity affected every window.</strong> The original Balanced constrained run also had heavy CPU activity during warmup; both it and the repeat are shown.
+  These FPS samples do not establish a reliable percentage gain or tier ranking. The constrained Performance improvement was modest.</p>
+<div class="scroll"><table><thead><tr><th>Setting</th><th>Resources</th><th>FPS</th><th>p95 frame</th><th>Raw capture</th></tr></thead><tbody id="runs"></tbody></table></div>
+<h2>Checks</h2>
+<ul>
+  <li>92 Node tests; 14 GPU publication/scissoring/lifecycle checks, five frozen-uniform checks and eight real-sky response checks.</li>
+  <li>All 39 accelerated cloud/weather transition cases across the three worlds.</li>
+  <li>A real 45-second rain-to-dark-storm transition: no new shader pipelines or GPU errors, longest measured interval 24.9 ms.</li>
+  <li>Cloud-shadow continuity on ground and 25 m roofs; all 55 rain-surface/shelter cases; reflection reprojection on all six host meshes.</li>
+  <li>Full demo quality switch from Performance to Balanced and back, with all three worlds and quality settings available.</li>
+</ul>
+<p><a href="main-integration.json">Demo integration</a> · <a href="realtime-weather-transition.json">Real-time transition</a> · <a href="panorama-contract.json">Panorama GPU contract</a> · <a href="shadow-motion.json">Shadow continuity</a> · <a href="rain-surfaces.json">Rain surfaces</a> · <a href="reflection-motion.json">Reflection motion</a></p>
+<p class="note">Full-demo quality changes still have a slow shader warmup: the switch into Balanced spent 175.7 seconds preparing its scene rendering. It completed without errors, but this cloud display change does not resolve that compilation delay. Weather transitions above used their already-warmed shaders.</p>
+<script type="module">
+  const picker=document.getElementById('view'),capture=document.getElementById('capture'),caption=document.getElementById('caption');
+  picker.addEventListener('change',()=>{capture.src=picker.value+'.jpg';capture.alt=caption.textContent=picker.selectedOptions[0].textContent;});
+  const data=await fetch('measurements.json').then(r=>{if(!r.ok)throw Error(r.status);return r.json();});
+  const labels={live:'Previous Performance',cached:'Cached Performance',balanced:'Balanced',high:'High','balanced-repeat':'Balanced (repeat)'};
+  for(const run of data.measurements){
+    const row=document.createElement('tr');
+    for(const value of [labels[run.variant],run.level==='native'?'Native':'Constrained',run.fps.toFixed(1),run.p95Ms.toFixed(1)+' ms']){
+      const cell=document.createElement('td');cell.textContent=value;row.append(cell);
+    }
+    const cell=document.createElement('td'),link=document.createElement('a');link.href=run.file;link.textContent='JSON';cell.append(link);row.append(cell);document.getElementById('runs').append(row);
+  }
+</script>
+</html>

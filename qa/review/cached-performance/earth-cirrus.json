@@ -1,0 +1,57 @@
+{
+  "source": "working tree",
+  "sky": "earth",
+  "tier": "performance",
+  "cloud": "cirrus",
+  "weather": "none",
+  "hours": 10.5,
+  "time": 143.1461666666669,
+  "camera": [
+    0,
+    2.2,
+    13
+  ],
+  "rotation": [
+    0.20000000000000004,
+    0,
+    0,
+    "XYZ"
+  ],
+  "wind": [
+    980.6814389698566,
+    0,
+    1011.8279365731842
+  ],
+  "cached": {
+    "mode": "banded-world-direction-cloud-panorama",
+    "width": 2048,
+    "height": 1024,
+    "bands": 32,
+    "refreshSeconds": 3,
+    "blendSeconds": 0.5,
+    "captures": 47,
+    "bandDraws": 1472,
+    "fullDraws": 1,
+    "failures": 0,
+    "publishedTime": 140.8195,
+    "captureTime": 140.8195,
+    "band": -1,
+    "blend": 1,
+    "liveCloudShadows": true,
+    "liveLocalReflections": true
+  },
+  "shadows": {
+    "resolution": 256,
+    "extent": 6144,
+    "refreshSeconds": 0.1,
+    "captures": 1338,
+    "projection": "orthographic-light-columns",
+    "publication": "two-capture-atlas",
+    "receiverTextureReads": "one when settled, two during blending"
+  },
+  "environment": {
+    "bakes": 8,
+    "replacements": 0
+  },
+  "errors": []
+}
