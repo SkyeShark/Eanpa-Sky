@@ -1,0 +1,40 @@
+{
+  "date": "2026-09-12T19:28:45.508Z",
+  "before": {
+    "commit": "982b94686939ab838ab0e0358ba213f8e6b5d68d",
+    "three": "186",
+    "source": "Committed modules supplied through CDP request interception; disk checkout unchanged"
+  },
+  "after": {
+    "commit": "817c7c8",
+    "source": "Native instanced tangent and material AO fixes; captured before local commit"
+  },
+  "viewport": [
+    1578,
+    846
+  ],
+  "sky": "earth",
+  "hours": 10.5,
+  "tier": "balanced",
+  "dryWeather": "none",
+  "camera": {
+    "position": [
+      24,
+      1.82,
+      -19.5
+    ],
+    "lookAt": [
+      22,
+      4,
+      -24
+    ],
+    "fov": 62
+  },
+  "movement": "Six seconds, 180 frames, lateral +/-1.2m, depth +/-0.35m, yaw +/-0.035rad",
+  "lighting": "Native local probe + SSR + sky environment, AO enabled; original meshes, maps and material parameters",
+  "limitations": [
+    "Cloud phase was not locked between dry captures. Compare the erroneous flat faces, not a whole-image pixel difference.",
+    "Recordings are paced at 30 FPS for inspection, not performance measurements.",
+    "Rain capture selects steady wetness directly for material regression, not weather-transition validation."
+  ]
+}

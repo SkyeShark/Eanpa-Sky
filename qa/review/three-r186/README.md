@@ -8,6 +8,11 @@ See [provenance and retained patches](../../../vendor/three/EANPA_PATCHES.md),
 the [official release](https://github.com/mrdoob/three.js/releases/tag/r186), and
 the [capture viewer](index.html).
 
+Follow-up: the user identified black/flickering fence faces that this first
+visual pass missed. The [fence reflection investigation](../fence-reflections/README.md)
+reproduces the pre-existing instanced tangent error, repairs it, and includes
+moving-camera and native material regression checks.
+
 ## Compatibility and correctness
 
 All 92 Node tests pass. They cover the renderer preparation queue and progress

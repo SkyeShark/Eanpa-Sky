@@ -1,0 +1,43 @@
+{
+  "pass": true,
+  "date": "2026-09-12T19:18:43.204Z",
+  "revision": "186",
+  "weather": "none",
+  "rows": [
+    {
+      "phase": 0,
+      "samples": 265759,
+      "nonFinite": 0,
+      "maxLengthError": 0.0015260897068303247,
+      "pass": true
+    },
+    {
+      "phase": 1.5707963267948966,
+      "samples": 270740,
+      "nonFinite": 0,
+      "maxLengthError": 0.0015299102418733224,
+      "pass": true
+    },
+    {
+      "phase": 3.141592653589793,
+      "samples": 283253,
+      "nonFinite": 0,
+      "maxLengthError": 0.0015547440759966502,
+      "pass": true
+    },
+    {
+      "phase": 4.71238898038469,
+      "samples": 278439,
+      "nonFinite": 0,
+      "maxLengthError": 0.0015184486806001374,
+      "pass": true
+    },
+    {
+      "phase": 6.283185307179586,
+      "samples": 265759,
+      "nonFinite": 0,
+      "maxLengthError": 0.0015260897068303247,
+      "pass": true
+    }
+  ]
+}

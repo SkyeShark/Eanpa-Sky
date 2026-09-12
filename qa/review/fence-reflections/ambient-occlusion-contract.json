@@ -1,0 +1,131 @@
+{
+  "pass": true,
+  "revision": "186",
+  "date": "2026-09-12T19:25:57.667Z",
+  "checks": [
+    {
+      "name": "direct-diffuse",
+      "pass": true,
+      "unoccluded": 1.5315336589119397,
+      "occluded": 1.5315336589119397,
+      "nativeReference": 1.5315336589119397,
+      "relativeError": 0,
+      "ratio": 1
+    },
+    {
+      "name": "direct-specular",
+      "pass": true,
+      "unoccluded": 19.894250873243436,
+      "occluded": 19.894250873243436,
+      "nativeReference": 19.894250873243436,
+      "relativeError": 0,
+      "ratio": 1
+    },
+    {
+      "name": "emission",
+      "pass": true,
+      "unoccluded": 0.6052227392792702,
+      "occluded": 0.6052227392792702,
+      "nativeReference": 0.6052227392792702,
+      "relativeError": 0,
+      "ratio": 1
+    },
+    {
+      "name": "indirect-diffuse",
+      "pass": true,
+      "unoccluded": 0.3685638904571533,
+      "occluded": 0.2211383432149887,
+      "nativeReference": 0.2211383432149887,
+      "relativeError": 0,
+      "ratio": 0.6000000242582004
+    },
+    {
+      "name": "authored-ao",
+      "pass": true,
+      "unoccluded": 0.18428194522857666,
+      "occluded": 0.11056917160749435,
+      "nativeReference": 0.11056917160749435,
+      "relativeError": 0,
+      "ratio": 0.6000000242582004
+    },
+    {
+      "name": "chrome-clearcoat",
+      "pass": true,
+      "unoccluded": 0.08569738403821248,
+      "occluded": 0.05636200720861476,
+      "nativeReference": 0.05636200720861476,
+      "relativeError": 0,
+      "ratio": 0.6576864374702842
+    },
+    {
+      "name": "unoccluded-moving-plane",
+      "pass": true,
+      "camera": [
+        0,
+        0,
+        4
+      ],
+      "p01": 1,
+      "median": 1
+    },
+    {
+      "name": "unoccluded-moving-plane",
+      "pass": true,
+      "camera": [
+        1.4,
+        0.3,
+        4
+      ],
+      "p01": 1,
+      "median": 1
+    },
+    {
+      "name": "unoccluded-moving-plane",
+      "pass": true,
+      "camera": [
+        -1.4,
+        -0.3,
+        4
+      ],
+      "p01": 1,
+      "median": 1
+    },
+    {
+      "name": "unoccluded-moving-plane",
+      "pass": true,
+      "camera": [
+        0.3,
+        1.4,
+        4
+      ],
+      "p01": 1,
+      "median": 1
+    },
+    {
+      "name": "unoccluded-moving-plane",
+      "pass": true,
+      "camera": [
+        0.3,
+        -1.4,
+        4
+      ],
+      "p01": 1,
+      "median": 1
+    },
+    {
+      "name": "fully-occluded-samples-stay-zero",
+      "pass": true,
+      "maxVisibility": 0
+    },
+    {
+      "name": "webgpu-validation",
+      "pass": true,
+      "error": null
+    },
+    {
+      "name": "browser-errors",
+      "pass": true,
+      "newErrors": ""
+    }
+  ]
+}

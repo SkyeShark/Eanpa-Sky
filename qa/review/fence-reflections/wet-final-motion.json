@@ -1,0 +1,26 @@
+{
+  "date": "2026-09-12T19:20:19.898Z",
+  "revision": "186",
+  "weather": "rain",
+  "camera": [
+    24,
+    1.82,
+    -19.5
+  ],
+  "actualSeconds": 6.021099999994039,
+  "frames": 180,
+  "probe": {
+    "captures": 41,
+    "faces": 246,
+    "lastCaptureMs": 10,
+    "lastCenter": [
+      23.76976592593572,
+      1.82,
+      -19.84349768842686
+    ],
+    "blend": 1
+  },
+  "ao": true,
+  "pointerLocked": false,
+  "errors": []
+}

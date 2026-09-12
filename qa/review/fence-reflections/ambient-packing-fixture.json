@@ -1,0 +1,14 @@
+{
+  "pass": true,
+  "date": "2026-09-12T19:26:25.116Z",
+  "size": [
+    1578,
+    846
+  ],
+  "receivers": 743078,
+  "negativeZ": 13784,
+  "maxNormalError": 0.003494978271784171,
+  "idErrors": 0,
+  "invalid": 0,
+  "sampledTextureLimit": 16
+}

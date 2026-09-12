@@ -1,0 +1,143 @@
+{
+  "pass": false,
+  "revision": "186",
+  "date": "2026-09-12T19:22:28.302Z",
+  "checks": [
+    {
+      "mode": "uniform-buffer",
+      "angle": 0,
+      "samples": 14828,
+      "finiteErrors": 0,
+      "maxNormalError": 0.03150259097573118,
+      "relativeHdrError": 0.014801541454436342,
+      "pass": false
+    },
+    {
+      "mode": "uniform-buffer",
+      "angle": 1.5707963267948966,
+      "samples": 14846,
+      "finiteErrors": 0,
+      "maxNormalError": 0.38961273263704116,
+      "relativeHdrError": 0.38219484258705577,
+      "pass": false
+    },
+    {
+      "mode": "uniform-buffer",
+      "angle": 3.141592653589793,
+      "samples": 14831,
+      "finiteErrors": 0,
+      "maxNormalError": 0.5263114663394377,
+      "relativeHdrError": 0.38450898142712253,
+      "pass": false
+    },
+    {
+      "mode": "uniform-buffer",
+      "angle": 4.71238898038469,
+      "samples": 14830,
+      "finiteErrors": 0,
+      "maxNormalError": 0.43841190268762215,
+      "relativeHdrError": 0.09824865157022232,
+      "pass": false
+    },
+    {
+      "mode": "uniform-buffer",
+      "angle": 0.67,
+      "samples": 14904,
+      "finiteErrors": 0,
+      "maxNormalError": 0.17512310621273092,
+      "relativeHdrError": 0.04886634518776038,
+      "pass": false
+    },
+    {
+      "mode": "instanced-attributes",
+      "angle": 0,
+      "samples": 14828,
+      "finiteErrors": 0,
+      "maxNormalError": 0.03150259097573118,
+      "relativeHdrError": 0.014801541454436342,
+      "pass": false
+    },
+    {
+      "mode": "instanced-attributes",
+      "angle": 1.5707963267948966,
+      "samples": 14846,
+      "finiteErrors": 0,
+      "maxNormalError": 0.38961273263704116,
+      "relativeHdrError": 0.38219484258705577,
+      "pass": false
+    },
+    {
+      "mode": "instanced-attributes",
+      "angle": 3.141592653589793,
+      "samples": 14831,
+      "finiteErrors": 0,
+      "maxNormalError": 0.5263114663394377,
+      "relativeHdrError": 0.38450898142712253,
+      "pass": false
+    },
+    {
+      "mode": "instanced-attributes",
+      "angle": 4.71238898038469,
+      "samples": 14830,
+      "finiteErrors": 0,
+      "maxNormalError": 0.43841190268762215,
+      "relativeHdrError": 0.09824865157022232,
+      "pass": false
+    },
+    {
+      "mode": "instanced-attributes",
+      "angle": 0.67,
+      "samples": 14904,
+      "finiteErrors": 0,
+      "maxNormalError": 0.17512310621273092,
+      "relativeHdrError": 0.04886634518776038,
+      "pass": false
+    },
+    {
+      "mode": "dynamic-attributes",
+      "angle": 0,
+      "samples": 14828,
+      "finiteErrors": 0,
+      "maxNormalError": 0.03150259097573118,
+      "relativeHdrError": 0.014801541454436342,
+      "pass": false
+    },
+    {
+      "mode": "dynamic-attributes",
+      "angle": 1.5707963267948966,
+      "samples": 14846,
+      "finiteErrors": 0,
+      "maxNormalError": 0.38961273263704116,
+      "relativeHdrError": 0.38219484258705577,
+      "pass": false
+    },
+    {
+      "mode": "dynamic-attributes",
+      "angle": 3.141592653589793,
+      "samples": 14831,
+      "finiteErrors": 0,
+      "maxNormalError": 0.5263114663394377,
+      "relativeHdrError": 0.38450898142712253,
+      "pass": false
+    },
+    {
+      "mode": "dynamic-attributes",
+      "angle": 4.71238898038469,
+      "samples": 14830,
+      "finiteErrors": 0,
+      "maxNormalError": 0.43841190268762215,
+      "relativeHdrError": 0.09824865157022232,
+      "pass": false
+    },
+    {
+      "mode": "dynamic-attributes",
+      "angle": 0.67,
+      "samples": 14904,
+      "finiteErrors": 0,
+      "maxNormalError": 0.17512310621273092,
+      "relativeHdrError": 0.04886634518776038,
+      "pass": false
+    }
+  ],
+  "validation": null
+}

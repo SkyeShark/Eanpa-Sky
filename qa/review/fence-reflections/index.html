@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eanpa — fence reflection repair</title>
+<style>
+ :root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#10171d;color:#dbe7ed}
+ body{max-width:1500px;margin:auto;padding:24px}h1{font-size:1.8rem;margin:0 0 8px}h2{font-size:1.2rem}
+ p{max-width:82ch}a{color:#91d8ff}button,select{font:inherit;padding:8px 14px;border:1px solid #617687;border-radius:5px;background:#1d2d39;color:inherit}
+ button[aria-pressed=true]{background:#a9deef;color:#11222d}button:focus-visible,select:focus-visible{outline:3px solid #d2edff;outline-offset:3px}
+ .controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0}.controls label{display:flex;gap:8px;align-items:center}
+ figure{margin:12px 0}img,video{display:block;width:100%;height:auto;background:#080d11;border-radius:6px}figcaption{margin-top:8px;color:#aac0ce}
+ .films{display:grid;grid-template-columns:1fr 1fr;gap:18px}.note{color:#adc1ce}.wet{max-width:1000px}
+ @media(max-width:800px){body{padding:16px}.films{grid-template-columns:1fr}}
+</style>
+<h1>Fence reflections: before and after</h1>
+<p>The metal bracket faces now retain their reflections as the camera moves. The repair transforms each instance’s normal-map tangent with its placement, and applies ambient occlusion through native material lighting.</p>
+<p><a href="README.md">Findings and validation</a> · <a href="../../../">Open the local engine</a></p>
+<div class="controls">
+ <button id="before" aria-pressed="false">Before</button><button id="after" aria-pressed="true">After</button>
+ <label>Camera position <select id="frame"><option value="0">Start</option><option value="45" selected>Right</option><option value="90">Center</option><option value="135">Left</option><option value="179">End</option></select></label>
+</div>
+<figure><img id="comparison" src="final-motion-45.jpg" width="1578" height="846" alt="Corrected reflective front faces of the metal brackets"><figcaption id="caption" aria-live="polite">After — native reflections and ambient occlusion enabled.</figcaption></figure>
+<p class="note">The paired views use the same camera path, original geometry and materials. Clouds were not frozen between recordings. Deep gaps still receive occlusion; the flat front faces no longer switch to solid black.</p>
+<h2>Movement</h2>
+<div class="films">
+ <figure><video controls playsinline muted preload="none" poster="before-motion-45.jpg" src="before-motion.webm"></video><figcaption>Before: r186 before the repair.</figcaption></figure>
+ <figure><video controls playsinline muted preload="none" poster="final-motion-45.jpg" src="final-motion.webm"></video><figcaption>After: same six-second camera path.</figcaption></figure>
+</div>
+<p class="note">Videos were recorded at 30 FPS for inspection. Benchmark timings are recorded separately.</p>
+<h2>Rain and flashlight</h2>
+<figure class="wet"><video controls playsinline muted preload="none" poster="wet-final-motion-45.jpg" src="wet-final-motion.webm"></video><figcaption>Steady rain and wetness, flashlight on. Direct illumination stays visible on the bracket faces throughout movement.</figcaption></figure>
+<script>
+ let version='final';const frame=document.getElementById('frame'),picture=document.getElementById('comparison');
+ function update(){const fixed=version==='final';picture.src=version+'-motion-'+frame.value+'.jpg';
+  picture.alt=fixed?'Corrected reflective front faces of the metal brackets':'Reproduced solid-black front faces before the repair';
+  document.getElementById('caption').textContent=(fixed?'After':'Before')+' — native reflections and ambient occlusion enabled.';
+  document.getElementById('after').setAttribute('aria-pressed',String(fixed));document.getElementById('before').setAttribute('aria-pressed',String(!fixed));}
+ document.getElementById('before').onclick=()=>{version='before';update()};document.getElementById('after').onclick=()=>{version='final';update()};frame.onchange=update;
+</script>
+</html>
