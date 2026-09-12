@@ -1,4 +1,4 @@
-// Three r184 shares one mutable override material across every shadow caster.
+// Three r186 shares one mutable override material across every shadow caster.
 // Alternating opaque and alpha-tested objects increments that material's version
 // on every switch, making all previously drawn casters rebuild their cache keys.
 // Keep the existing renderer's shadow semantics with a stable variant per source.

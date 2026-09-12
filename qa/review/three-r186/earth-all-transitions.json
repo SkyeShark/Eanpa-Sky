@@ -1,0 +1,400 @@
+{
+  "date": "2026-09-12T17:17:40.253Z",
+  "sky": "earth",
+  "quality": "high",
+  "pointerLocked": false,
+  "method": "45.5 simulated seconds per case in 182 rendered frames; not a real-time frame pacing benchmark",
+  "pass": true,
+  "results": [
+    {
+      "axis": "weather",
+      "name": "clear",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.5811388300841898,
+      "transition": {
+        "active": false,
+        "from": "none",
+        "target": "clear",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "clear",
+        "target": "clear",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 2.7415999999940395,
+      "p95CpuSubmitMs": 2.9000000059604645,
+      "maxCpuSubmitMs": 3.699999988079071,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "sunshower",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.9867313452787887,
+      "transition": {
+        "active": false,
+        "from": "clear",
+        "target": "sunshower",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "cumulus",
+        "target": "cumulus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 2.8899000000059605,
+      "p95CpuSubmitMs": 3.2999999821186066,
+      "maxCpuSubmitMs": 4.300000011920929,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "fair",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.9867528989352286,
+      "transition": {
+        "active": false,
+        "from": "sunshower",
+        "target": "fair",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "cumulus",
+        "target": "cumulus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 2.5759000000059604,
+      "p95CpuSubmitMs": 3.0999999940395355,
+      "maxCpuSubmitMs": 4.0999999940395355,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "overcast",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.9867528989352286,
+      "transition": {
+        "active": false,
+        "from": "fair",
+        "target": "overcast",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "stratus",
+        "target": "stratus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 1.879199999988079,
+      "p95CpuSubmitMs": 2.800000011920929,
+      "maxCpuSubmitMs": 3.899999976158142,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "rain",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 2.4926744770979026,
+      "transition": {
+        "active": false,
+        "from": "overcast",
+        "target": "rain",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "stratus",
+        "target": "stratus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 1.4654000000059604,
+      "p95CpuSubmitMs": 2.9000000059604645,
+      "maxCpuSubmitMs": 3.899999976158142,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "storm",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 3.872302323990825,
+      "transition": {
+        "active": false,
+        "from": "rain",
+        "target": "storm",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "cumulus",
+        "target": "cumulus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 1.169199999988079,
+      "p95CpuSubmitMs": 2.7999999821186066,
+      "maxCpuSubmitMs": 3.9000000059604645,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "cyclone",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 9.230731072093258,
+      "transition": {
+        "active": false,
+        "from": "storm",
+        "target": "cyclone",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "stratus",
+        "target": "stratus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 0.9969000000059605,
+      "p95CpuSubmitMs": 2.7000000178813934,
+      "maxCpuSubmitMs": 3.5,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "darkstorm",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 9.230982182766617,
+      "transition": {
+        "active": false,
+        "from": "cyclone",
+        "target": "darkstorm",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "cumulus",
+        "target": "cumulus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 1.0407999999821187,
+      "p95CpuSubmitMs": 2.800000011920929,
+      "maxCpuSubmitMs": 10,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "weather",
+      "name": "none",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 3.1645825412788846,
+      "transition": {
+        "active": false,
+        "from": "darkstorm",
+        "target": "none",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "cumulus",
+        "target": "cumulus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 1.4355,
+      "p95CpuSubmitMs": 2.800000011920929,
+      "maxCpuSubmitMs": 3.9000000059604645,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "cloud",
+      "name": "clear",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.5811388300841898,
+      "transition": {
+        "active": false,
+        "from": "none",
+        "target": "none",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "clear",
+        "target": "clear",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 2.7049000000059604,
+      "p95CpuSubmitMs": 2.5999999940395355,
+      "maxCpuSubmitMs": 3.2999999821186066,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "cloud",
+      "name": "cumulus",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.5811388300841898,
+      "transition": {
+        "active": false,
+        "from": "none",
+        "target": "none",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "cumulus",
+        "target": "cumulus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 2.667300000011921,
+      "p95CpuSubmitMs": 2.9000000059604645,
+      "maxCpuSubmitMs": 4,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "cloud",
+      "name": "stratus",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.5811388300841898,
+      "transition": {
+        "active": false,
+        "from": "none",
+        "target": "none",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "stratus",
+        "target": "stratus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 1.5704000000059604,
+      "p95CpuSubmitMs": 2.5,
+      "maxCpuSubmitMs": 3.4000000059604645,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "axis": "cloud",
+      "name": "cirrus",
+      "initialShift": 0,
+      "backwards": 0,
+      "maxStep": 1.5811388300841898,
+      "transition": {
+        "active": false,
+        "from": "none",
+        "target": "none",
+        "durationSeconds": 45,
+        "elapsedSeconds": 45,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "cloudTransition": {
+        "active": false,
+        "from": "cirrus",
+        "target": "cirrus",
+        "durationSeconds": 0,
+        "elapsedSeconds": 0,
+        "rawProgress": 1,
+        "easedProgress": 1
+      },
+      "elapsedWallSeconds": 2.3563000000119207,
+      "p95CpuSubmitMs": 2.5999999940395355,
+      "maxCpuSubmitMs": 3.600000023841858,
+      "errors": [],
+      "pass": true
+    }
+  ]
+}

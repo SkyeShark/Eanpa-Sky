@@ -1,4 +1,4 @@
-// Three r184 retains draw objects for obsolete render contexts/lights, and its
+// Three r186 retains draw objects for obsolete render contexts/lights, and its
 // geometry disposer only sees the attributes of the first draw. TSL creates
 // additional instance buffers for later draws. Retire these caches explicitly
 // while the standalone's frame loop is stopped for a complete sky rebuild.

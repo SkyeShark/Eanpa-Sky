@@ -16,7 +16,8 @@ Fix the offscreen lighting diagnostic's underlying shadow-resize error: finish
 resizing during the receiver pass that sees the new dimensions, so subsequent
 static draws do not retain a destroyed depth-texture binding.
 
-See [vendor provenance and migration notes](vendor/three/EANPA_PATCHES.md).
+See [vendor provenance and migration notes](vendor/three/EANPA_PATCHES.md) and
+[visual review, GPU checks and resource-stress limits](qa/review/three-r186/README.md).
 
 ## 0.2.1 CPU follow-up — 2026-09-11
 

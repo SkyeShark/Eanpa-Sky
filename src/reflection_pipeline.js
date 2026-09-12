@@ -906,7 +906,7 @@ export function makeReflectionPipeline(
             return true;
         },
         setSsrParams({ maxDistance, thickness, quality } = {}) {
-            // Donor live-tuning contract: these are SSRNode uniforms, so they
+            // Live tuning uses trace uniforms, so these parameters
             // retune the march without any graph or pipeline rebuild.
             // (resolutionScale is a build-time property — change quality tier
             // instead.)

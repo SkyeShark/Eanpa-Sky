@@ -13,6 +13,8 @@ try{
         _eanpaTest.paused=false;_eanpaTest.pauseAfterFrame=true;
         while(!_eanpaTest.paused)await new Promise(done=>setTimeout(done,10));
         const state=T.RendererUtils.saveRendererState(r),context=r.contextNode,shadowType=r.shadowMap.type;
+        const gpuErrors=[],device=r.backend.device,onGpuError=event=>gpuErrors.push(String(event.error));
+        device.addEventListener('uncapturederror',onGpuError);
         const original=r._nodes.updateGroup,rows=[],groups=new Set();
         r._nodes.updateGroup=function(group){if(group.name==='render')groups.add(group);return original.call(this,group);};
         try{
@@ -59,8 +61,11 @@ try{
                         filterDimensionsUpdatedWithinOneFrame:true,lightIntensityUpdatedNextFrame:true});
                 }finally{a.dispose();b.dispose();geometry.dispose();materials.forEach(m=>m.dispose());light.dispose();}
             }
-            return {date:new Date().toISOString(),passed:true,rows};
+            await device.queue.onSubmittedWorkDone();await new Promise(done=>setTimeout(done,0));
+            if(gpuErrors.length)throw new Error('GPU validation errors: '+gpuErrors.join('; '));
+            return {date:new Date().toISOString(),passed:true,rows,gpuErrors};
         }finally{
+            device.removeEventListener('uncapturederror',onGpuError);
             r._nodes.updateGroup=original;r.shadowMap.type=shadowType;T.RendererUtils.restoreRendererState(r,state);r.contextNode=context;
             _eanpaTest.paused=false;_eanpaTest.pauseAfterFrame=false;
         }

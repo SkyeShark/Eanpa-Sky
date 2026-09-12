@@ -61,6 +61,9 @@ compositor needs radiance plus hit coverage, whereas r186 SSR outputs ray
 distance in alpha. That compositor now uses `src/screen_space_trace.js`, sharing
 the continuous crossing and receiver rejection with the default native PBR path.
 It no longer depends on the old SSR addon patches or its positional arguments.
+The optional path is exercised with `qa/legacy-reflection-contract.js` and
+`qa/sky-fixture.html?legacy_reflections=1`. Runtime validation and captures
+are recorded in [the upgrade review](../../qa/review/three-r186/README.md).
 
 Resource retirement, shadow-material variants and environment ownership remain
 in Eanpa adapters. They depend on pinned renderer interfaces and must be reviewed

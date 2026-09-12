@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eanpa — Three.js r186 review</title><style>
+body{background:#101920;color:#dfeaf0;font:16px/1.5 system-ui;margin:24px auto;max-width:1500px;padding:0 20px}
+a{color:#91d6ff}select{background:#21313e;color:inherit;padding:10px;font:inherit;border-radius:8px}
+img,video{display:block;width:100%;height:auto;background:#090f14;border-radius:10px;margin:16px 0 28px}
+video{max-height:800px}label{display:block;margin:20px 0 10px}h1{font-size:28px}</style>
+<h1>Three.js r186 compatibility review</h1>
+<p><a href="../../../">Open Eanpa</a> · <a href="README.md">Validation and performance limits</a> · <a href="validation.json">GPU check results</a></p>
+<p>92 automated tests pass. The upgrade retains the engine's renderer fixes and resolves shadow-map resize ordering. Stress timings are affected by other workloads; see the report.</p>
+<label for="capture">Captured view</label><select id="capture"><option value="r184-earth.jpg">Earth before: r184</option><option value="r186-earth.jpg">Earth after: r186</option><option value="earth-rain.jpg">Earth rain</option><option value="earth-night.jpg">Earth night</option><option value="ring-day.jpg">Ringworld daylight</option><option value="ring-cirrus.jpg">Ringworld cirrus</option><option value="ring-eclipse.jpg">Ringworld eclipse, reverse arc</option><option value="shield-star.jpg">Shieldworld red giant</option><option value="chrome-motion-2.jpg">Close chrome and orb</option><option value="fixture-rain.jpg">Rain and wetness on generic host geometry</option><option value="legacy-reflections.jpg">Optional legacy diagnostic compositor</option></select>
+<img id="view" src="r184-earth.jpg" alt="Earth before the Three.js upgrade">
+<h2>Chrome and local reflections</h2><p>This clip starts immediately after an inspection teleport and time change; the first environment refresh is visible.</p>
+<video controls preload="none" poster="chrome-motion-2.jpg" src="chrome-motion.webm"></video>
+<h2>Red giant at normal animation speed</h2><video controls preload="none" poster="shield-star.jpg" src="shield-motion.webm"></video>
+<script>const selector=document.getElementById('capture'),view=document.getElementById('view');selector.onchange=()=>{view.src=selector.value;view.alt=selector.selectedOptions[0].textContent;};</script></html>

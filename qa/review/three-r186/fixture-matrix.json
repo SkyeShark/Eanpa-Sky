@@ -1,0 +1,62 @@
+[
+  {
+    "tier": "performance",
+    "level": "native",
+    "fps": 127.13007845684874,
+    "p95Ms": 14,
+    "errors": [],
+    "cleanCpu": false,
+    "cleanGpu": false,
+    "bakes": 1
+  },
+  {
+    "tier": "performance",
+    "level": "limited",
+    "fps": 49.10196407859241,
+    "p95Ms": 25,
+    "errors": [],
+    "cleanCpu": false,
+    "cleanGpu": false,
+    "bakes": 1
+  },
+  {
+    "tier": "balanced",
+    "level": "native",
+    "fps": 160.31763494022564,
+    "p95Ms": 12.200000017881393,
+    "errors": [],
+    "cleanCpu": false,
+    "cleanGpu": false,
+    "bakes": 1
+  },
+  {
+    "tier": "balanced",
+    "level": "limited",
+    "fps": 44.80089601800047,
+    "p95Ms": 28.299999982118607,
+    "errors": [],
+    "cleanCpu": false,
+    "cleanGpu": false,
+    "bakes": 1
+  },
+  {
+    "tier": "high",
+    "level": "native",
+    "fps": 168.56123091668823,
+    "p95Ms": 8.599999994039536,
+    "errors": [],
+    "cleanCpu": false,
+    "cleanGpu": false,
+    "bakes": 1
+  },
+  {
+    "tier": "high",
+    "level": "limited",
+    "fps": 53.29360476749143,
+    "p95Ms": 23.700000017881393,
+    "errors": [],
+    "cleanCpu": false,
+    "cleanGpu": true,
+    "bakes": 1
+  }
+]

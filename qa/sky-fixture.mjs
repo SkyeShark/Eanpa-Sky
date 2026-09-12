@@ -11,6 +11,7 @@ import {makeRingworld} from '../src/ringsky.js';
 import {makeShieldworld} from '../src/shieldworld.js';
 import {makeSpatialCloudPass} from '../src/cloudspatial.js';
 import {makeNativeReflectionPipeline} from '../src/native_reflection_pipeline.js';
+import {makeReflectionPipeline} from '../src/reflection_pipeline.js';
 import {makeReflectionEnvironment} from '../src/reflection_environment.js';
 
 const T=globalThis.THREE={...GPU,...TSL};globalThis.GLTFLoader=GLTFLoader;globalThis.EANPA_NO_MRT=true;
@@ -66,9 +67,11 @@ weather.uniforms.surfaceWater.value=Math.pow(weather.uniforms.wetTarget.value,1.
 active.update(0);sky.wrapCloudShadows(scene);
 const spatial=makeSpatialCloudPass(T,renderer,camera,{div:quality.cloudDiv});spatial.attach(scene,sky);
 const environment=makeReflectionEnvironment(T,renderer);
-const pipeline=makeNativeReflectionPipeline(T,renderer,scene,camera,sky,quality,fxaa);
 const baked=await sky.bakeEnv(renderer,{...quality.reflectionBake,assign:false});
-pipeline.setEnvironment(environment.update(baked));pipeline.localProbe.configure({sampleGroundHeight:()=>0});
+const initialEnvironment=environment.update(baked);
+const pipelineFactory=search.has('legacy_reflections')?makeReflectionPipeline:makeNativeReflectionPipeline;
+const pipeline=pipelineFactory(T,renderer,scene,camera,sky,quality,fxaa,initialEnvironment);
+pipeline.setEnvironment(initialEnvironment);pipeline.localProbe?.configure({sampleGroundHeight:()=>0});
 globalThis._sky=sky;globalThis._c=camera;globalThis._reflectionPipeline=pipeline;globalThis._spatialClouds=spatial;
 const state=globalThis._eanpaTest={paused:true,pauseAfterFrame:false,completedFrames:0};
 const fixture=globalThis.__skyFixture={renderer,scene,camera,host,sky,weather,pipeline,spatial,active,errors,

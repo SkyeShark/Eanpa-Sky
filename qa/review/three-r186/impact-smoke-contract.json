@@ -1,0 +1,10 @@
+{
+  "pass": true,
+  "finite": true,
+  "activePixels": 3746,
+  "translatedActivePixels": 3746,
+  "maxAlpha": 0.2510690987110138,
+  "translationMaxDifference": 0.007539317011833191,
+  "translationMeanDifference": 0.0000042214670898662535,
+  "expiredMaxAlpha": 0
+}

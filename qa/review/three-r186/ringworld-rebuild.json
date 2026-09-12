@@ -1,0 +1,11 @@
+{
+  "elapsedSeconds": 156.084,
+  "state": {
+    "ready": true,
+    "stage": "complete",
+    "boot": "finishing lighting and the first frame…",
+    "frames": 9220,
+    "errors": []
+  },
+  "errors": []
+}

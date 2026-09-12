@@ -1,0 +1,8 @@
+{
+  "revision": "186",
+  "frames": 836,
+  "errors": [],
+  "implementation": "eanpa-continuous-depth-native-pbr-response",
+  "mode": "same-ray-sky-ground-fallback-plus-ssr-pbr",
+  "locked": false
+}
