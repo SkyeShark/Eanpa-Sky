@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { WebGPURenderer, WebGPUBackend, Scene, PerspectiveCamera, Mesh, BoxGeometry,
-    MeshBasicNodeMaterial, Layers, HalfFloatType, TSL } from '../vendor/three/three.webgpu.js';
+    MeshBasicNodeMaterial, Layers, HalfFloatType, PCFShadowMap, TSL } from '../vendor/three/three.webgpu.js';
 
 // Node has no browser scheduler; keep the real compiler's yield boundaries.
 globalThis.self = {scheduler: {yield: () => new Promise(resolve => setImmediate(resolve))}};
@@ -25,6 +25,8 @@ function compilerFixture({ count = 9, fail = -1 } = {}) {
         _currentRenderContext: 'original-context', _handleObjectFunction: 'original-handler',
         _currentRenderObjectFunction: 'original-render', _compilationPromises: null,
         sortObjects: false, opaque: true, transparent: true, backend: {},
+        shadowMap: {type: PCFShadowMap}, xr: {isPresenting: false},
+        _updateCamera(camera) { camera.updateMatrixWorld(); return camera; },
         _renderContexts: {get: () => context}, _renderLists: {get: () => list},
         _background: {update() {}}, _createObjectPipeline() {},
         _projectObject: WebGPURenderer.prototype._projectObject,
@@ -78,6 +80,22 @@ test('a failed compilation drains outstanding driver work and restores the rende
     assert.deepEqual(f.stats.after, [0, 1, 3]);
 });
 
+test('bounded compilation retains the r186 progress callback for completed objects', async t => {
+    const previous=globalThis.ProgressEvent;
+    globalThis.ProgressEvent=class {
+        constructor(type, values) { this.type=type; Object.assign(this, values); }
+    };
+    t.after(()=>{if(previous===undefined)delete globalThis.ProgressEvent;else globalThis.ProgressEvent=previous;});
+    const f=compilerFixture({count:5}),events=[];
+    await WebGPURenderer.prototype.compileAsync.call(f.renderer,f.scene,f.camera,null,event=>{
+        events.push(event);
+        assert.equal(f.renderer._isPreCompiling,false);
+        assert.equal(event.loaded,f.stats.after.length);
+    });
+    assert.deepEqual(events.map(event=>event.loaded),[1,2,3,4,5]);
+    assert.ok(events.every(event=>event.type==='progress'&&event.total===5&&event.lengthComputable));
+});
+
 test('offscreen compilation uses the target depth and stencil contract', async () => {
     const f = compilerFixture({count: 1});
     const target = {depthBuffer: false, stencilBuffer: true};
@@ -105,12 +123,16 @@ function passFixture() {
         getRenderTarget: () => target, setRenderTarget: value => { target = value; },
         getMRT: () => mrt, setMRT: value => { mrt = value; },
         getPixelRatio: () => 1, getSize: value => value.set(320, 180),
+        getDrawingBufferSize: value => value.set(320, 180),
     };
     return {pass, renderer, scene, camera};
 }
 
 test('a pass compiles and renders with the identical merged context and attachment format', async () => {
     const {pass, renderer, scene, camera} = passFixture();
+    renderer.lighting = {name: 'outer lighting'};
+    pass.lighting = {name: 'pass lighting'};
+    const outerLighting = renderer.lighting;
     const outerContext = renderer.contextNode, outerTarget = renderer.getRenderTarget();
     let compiledContext;
     const check = () => {
@@ -122,6 +144,7 @@ test('a pass compiles and renders with the identical merged context and attachme
         assert.equal(scene.overrideMaterial, pass.overrideMaterial);
         assert.equal(camera.layers.mask, 8);
         assert.equal(renderer.transparent, false);
+        assert.equal(renderer.lighting, pass.lighting);
     };
     renderer.compileAsync = async () => { check(); compiledContext = renderer.contextNode; };
     renderer.render = () => { check(); assert.equal(renderer.contextNode, compiledContext); };
@@ -130,6 +153,7 @@ test('a pass compiles and renders with the identical merged context and attachme
     assert.equal(renderer.contextNode, outerContext);
     assert.equal(renderer.getRenderTarget(), outerTarget);
     assert.equal(renderer.transparent, true);
+    assert.equal(renderer.lighting, outerLighting);
     assert.equal(scene.overrideMaterial, null);
     assert.equal(camera.layers.mask, 1);
     pass.dispose();
@@ -174,6 +198,9 @@ test('overlapping driver compilations keep their own validation errors', async t
     const pipelines = [], promises = [];
     for (let i = 0; i < 3; i++) {
         const pipeline = {vertexProgram: {}, fragmentProgram: {}}; pipelines.push(pipeline);
+        for (const program of [pipeline.vertexProgram, pipeline.fragmentProgram]) {
+            backend.get(program).module = {module: {getCompilationInfo: async () => ({messages: []})}};
+        }
         const material = new MeshBasicNodeMaterial(); material.name = 'scope' + i;
         backend.createRenderPipeline({object: {}, material, geometry: {}, pipeline,
             context: {textures: null, depth: false, stencil: false}, getBindings: () => []}, promises);

@@ -17,7 +17,8 @@ try{
         r._nodes.updateGroup=function(group){if(group.name==='render')groups.add(group);return original.call(this,group);};
         try{
             T.RendererUtils.resetRendererState(r);r.contextNode=T.context({});r.toneMapping=T.NoToneMapping;r.outputColorSpace=T.LinearSRGBColorSpace;
-            for(const filter of ['PCF','PCFSoft','point']){
+            const filters=Number(T.REVISION)>=186?['PCF','point']:['PCF','PCFSoft','point'];
+            for(const filter of filters){
                 const scene=new T.Scene(),camera=new T.OrthographicCamera(-1,1,1,-1,.1,10);camera.position.z=5;
                 r.shadowMap.type=filter==='PCFSoft'?T.PCFSoftShadowMap:T.PCFShadowMap;
                 const light=filter==='point'?new T.PointLight(0xffffff,2):new T.DirectionalLight(0xffffff,1);

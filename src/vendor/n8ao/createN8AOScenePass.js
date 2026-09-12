@@ -1,5 +1,5 @@
 import { Object3D, UnsignedByteType } from "three";
-import { diffuseColor, directionToColor, mrt, normalView, output, pass, } from "three/tsl";
+import { diffuseColor, packNormalToRGB, mrt, normalView, output, pass, } from "three/tsl";
 /**
  * Create a minimal scene pass with the beauty, depth, diffuse, and encoded
  * normal outputs needed by N8AONode.
@@ -9,7 +9,7 @@ export function createN8AOScenePass(scene, camera) {
     scenePass.setMRT(mrt({
         output,
         diffuseColor,
-        normal: directionToColor(normalView),
+        normal: packNormalToRGB(normalView),
     }));
     // Match the bandwidth optimization used by the original integration.
     scenePass.getTexture("diffuseColor").type = UnsignedByteType;

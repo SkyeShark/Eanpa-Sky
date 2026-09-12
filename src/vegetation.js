@@ -564,7 +564,7 @@ export async function makeVegetationScene(THREE, {
                         material.mrtNode = T3.mrt({
                             output: T3.output,
                             normal: T3.vec4(
-                                T3.directionToColor(T3.normalView),
+                                T3.packNormalToRGB(T3.normalView),
                                 T3.float(1),
                             ),
                             metalrough: T3.vec4(

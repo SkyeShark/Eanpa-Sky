@@ -17,7 +17,7 @@ export function makeReflectionGeometry(T,renderer,scene,camera,receiverIds){
     const previousZ=T.varying(previousPosition.z,'reflectionPreviousViewZ');
     const face=T.cross(T.dFdx(T.positionView),T.dFdy(T.positionView)).normalize();
     const faceNormal=T.select(T.dot(face,T.positionView).greaterThan(0),face.negate(),face);
-    const mrt=T.mrt({output:T.vec4(T.directionToColor(faceNormal),convex),
+    const mrt=T.mrt({output:T.vec4(T.packNormalToRGB(faceNormal),convex),
         motion:T.vec4(T.velocity.mul(T.vec2(.5,-.5)),previousZ,key)});
     // IDs are exact through 2048 in half float; use float for arbitrary host
     // object counts and previous depth at the kilometre scale.

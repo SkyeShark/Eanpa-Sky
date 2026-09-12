@@ -68,7 +68,7 @@ The output directory must be new; use a different output path for a second build
 ## Credits & licenses
 
 - Code: MIT (see LICENSE)
-- Three.js (vendored, r184): MIT
+- Three.js (vendored, r186 / 0.186.0): MIT; [local renderer patches](vendor/three/EANPA_PATCHES.md)
 - Audio: see `assets/audio/README.md` — mostly CC0; four desert-bird
   recordings are CC BY-NC-SA (xeno-canto) and are **not** CC0
 - PBR surfaces: Poly Haven / ambientCG (CC0); moon: NASA CGI Moon Kit;

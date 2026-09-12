@@ -139,7 +139,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     scenePass.name = 'Native PBR with local radiance';
     scenePass.contextNode = T.context({eanpaReflectionSurfacePass: true});
     const outputs = {output: T.output,
-        normal: T.vec4(T.directionToColor(T.normalView), sourceReceiverId),
+        normal: T.vec4(T.packNormalToRGB(T.normalView), sourceReceiverId),
         metalrough: T.vec4(T.metalness, T.roughness, 1, T.diffuseColor.a),
         emissive: T.vec4(T.emissive, T.diffuseColor.a)};
     const mrt = T.mrt(outputs);

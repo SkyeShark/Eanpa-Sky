@@ -265,7 +265,7 @@ const renderer = new THREE.WebGPURenderer({
     canvas,
     // The complete image is produced by the Eidoverse post graph. Its scene
     // MRT is single-sample and the final tone-mapped image runs through the
-    // exact Three r184 FXAA node, so canvas MSAA would only multisample a
+    // pinned Three FXAA node, so canvas MSAA would only multisample a
     // fullscreen triangle after all geometric edges were already resolved.
     antialias: false,
     powerPreference: 'high-performance',
@@ -280,7 +280,7 @@ renderer.toneMappingExposure = 1.0;
 renderer.shadowMap.enabled = true;
 const shadowMaterialCache = installShadowMaterialCache(renderer);
 globalThis._shadowMaterialCache = shadowMaterialCache;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 await renderer.init();
 // Validation failures in texture copies and render passes are device events,
 // not JavaScript exceptions or shader compilation errors.

@@ -1,0 +1,137 @@
+{
+  "name": "three",
+  "version": "0.186.0",
+  "revision": "186",
+  "verifiedOn": "2026-09-12",
+  "tarball": "https://registry.npmjs.org/three/-/three-0.186.0.tgz",
+  "integrity": "sha512-cr/fIM2ddMSVbYVgkfD4jLJv7Fh/8ZTjvo+7gQeSVGUZHxpx9FDwoL5iC7hUz/LiRA8wMbqfnb90xKfm1/HHkQ==",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "addons/controls/OrbitControls.js",
+      "packagePath": "examples/jsm/controls/OrbitControls.js",
+      "upstreamSha256": "3d79d07ecb686b4e5d93232eedab255331c1beef711e13164eaa1f68655a5f2b",
+      "patched": false
+    },
+    {
+      "path": "addons/libs/basis/basis_transcoder.js",
+      "packagePath": "examples/jsm/libs/basis/basis_transcoder.js",
+      "upstreamSha256": "8478b5b6d6b74e7d3082b89f6417321d8d1dc0307f2b30d4484bb11b441696a1",
+      "patched": false
+    },
+    {
+      "path": "addons/libs/basis/basis_transcoder.wasm",
+      "packagePath": "examples/jsm/libs/basis/basis_transcoder.wasm",
+      "upstreamSha256": "6cf17dc889352c42e9acf8897107978d127005fe3386c36a0e3845e27967630a",
+      "patched": false
+    },
+    {
+      "path": "addons/libs/ktx-parse.module.js",
+      "packagePath": "examples/jsm/libs/ktx-parse.module.js",
+      "upstreamSha256": "f40c491f6c44dde511268121f778a0050e73b1a15fd844c1ae2c78c73213eafc",
+      "patched": false
+    },
+    {
+      "path": "addons/libs/zstddec.module.js",
+      "packagePath": "examples/jsm/libs/zstddec.module.js",
+      "upstreamSha256": "5cbf818e842628a4464e748594a6deae18ceddda3c2f541e7b3a0ff5fc7611e2",
+      "patched": false
+    },
+    {
+      "path": "addons/loaders/GLTFLoader.js",
+      "packagePath": "examples/jsm/loaders/GLTFLoader.js",
+      "upstreamSha256": "131c0f78c01d19368ae495caa65b3adaa10487810a36a05bb5901b769a35ac16",
+      "patched": false
+    },
+    {
+      "path": "addons/loaders/KTX2Loader.js",
+      "packagePath": "examples/jsm/loaders/KTX2Loader.js",
+      "upstreamSha256": "3a3233ce3409443076d3414b78832e1405fcfac5ecb34d367365fd0781127d6c",
+      "patched": false
+    },
+    {
+      "path": "addons/math/ColorSpaces.js",
+      "packagePath": "examples/jsm/math/ColorSpaces.js",
+      "upstreamSha256": "cc35c01c793cd17ccded7bc8142abffd3ce0d60dd6de8d5d216983bd05aee262",
+      "patched": false
+    },
+    {
+      "path": "addons/tsl/display/BloomNode.js",
+      "packagePath": "examples/jsm/tsl/display/BloomNode.js",
+      "upstreamSha256": "f28a279656a37cf44bc09e45fd2de5df93a17cffad77f6da0a5bcd979cfd6525",
+      "patched": false
+    },
+    {
+      "path": "addons/tsl/display/boxBlur.js",
+      "packagePath": "examples/jsm/tsl/display/boxBlur.js",
+      "upstreamSha256": "fa6f4ce3c9b1205fa3cc8a9da7783e57405402b6aa62a4bd984a8b0ac5ded115",
+      "patched": false
+    },
+    {
+      "path": "addons/tsl/display/FXAANode.js",
+      "packagePath": "examples/jsm/tsl/display/FXAANode.js",
+      "upstreamSha256": "775f4e5b3c9427739b48bea1634045c869bec6e525d572db70f99aab42d1c544",
+      "patched": false
+    },
+    {
+      "path": "addons/tsl/display/ImportanceSampledEnvironment.js",
+      "packagePath": "examples/jsm/tsl/display/ImportanceSampledEnvironment.js",
+      "upstreamSha256": "a938b9efb1432628871515c030a069d91694e708c1b6ad2ebaa691aecdbd16ef",
+      "patched": false
+    },
+    {
+      "path": "addons/tsl/display/SSRNode.js",
+      "packagePath": "examples/jsm/tsl/display/SSRNode.js",
+      "upstreamSha256": "8c326d1c7ce2526cc49e341b6abe49463524dff2c04d3be7dbdb0f8145052153",
+      "patched": false
+    },
+    {
+      "path": "addons/tsl/utils/RNoise.js",
+      "packagePath": "examples/jsm/tsl/utils/RNoise.js",
+      "upstreamSha256": "a235650eba39528ff10f987c497552c65a3affc4633591f34aae24b4ae98a20b",
+      "patched": false
+    },
+    {
+      "path": "addons/tsl/utils/SpecularHelpers.js",
+      "packagePath": "examples/jsm/tsl/utils/SpecularHelpers.js",
+      "upstreamSha256": "cce8b1cffde0b7f7966a062d0d05b97318ce180f411c76fe3e25ebbef49e4220",
+      "patched": false
+    },
+    {
+      "path": "addons/utils/BufferGeometryUtils.js",
+      "packagePath": "examples/jsm/utils/BufferGeometryUtils.js",
+      "upstreamSha256": "9fb63427ce6641fa14fd0baff9cc4d1b5f9c3d85fd084bf2e90e803c44ec1797",
+      "patched": false
+    },
+    {
+      "path": "addons/utils/SkeletonUtils.js",
+      "packagePath": "examples/jsm/utils/SkeletonUtils.js",
+      "upstreamSha256": "b1632a703206c3d830de9fcbe515696770d04b71a15ee6b50afa6d2c3298c86f",
+      "patched": false
+    },
+    {
+      "path": "addons/utils/WorkerPool.js",
+      "packagePath": "examples/jsm/utils/WorkerPool.js",
+      "upstreamSha256": "5ac7095fd566bc9ae48376055fd66edf27cb9ebbf9e1269dc206bfd4933ae9eb",
+      "patched": false
+    },
+    {
+      "path": "three.core.js",
+      "packagePath": "build/three.core.js",
+      "upstreamSha256": "9edde002b066a9a05676a6127f67735b62baf399bdea529f2f7e31657da769e6",
+      "patched": false
+    },
+    {
+      "path": "three.tsl.js",
+      "packagePath": "build/three.tsl.js",
+      "upstreamSha256": "6e6b92d8ce467818944f73815a96abadc6392fb34de577d479a23810b6aeeed0",
+      "patched": true
+    },
+    {
+      "path": "three.webgpu.js",
+      "packagePath": "build/three.webgpu.js",
+      "upstreamSha256": "a78400fa1d359e81fcc12b84ed0a89a7fbecb4b8373e28ae8f9d2b11f6ea13bc",
+      "patched": true
+    }
+  ]
+}

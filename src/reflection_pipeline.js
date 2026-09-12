@@ -11,7 +11,7 @@
 // upstream attribution and CC0 license travel with it in vendor/n8ao/.
 import { N8AONode } from './vendor/n8ao/N8AONode.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
-import { ssr as makeSsrNode } from 'three/addons/tsl/display/SSRNode.js';
+import { makeScreenSpaceTrace } from './screen_space_trace.js';
 import { createConvexReceiverIds } from './reflection_receiver_id.js';
 import { makeNativeReflectionPipeline } from './native_reflection_pipeline.js';
 
@@ -355,25 +355,36 @@ function disposeOwnedRttNodes(nodes) {
 }
 
 function makeEidoverseSsr({
-    color, depth, normal, objectId, metalrough, response, camera,
+    T, color, depth, normal, objectId, metalrough, response, camera, logarithmicDepthBuffer,
     maxDistance, thickness, quality, resolutionScale,
 }) {
-    // Based on the Three r184 SSRNode used by Eidoverse's auto-enhance
-    // path, with receiver rejection guards. Its reciprocal-Z march, adaptive pixel count,
-    // neighbor-derived thickness and plane-distance validation are essential:
-    // the old fixed-step linear interpolation almost never produced a valid
-    // local-geometry hit in this hundreds-of-metres scene.
-    const node = makeSsrNode(
-        color, depth, normal, metalrough.r, metalrough.g, camera,
-    );
-    node.specularResponseNode = response;
-    node.objectIdNode = objectId;
-    node.maxDistance.value = maxDistance;
-    node.thickness.value = thickness;
-    node.quality.value = quality;
-    node.resolutionScale = resolutionScale;
-    node.maxRoughness.value = 0.75;
-    node.roughnessBlurScale.value = 2.5;
+    // r186 SSR returns ray distance in alpha; this diagnostic compositor needs
+    // radiance plus hit coverage. Share Eanpa's continuous-depth tracer so its
+    // receiver rejection and exclusive sky/local ownership remain intact.
+    const live = (key, type) => T.reference(key, type, camera).setGroup(T.renderGroup);
+    const projection=live('projectionMatrix','mat4'), inverse=live('projectionMatrixInverse','mat4');
+    const near=live('near','float'), far=live('far','float');
+    const params={maxDistance:T.uniform(maxDistance),thickness:T.uniform(thickness),quality:T.uniform(quality)};
+    const trace=makeScreenSpaceTrace({colorNode:color,depthNode:depth,objectIdNode:objectId,
+        camera,projection,projectionInverse:inverse,near,far,logarithmicDepthBuffer,...params});
+    const node=T.Fn(()=>{
+        const coord=T.uv(),rawDepth=depth.sample(coord).r.toVar();
+        const projectedDepth=logarithmicDepthBuffer
+            ? T.viewZToPerspectiveDepth(T.logarithmicDepthToViewZ(rawDepth,near,far),near,far) : rawDepth;
+        const position=T.getViewPosition(coord,projectedDepth,inverse).toVar();
+        const plane=T.normalize(T.cross(position.dFdx(),position.dFdy())).toVar();
+        T.If(T.dot(plane,position).greaterThan(0),()=>plane.mulAssign(-1));
+        const mappedNormal=normal.sample(coord).rgb.normalize();
+        const incident=camera.isPerspectiveCamera?position.normalize():T.vec3(0,0,-1);
+        const roughness=metalrough.sample(coord).g.toVar(), specular=response.sample(coord).rgb;
+        const output=T.vec4(0).toVar();
+        T.If(rawDepth.lessThan(.999999).and(roughness.lessThan(.75))
+            .and(T.max(T.max(specular.r,specular.g),specular.b).greaterThan(.00001)),()=>{
+            output.assign(trace(position,T.reflect(incident,mappedNormal),plane,objectId.sample(coord),roughness));
+        });
+        return output;
+    })();
+    Object.assign(node,params,{resolutionScale});
     return node;
 }
 
@@ -396,7 +407,7 @@ export function makeReflectionPipeline(
     }
     const required = [
         'RenderPipeline', 'pass', 'mrt', 'output', 'normalView',
-        'directionToColor', 'colorToDirection', 'metalness', 'roughness',
+        'packNormalToRGB', 'unpackRGBToNormal', 'metalness', 'roughness',
         'sample', 'convertToTexture',
         'uniform', 'mix', 'renderOutput', 'pmremTexture',
         'DFGLUT', 'specularColor', 'specularF90', 'diffuseColor',
@@ -482,7 +493,7 @@ export function makeReflectionPipeline(
     const materialAo = makeResolvedMaterialAoNode(THREE);
     const sceneOutputs = {
         output: THREE.output,
-        normal: THREE.vec4(THREE.directionToColor(THREE.normalView),
+        normal: THREE.vec4(THREE.packNormalToRGB(THREE.normalView),
             makeReceiverIdAlphaNode(THREE, auxiliaryAlpha)),
         // B stores the N8AO receiver acceptance weight. SSR consumes only R/G,
         // so thin materials can reduce or reject cavity darkening without a
@@ -524,7 +535,7 @@ export function makeReflectionPipeline(
     const ownedRttNodes = new Set();
     const sceneAoMask = sceneMetalrough.b;
     const sceneNormal = THREE.sample((coord) => (
-        THREE.colorToDirection(packedNormal.sample(coord))
+        THREE.unpackRGBToNormal(packedNormal.sample(coord))
     ));
     const projectionInverse = THREE.uniform(camera.projectionMatrixInverse);
     const sceneCameraViewMatrix = THREE.uniform(camera.matrixWorldInverse);
@@ -652,7 +663,7 @@ export function makeReflectionPipeline(
         : sceneBakedRadiance;
 
     // Match Eidoverse's MRT bandwidth optimization. N8AO consumes the same
-    // directionToColor-encoded normal attachment directly; it does not render
+    // packNormalToRGB-encoded normal attachment directly; it does not render
     // a second beauty/normal scene pass.
     if (THREE.UnsignedByteType && scenePass.getTexture) {
         // Native material lighting shades with the full-precision normal.
@@ -731,6 +742,7 @@ export function makeReflectionPipeline(
     // black. Occlusion is decided by the ray hit, never by stripping its light.
     const ssrSourceColor = aoSceneColor;
     const ssrNode = makeEidoverseSsr({
+        T: THREE,
         color: ssrSourceColor,
         depth: sceneDepth,
         normal: sceneNormal,
@@ -742,6 +754,7 @@ export function makeReflectionPipeline(
         metalrough: sceneMetalrough,
         response: sceneSsrResponse,
         camera,
+        logarithmicDepthBuffer: renderer.logarithmicDepthBuffer,
         maxDistance: options.ssrDistance,
         thickness: options.ssrThickness,
         quality: options.ssrQuality,
@@ -841,7 +854,7 @@ export function makeReflectionPipeline(
         cloudReflectionAo: 'native-material-ibl-occlusion',
         cloudReflectionResolutionScale: null,
         cloudReflectionUpdate: 'periodic-equirectangular-pmrem',
-        ssrImplementation: 'three-r184-ssr-native-pbr-response',
+        ssrImplementation: 'eanpa-continuous-depth-native-pbr-response',
         ssrHitConfidence: 'binary-accepted-hit-ownership-with-screen-edge-fade',
         ssrSource: 'complete-ao-composited-hdr-hit-radiance',
         ssrMaterialResponse: 'resolved-f0-dfg-roughness-metalness-albedo-normal-ao',

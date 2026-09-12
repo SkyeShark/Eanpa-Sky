@@ -1,5 +1,23 @@
 # Release notes
 
+## Unreleased — Three.js r186
+
+Update the vendored Three.js runtime, TSL exports, loaders, postprocessing addons
+and Basis transcoder from r184 to the stable 0.186.0 release. Use r186's soft PCF
+filter and current normal-packing names. Preserve Eanpa's shared shadow uniforms,
+bounded shader preparation, pass context, texture sampling and sleeping-light
+attachment fixes; retire patches now supplied upstream.
+
+The optional legacy reflection compositor now shares Eanpa's continuous-depth
+tracer: r186's stock SSR stores ray distance in alpha, while this compositor
+requires hit coverage for exclusive local/sky reflection ownership.
+
+Fix the offscreen lighting diagnostic's underlying shadow-resize error: finish
+resizing during the receiver pass that sees the new dimensions, so subsequent
+static draws do not retain a destroyed depth-texture binding.
+
+See [vendor provenance and migration notes](vendor/three/EANPA_PATCHES.md).
+
 ## 0.2.1 CPU follow-up — 2026-09-11
 
 Reuse native shadow-filter parameter nodes across receiving materials so the

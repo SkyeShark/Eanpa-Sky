@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import {TSL,Vector2} from '../vendor/three/three.webgpu.js';
+import {TSL,Vector2,ShadowNode,DirectionalLight,PerspectiveCamera} from '../vendor/three/three.webgpu.js';
 
 // Exercise the actual private renderer cache with real TSL references. Shader
 // and buffer sharing is also checked in the live WebGPU capture.
@@ -39,4 +39,28 @@ test('different lights retain independent filter dimensions and radii',()=>{
     assert.deepEqual(value(second.mapSize).toArray(),[512,256]);
     assert.equal(value(first.radius),3);
     assert.equal(value(second.radius),.5);
+});
+
+test('shadow resize completes before a second receiver pass in the same frame',()=>{
+    const light=new DirectionalLight(),node=new ShadowNode(light);
+    light.shadow.mapSize.set(64,32);
+    node.shadowMap={width:64,height:32,depthTexture:{version:0}};
+    let draws=0;
+    node.updateShadow=()=>{
+        draws++;
+        node.shadowMap.width=light.shadow.mapSize.width;
+        node.shadowMap.height=light.shadow.mapSize.height;
+        node._depthVersionCached=node.shadowMap.depthTexture.version;
+    };
+    const frame={renderer:{_isPreCompiling:false},camera:new PerspectiveCamera(),frameId:1};
+    node.updateBefore(frame);node.updateBefore(frame);
+    assert.equal(draws,1,'unchanged shadow still renders once per camera/frame');
+    light.shadow.mapSize=new Vector2(32,16);
+    node.updateBefore(frame);
+    assert.equal(draws,2,'resize must not be deferred until bindings stop refreshing');
+    assert.deepEqual([node.shadowMap.width,node.shadowMap.height],[32,16]);
+    node.updateBefore(frame);assert.equal(draws,2);
+    frame.frameId++;node.updateBefore(frame);assert.equal(draws,3);
+    frame.renderer._isPreCompiling=true;
+    light.shadow.mapSize.set(16,8);node.updateBefore(frame);assert.equal(draws,3);
 });

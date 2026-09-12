@@ -1053,7 +1053,7 @@ function stampSceneMrtOverride(material, n8aoAcceptance) {
     if (!(T3.mrt && T3.output && T3.normalView)) return;
     material.mrtNode = T3.mrt({
         output: T3.output,
-        normal: T3.vec4(T3.directionToColor(T3.normalView), T3.float(1)),
+        normal: T3.vec4(T3.packNormalToRGB(T3.normalView), T3.float(1)),
         metalrough: T3.vec4(
             T3.metalness, T3.roughness,
             T3.float(n8aoAcceptance), T3.materialEnvIntensity,
