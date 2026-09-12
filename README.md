@@ -43,6 +43,10 @@ corrections in [the September 10 report](REVIEW_2026-09-10.md).
   touch response, a climbable ziggurat temple
 
 Controls are on-screen. Quality tiers in the panel; Balanced targets 60+ FPS.
+Performance periodically captures the volumetric clouds into a moving panorama
+to reduce GPU work. Cloud shadows, local reflections, lighting and weather
+effects remain active. Balanced and High render the cloud volume every frame.
+See [the quality tradeoffs](docs/SKY_SYSTEM_INTEGRATION.md#performance-cloud-display).
 
 Cloud shadows work on scene PBR geometry without a terrain callback; see
 [the integration guide](docs/SKY_SYSTEM_INTEGRATION.md). Rain shelter, impacts,

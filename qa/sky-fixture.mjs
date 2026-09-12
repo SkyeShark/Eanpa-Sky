@@ -99,6 +99,10 @@ const fixture=globalThis.__skyFixture={renderer,scene,camera,host,sky,weather,pi
 document.getElementById('progress').textContent='Compiling sky, weather and reflection passes…';
 const warm=active.weatherWarmupObjects(),visibility=warm.map(o=>o.visible);warm.forEach(o=>o.visible=true);
 await spatial.compileAsync();await pipeline.compileAsync();
+// Submit the final post-processing graph while pooled weather effects are
+// still visible, as the standalone boot does. frame() updates weather first
+// and hides them; its first strike would otherwise cold-compile bloom here.
+await pipeline.render();
 for(let i=0;i<3;i++)await fixture.frame(i/60);
 warm.forEach((o,i)=>o.visible=visibility[i]);await renderer.backend.device.queue.onSubmittedWorkDone();
 fixture.ready=true;state.paused=false;

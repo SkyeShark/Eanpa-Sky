@@ -43,11 +43,11 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
     const observerNode = shared(new T.Vector3());
     const signatureNames = ['finalMul','wispOn','stormCanopy','cloudWeatherGrey','wispOpacity'];
     const lightNode = u.cloudLightColor.mul(u.lightK).add(u.cloudAmbSky.mul(.5))
-        .add(u.cloudAmbGround.mul(.15)).mul(u.cloudDim).max(.001);
+        .add(u.cloudAmbGround.mul(.15)).mul(u.cloudRadiance).mul(u.cloudRadianceScale).max(.001);
     const lightFloor = new T.Vector3(.001,.001,.001);
     const lightValue = target => target.copy(u.cloudLightColor.value).multiplyScalar(u.lightK.value)
         .addScaledVector(u.cloudAmbSky.value,.5).addScaledVector(u.cloudAmbGround.value,.15)
-        .multiplyScalar(u.cloudDim.value).max(lightFloor);
+        .multiplyScalar(u.cloudRadiance.value*u.cloudRadianceScale.value).max(lightFloor);
     const stats = {mode:'banded-world-direction-cloud-panorama',width,height,bands,
         refreshSeconds,blendSeconds,captures:0,bandDraws:0,fullDraws:0,failures:0,
         publishedTime:null,captureTime:null,band:-1,blend:1,liveCloudShadows:true,liveLocalReflections:true};
@@ -78,6 +78,10 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
         try {
             renderer.xr.enabled = false;renderer.setMRT(null);renderer.setRenderObjectFunction(null);
             renderer.autoClear = false;target.scissor.set(0,start,width,end-start);target.scissorTest = !full;
+            // r186 takes the rectangle from the target, but the enable flag
+            // from the renderer's canvas target. Both must be set: target-only
+            // scissoring silently rerenders the full panorama for every band.
+            renderer.setScissorTest(!full);
             renderer.setRenderTarget(target);
             if (full && !ready) await renderer.compileAsync(quad,quad.camera);
             if(disposed)return false;
@@ -93,8 +97,8 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
     };
     const publish = time => {
         const recycled = previous;previous = current;current = staging;staging = recycled;
-        publishView(newView,current);publishView(oldView,ready ? previous : current);
-        publishedAt = time;blend.value = ready ? 0 : 1;
+        publishView(newView,current);publishView(oldView,previous);
+        publishedAt = ready ? time : time-blendSeconds;blend.value = ready ? 0 : 1;
         ready = true;band = -1;stats.band = -1;stats.captures++;
         stats.publishedTime = current.time;stats.blend = blend.value;
     };
@@ -138,6 +142,11 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
             if(disposed)return false;
             if(ready)return true;
             if(!initialization)initialization=(async()=>{
+                // Keep old/new texture identities distinct during the first
+                // shader build. Pointing both at the first capture makes TSL
+                // deduplicate them into one binding, breaking every later fade.
+                // The zero-initialized old target has zero weight at startup.
+                for(const record of records)renderer.initRenderTarget(record.target);
                 if(!await begin() || !await renderBand(true))return false;
                 await renderer.backend.device.queue.onSubmittedWorkDone();
                 if(disposed)return false;
@@ -149,21 +158,22 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
             if(disposed)return;
             if(updating)return updating;
             updating=(async()=>{
-            if(!await api.ensureReady() || disposed)return;
-            const time = u.time.value;
-            const fraction = Math.max(0,Math.min(1,(time-publishedAt)/blendSeconds));
-            blend.value = fraction*fraction*(3-2*fraction);stats.blend = blend.value;
-            camera.getWorldPosition(observer);observerNode.value.copy(observer);
-            const age = time-current.time;
-            const changed = signatureNames.some((name,i)=>Math.abs(u[name].value-current.signature[i])>.035);
-            const moved = observer.distanceToSquared(current.origin)>32*32;
-            const sunMoved = current.sun.dot(u.cloudLightDir.value)<.999;
-            if(time<publishedAt){band=-1;blend.value=1;publishedAt=time-blendSeconds;}
-            if(band<0 && blend.value>=1 && (age>=refreshSeconds || age<0
-                || ((changed||moved||sunMoved) && age>=.75))) {
-                if(!await begin())return;
-            }
-            if(band>=0 && await renderBand(false) && band>=bands)publish(time);
+                if(!await api.ensureReady() || disposed)return;
+                const time = u.time.value;
+                const fraction = Math.max(0,Math.min(1,(time-publishedAt)/blendSeconds));
+                blend.value = fraction*fraction*(3-2*fraction);
+                camera.getWorldPosition(observer);observerNode.value.copy(observer);
+                const age = time-current.time;
+                const changed = signatureNames.some((name,i)=>Math.abs(u[name].value-current.signature[i])>.035);
+                const moved = observer.distanceToSquared(current.origin)>32*32;
+                const sunMoved = current.sun.dot(u.cloudLightDir.value)<.999;
+                if(time<publishedAt){band=-1;blend.value=1;publishedAt=time-blendSeconds;}
+                stats.blend = blend.value;
+                if(band<0 && blend.value>=1 && (age>=refreshSeconds || age<0
+                    || ((changed||moved||sunMoved) && age>=.75))) {
+                    if(!await begin())return;
+                }
+                if(band>=0 && await renderBand(false) && band>=bands)publish(time);
             })().finally(()=>{updating=null;release();});
             return updating;
         },

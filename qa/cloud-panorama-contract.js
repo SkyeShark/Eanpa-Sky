@@ -7,7 +7,7 @@
  const {makeCachedCloudDisplay}=await import('/engine/cached_cloud_display.js');
  const scalar=value=>T.uniform(value).setGroup(T.frameGroup),vector=(x=0,y=0,z=0)=>scalar(new T.Vector3(x,y,z));
  const u={time:scalar(0),amount:scalar(.2),cloudDisplacement:vector(),cloudLightColor:vector(1,1,1),lightK:scalar(1),
-  cloudAmbSky:vector(),cloudAmbGround:vector(),cloudDim:scalar(1),cloudLightDir:vector(0,1,0),
+  cloudAmbSky:vector(),cloudAmbGround:vector(),cloudRadiance:scalar(1),cloudRadianceScale:scalar(1),cloudLightDir:vector(0,1,0),
   finalMul:scalar(1),wispOn:scalar(0),stormCanopy:scalar(0),cloudWeatherGrey:scalar(0),wispOpacity:scalar(0),
   cloudStart:scalar(1000),cloudHeight:scalar(1000),fadeDist:scalar(50000),solarSkyVisibility:scalar(1),
   lightningStrike:scalar(new T.Vector4()),lightningFlashColor:vector(1,1,1)};
@@ -35,15 +35,6 @@
   await Promise.all([cache.ensureReady(),cache.ensureReady()]);
   check('one initial capture for concurrent requests',cache.stats.fullDraws===1&&cache.stats.captures===1,{stats:{...cache.stats}});
   check('initial frozen data',await uniformRed(published(),.2)<.001);
-  u.time.value=1;u.amount.value=.7;
-  await Promise.all([cache.update(),cache.update()]);
-  check('partial capture stays private and concurrent updates coalesce',cache.stats.band===1&&cache.stats.captures===1&&await uniformRed(published(),.2)<.001);
-  u.amount.value=.9;
-  for(let i=1;i<4;i++){u.time.value=1+i*.01;await cache.update();}
-  const error=await uniformRed(published(),.7);
-  check('every completed band uses the state from capture start',cache.stats.captures===2&&error<.001,{maxError:error});
-  // Inverse world-direction mapping must recover both latitude and longitude.
-  u.time.value=1.2;await cache.update();
   sampleMaterial=new T.NodeMaterial();sampleMaterial.depthTest=sampleMaterial.depthWrite=sampleMaterial.toneMapped=false;
   sampleMaterial.fragmentNode=T.Fn(()=>{
    const uv=T.uv(),lon=uv.x.sub(.5).mul(Math.PI*2),lat=T.float(.5).sub(uv.y).mul(Math.PI);
@@ -51,8 +42,28 @@
    return cache.sample(dir,T.vec3(0),false);
   })();
   const quad=new T.QuadMesh(sampleMaterial);sampleTarget=new T.RenderTarget(64,32,{type:T.FloatType,depthBuffer:false});
-  r.setMRT(null);r.setRenderTarget(sampleTarget);quad.render(r);
-  const pixel=await read(sampleTarget),samples=[];
+  const drawSample=async()=>{await new Promise(requestAnimationFrame);r.setMRT(null);r.setRenderTarget(sampleTarget);quad.render(r);return read(sampleTarget);};
+  await drawSample();
+  check('shader compiled on first publication sees the initial cloud',await uniformRed(sampleTarget,.2)<.001);
+  u.time.value=.01;await cache.update();await drawSample();
+  check('first display update keeps the completed startup capture fully visible',await uniformRed(sampleTarget,.2)<.001);
+  u.time.value=1;u.amount.value=.7;
+  await Promise.all([cache.update(),cache.update()]);
+  check('partial capture stays private and concurrent updates coalesce',cache.stats.band===1&&cache.stats.captures===1&&await uniformRed(published(),.2)<.001);
+  const partial=cache.records.find(record=>record.time===cache.stats.captureTime).target,partialPixel=await read(partial);
+  const rowValues=Array.from({length:32},(_,y)=>partialPixel(32,y)[0]);
+  check('one scissor band changes only its eight rows',rowValues.slice(0,8).every(v=>Math.abs(v-.7)<.001)
+   &&rowValues.slice(8).every(v=>Math.abs(v-.7)>.01),{rowValues});
+  u.amount.value=.9;
+  for(let i=1;i<4;i++){u.time.value=1+i*.01;await cache.update();}
+  const error=await uniformRed(published(),.7);
+  check('every completed band uses the state from capture start',cache.stats.captures===2&&error<.001,{maxError:error});
+  await drawSample();check('publication starts from the previous image',await uniformRed(sampleTarget,.2)<.001);
+  u.time.value=1.08;await cache.update();await drawSample();
+  check('halfway crossfade contains both distinct texture bindings',await uniformRed(sampleTarget,.45)<.001);
+  // Inverse world-direction mapping must recover both latitude and longitude.
+  u.time.value=1.2;await cache.update();
+  const pixel=await drawSample(),samples=[];
   for(const [x,y]of [[8,4],[48,4],[8,26],[48,26],[31,15]]){
    const value=pixel(x,y),expected=[.7,(x+.5)/64,(y+.5)/32,.6];
    samples.push({x,y,value,expected,error:Math.max(...value.map((v,i)=>Math.abs(v-expected[i])))});

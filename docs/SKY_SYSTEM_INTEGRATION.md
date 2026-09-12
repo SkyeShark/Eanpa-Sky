@@ -81,3 +81,74 @@ The standalone celestial geometry layer uses its own camera/depth buffer. Its
 Ringworld near plane is 20 metres, keeping metre-scale shoreline depth distinct
 ten kilometres away. The first-person camera remains at 0.18 metres; framing,
 zoom, and the local reflection depth convention are unchanged.
+
+## Performance cloud display
+
+The existing three presets remain. Performance uses a periodically captured
+cloud panorama; Balanced and High retain the current-frame volumetric pass.
+Only the displayed cloud layer, including its distant atmospheric shafts, is
+captured. Sun, moon, star, ring, day/night authority, weather transitions,
+lightning, rain particles, surface impacts, puddles and cloud-shadow maps keep
+their independent live updates. Cloud-shadow receivers still use their world
+positions; no terrain identification or demonstration assets are involved.
+
+`skyQualityPresets().performance.cloudDisplayCapture` supplies a 2048 × 1024
+HDR panorama, 32 horizontal bands, a three-second refresh interval and a
+half-second crossfade. One band renders per host frame. Significant weather,
+sun-direction or observer changes request an earlier capture after 0.75 seconds.
+A capture freezes its uniforms and light-density cache until every band is
+complete. It publishes only then; unfinished bands never appear on screen or
+in an environment bake. The first full capture completes during shader warmup.
+
+The display looks up a world ray, so camera rotation remains immediate. Between
+captures, integrated wind and observer translation approximately reproject the
+image at a representative cloud altitude. Current light colour and eclipse
+visibility affect radiance immediately; lightning adds a transient spatial
+flash. Reflection bakes sample the completed cloud images without that flash,
+then use the existing native PMREM convolution and stable environment target.
+Local screen-space reflections retain their normal per-frame geometry and PBR
+response. The Performance environment refresh budget remains 24 seconds,
+with earlier refreshes for weather/time changes in the standalone host.
+
+This trades fine angular detail, exact multilayer parallax and continuously
+evolving cloud shape for less repeated ray marching. Fast travel, close cloud
+fly-throughs and abrupt weather cuts suit the live modes better. Cloud shadows
+use the true current density field, so their cadence remains 10 Hz; approximate
+display reprojection can leave a small spatial mismatch. The three RGBA16F
+targets consume 48 MiB at the default size. Hosts can lower the capture size
+through the option above at the cost of visibly softer clouds.
+
+The standalone sky factories forward these options to `makeSkySystem`.
+`makeSpatialCloudPass` owns the display and its targets:
+
+```js
+const display = makeSpatialCloudPass(THREE, renderer, camera, {
+    div: quality.cloudDiv,
+});
+display.attach(scene, sky); // before the first sky.bakeEnv()
+await display.compileAsync();
+
+// In the host's serialized frame, after updating sky/weather uniforms:
+await sky.prepareCloudShadows(renderer, camera);
+await display.render();
+await hostReflectionPipeline.render();
+
+// Dispose the display before replacing its sky.
+display.dispose();
+sky.dispose();
+```
+
+Custom hosts can instead import `makeCachedCloudDisplay` from
+`engine/cached_cloud_display.js`, register it with
+`sky.setCachedCloudDisplay(display)`, await `display.ensureReady()`, call
+`display.update()` once per frame, and composite
+`display.sample(worldDirection, observerPosition)` as premultiplied cloud RGBA.
+Keep capture/render work serialized on the renderer. Detach with
+`sky.setCachedCloudDisplay(null)` and dispose the display when changing paths.
+The provider exposes capture counters through `stats`; the spatial adapter
+exposes them through `captureStats`.
+
+This implementation uses Eanpa's existing cloud shader rather than copied
+third-party rendering code. The scheduling approach follows the general
+separation of cloud display, shadows and time-sliced environment capture
+described in [Epic's volumetric-cloud documentation](https://dev.epicgames.com/documentation/unreal-engine/volumetric-cloud-component-in-unreal-engine).
