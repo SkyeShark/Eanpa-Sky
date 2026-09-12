@@ -1,3 +1,5 @@
+import { makeProgressiveTextures } from './progressive_textures.js';
+
 // Real-scale Eanpa desert terrain. A dense local height field carries the
 // walkable scene while a concentric, progressively coarser ring supplies the
 // distant horizon. Fourteen user-selected Poly Haven and ambientCG CC0 surfaces
@@ -1355,7 +1357,7 @@ async function decodePngRgba(blob, url, expectedWidth, expectedHeight) {
     return decoded;
 }
 
-async function loadGroundTextures(T3, renderer = null) {
+async function loadGroundTextures(T3, renderer = null, progressiveTextures = true) {
     const packageRoot = './assets/pbr/eanpa_southwest_ground_v3';
     const runtimeSet = (fileStem, heightFile) => ({
         albedoSource2k: `${packageRoot}/runtime/${fileStem}_AlbedoGrade_2K.png`,
@@ -1506,7 +1508,7 @@ async function loadGroundTextures(T3, renderer = null) {
         });
     };
 
-    const loadCompressedArrays = async () => {
+    const loadCompressedArrays = async (size = SURFACE_RUNTIME_SIZE) => {
         if (!renderer) throw new Error('renderer-unavailable-for-KTX2-detectSupport');
         const { KTX2Loader } = await import('three/addons/loaders/KTX2Loader.js');
         const loader = new KTX2Loader();
@@ -1523,30 +1525,32 @@ async function loadGroundTextures(T3, renderer = null) {
         const validate = (texture, label) => {
             const image = texture?.image ?? {};
             if (texture?.isCompressedArrayTexture !== true
-                || image.width !== SURFACE_RUNTIME_SIZE
-                || image.height !== SURFACE_RUNTIME_SIZE
+                || image.width !== size
+                || image.height !== size
                 || image.depth !== SURFACE_LAYER_COUNT
                 || !acceptedFormats.includes(texture.format)
-                || (texture.mipmaps?.length ?? 0) < 12) {
+                || (texture.mipmaps?.length ?? 0) !== Math.log2(size) + 1) {
                 throw new Error(`invalid-${label}-compressed-array`);
             }
         };
         try {
             // Sequential transcodes bound the worker and temporary-memory peak.
-            albedo = await loader.loadAsync(SURFACE_KTX2_ALBEDO_URL);
+            const urlFor = url => size === SURFACE_RUNTIME_SIZE ? url
+                : url.replace('/runtime/', '/runtime/preview_512/').replace('14x2K', '14x512');
+            albedo = await loader.loadAsync(urlFor(SURFACE_KTX2_ALBEDO_URL));
             validate(albedo, 'albedo-height');
-            packed = await loader.loadAsync(SURFACE_KTX2_PACKED_URL);
+            packed = await loader.loadAsync(urlFor(SURFACE_KTX2_PACKED_URL));
             validate(packed, 'normal-rough-ao');
             return {
                 albedo: annotateArray(albedo, 'albedo', {
                     srgb: true,
-                    runtimeSize: SURFACE_RUNTIME_SIZE,
-                    runtimeKind: 'uastc-ktx2-2k-compressed-array',
+                    runtimeSize: size,
+                    runtimeKind: size === SURFACE_RUNTIME_SIZE ? 'uastc-ktx2-2k-compressed-array' : 'uastc-ktx2-512-preview',
                     generateMipmaps: false,
                 }),
                 packed: annotateArray(packed, 'packed', {
-                    runtimeSize: SURFACE_RUNTIME_SIZE,
-                    runtimeKind: 'uastc-ktx2-2k-compressed-array',
+                    runtimeSize: size,
+                    runtimeKind: size === SURFACE_RUNTIME_SIZE ? 'uastc-ktx2-2k-compressed-array' : 'uastc-ktx2-512-preview',
                     generateMipmaps: false,
                 }),
             };
@@ -1566,17 +1570,19 @@ async function loadGroundTextures(T3, renderer = null) {
     let gpuEstimatedMipBytes;
     let compressionFallbackReason = null;
     try {
-        surfaceArray = await loadCompressedArrays();
-        textureRuntime = 'uastc-ktx2-2k-compressed-array';
-        runtimeResolution = SURFACE_RUNTIME_SIZE;
+        surfaceArray = await loadCompressedArrays(progressiveTextures ? 512 : SURFACE_RUNTIME_SIZE);
+        textureRuntime = progressiveTextures ? 'uastc-ktx2-512-preview' : 'uastc-ktx2-2k-compressed-array';
+        runtimeResolution = progressiveTextures ? 512 : SURFACE_RUNTIME_SIZE;
         // BC7, ASTC 4x4, and ETC2 RGBA are all 8 bpp. The mip estimate includes
         // the minimum 4x4 block allocation for the final sub-block levels.
-        gpuBaseLevelBytes = 117440512;
-        gpuEstimatedMipBytes = 156588096;
+        gpuBaseLevelBytes = 2 * SURFACE_LAYER_COUNT * runtimeResolution ** 2;
+        gpuEstimatedMipBytes = Array.from({length: Math.log2(runtimeResolution) + 1}, (_, level) =>
+            2 * SURFACE_LAYER_COUNT * 16 * Math.max(1, runtimeResolution / 2 ** level / 4) ** 2)
+            .reduce((sum, bytes) => sum + bytes, 0);
     } catch (error) {
         compressionFallbackReason = String(error?.message ?? error);
         console.warn(
-            '[terrain] 2K compressed arrays unavailable; using verified 1K RGBA8 fallback:',
+            '[terrain] compressed arrays unavailable; using verified 1K RGBA8 fallback:',
             compressionFallbackReason,
         );
         surfaceArray = {
@@ -1604,8 +1610,12 @@ async function loadGroundTextures(T3, renderer = null) {
     blendBrush.userData.sourceProject = 'SeedThree';
     blendBrush.userData.sha256 =
         '4fd44ca5c00b83c897423d1a849bd2e184684b1dc16b88e28e905ddeec2ab62b';
+    const surfaceNodes = Object.fromEntries(Object.entries(surfaceArray).map(([key, texture]) =>
+        [key, T3.texture(texture).setUpdateMatrix(false)]));
     return {
         surfaceArray,
+        surfaceNodes,
+        loadFullResolution: textureRuntime === 'uastc-ktx2-512-preview' ? () => loadCompressedArrays() : null,
         blendBrush,
         surfaceLayers: surfaceLayers.map((layer) => layer.id),
         textureRuntime,
@@ -1621,8 +1631,9 @@ async function loadGroundTextures(T3, renderer = null) {
             channel: 'luminance',
             tileMeters: [...layer.tileMeters],
             retainedResolution: '4K-master',
-            runtimeBlendUrl: textureRuntime === 'uastc-ktx2-2k-compressed-array'
-                ? SURFACE_KTX2_ALBEDO_URL : layer.albedoFallback,
+            runtimeBlendUrl: textureRuntime.startsWith('uastc-ktx2')
+                ? (runtimeResolution === 512 ? SURFACE_KTX2_ALBEDO_URL.replace('/runtime/', '/runtime/preview_512/').replace('14x2K', '14x512')
+                    : SURFACE_KTX2_ALBEDO_URL) : layer.albedoFallback,
             runtimeBlendLayer: index,
             runtimeBlendChannel: 'A',
             runtimeBlendResolution: runtimeResolution,
@@ -1954,8 +1965,8 @@ function makeTerrainMaterial(T3, maps, { far = false } = {}) {
             .toVar(`terrainTopGradY${slot}`);
         const offsetA=offsetFor(variationCell,entry.layer),offsetB=offsetFor(variationCell.add(1),entry.layer);
         const variedSample=(key,coordinate,dx,dy)=>T3.mix(
-            T3.texture(maps.surfaceArray[key],coordinate.add(offsetA)).depth(entry.layer).grad(dx,dy),
-            T3.texture(maps.surfaceArray[key],coordinate.add(offsetB)).depth(entry.layer).grad(dx,dy),variationBlend);
+            T3.texture(maps.surfaceNodes[key],coordinate.add(offsetA)).depth(entry.layer).grad(dx,dy),
+            T3.texture(maps.surfaceNodes[key],coordinate.add(offsetB)).depth(entry.layer).grad(dx,dy),variationBlend);
         const sampleArray = (key) => T3.Fn(()=>{
             const dx=gradX.toVar(),dy=gradY.toVar(),value=T3.vec4(0).toVar();
             // Most terrain pixels have one or two contributing layers. Do not
@@ -2195,7 +2206,7 @@ function makeCliffMaterial(T3, maps) {
             T3.positionWorld.y.mul(scale).sub(T3.positionWorld.x.mul(scale * turn)),
         );
         const sample = (coordinates) => (
-            T3.texture(maps.surfaceArray[key], coordinates).depth(T3.int(layer))
+            T3.texture(maps.surfaceNodes[key], coordinates).depth(T3.int(layer))
         );
         return sample(yz).mul(weights.x)
             .add(sample(xz).mul(weights.y))
@@ -2719,11 +2730,11 @@ async function loadDesertRockLibrary(T3) {
     };
 }
 
-export async function makeTerrain(T3, renderer = null) {
+export async function makeTerrain(T3, renderer = null, { progressiveTextures = true } = {}) {
     // The baked heightfield must be resident BEFORE any geometry, placement,
     // or ecology sampling below — terrainHeightAt reads it from load onward.
     const [maps, desertCliffTemplates, desertRockLibrary] = await Promise.all([
-        loadGroundTextures(T3, renderer),
+        loadGroundTextures(T3, renderer, progressiveTextures),
         loadDesertCliffTemplates(T3),
         loadDesertRockLibrary(T3),
         loadBakedTerrain(),
@@ -3186,8 +3197,8 @@ export async function makeTerrain(T3, renderer = null) {
     terrain.userData.gridSpacing = NEAR_SIZE / NEAR_SEGMENTS;
     terrain.userData.horizonRadialSegments = HORIZON_RADIAL_SEGMENTS;
     terrain.userData.distantSeatingSurface = 'rendered-horizon-triangles';
-    terrain.userData.pbrSource = maps.textureRuntime === 'uastc-ktx2-2k-compressed-array'
-        ? 'fourteen-layer compressed true-2K arrays from retained 4K Poly Haven + ambientCG CC0 Southwest masters'
+    terrain.userData.pbrSource = maps.textureRuntime.startsWith('uastc-ktx2')
+        ? 'fourteen-layer compressed arrays from retained 4K Poly Haven + ambientCG CC0 Southwest masters'
         : 'fourteen-layer 1K RGBA8 compatibility arrays from retained 2K/4K Southwest masters';
     terrain.userData.groundMaterialLayers = 14;
     terrain.userData.groundSamplerCount = 3;
@@ -3196,6 +3207,22 @@ export async function makeTerrain(T3, renderer = null) {
     terrain.userData.groundGpuBaseLevelBytes = maps.gpuBaseLevelBytes;
     terrain.userData.groundEstimatedMipBytes = maps.gpuEstimatedMipBytes;
     terrain.userData.groundCompressionFallbackReason = maps.compressionFallbackReason;
+    const streaming = maps.loadFullResolution ? makeProgressiveTextures({
+        textures: maps.surfaceArray, nodes: maps.surfaceNodes,
+        load: maps.loadFullResolution, upload: texture => renderer.initTexture(texture),
+        onPublish() {
+            terrain.userData.groundRuntimeResolution = SURFACE_RUNTIME_SIZE;
+            terrain.userData.groundTextureRuntime = 'uastc-ktx2-2k-compressed-array';
+            terrain.userData.groundGpuBaseLevelBytes = 117440512;
+            terrain.userData.groundEstimatedMipBytes = 156588096;
+            for (const source of terrain.userData.spomHeightSources) {
+                source.runtimeBlendUrl = SURFACE_KTX2_ALBEDO_URL;
+                source.runtimeBlendResolution = SURFACE_RUNTIME_SIZE;
+            }
+        },
+    }) : null;
+    terrain.userData.textureStreaming = streaming?.stats ?? {state: 'disabled'};
+    terrain.updateTextureStreaming = () => streaming?.update() ?? false;
     terrain.userData.groundTopK = 5;
     terrain.userData.groundDynamicSamplesPerArray = 5;
     terrain.userData.groundFamilyLayers = {
@@ -3485,7 +3512,8 @@ export async function makeTerrain(T3, renderer = null) {
         for (const rockGeometry of rockGeometries) rockGeometry.dispose();
         desertRockLibrary.material.dispose();
         desertRockLibrary.textures.forEach((texture) => texture.dispose());
-        for (const texture of Object.values(maps.surfaceArray)) texture.dispose();
+        if (streaming) streaming.dispose();
+        else for (const texture of Object.values(maps.surfaceArray)) texture.dispose();
         maps.blendBrush?.dispose?.();
     };
 
