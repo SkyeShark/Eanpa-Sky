@@ -32,13 +32,15 @@ const QUALITY = {
     },
     performance: {
         name: 'performance', label: 'Performance', fpsTarget: 120,
-        cloudDisplayCapture: {width:2048,height:1024,bands:32,refreshSeconds:3,blendSeconds:.5},
-        skySamples: 20, lightSamples: 6, cloudPasses: 2, cloudDiv: 3,
-        cloudShadowResolution:256,
-        reflectionBake: { width: 256, height: 128, cloudPasses: 2 },
-        cloudReflectionRefreshSeconds: 24,
-        weather: { rainCount: 5500, splashCount: 320, transitionSeconds: 45, surfaceResolution: 512, surfaceRefreshHz: 6 },
-        ...optimizedCaches([72, 20, 72], 0.33),
+        // Amortize a detailed volume instead of combining the panorama with
+        // the old sparse live march. Supporting effects keep Balanced budgets.
+        cloudDisplayCapture: {width:2048,height:1024,bands:32,refreshSeconds:9,blendSeconds:9},
+        skySamples: 64, lightSamples: 14, cloudPasses: 4, cloudDiv: 2,
+        cloudShadowResolution:384,
+        reflectionBake: { width: 384, height: 192, cloudPasses: 3 },
+        cloudReflectionRefreshSeconds: 16,
+        weather: { rainCount: 10000, splashCount: 700, transitionSeconds: 45, surfaceResolution: 768, surfaceRefreshHz: 8 },
+        ...optimizedCaches([112, 28, 112], 0.22),
     },
 };
 return QUALITY;

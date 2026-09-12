@@ -1150,7 +1150,7 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
 
         const cloudBody = (
             dirIn, orgIn, passesIn, jitterOverride = null,
-            transientLightScale = float(1),
+            transientLightScale = float(1), captureDistance = null,
         ) => {
             const dir = dirIn;
             const org = orgIn;
@@ -1223,6 +1223,9 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
                         : hashScreen(screenCoordinate.xy))));
             const colSum = vec3(0).toVar();
             const trSum = float(0).toVar();
+            // Only the cached Performance capture builds these moments. Live
+            // Balanced/High retain their original shader and attachment layout.
+            const distanceSum = captureDistance ? float(0).toVar() : null;
             const marchVisible = CLOUD_DBG
                 ? float(1).greaterThan(0)
                 : dir.y.greaterThan(0.008).and(t0.lessThan(u.fadeDist));
@@ -1274,6 +1277,9 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
                             const radiance = ambGrey.add(u.cloudLightColor.mul(intensity).mul(celestialK))
                                 .mul(u.cloudRadiance).mul(u.cloudRadianceScale).add(canopySkylight).mul(s.density);
                             const trStep = exp(s.density.mul(stepS).negate());
+                            if (captureDistance) distanceSum.addAssign(
+                                Trk.mul(float(1).sub(trStep)).mul(length(p.sub(org))),
+                            );
                             colk.addAssign(Trk.mul(radiance.sub(radiance.mul(trStep)).div(max(s.density, 1e-6))));
                             Trk.assign(Trk.mul(trStep));
                         });
@@ -1287,6 +1293,7 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
             });
             const col = colSum.div(M_PASS).toVar();
             const Tr = trSum.div(M_PASS);
+            const ordinaryDistance = captureDistance ? distanceSum.div(M_PASS).toVar() : null;
             const wispA = float(0).toVar();
             // Severe sealed weathers (Cyclone, Dark Storm) run this shared
             // high-cloud graph as their textured canopy sheet — the coherent
@@ -1300,6 +1307,7 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
             ));
             const wispAlpha = highCloudAlphaAt(org.add(dir.mul(wispHitT))).mul(hit.y).mul(wispRange);
             wispA.assign(wispAlpha);
+            if (captureDistance) ordinaryDistance.addAssign(Tr.mul(wispAlpha).mul(wispHitT));
             // cloudBody speaks premultiplied RGBA: multiply the straight wisp
             // radiance by its actual coverage (the old density-vs-alpha split
             // made every thin sheet intrinsically dark grey).
@@ -1316,6 +1324,7 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
             // collapse the result into a projected sky texture.
             const stormA = float(0).toVar();
             const stormRgb = vec3(0).toVar();
+            const stormDistance = captureDistance ? float(0).toVar() : null;
             If(u.stormCanopy.greaterThan(0.0001).and(dir.y.greaterThan(0.0005)), () => {
                 const stormBaseY = stormLayerBottom();
                 const stormDepth = stormLayerDepth();
@@ -1383,6 +1392,9 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
                         );
                         const stormTrStep = exp(
                             sample.extinction.mul(stormStep).negate(),
+                        );
+                        if (captureDistance) stormDistance.addAssign(
+                            stormTr.mul(float(1).sub(stormTrStep)).mul(length(stormP.sub(org))),
                         );
 
                         // Beer attenuation through the mass above and below the
@@ -1454,6 +1466,7 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
                 // makes this effectively opaque at settled zenith, but never by
                 // substituting a constant alpha or painted top surface.
                 stormA.assign(float(1).sub(stormTr).mul(stormBoundary));
+                if (captureDistance) stormDistance.mulAssign(stormBoundary.div(N_STORM_PASSES));
                 stormRgb.assign(
                     stormVolumeSum.div(N_STORM_PASSES).mul(stormBoundary),
                 );
@@ -1500,6 +1513,15 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
                 underlayerFrontRgb,
                 settledUnderlayerFront,
             );
+            if (captureDistance) {
+                const ordinaryMoment = ordinaryDistance.mul(fade);
+                const frontMoment = stormDistance.add(ordinaryMoment.mul(float(1).sub(stormA)));
+                const underMoment = ordinaryMoment.add(stormDistance.mul(float(1).sub(ordinaryA)));
+                // Kilometres in R16F: enough range/precision for the full sky,
+                // with only one extra 16-bit channel per captured direction.
+                captureDistance.assign(mix(frontMoment,underMoment,settledUnderlayerFront)
+                    .div(cloudA.max(.0001)).mul(.001));
+            }
             // BELOW-CLOUD ATMOSPHERE march: haze shafts (crepuscular rays) +
             // WORLD RAIN CURTAINS. Both live in the slab between camera and
             // cloud base; precipitation density hangs under DENSE weather
@@ -1589,6 +1611,10 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
             // curtains genuinely occlude the sky behind them (haze density is
             // tiny so clear days are unaffected)
             const coverT = float(1).sub(float(1).sub(cloudA).mul(trH));
+            // Store a premultiplied distance moment. Bilinear filtering a
+            // straight depth against empty texels pulls cloud-edge distances
+            // toward zero and folds the inverse warp into visible outlines.
+            if (captureDistance) captureDistance.mulAssign(coverT);
             const dg2 = OUTPUT_DITHER > 0
                 ? hashScreen(screenCoordinate.xy.add(vec2(17.3, 41.7))).sub(0.5).mul(OUTPUT_DITHER).mul(coverT)
                 : float(0);
@@ -1896,13 +1922,15 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
                 const material = new T3.NodeMaterial();
                 material.name = 'Frozen cloud panorama bands';
                 material.depthTest = material.depthWrite = material.toneMapped = false;
-                material.fragmentNode = Fn(() => {
+                const distance = T3.property('float');
+                const radiance = Fn(() => {
                     const texcoord = T3.uv();
                     const lon = texcoord.x.sub(.5).mul(Math.PI*2);
                     const lat = float(.5).sub(texcoord.y).mul(Math.PI);
                     const dir = vec3(cos(lat).mul(cos(lon)),sin(lat),cos(lat).mul(sin(lon)));
-                    return cloudBody(dir,origin,opts.cloudPasses,null,float(0));
+                    return cloudBody(dir,origin,opts.cloudPasses,null,float(0),distance);
                 })().context({eanpaCloudSnapshot:true});
+                material.fragmentNode = T3.outputStruct(radiance,distance);
                 return {material,snapshot};
             },
             _solarOcclusion: null,

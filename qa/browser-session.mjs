@@ -27,6 +27,8 @@ const alive = pid => {
 };
 const action = process.argv[2] ?? 'status';
 if (action === 'start' || action === 'preview') {
+    const startUrl = new URL(process.argv[3] ?? `http://127.0.0.1:${serverPort}/?benchmark=1&automated=1`);
+    if (startUrl.origin !== `http://127.0.0.1:${serverPort}`) throw new Error('QA startup URL must use the owned loopback server');
     let existing = null;
     if (action === 'preview') {
         existing = JSON.parse(await readFile(stateFile, 'utf8'));
@@ -70,7 +72,7 @@ if (action === 'start' || action === 'preview') {
             '--remote-debugging-address=127.0.0.1', `--user-data-dir=${profile}`,
             '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
             '--enable-unsafe-webgpu', '--mute-audio', '--window-size=1600,1000',
-            `http://127.0.0.1:${serverPort}/?benchmark=1&automated=1`,
+            startUrl.href,
         ], 'chrome');
         owned.push(browser);
         const state = { serverPid: server.pid, browserPid: browser.pid, profile,

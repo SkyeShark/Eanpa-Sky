@@ -10,26 +10,31 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
     };
     const width = bounded('width',2048,16,4096,true), height = bounded('height',1024,16,2048,true);
     const bands = bounded('bands',Math.min(height,32),1,height,true);
-    const refreshSeconds = bounded('refreshSeconds',3,.1,60);
-    const blendSeconds = bounded('blendSeconds',.5,.05,10);
+    const refreshSeconds = bounded('refreshSeconds',9,.1,60);
+    const blendSeconds = bounded('blendSeconds',9,.05,60);
     const u = sky.uniforms;
     const shared = value => T.uniform(value).setGroup(T.renderGroup);
     const makeRecord = index => {
-        const target = new T.RenderTarget(width, height, {type:T.HalfFloatType, depthBuffer:false});
-        Object.assign(target.texture, {wrapS:T.RepeatWrapping, wrapT:T.ClampToEdgeWrapping,
+        const target = new T.RenderTarget(width, height, {count:2,type:T.HalfFloatType, depthBuffer:false});
+        for(const texture of target.textures)Object.assign(texture, {wrapS:T.RepeatWrapping, wrapT:T.ClampToEdgeWrapping,
             minFilter:T.LinearFilter, magFilter:T.LinearFilter, generateMipmaps:false,
-            colorSpace:T.NoColorSpace, name:`eanpa-cloud-panorama-${index}`});
+            colorSpace:T.NoColorSpace});
+        target.texture.name = `eanpa-cloud-panorama-${index}`;
+        target.textures[1].format = T.RedFormat;
+        target.textures[1].name = `eanpa-cloud-distance-${index}`;
         return {target, origin:new T.Vector3(), wind:new T.Vector3(), light:new T.Vector3(),
-            sun:new T.Vector3(), altitude:1000, time:-Infinity, signature:[]};
+            sun:new T.Vector3(), stretch:new T.Vector3(1,1,1), flow:new T.Vector2(),
+            altitude:1000, time:-Infinity, signature:[]};
     };
     const records = [0,1,2].map(makeRecord);
     let current = records[0], previous = records[1], staging = records[2];
     const makeView = record => ({
-        texture:T.texture(record.target.texture), origin:shared(new T.Vector3()),
+        texture:T.texture(record.target.texture), distance:T.texture(record.target.textures[1]), origin:shared(new T.Vector3()),
         wind:shared(new T.Vector3()), light:shared(new T.Vector3(1,1,1)), altitude:shared(1000),
+        stretch:shared(new T.Vector3(1,1,1)), flow:shared(new T.Vector2()), time:shared(0),
     });
     const oldView = makeView(previous), newView = makeView(current), blend = shared(1);
-    for (const view of [oldView,newView]) view.texture.updateMatrix = false;
+    for (const view of [oldView,newView]) view.texture.updateMatrix = view.distance.updateMatrix = false;
     const captureOrigin = shared(new T.Vector3());
     const capture = sky.createCloudCaptureMaterial(captureOrigin);
     const quad = new T.QuadMesh(capture.material);
@@ -37,6 +42,7 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
     // temporarily replaces it, which would create a second pipeline at startup.
     capture.material.vertexNode = T.vec4(T.positionGeometry,1);
     let ready = false, disposed = false, released = false, band = -1, publishedAt = 0;
+    let lastUpdateTime = null, bandSeconds = .5;
     let initialization = null, updating = null;
     let savedState;
     const observer = new T.Vector3();
@@ -49,12 +55,16 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
         .addScaledVector(u.cloudAmbSky.value,.5).addScaledVector(u.cloudAmbGround.value,.15)
         .multiplyScalar(u.cloudRadiance.value*u.cloudRadianceScale.value).max(lightFloor);
     const stats = {mode:'banded-world-direction-cloud-panorama',width,height,bands,
-        refreshSeconds,blendSeconds,captures:0,bandDraws:0,fullDraws:0,failures:0,
+        refreshSeconds,blendSeconds,activeBlendSeconds:blendSeconds,captures:0,bandDraws:0,fullDraws:0,failures:0,
+        distanceReprojection:true,textureBytes:width*height*10*3,
         publishedTime:null,captureTime:null,band:-1,blend:1,liveCloudShadows:true,liveLocalReflections:true};
     const publishView = (view, record) => {
         view.texture.value = record.target.texture;
+        view.distance.value = record.target.textures[1];
         view.origin.value.copy(record.origin);view.wind.value.copy(record.wind);
         view.light.value.copy(record.light);view.altitude.value = record.altitude;
+        view.stretch.value.copy(record.stretch);view.flow.value.copy(record.flow);
+        view.time.value=Number.isFinite(record.time)?record.time:u.time.value;
     };
     const begin = async () => {
         await sky.prepareOptimizedCaches?.(renderer,camera,true);
@@ -62,6 +72,16 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
         camera.getWorldPosition(observer);observerNode.value.copy(observer);staging.origin.copy(observer);
         staging.wind.copy(u.cloudDisplacement.value);staging.sun.copy(u.cloudLightDir.value);
         staging.time = u.time.value;staging.signature = signatureNames.map(name => u[name].value);
+        staging.stretch.copy(u.stretch.value);
+        // Match the density-domain drift: the main erosion field travels in
+        // addition to the weather map. Cirrus has only wind advection; the
+        // storm volume has its own slower drift. Keep these per capture so
+        // a weather transition never changes an old image's motion model.
+        const smooth = (a,b,v) => {const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
+        const underlayerFront = smooth(.96,.995,u.stormCanopy.value)
+            *(1-smooth(.005,.08,u.celestialVisibility.value));
+        const stormWeight = u.stormCanopy.value*(1-underlayerFront);
+        staging.flow.set(u.finalMul.value>.0001 ? 1-stormWeight : 0,stormWeight);
         staging.altitude = u.stormCanopy.value > .1 ? 1275
             : u.finalMul.value > .001 ? u.cloudStart.value + u.cloudHeight.value*.5
             : u.cloudStart.value + u.cloudHeight.value + 1000;
@@ -99,6 +119,8 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
         const recycled = previous;previous = current;current = staging;staging = recycled;
         publishView(newView,current);publishView(oldView,previous);
         publishedAt = ready ? time : time-blendSeconds;blend.value = ready ? 0 : 1;
+        if(ready)bandSeconds=Math.max(.01,Math.min(refreshSeconds,time-current.time));
+        lastUpdateTime = time;
         ready = true;band = -1;stats.band = -1;stats.captures++;
         stats.publishedTime = current.time;stats.blend = blend.value;
     };
@@ -108,18 +130,31 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
         for(const record of records)record.target.dispose();
         capture.material.dispose();capture.snapshot.dispose();
     };
+    const directionUV = ray => T.vec2(T.atan(ray.z,ray.x).div(Math.PI*2).add(.5),
+        T.acos(ray.y.clamp(-1,1)).div(Math.PI).clamp(.5/height,1-.5/height));
     const sampleView = (view, dir, origin) => {
-        // One representative altitude supplies modest translation/wind parallax.
-        // It is an approximation for a multilayer volume; camera rotation stays
-        // exact because lookup is always a world direction, never screen UV.
+        const delta = u.cloudDisplacement.sub(view.wind), elapsed = u.time.sub(view.time);
+        const ordinary = T.vec3(delta.x.add(delta.z.mul(.4)).sub(elapsed.mul(12.3)),0,
+            delta.z.sub(delta.x.mul(.4))).div(view.stretch.max(.01));
+        const storm = T.vec3(delta.x.mul(.62),elapsed.mul(-1.15),delta.z.mul(.62));
+        const advection = delta.mul(T.float(1).sub(view.flow.x).sub(view.flow.y))
+            .add(ordinary.mul(view.flow.x)).add(storm.mul(view.flow.y));
         const distance = view.altitude.sub(origin.y).max(1).div(dir.y.max(.04)).min(u.fadeDist);
-        const hit = origin.add(dir.mul(distance));
-        const advection = u.cloudDisplacement.sub(view.wind);
-        const warped = hit.sub(view.origin).sub(advection).normalize();
-        const ray = T.mix(dir,warped,T.smoothstep(.015,.05,dir.y)).normalize();
-        const uv = T.vec2(T.atan(ray.z,ray.x).div(Math.PI*2).add(.5),
-            T.acos(ray.y.clamp(-1,1)).div(Math.PI).clamp(.5/height,1-.5/height));
-        const rgba = view.texture.sample(uv);
+        const firstRay = origin.add(dir.mul(distance)).sub(view.origin).sub(advection).normalize();
+        const firstUV=directionUV(firstRay),firstColor=view.texture.sample(firstUV);
+        const capturedDistance = view.distance.sample(firstUV).r.mul(1000).div(firstColor.a.max(.0001));
+        // Reconstruct the captured visible cloud, then solve its distance on
+        // the current ray. This also handles the curved deck and high cirrus;
+        // a fixed plane alone slides different cloud depths out of alignment.
+        const point = view.origin.add(firstRay.mul(capturedDistance)).add(advection);
+        const correctedDistance = point.sub(origin).dot(dir).max(1);
+        // Thin/mixed silhouettes have uncertain depth; retain the smooth
+        // altitude prior there instead of letting a discontinuity fold UVs.
+        const confidence=T.smoothstep(.02,.15,firstColor.a).mul(T.smoothstep(1,10,capturedDistance));
+        const travel = T.mix(distance,correctedDistance.clamp(distance.mul(.65),distance.mul(1.5)),confidence);
+        const warped = origin.add(dir.mul(travel)).sub(view.origin).sub(advection).normalize();
+        const ray = T.mix(dir,warped,T.smoothstep(.005,.025,dir.y)).normalize();
+        const rgba = view.texture.sample(directionUV(ray));
         const relight = lightNode.div(view.light.max(.001)).clamp(0,4);
         return T.vec4(rgba.rgb.mul(relight),rgba.a);
     };
@@ -160,20 +195,28 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
             updating=(async()=>{
                 if(!await api.ensureReady() || disposed)return;
                 const time = u.time.value;
-                const fraction = Math.max(0,Math.min(1,(time-publishedAt)/blendSeconds));
-                blend.value = fraction*fraction*(3-2*fraction);
                 camera.getWorldPosition(observer);observerNode.value.copy(observer);
                 const age = time-current.time;
                 const changed = signatureNames.some((name,i)=>Math.abs(u[name].value-current.signature[i])>.035);
                 const moved = observer.distanceToSquared(current.origin)>32*32;
                 const sunMoved = current.sun.dot(u.cloudLightDir.value)<.999;
+                const responsive = changed||moved||sunMoved;
+                const cadence = responsive ? Math.min(refreshSeconds,3) : refreshSeconds;
+                const duration = responsive ? Math.min(blendSeconds,3) : blendSeconds;
+                const dt = lastUpdateTime===null ? 0 : Math.max(0,time-lastUpdateTime);
+                // Continuous interpolation, not a held image followed by a
+                // half-second catch-up pulse. Changing weather may accelerate
+                // the fade, but never jumps its weight or replaces a live slot.
+                blend.value = Math.min(1,blend.value+dt/duration);
+                lastUpdateTime = time;stats.activeBlendSeconds=duration;
                 if(time<publishedAt){band=-1;blend.value=1;publishedAt=time-blendSeconds;}
                 stats.blend = blend.value;
-                if(band<0 && blend.value>=1 && (age>=refreshSeconds || age<0
-                    || ((changed||moved||sunMoved) && age>=.75))) {
+                const lead = Math.min(bandSeconds,cadence*.5);
+                if(band<0 && (1-blend.value)*duration<=lead && (age>=cadence-lead || age<0)) {
                     if(!await begin())return;
                 }
-                if(band>=0 && await renderBand(false) && band>=bands)publish(time);
+                if(band>=0 && band<bands)await renderBand(false);
+                if(band>=bands && blend.value>=1)publish(time);
             })().finally(()=>{updating=null;release();});
             return updating;
         },

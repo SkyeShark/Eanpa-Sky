@@ -93,29 +93,40 @@ their independent live updates. Cloud-shadow receivers still use their world
 positions; no terrain identification or demonstration assets are involved.
 
 `skyQualityPresets().performance.cloudDisplayCapture` supplies a 2048 × 1024
-HDR panorama, 32 horizontal bands, a three-second refresh interval and a
-half-second crossfade. One band renders per host frame. Significant weather,
-sun-direction or observer changes request an earlier capture after 0.75 seconds.
+HDR panorama and a filtered distance moment, 32 horizontal bands, a nine-second
+refresh interval and continuous nine-second interpolation. The capture uses
+64 march steps with four interleaved passes and 14 light samples. Supporting
+shadow, reflection, rain and density/light-cache budgets match Balanced;
+Performance saves work by amortizing its volume capture, rather than retaining
+the former 20-step, two-pass live march. Balanced and High are unchanged.
+One band renders per host frame. Significant weather, sun-direction or observer
+changes shorten the cadence and remaining interpolation to about three seconds
+without jumping the blend weight. The next capture can start as a fade finishes.
 A capture freezes its uniforms and light-density cache until every band is
 complete. It publishes only then; unfinished bands never appear on screen or
 in an environment bake. The first full capture completes during shader warmup.
 
 The display looks up a world ray, so camera rotation remains immediate. Between
-captures, integrated wind and observer translation approximately reproject the
-image at a representative cloud altitude. Current light colour and eclipse
+captures, integrated wind, density erosion motion, cloud stretch and observer
+translation approximately reproject the image using its visible cloud distance.
+The extra R16F channel stores a premultiplied distance moment so filtering at
+clear edges does not collapse depth toward zero. Thin edges use a conservative
+altitude prior. Current light colour and eclipse
 visibility affect radiance immediately; lightning adds a transient spatial
 flash. Reflection bakes sample the completed cloud images without that flash,
 then use the existing native PMREM convolution and stable environment target.
 Local screen-space reflections retain their normal per-frame geometry and PBR
-response. The Performance environment refresh budget remains 24 seconds,
+response. The Performance environment refresh budget is 16 seconds,
 with earlier refreshes for weather/time changes in the standalone host.
 
 This trades fine angular detail, exact multilayer parallax and continuously
 evolving cloud shape for less repeated ray marching. Fast travel, close cloud
 fly-throughs and abrupt weather cuts suit the live modes better. Cloud shadows
 use the true current density field, so their cadence remains 10 Hz; approximate
-display reprojection can leave a small spatial mismatch. The three RGBA16F
-targets consume 48 MiB at the default size. Hosts can lower the capture size
+display reprojection can leave a spatial mismatch. One depth per ray cannot
+reconstruct multiple intersecting layers, and fine erosion between captures is
+interpolated rather than evaluated live. The three RGBA16F plus R16F captures
+consume 60 MiB at the default size. Hosts can lower the capture size
 through the option above at the cost of visibly softer clouds.
 
 The standalone sky factories forward these options to `makeSkySystem`.

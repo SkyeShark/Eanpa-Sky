@@ -8,13 +8,14 @@
  const scalar=value=>T.uniform(value).setGroup(T.frameGroup),vector=(x=0,y=0,z=0)=>scalar(new T.Vector3(x,y,z));
  const u={time:scalar(0),amount:scalar(.2),cloudDisplacement:vector(),cloudLightColor:vector(1,1,1),lightK:scalar(1),
   cloudAmbSky:vector(),cloudAmbGround:vector(),cloudRadiance:scalar(1),cloudRadianceScale:scalar(1),cloudLightDir:vector(0,1,0),
-  finalMul:scalar(1),wispOn:scalar(0),stormCanopy:scalar(0),cloudWeatherGrey:scalar(0),wispOpacity:scalar(0),
+  finalMul:scalar(0),wispOn:scalar(0),stormCanopy:scalar(0),cloudWeatherGrey:scalar(0),wispOpacity:scalar(0),
+  stretch:vector(1,1,1),celestialVisibility:scalar(1),
   cloudStart:scalar(1000),cloudHeight:scalar(1000),fadeDist:scalar(50000),solarSkyVisibility:scalar(1),
   lightningStrike:scalar(new T.Vector4()),lightningFlashColor:vector(1,1,1)};
  const sky={uniforms:u,async prepareOptimizedCaches(){},createCloudCaptureMaterial(){
   const snapshot=makeCloudUniformSnapshot(T,u),material=new T.NodeMaterial();
   material.depthTest=material.depthWrite=material.toneMapped=false;
-  material.fragmentNode=T.Fn(()=>T.vec4(u.amount,T.uv(),.6))().context({eanpaCloudSnapshot:true});
+  material.fragmentNode=T.outputStruct(T.Fn(()=>T.vec4(u.amount,T.uv(),.6))().context({eanpaCloudSnapshot:true}),T.float(1.5*.6));
   return{snapshot,material};
  }};
  const camera=new T.PerspectiveCamera();camera.updateMatrixWorld(true);
