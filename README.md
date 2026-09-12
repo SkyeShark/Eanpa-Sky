@@ -44,6 +44,12 @@ corrections in [the September 10 report](REVIEW_2026-09-10.md).
 
 Controls are on-screen. Quality tiers in the panel; Balanced targets 60+ FPS.
 
+The separate **Reflections and shading** selector offers **Reduced GPU load**:
+half-resolution ambient occlusion with fewer samples and a shorter screen-space
+reflection range. Full detail remains the default. Sky quality and world detail
+are independent. Effect changes prepare their shaders behind the loading screen.
+Use `?effects-quality=performance` to open directly with the reduced effect budget.
+
 Cloud shadows work on scene PBR geometry without a terrain callback; see
 [the integration guide](docs/SKY_SYSTEM_INTEGRATION.md). Rain shelter, impacts,
 wetness and puddles use nearby surface geometry; see [engine/RAIN.md](engine/RAIN.md).
