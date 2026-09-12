@@ -47,7 +47,7 @@ try{
   const stage=state.stages?.at(-1)?.text;if(stage!==lastStage){lastStage=stage;console.log(JSON.stringify(state));}
   if(state.done && state.frames>2)break;
  }
- const snapshot=await evaluate('(()=>{if(globalThis._eanpaTest)_eanpaTest.paused=true;return {profile:globalThis.__startupProfile,warmup:globalThis._shaderWarmupStats,frames:globalThis._eanpaTest?.completedFrames,settings:{viewport:[innerWidth,innerHeight],devicePixelRatio,sky:document.getElementById("skybox")?.value,clouds:document.getElementById("cloud-type")?.value,weather:document.getElementById("weather")?.value,quality:document.getElementById("quality")?.value},errorText:[...document.body.children].filter(e=>e.style?.zIndex==="99").map(e=>e.textContent).filter(Boolean),resources:performance.getEntriesByType("resource").map(e=>({name:e.name,start:e.startTime,end:e.responseEnd,bytes:e.transferSize,duration:e.duration})),heap:performance.memory?.usedJSHeapSize}})()');
+ const snapshot=await evaluate('(()=>{if(globalThis._eanpaTest)_eanpaTest.paused=true;return {profile:globalThis.__startupProfile,warmup:globalThis._shaderWarmupStats,frames:globalThis._eanpaTest?.completedFrames,settings:{viewport:[innerWidth,innerHeight],devicePixelRatio,sky:document.getElementById("skybox")?.value,clouds:document.getElementById("cloud-type")?.value,weather:document.getElementById("weather")?.value,quality:document.getElementById("quality")?.value,effectsQuality:document.getElementById("effects-quality")?.value},errorText:[...document.body.children].filter(e=>e.style?.zIndex==="99").map(e=>e.textContent).filter(Boolean),resources:performance.getEntriesByType("resource").map(e=>({name:e.name,start:e.startTime,end:e.responseEnd,bytes:e.transferSize,duration:e.duration})),heap:performance.memory?.usedJSHeapSize}})()');
  if(mode==='cpu'){const {profile}=await send('Profiler.stop');await writeFile('.artifacts/startup/'+name+'.cpuprofile',JSON.stringify(profile));}
  // Keep canceled requests visible in the artifact. A 200 HEAD has no body;
  // streamed GETs can also report cancellation after Resource Timing records
@@ -60,8 +60,8 @@ try{
  const valid=!snapshot.errorText.length&&!snapshot.profile?.pipelines.some(p=>p.failed)&&!errors.length&&!failedRequests.length&&snapshot.profile?.done===true;
  const result={url,mode,valid,cpuThrottleRate:Number(rate),httpCacheDisabled:mode!=='warm',
   shaderCache:mode==='cold'?'browser shader cache cleared via CDP; driver cache uncontrolled':'not cleared',
-  recordedAt:new Date().toISOString(),...snapshot,requests:[...requests.values()],failedRequests,completedCancellations,logs,errors};
+  recordedAt:new Date().toISOString(),...snapshot,transferBytes:snapshot.resources.reduce((sum,r)=>sum+(r.bytes??0),0),requests:[...requests.values()],failedRequests,completedCancellations,logs,errors};
  await writeFile('.artifacts/startup/'+name+'.json',JSON.stringify(result,null,2));
  if(!valid){console.error('Invalid startup: browser or GPU errors. See artifact.');process.exitCode=1;}
- console.log(JSON.stringify({name,stages:snapshot.profile?.stages,warmup:snapshot.warmup,modules:snapshot.profile?.modules.length,pipelines:snapshot.profile?.pipelines.length,requests:requests.size,bytes:[...requests.values()].reduce((sum,r)=>sum+(r.bytes??0),0),errors:errors.length}));
+ console.log(JSON.stringify({name,stages:snapshot.profile?.stages,warmup:snapshot.warmup,modules:snapshot.profile?.modules.length,pipelines:snapshot.profile?.pipelines.length,requests:requests.size,bytes:result.transferBytes,errors:errors.length}));
 }finally{if(script)await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:script.identifier}).catch(()=>{});await send('Emulation.setCPUThrottlingRate',{rate:1}).catch(()=>{});await send('Network.setCacheDisabled',{cacheDisabled:false}).catch(()=>{});for(const p of pending.values())clearTimeout(p.timer);socket.close();}
