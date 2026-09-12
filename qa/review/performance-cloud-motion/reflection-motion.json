@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "size": [
+    1578,
+    846
+  ],
+  "groups": {
+    "1": {
+      "name": "BoxGeometry",
+      "samples": 41329,
+      "maxPixelError": 0.0006314600862385271,
+      "maxPreviousZError": 0.004457081641717764,
+      "maxDepthDifference": 0
+    },
+    "2": {
+      "name": "BoxGeometry",
+      "samples": 1256,
+      "maxPixelError": 0.00020336835984003922,
+      "maxPreviousZError": 0.00020116892263644104,
+      "maxDepthDifference": 0
+    },
+    "3": {
+      "name": "BoxGeometry",
+      "samples": 1224,
+      "maxPixelError": 0.00021278237843712865,
+      "maxPreviousZError": 0.0004127795731108108,
+      "maxDepthDifference": 0
+    },
+    "4": {
+      "name": "BoxGeometry",
+      "samples": 2444,
+      "maxPixelError": 0.00035271071850415705,
+      "maxPreviousZError": 0.00006437158354088979,
+      "maxDepthDifference": 0
+    },
+    "5": {
+      "name": "SphereGeometry",
+      "samples": 777,
+      "maxPixelError": 0.00016772485824004854,
+      "maxPreviousZError": 0.00017704093643189367,
+      "maxDepthDifference": 0
+    },
+    "6": {
+      "name": "TorusKnotGeometry",
+      "samples": 307,
+      "maxPixelError": 0.00039955813135803263,
+      "maxPreviousZError": 0.00008351568454756375,
+      "maxDepthDifference": 0
+    }
+  },
+  "implementation": "current-geometry-motion-reprojected-radiance"
+}

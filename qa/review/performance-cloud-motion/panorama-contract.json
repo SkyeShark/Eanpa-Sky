@@ -1,0 +1,206 @@
+{
+  "pass": true,
+  "date": "2026-09-12T23:38:59.374Z",
+  "revision": "186",
+  "checks": [
+    {
+      "name": "one initial capture for concurrent requests",
+      "pass": true,
+      "stats": {
+        "mode": "banded-world-direction-cloud-panorama",
+        "width": 64,
+        "height": 32,
+        "bands": 4,
+        "refreshSeconds": 1,
+        "blendSeconds": 0.1,
+        "activeBlendSeconds": 0.1,
+        "captures": 1,
+        "bandDraws": 0,
+        "fullDraws": 1,
+        "failures": 0,
+        "distanceReprojection": true,
+        "textureBytes": 61440,
+        "publishedTime": 0,
+        "captureTime": 0,
+        "band": -1,
+        "blend": 1,
+        "liveCloudShadows": true,
+        "liveLocalReflections": true
+      }
+    },
+    {
+      "name": "initial frozen data",
+      "pass": true
+    },
+    {
+      "name": "shader compiled on first publication sees the initial cloud",
+      "pass": true
+    },
+    {
+      "name": "first display update keeps the completed startup capture fully visible",
+      "pass": true
+    },
+    {
+      "name": "partial capture stays private and concurrent updates coalesce",
+      "pass": true
+    },
+    {
+      "name": "one scissor band changes only its eight rows",
+      "pass": true,
+      "rowValues": [
+        0.69970703125,
+        0.69970703125,
+        0.69970703125,
+        0.69970703125,
+        0.69970703125,
+        0.69970703125,
+        0.69970703125,
+        0.69970703125,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "every completed band uses the state from capture start",
+      "pass": true,
+      "maxError": 0.0002929687499999556
+    },
+    {
+      "name": "publication starts from the previous image",
+      "pass": true
+    },
+    {
+      "name": "halfway crossfade contains both distinct texture bindings",
+      "pass": true
+    },
+    {
+      "name": "world directions round-trip without rotation or vertical flip",
+      "pass": true,
+      "samples": [
+        {
+          "x": 8,
+          "y": 4,
+          "value": [
+            0.69970703125,
+            0.1328125,
+            0.140625,
+            0.599609375
+          ],
+          "expected": [
+            0.7,
+            0.1328125,
+            0.140625,
+            0.6
+          ],
+          "error": 0.0003906249999999778
+        },
+        {
+          "x": 48,
+          "y": 4,
+          "value": [
+            0.69970703125,
+            0.7578125,
+            0.140625,
+            0.599609375
+          ],
+          "expected": [
+            0.7,
+            0.7578125,
+            0.140625,
+            0.6
+          ],
+          "error": 0.0003906249999999778
+        },
+        {
+          "x": 8,
+          "y": 26,
+          "value": [
+            0.69970703125,
+            0.1328125,
+            0.828125,
+            0.599609375
+          ],
+          "expected": [
+            0.7,
+            0.1328125,
+            0.828125,
+            0.6
+          ],
+          "error": 0.0003906249999999778
+        },
+        {
+          "x": 48,
+          "y": 26,
+          "value": [
+            0.69970703125,
+            0.7578125,
+            0.828125,
+            0.599609375
+          ],
+          "expected": [
+            0.7,
+            0.7578125,
+            0.828125,
+            0.6
+          ],
+          "error": 0.0003906249999999778
+        },
+        {
+          "x": 31,
+          "y": 15,
+          "value": [
+            0.69970703125,
+            0.4921875,
+            0.484375,
+            0.599609375
+          ],
+          "expected": [
+            0.7,
+            0.4921875,
+            0.484375,
+            0.6
+          ],
+          "error": 0.0003906249999999778
+        }
+      ]
+    },
+    {
+      "name": "draw failure reported",
+      "pass": true
+    },
+    {
+      "name": "failure retains publication and restores renderer",
+      "pass": true
+    },
+    {
+      "name": "failed band can retry without holes",
+      "pass": true
+    },
+    {
+      "name": "dispose during warmup publishes nothing and releases exactly once",
+      "pass": true
+    }
+  ]
+}

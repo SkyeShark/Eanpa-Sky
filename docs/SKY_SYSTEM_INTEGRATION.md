@@ -96,7 +96,7 @@ positions; no terrain identification or demonstration assets are involved.
 HDR panorama and a filtered distance moment, 32 horizontal bands, a nine-second
 refresh interval and continuous nine-second interpolation. The capture uses
 64 march steps with four interleaved passes and 14 light samples. Supporting
-shadow, reflection, rain and density/light-cache budgets match Balanced;
+cloud-shadow, sky-reflection, rain and density/light-cache budgets match Balanced;
 Performance saves work by amortizing its volume capture, rather than retaining
 the former 20-step, two-pass live march. Balanced and High are unchanged.
 One band renders per host frame. Significant weather, sun-direction or observer

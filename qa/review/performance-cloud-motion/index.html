@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eanpa — Performance cloud correction</title>
+<style>
+ :root{color-scheme:dark;font:17px/1.55 system-ui,sans-serif;background:#101820;color:#e2edf3}
+ body{max-width:1180px;margin:36px auto;padding:0 24px}h1{font-size:2rem;margin-bottom:10px}h2{margin-top:38px}
+ a{color:#97d6ff}p{max-width:88ch}figure{margin:0}figcaption{padding:7px 0;color:#b8c9d4}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}video,img{width:100%;border-radius:8px;display:block;background:#1b2a35}
+ button,select{font:inherit;padding:8px 14px;background:#243847;border:1px solid #638095;color:inherit;border-radius:5px}
+ table{border-collapse:collapse;width:100%}th,td{padding:10px 14px;border-bottom:1px solid #344653;text-align:left}
+ .metric{padding:18px 22px;background:#1b2d39;border-left:4px solid #9de0bd}.muted,small{color:#afc2ce}
+ canvas{width:100%;height:250px;background:#172631;border-radius:8px}.legend span{margin-right:24px}
+ @media(max-width:760px){.pair{grid-template-columns:1fr}body{padding:0 16px}table{font-size:.85rem}}
+</style>
+<h1>Performance cloud correction</h1>
+<p>Performance now captures a detailed cloud volume and interpolates it continuously.
+ Balanced and High retain their existing values and live rendering path.</p>
+<p><a href="../../../?quality=performance">Open the engine in Performance</a> ·
+ <a href="quality-isolation.json">Preset comparison</a> · <a href="README.md">Validation notes</a></p>
+<div class="metric"><strong>64 march steps × 4 passes, with 14 light samples.</strong>
+ The rejected capture used 20 × 2 with 6 light samples. Performance’s cloud-shadow,
+ sky-reflection, rain and cache budgets now match Balanced.</div>
+<h2>Cloud motion</h2>
+<p>The previous version held an image, then squeezed three seconds of evolution into a half-second
+ fade. Its motion warp also missed the erosion field’s movement. The correction uses continuous
+ nine-second interpolation and accounts for wind, erosion, cloud stretch and captured distance.</p>
+<div class="pair">
+ <figure><video id="before" controls muted playsinline preload="metadata" poster="before.jpg" src="before.webm"></video><figcaption>Rejected Performance — sparse capture and short fades</figcaption></figure>
+ <figure><video id="after" controls muted playsinline preload="metadata" poster="after.jpg" src="after.webm"></video><figcaption>Corrected Performance — dense capture and continuous motion</figcaption></figure>
+</div>
+<p><button id="play">Play both from the start</button> <small>18 seconds each, normal simulation speed, stationary camera.</small></p>
+<canvas id="motion" width="1180" height="250" aria-label="Cloud opacity change per frame, before and after"></canvas>
+<p class="legend"><span style="color:#ffc089">— Rejected capture</span><span style="color:#92e0c0">— Corrected capture</span></p>
+<p id="motion-summary"></p>
+<p class="muted">The chart measures mean opacity change between consecutive frames in separate
+ 30-second runs. It checks the recurring bursts within each run; the cloud layouts are not identical.
+ Readback instrumentation is excluded from the FPS benchmarks.</p>
+<h2>Other skies and ground effects</h2>
+<p><select id="view" aria-label="Captured scene"></select></p>
+<img id="scene" alt="Performance cloud rendering on the selected sky" loading="lazy">
+<p>Cloud shadows, rain, impacts, puddles, lightning, celestial motion and local PBR reflections
+ retain their live updates. The panorama carries only the displayed cloud layer and its distant haze.</p>
+<h2>Available-resource checks</h2>
+<p>RTX 5090 Laptop GPU, 1578 × 846, Earth rain, moving camera, 20 seconds per run.
+ The fixture contains six generic host surfaces, including a roof, slope and chrome receivers.</p>
+<table><thead><tr><th>Performance version</th><th>Native FPS</th><th>Constrained FPS</th><th>Constrained p95 frame</th><th>GPU work / frame</th></tr></thead><tbody id="benchmarks"></tbody></table>
+<p class="muted">Constrained means 4× browser CPU throttling plus a GPU workload targeted at 8 ms.
+ This is resource stress, not emulation of a named lower-end GPU. Background CPU activity was present;
+ these results do not establish a precise speedup. GPU timestamps measure submitted GPU work and
+ exclude queue idle time. Each GPU run covers 20 seconds, including panorama updates.</p>
+<h2>Validation and limits</h2>
+<p><a href="panorama-contract.json">Atomic publication and lifecycle</a> ·
+ <a href="motion-contract.json">Moving cloud alignment</a> ·
+ <a href="live-response.json">Live lighting, eclipse and lightning</a> ·
+ <a href="validation.json">All validation results</a> · <a href="measurements.json">Measurements</a></p>
+<p>A capture stores one visible distance per direction. It cannot reconstruct every overlapping
+ cloud layer or reveal new geometry during fast flight. Fine erosion is interpolated between
+ captures; cloud shadows use the current density field. Angular detail is limited by the panorama.
+ The three colour and distance captures use 60 MiB.</p>
+<script type="module">
+ const measurements=await fetch('measurements.json').then(r=>r.json());
+ const before=document.querySelector('#before'),after=document.querySelector('#after');
+ document.querySelector('#play').onclick=()=>{for(const v of [before,after]){v.currentTime=0;v.play().catch(()=>{});}};
+ const view=document.querySelector('#view'),scene=document.querySelector('#scene');
+ for(const [name,label] of measurements.views){const o=new Option(label,name);view.add(o);}
+ view.onchange=()=>{scene.src=view.value+'.jpg';scene.alt=view.selectedOptions[0].text;};view.onchange();
+ for(const row of measurements.benchmarks){const tr=document.createElement('tr');
+  for(const value of [row.label,row.native.fps.toFixed(1),row.limited.fps.toFixed(1),row.limited.p95Ms.toFixed(1)+' ms',row.gpu.meanMs.toFixed(3)+' ms']){
+   const td=document.createElement('td');td.textContent=value;tr.append(td);
+  }document.querySelector('#benchmarks').append(tr);
+ }
+ const temporal=measurements.temporal,c=document.querySelector('#motion'),ctx=c.getContext('2d');
+ const left=68,right=c.width-20,top=18,bottom=c.height-35,maximum=Math.max(...temporal.before.values,...temporal.after.values)*1.08;
+ ctx.font='15px system-ui';ctx.strokeStyle='#344d5d';ctx.fillStyle='#afc2ce';
+ for(let s=0;s<=30;s+=5){const x=left+(right-left)*s/30;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,bottom);ctx.stroke();ctx.fillText(s+' s',x-10,bottom+25);}
+ for(let i=0;i<=4;i++){const y=bottom-(bottom-top)*i/4;ctx.fillText((maximum*i/4).toFixed(4),2,y+5);}
+ for(const [key,color]of [['before','#ffc089'],['after','#92e0c0']]){const values=temporal[key].values;ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();
+  values.forEach((v,i)=>{const x=left+(right-left)*i/(values.length-1),y=bottom-(bottom-top)*v/maximum;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+ }
+ document.querySelector('#motion-summary').textContent='The 95th-percentile change relative to the median fell from '+temporal.before.burstRatio.toFixed(1)+'× to '+temporal.after.burstRatio.toFixed(2)+'×. The repeated short fade bursts are absent from the corrected run.';
+</script>
+</html>

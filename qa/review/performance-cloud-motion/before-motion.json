@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-12T23:10:34.076Z",
+  "sky": "earth",
+  "weather": "none",
+  "quality": "performance",
+  "camera": [
+    0,
+    2.2,
+    13
+  ],
+  "fov": 62,
+  "start": 42.91219999998806,
+  "duration": 18,
+  "simulationSpeed": 1,
+  "videoKbps": 1000,
+  "actualSeconds": 18.0115,
+  "errors": [],
+  "pointerLocked": false,
+  "frames": [
+    {
+      "time": 42.91219999998806
+    },
+    {
+      "time": 45.91219999998806
+    },
+    {
+      "time": 48.91219999998806
+    },
+    {
+      "time": 51.91219999998806
+    },
+    {
+      "time": 54.91219999998806
+    },
+    {
+      "time": 57.91219999998806
+    },
+    {
+      "time": 60.87886666665473
+    }
+  ]
+}

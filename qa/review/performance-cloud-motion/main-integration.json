@@ -1,0 +1,108 @@
+{
+  "pass": true,
+  "date": "2026-09-12T23:45:02.983Z",
+  "errors": [],
+  "records": [
+    {
+      "step": "first ready",
+      "ready": true,
+      "quality": "performance",
+      "mode": "banded-world-direction-cloud-panorama",
+      "capture": {
+        "mode": "banded-world-direction-cloud-panorama",
+        "width": 2048,
+        "height": 1024,
+        "bands": 32,
+        "refreshSeconds": 9,
+        "blendSeconds": 9,
+        "activeBlendSeconds": 9,
+        "captures": 1,
+        "bandDraws": 0,
+        "fullDraws": 1,
+        "failures": 0,
+        "distanceReprojection": true,
+        "textureBytes": 62914560,
+        "publishedTime": 0,
+        "captureTime": 0,
+        "band": -1,
+        "blend": 1,
+        "liveCloudShadows": true,
+        "liveLocalReflections": true
+      },
+      "frames": 2,
+      "time": 0.1,
+      "warmup": {
+        "rainSurfaceWarmupMs": 110.7,
+        "exactMrtCompileMs": 20553.6,
+        "finalGraphRenderMs": 9476.4,
+        "totalMs": 30902.4,
+        "weatherGraphReady": true
+      },
+      "stage": "complete",
+      "errors": "",
+      "pointerLocked": false,
+      "requests": 0,
+      "skies": [
+        "earth",
+        "ringworld",
+        "shieldworld"
+      ],
+      "tiers": [
+        "high",
+        "balanced",
+        "performance"
+      ],
+      "bootMs": 37275
+    },
+    {
+      "step": "two subsequent publications",
+      "ready": true,
+      "quality": "performance",
+      "mode": "banded-world-direction-cloud-panorama",
+      "capture": {
+        "mode": "banded-world-direction-cloud-panorama",
+        "width": 2048,
+        "height": 1024,
+        "bands": 32,
+        "refreshSeconds": 9,
+        "blendSeconds": 9,
+        "activeBlendSeconds": 9,
+        "captures": 3,
+        "bandDraws": 64,
+        "fullDraws": 1,
+        "failures": 0,
+        "distanceReprojection": true,
+        "textureBytes": 62914560,
+        "publishedTime": 17.503700000000155,
+        "captureTime": 17.503700000000155,
+        "band": -1,
+        "blend": 0.0038111111111117026,
+        "liveCloudShadows": true,
+        "liveLocalReflections": true
+      },
+      "frames": 2854,
+      "time": 17.736800000000173,
+      "warmup": {
+        "rainSurfaceWarmupMs": 110.7,
+        "exactMrtCompileMs": 20553.6,
+        "finalGraphRenderMs": 9476.4,
+        "totalMs": 30902.4,
+        "weatherGraphReady": true
+      },
+      "stage": "complete",
+      "errors": "",
+      "pointerLocked": false,
+      "requests": 0,
+      "skies": [
+        "earth",
+        "ringworld",
+        "shieldworld"
+      ],
+      "tiers": [
+        "high",
+        "balanced",
+        "performance"
+      ]
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 import { connect } from './cdp.mjs';
 import { mkdir, writeFile } from 'node:fs/promises';
 
-const [name = 'current', requested = '120'] = process.argv.slice(2);
+const [name = 'current', requested = '120', minimumSeconds = '0'] = process.argv.slice(2);
 const frames = Number(requested);
 if (!Number.isInteger(frames) || frames < 2 || frames > 600) throw new Error('Use 2–600 frames');
+if(!Number.isFinite(Number(minimumSeconds))||Number(minimumSeconds)<0||Number(minimumSeconds)>30)throw new Error('Use 0–30 seconds');
 const cdp = await connect();
 try {
     const result = await cdp.evaluate(`(async () => {
@@ -16,7 +17,8 @@ try {
         const read=device.createBuffer({size:16384,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});
         const proto=GPUCommandEncoder.prototype;
         const originalRender=proto.beginRenderPass,originalCompute=proto.beginComputePass,originalPipeline=pipeline.render;
-        const records=[];let index=0, labels=[],failure=null;
+        const records=[],started=performance.now(),initialCaptures=globalThis._spatialClouds?.captureStats?.captures??0;
+        let index=0, labels=[],failure=null;
         function descriptor(input,kind) {
             if(index>=2048) throw new Error('GPU profile query capacity exceeded');
             const target=pipeline.pipeline.renderer.getRenderTarget();
@@ -44,7 +46,7 @@ try {
                     records.push({ms:passes.reduce((sum,p)=>sum+p.ms,0),passes});
                     read.unmap();index=0;labels=[];
                 }
-                if(records.length>=${frames}) _eanpaTest.pauseAfterFrame=true;
+                if(records.length>=${frames}&&performance.now()-started>=${Number(minimumSeconds)*1000}) _eanpaTest.pauseAfterFrame=true;
                 return result;
             }catch(e){failure=String(e);_eanpaTest.pauseAfterFrame=true;throw e;}
         };
@@ -57,6 +59,8 @@ try {
             }
             if(failure)throw new Error(failure);
             return {date:new Date().toISOString(),sourceRevision:globalThis.__sourceRevision??null,
+                actualSeconds:(performance.now()-started)/1000,
+                cloudCapturesDuringRun:(globalThis._spatialClouds?.captureStats?.captures??0)-initialCaptures,
                 size:[pipeline.pipeline.renderer.domElement.width,pipeline.pipeline.renderer.domElement.height],
                 cloudDisplay:{mode:globalThis._spatialClouds?.mode,capture:globalThis._spatialClouds?.captureStats??null},
                 sky:document.getElementById('skybox')?.value??globalThis.__skyFixture?.kind,

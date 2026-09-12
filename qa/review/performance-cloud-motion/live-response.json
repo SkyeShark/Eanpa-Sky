@@ -1,0 +1,63 @@
+{
+  "pass": true,
+  "date": "2026-09-12T23:39:00.086Z",
+  "sky": "earth",
+  "tier": "performance",
+  "checks": [
+    {
+      "name": "published sky contains cloud coverage",
+      "pass": true,
+      "coverage": 0.34867389985528885
+    },
+    {
+      "name": "eclipse changes radiance immediately without changing opacity",
+      "pass": true,
+      "maxError": 1.9073486345888568e-7
+    },
+    {
+      "name": "current light responds between captures",
+      "pass": true,
+      "difference": {
+        "mean": 0.3393407904912162,
+        "max": 10.565251350402832
+      }
+    },
+    {
+      "name": "lightning remains live on visible clouds",
+      "pass": true,
+      "difference": {
+        "mean": 0.052603572250365584,
+        "max": 0.4582090377807617
+      }
+    },
+    {
+      "name": "transient lightning never enters the environment sample",
+      "pass": true,
+      "difference": {
+        "mean": 0,
+        "max": 0
+      }
+    },
+    {
+      "name": "wind advects cloud coverage between captures",
+      "pass": true,
+      "difference": {
+        "mean": 0.20070629297263423,
+        "max": 0.9970703125
+      }
+    },
+    {
+      "name": "observer translation changes lookup without screen history",
+      "pass": true,
+      "difference": {
+        "mean": 0.07858575951332042,
+        "max": 0.959936642087996
+      }
+    },
+    {
+      "name": "all live responses occurred without publishing another panorama",
+      "pass": true,
+      "captures": 5
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "date": "2026-09-12T23:45:46.710Z",
+  "runtime": "8c6070f",
+  "nodeTests": {
+    "pass": true,
+    "count": 92
+  },
+  "transitions": [
+    {
+      "sky": "earth",
+      "pass": true,
+      "cases": 13,
+      "date": "2026-09-12T23:23:00.562Z"
+    },
+    {
+      "sky": "ringworld",
+      "pass": true,
+      "cases": 13,
+      "date": "2026-09-12T23:33:21.704Z"
+    },
+    {
+      "sky": "shieldworld",
+      "pass": true,
+      "cases": 13,
+      "date": "2026-09-12T23:37:27.401Z"
+    }
+  ],
+  "checks": {
+    "panorama-contract": {
+      "pass": true,
+      "checks": 14,
+      "date": "2026-09-12T23:38:59.374Z"
+    },
+    "motion-contract": {
+      "pass": true,
+      "checks": 6,
+      "date": "2026-09-12T23:35:57.954Z"
+    },
+    "live-response": {
+      "pass": true,
+      "checks": 8,
+      "date": "2026-09-12T23:39:00.086Z"
+    },
+    "shadow-motion": {
+      "pass": true,
+      "date": "2026-09-12T23:27:33.236Z"
+    },
+    "rain-surfaces": {
+      "pass": true
+    },
+    "reflection-motion": {
+      "pass": true
+    },
+    "realtime-weather-transition": {
+      "pass": true,
+      "date": "2026-09-12T23:26:59.326Z"
+    },
+    "quality-isolation": {
+      "pass": true,
+      "date": "2026-09-12T23:09:47.156Z"
+    },
+    "main-integration": {
+      "pass": true,
+      "date": "2026-09-12T23:45:02.983Z"
+    }
+  },
+  "pass": true
+}

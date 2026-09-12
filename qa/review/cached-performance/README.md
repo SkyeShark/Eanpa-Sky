@@ -1,5 +1,9 @@
 # Performance cloud display review
 
+This is the superseded first capture implementation. See the
+[Performance cloud correction](../performance-cloud-motion/index.html) for the
+denser sampling, continuous motion, and new validation.
+
 The existing Performance preset now displays periodically captured volumetric
 clouds. Balanced and High retain the live volume pass. There are still three
 quality settings. Runtime tested: `8a8ad67`; comparison: published r186 `31a107f`.
