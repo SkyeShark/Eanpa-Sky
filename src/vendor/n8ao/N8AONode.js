@@ -126,6 +126,10 @@ export class N8AONode extends TempNode {
     transparencyTargetDepthWriteFalse = null;
     transparencyTargetDepthWriteTrue = null;
     outputTextureNode = passTexture(this, this.outputTarget.texture);
+    // Raw visibility for forward material lighting. It is published after
+    // denoising, without multiplying the already lit beauty buffer.
+    occlusionTextureNode = texture(this.aoTargetA.texture);
+    occlusionOnly = false;
     aoMaterial = new NodeMaterial();
     accumulationMaterial = new NodeMaterial();
     blurMaterial = new NodeMaterial();
@@ -212,6 +216,8 @@ export class N8AONode extends TempNode {
         this.normalTexture = input.normalTexture;
         this.scenePassNode = input.scenePassNode ?? null;
         this.scene = input.scene;
+        this.occlusionOnly = input.occlusionOnly === true;
+        this.occlusionTextureNode.updateMatrix = false;
         this.blueNoiseTexture.colorSpace = NoColorSpace;
         this.blueNoiseTexture.wrapS = RepeatWrapping;
         this.blueNoiseTexture.wrapT = RepeatWrapping;
@@ -312,6 +318,9 @@ export class N8AONode extends TempNode {
     }
     getTextureNode() {
         return this.outputTextureNode;
+    }
+    getOcclusionTextureNode() {
+        return this.occlusionTextureNode;
     }
     setDisplayMode(mode) {
         this.configuration.renderMode = resolveDisplayMode(mode);
@@ -436,16 +445,20 @@ export class N8AONode extends TempNode {
                 this.accumulationPreviousTextureNode.value =
                     this.accumulationTargetA.texture;
                 this.compositeAoTextureNode.value = this.accumulationTargetA.texture;
+                this.occlusionTextureNode.value = this.accumulationTargetA.texture;
             } else {
                 // With no temporal accumulation the blend is exactly the
                 // current denoised AO. Avoid two clears and a full-screen copy.
                 this.compositeAoTextureNode.value = readTarget.texture;
+                this.occlusionTextureNode.value = readTarget.texture;
             }
         }
-        renderer.setRenderTarget(this.outputTarget);
-        this.quadMesh.material = this.compositeMaterial;
-        this.quadMesh.name = "N8AO.Composite";
-        this.quadMesh.render(renderer);
+        if (!this.occlusionOnly) {
+            renderer.setRenderTarget(this.outputTarget);
+            this.quadMesh.material = this.compositeMaterial;
+            this.quadMesh.name = "N8AO.Composite";
+            this.quadMesh.render(renderer);
+        }
         renderer.xr.enabled = xrEnabled;
         this.scene.background = previousBackground;
         if (this.rendererState != null) {
@@ -702,7 +715,7 @@ export class N8AONode extends TempNode {
                     .fract()
                     .toVar();
                 const helper = vec3(0, 1, 0).toVar();
-                If(dot(helper, normal).greaterThan(0.99), () => {
+                If(abs(dot(helper, normal)).greaterThan(0.99), () => {
                     helper.assign(vec3(1, 0, 0));
                 });
                 const tangent = helper.cross(normal).normalize().toVar();
@@ -868,10 +881,9 @@ export class N8AONode extends TempNode {
                 const denoisedOcclusion = occlusion
                     .div(totalWeight.greaterThan(0).select(totalWeight, 1))
                     .toVar();
-                const fixedOcclusion = denoisedOcclusion
-                    .equal(0)
-                    .select(1, clamp(denoisedOcclusion, 0, 1))
-                    .toVar();
+                // Zero is valid full occlusion, not an invalid sample. Mapping
+                // it to one made dark creases flash as sampling crossed zero.
+                const fixedOcclusion = clamp(denoisedOcclusion, 0, 1).toVar();
                 result.assign(vec4(fixedOcclusion, normal.mul(0.5).add(0.5)));
             });
             return result;

@@ -2,6 +2,13 @@
 
 ## Unreleased — Three.js r186
 
+Fix black/flickering normal-mapped faces on rotated instances by transforming
+their tangents with the instance matrix. Preserve the original metal materials
+and normal maps. Replace the native pipeline's whole-image ambient-occlusion
+multiply with Three's material-level indirect-light occlusion, and correct the
+denoiser's zero-visibility discontinuity. Share visibility with the existing
+reflection geometry binding to retain the 24-texture limit.
+
 Update the vendored Three.js runtime, TSL exports, loaders, postprocessing addons
 and Basis transcoder from r184 to the stable 0.186.0 release. Use r186's soft PCF
 filter and current normal-packing names. Preserve Eanpa's shared shadow uniforms,

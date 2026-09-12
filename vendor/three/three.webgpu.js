@@ -19070,6 +19070,16 @@ const instance = /*@__PURE__*/ Fn( ( [ matrices, colors = null ], builder ) => {
 
 	}
 
+	// Eanpa: the tangent is a surface direction, so apply the forward instance
+	// transform (w=0), including non-uniform scale. Leaving it in mesh space
+	// can make it parallel to the transformed normal after a quarter turn;
+	// normalizing their cross product then produces NaNs and black PBR faces.
+	if ( builder.hasGeometryAttribute( 'tangent' ) ) {
+
+		tangentLocal.assign( instanceMatrixNode.mul( vec4( tangentLocal, 0 ) ).xyz );
+
+	}
+
 	// COLOR
 
 	if ( instanceColorNode !== null ) {

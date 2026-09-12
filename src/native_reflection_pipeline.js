@@ -1,4 +1,4 @@
-import { N8AONode } from './vendor/n8ao/N8AONode.js';
+import { makeAmbientOcclusion } from './ambient_occlusion.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { createConvexReceiverIds } from './reflection_receiver_id.js';
 import { makeScreenSpaceTrace } from './screen_space_trace.js';
@@ -16,6 +16,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const localProbe = makeLocalReflectionProbe(T,renderer,scene,camera);
     const receiverIds = createConvexReceiverIds();
     const geometry = makeReflectionGeometry(T,renderer,scene,camera,receiverIds);
+    const ambientOcclusion = makeAmbientOcclusion(T,renderer,scene,camera,geometry);
     const receiverId = T.uniform(1).onObjectUpdate(({object}) => receiverIds(object));
     const sourceReceiverId = T.uniform(1).onObjectUpdate(({object,material}) =>
         object.userData?.noSSRSource || material.depthWrite === false ? 0 : receiverIds(object));
@@ -37,7 +38,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const sourceIds = T.texture(history.textures[1],T.screenUV);
     for (const node of [sourceColor, sourceDepth, sourceIds]) node.updateMatrix = false;
     const currentDepth=T.texture(geometry.target.depthTexture,T.screenUV);
-    const currentIds=T.texture(geometry.target.texture,T.screenUV);
+    const currentIds=ambientOcclusion.textureNode;
     const motion=T.texture(geometry.target.textures[1],T.screenUV);
     for(const node of [currentDepth,currentIds,motion])node.updateMatrix=false;
     for(const node of [sourceIds,currentIds,motion])node.setSampler(false);
@@ -48,7 +49,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     const params = {maxDistance: shared(32), thickness: shared(0.15), quality: shared(1), coarseDepthGate: shared(1)};
     const trace = makeScreenSpaceTrace({colorNode: sourceColor, depthNode: currentDepth,
         objectIdNode: T.sample(coord => currentIds.load(coord.mul(historySize).floor()).a),
-        hitNormalNode:T.sample(coord=>currentIds.load(coord.mul(historySize).floor()).rgb.mul(2).sub(1)),
+        hitNormalNode:T.sample(coord=>ambientOcclusion.unpackNormal(currentIds.load(coord.mul(historySize).floor()).rg)),
         sampleRadiance:T.Fn(([coord,lod])=>{
             const m=motion.load(coord.mul(historySize).floor()).toVar();
             const uv=coord.sub(m.xy).toVar(),result=T.vec4(0).toVar();
@@ -137,7 +138,7 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     // attachments explicitly identical; failed GPU copies otherwise read zero.
     scenePass.getTexture('depth').type = T.FloatType;
     scenePass.name = 'Native PBR with local radiance';
-    scenePass.contextNode = T.context({eanpaReflectionSurfacePass: true});
+    scenePass.contextNode = T.context({eanpaReflectionSurfacePass: true, getAO:ambientOcclusion.getAO});
     const outputs = {output: T.output,
         normal: T.vec4(T.packNormalToRGB(T.normalView), sourceReceiverId),
         metalrough: T.vec4(T.metalness, T.roughness, 1, T.diffuseColor.a),
@@ -147,14 +148,8 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
     scenePass.setMRT(mrt);
     for(const channel of ['metalrough','emissive']) scenePass.getTexture(channel).type = T.UnsignedByteType;
     const sceneColor = scenePass.getTextureNode('output');
-    const n8ao = new N8AONode({beautyNode:sceneColor, beautyTexture:scenePass.getTexture('output'),
-        depthNode:scenePass.getTextureNode('depth'), depthTexture:scenePass.getTexture('depth'),
-        normalNode:scenePass.getTextureNode('normal'), normalTexture:scenePass.getTexture('normal'), scene, camera});
-    Object.assign(n8ao.configuration, {halfRes:false, gammaCorrection:false, transparencyAware:false, accumulate:false});
-    n8ao.autoDetectTransparency = false;
-    n8ao.setQualityMode('Medium');
-    const aoWeight = T.uniform(1), bloomWeight = T.uniform(1);
-    const beauty = T.mix(sceneColor, n8ao.getTextureNode(), aoWeight.mul(scenePass.getTextureNode('metalrough').b));
+    const bloomWeight = T.uniform(1);
+    const beauty = sceneColor;
     const glow = bloom(scenePass.getTextureNode('emissive'), .28, .42);
     const display = T.convertToTexture(T.renderOutput(beauty.add(glow.mul(bloomWeight))));
     const pipeline = new T.RenderPipeline(renderer);
@@ -193,20 +188,20 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
         hasHistory = true; historyValid.value = 1;
     };
     prepareHistory();
-    return {supported:true, mode:'native-pbr-screen-space-radiance', pipeline, scenePass, history, trace, geometry, localProbe, skyLayers, registerObject, invalidateHistory,
+    return {supported:true, mode:'native-pbr-screen-space-radiance', pipeline, scenePass, history, trace, geometry, localProbe, ambientOcclusion, skyLayers, registerObject, invalidateHistory,
         ssrImplementation:'current-geometry-motion-reprojected-radiance', ssrNode:params,
         ssrMaterialResponse:'native-three-base-clearcoat-anisotropy-iridescence-specular-ior',
-        nativeEnvironmentPbr:true, sceneColorAttachments:4, aoAvailable:true, aoQuality:'Medium',
+        nativeEnvironmentPbr:true, get sceneColorAttachments(){return scenePass.renderTarget.textures.length;}, aoAvailable:true, aoQuality:'Medium',
         bloomAvailable:true, get aoEnabled(){return aoEnabled}, get bloomEnabled(){return bloomEnabled},
         get bloomActive(){return bloomEnabled && emissionPresent},
-        setAOEnabled(value){aoEnabled=!!value;aoWeight.value=aoEnabled?1:0;n8ao.enabled=aoEnabled;return aoEnabled;},
+        setAOEnabled(value){aoEnabled=!!value;ambientOcclusion.setEnabled(aoEnabled);return aoEnabled;},
         setBloomEnabled(value){bloomEnabled=!!value;return bloomEnabled;},
         setAuditContributions({ssr=true,sky=true,probe=true}={}){ssrWeight.value=ssr?1:0;skyWeight.value=sky?1:0;probeWeight.value=probe?1:0;auditing=!ssr||!sky||!probe;},
         setSsrParams(values={}){for(const k of ['maxDistance','thickness','quality','coarseDepthGate'])if(values[k]!==undefined)params[k].value=values[k];},
         setEnvironment(texture){environmentTexture=texture;invalidateHistory();localProbe.setEnvironment(texture);
             for(const material of installed.keys())if(material.envMap!==texture){material.envMap=texture;material.needsUpdate=true;}
             texture.userData.eanpaReflectionMaterialCount=installed.size;return texture;},
-        update(){}, resize(w,h){scenePass.setSize(w,h);n8ao.setSize(w,h);invalidateHistory();},
+        update(){}, resize(w,h){scenePass.setSize(w,h);ambientOcclusion.resize(w,h);invalidateHistory();},
         async compileAsync(onProgress){
             // The pinned PassNode uses the same merged context for compilation
             // and rendering, so the warmed native-PBR variant is reusable.
@@ -224,12 +219,12 @@ export function makeNativeReflectionPipeline(T, renderer, scene, camera, sky, qu
             finally {for(const layer of skyLayers)layer.restoreVisibility();renderer.contextNode=savedContext;renderer.setRenderTarget(savedTarget);renderer.setMRT(savedMrt);}
         },
         async render(){if(!disposed){try{prepareHistory();for(const layer of skyLayers)await layer.render();
-            if(!auditing)localProbe.update();await geometry.render();
+            if(!auditing)localProbe.update();await geometry.render();ambientOcclusion.render();
             emissionPresent=hasVisibleEmission(scene,camera);
             bloomWeight.value=bloomEnabled && emissionPresent ? 1 : 0;
             pipeline.render();if(!auditing)captureHistory();
         }finally{for(const layer of skyLayers)layer.restoreVisibility();}}},
-        dispose(){if(disposed)return;disposed=true;pipeline.dispose();for(const layer of skyLayers)layer.dispose();localProbe.dispose();geometry.dispose();history.dispose();scenePass.dispose();n8ao.dispose();glow.dispose();
+        dispose(){if(disposed)return;disposed=true;pipeline.dispose();for(const layer of skyLayers)layer.dispose();localProbe.dispose();geometry.dispose();history.dispose();scenePass.dispose();ambientOcclusion.dispose();glow.dispose();
             display._quadMesh?.material?.dispose();display.renderTarget?.dispose();display.dispose();
             for(const [material,state]of installed){state.release();material.needsUpdate=true;}
             installed.clear();},

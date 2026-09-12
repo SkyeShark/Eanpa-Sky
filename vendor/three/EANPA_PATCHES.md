@@ -12,6 +12,14 @@ The previous reviewed Eanpa renderer is preserved at commit `c8a3571`.
 
 ## Retained patches
 
+- Instancing transforms `tangentLocal` with the forward instance matrix,
+  alongside the inverse-transpose normal transform. The vendored r184/r186
+  paths omitted this step. A rotated instance could make its normal and
+  unrotated tangent parallel, producing NaNs in the normal-map basis and
+  solid-black PBR faces that changed with the camera. This retains authored
+  normal maps and instancing. `qa/instanced-tangent-contract.js` compares native
+  normal-mapped lighting against ordinary meshes across 15 rotation/scale and
+  uniform-buffer/static-attribute/dynamic-attribute cases.
 - `TextureNode.clone()` preserves the explicit `updateMatrix` policy. Screen
   buffers and PMREM samples must not regain per-object UV matrices through
   sample/LOD chains. Covered by `tests/texture-node-policy.test.mjs`.
