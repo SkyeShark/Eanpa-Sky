@@ -1,6 +1,6 @@
 # Release notes
 
-## Unreleased — Three.js r186
+## 0.2.1 Three.js r186 update — 2026-09-12
 
 Fix black/flickering normal-mapped faces on rotated instances by transforming
 their tangents with the instance matrix. Preserve the original metal materials
@@ -25,6 +25,8 @@ static draws do not retain a destroyed depth-texture binding.
 
 See [vendor provenance and migration notes](vendor/three/EANPA_PATCHES.md) and
 [visual review, GPU checks and resource-stress limits](qa/review/three-r186/README.md).
+The [fence reflection comparison](qa/review/fence-reflections/index.html) includes
+the subsequent tangent and ambient-occlusion fixes with moving-camera validation.
 
 ## 0.2.1 CPU follow-up — 2026-09-11
 
