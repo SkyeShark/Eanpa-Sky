@@ -14,6 +14,12 @@ latency. `MAX_SWITCH_MS` sets a failure budget; the default is 180 seconds.
 Page/GPU errors, failed startup, failed upgrades, and incomplete switches fail
 the run. These checks complement frame benchmarks, which exclude rebuilds.
 
+Startup pauses when the curtain closes, before streaming can begin, to capture
+the actual preview. Upgrade measurements include elapsed time and the largest
+animation-frame interval (browser scheduling, not GPU execution time). A switch
+records the frame count at curtain closure and requires a subsequent completed
+frame, so an old frame drained during teardown cannot satisfy the check.
+
 Localhost measurements isolate construction and compilation, not internet
 download speed. Record actual adapters and compare repeated runs with matching
 viewports/cache conditions. Browser shader-cache clearing does not clear the

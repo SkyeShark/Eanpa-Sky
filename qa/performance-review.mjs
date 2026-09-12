@@ -62,7 +62,7 @@ try {
     const startupLabel = `review-${label}`;
     console.log('Measuring initial startup…');
     const startup = await launch(process.execPath, ['qa/startup-profile.mjs',
-        'http://127.0.0.1:8378/?automated=1&benchmark=1', startupLabel, 'cold'], 'startup');
+        'http://127.0.0.1:8378/?automated=1&benchmark=1', startupLabel, 'cold', '1', '--pause-at-ready'], 'startup');
     const code = await startup.completed;
     if (code !== 0) throw new Error(`Startup failed; see ${output}/startup.log`);
     const initial = JSON.parse(await readFile(resolve(root, '.artifacts/startup', `${startupLabel}.json`)));
@@ -75,11 +75,24 @@ try {
         stream:_terrain.userData.textureStreaming??null,effects:_reflectionPipeline.effectsQuality??null})`);
     const shot = async name => {const r=await cdp.send('Page.captureScreenshot',{format:'png'});await writeFile(join(output,name+'.png'),Buffer.from(r.data,'base64'))};
     report.preview = await snapshot();
+    if (report.preview.stream && !['preview','disabled'].includes(report.preview.stream.state)) throw new Error('Texture upgrade started before preview capture');
     await shot('initial');
-    await cdp.evaluate('_eanpaTest.paused=false');
+    await cdp.evaluate(`(()=>{
+        const m=globalThis.__textureUpgradeMeasurement={start:performance.now(),intervals:[],done:false};
+        let last=m.start;
+        const sample=()=>{const now=performance.now();m.intervals.push(now-last);last=now;
+            const state=_terrain.userData.textureStreaming?.state;
+            if(!state || ['complete','disabled','failed'].includes(state)){m.done=true;m.end=now;return;}
+            requestAnimationFrame(sample);};
+        requestAnimationFrame(sample);_eanpaTest.paused=false;
+    })()`);
     await waitUntil(`!_terrain.userData.textureStreaming || ['complete','disabled','failed'].includes(_terrain.userData.textureStreaming.state)`);
     report.textures = await snapshot();
     if (report.textures.stream?.state === 'failed') throw new Error(report.textures.stream.error);
+    await waitUntil('__textureUpgradeMeasurement.done');
+    report.textureUpgrade = await cdp.evaluate(`(()=>{const m=__textureUpgradeMeasurement;return {
+        durationMs:m.end-m.start,maxAnimationFrameIntervalMs:Math.max(0,...m.intervals),
+        completedResourceBytes:performance.getEntriesByType('resource').reduce((sum,r)=>sum+r.transferSize,0)}})()`);
     await shot('full-textures');
     const cases = [['quality','performance'],['skybox','ringworld'],['skybox','earth'],['quality','balanced']];
     if (await cdp.evaluate(`!!document.getElementById('effects-quality')`)) cases.push(['effects-quality','performance'],['effects-quality','balanced']);
@@ -88,8 +101,13 @@ try {
         const before = await cdp.evaluate(`(()=>{const e=document.getElementById(${JSON.stringify(id)});
             if(![...e.options].some(o=>o.value===${JSON.stringify(value)}))throw Error('Unknown control value');
             const result={at:performance.now(),frames:_eanpaTest.completedFrames,pipelines:__startupProfile.pipelines.length,stageIndex:__startupProfile.stages.length};
+            globalThis.__switchReady=null;
+            const boot=document.getElementById('boot');
+            const observer=new MutationObserver(()=>{if(boot.style.display==='none'){
+                globalThis.__switchReady={at:performance.now(),frames:_eanpaTest.completedFrames};observer.disconnect();}});
+            observer.observe(boot,{attributes:true,attributeFilter:['style']});
             e.value=${JSON.stringify(value)};e.dispatchEvent(new Event('change',{bubbles:true}));return result})()`);
-        await waitUntil(`document.getElementById('boot').style.display==='none' && _eanpaTest.completedFrames>${before.frames}`, maxSwitchMs);
+        await waitUntil(`__switchReady && _eanpaTest.completedFrames>__switchReady.frames`, maxSwitchMs);
         const after = await cdp.evaluate(`({at:performance.now(),pipelines:__startupProfile.pipelines.length,warmup:_shaderWarmupStats,
             stages:__startupProfile.stages.slice(${before.stageIndex}),effects:_reflectionPipeline.effectsQuality??null})`);
         const ready = after.stages.find(stage => stage.text === 'ready');
