@@ -3,7 +3,9 @@
 // cold clears the origin's browser shader cache, not the GPU driver's cache.
 // CPU_RATE is DevTools CPU throttling, not GPU/device emulation.
 import { writeFile, mkdir } from 'node:fs/promises';
-const [url='https://skyeshark.github.io/Eanpa-Sky/?automated=1',name='live-baseline',mode='cpu',rate='1'] = process.argv.slice(2);
+const [url='https://skyeshark.github.io/Eanpa-Sky/?automated=1',name='live-baseline',mode='cpu',rate='1',pauseFlag=''] = process.argv.slice(2);
+const pauseAtReady=pauseFlag==='--pause-at-ready';
+if(pauseFlag&&!pauseAtReady)throw Error('Unknown startup flag');
 if(!/^[a-z0-9_-]+$/i.test(name)||!['cpu','warm','cold'].includes(mode)||!Number.isFinite(Number(rate))||Number(rate)<1||Number(rate)>8)throw Error('Invalid profile settings');
 if(!/^(http:\/\/127\.0\.0\.1:8378\/|https:\/\/skyeshark\.github\.io\/Eanpa-Sky\/)/.test(url)||!new URL(url).searchParams.has('automated'))throw Error('Use only automated inspection URLs');
 const pages=(await fetch('http://127.0.0.1:9223/json/list').then(r=>r.json())).filter(t=>t.type==='page');
@@ -26,7 +28,7 @@ const source=`(()=>{
 performance.setResourceTimingBufferSize(10000);
 const p=globalThis.__startupProfile={stages:[],modules:[],pipelines:[],longTasks:[],done:false};
 new PerformanceObserver(list=>{for(const e of list.getEntries())p.longTasks.push({start:e.startTime,duration:e.duration})}).observe({type:'longtask',buffered:true});
-let last='';new MutationObserver(()=>{const boot=document.getElementById('boot');if(!boot)return;const text=boot.style.display==='none'?'ready':boot.textContent;if(text!==last){last=text;p.stages.push({text,at:performance.now()});if(text==='ready'){p.readyAt=performance.now();p.done=true;}}}).observe(document,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
+let last='';new MutationObserver(()=>{const boot=document.getElementById('boot');if(!boot)return;const text=boot.style.display==='none'?'ready':boot.textContent;if(text!==last){last=text;p.stages.push({text,at:performance.now()});if(text==='ready'){const firstReady=!p.done;if(firstReady)p.readyAt=performance.now();p.done=true;if(firstReady&&${pauseAtReady}&&globalThis._eanpaTest)_eanpaTest.paused=true;}}}).observe(document,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
 if(globalThis.GPUDevice){const prototype=GPUDevice.prototype;const modules=new WeakMap();
  const shader=prototype.createShaderModule;prototype.createShaderModule=function(d){const start=performance.now();const result=shader.call(this,d);const item={id:p.modules.length,start,ms:performance.now()-start,chars:d.code?.length,label:d.label};p.modules.push(item);modules.set(result,item.id);return result;};
  for(const key of ['createRenderPipeline','createRenderPipelineAsync','createComputePipeline','createComputePipelineAsync']){const fn=prototype[key];prototype[key]=function(d){const start=performance.now(),item={key,start,label:d.label,vertex:modules.get(d.vertex?.module),fragment:modules.get(d.fragment?.module),compute:modules.get(d.compute?.module)};p.pipelines.push(item);const result=fn.call(this,d);item.callMs=performance.now()-start;if(result?.then)result.then(()=>item.readyMs=performance.now()-start,()=>item.failed=true);return result;};}
@@ -45,9 +47,9 @@ try{
  while(Date.now()<deadline){await new Promise(r=>setTimeout(r,1500));
   try{state=await evaluate('({uptime:performance.now(),stages:globalThis.__startupProfile?.stages,done:globalThis.__startupProfile?.done,frames:globalThis._eanpaTest?.completedFrames})');}catch(e){console.log(e.message);continue;}
   const stage=state.stages?.at(-1)?.text;if(stage!==lastStage){lastStage=stage;console.log(JSON.stringify(state));}
-  if(state.done && state.frames>2)break;
+  if(state.done && (pauseAtReady || state.frames>2))break;
  }
- const snapshot=await evaluate('(()=>{if(globalThis._eanpaTest)_eanpaTest.paused=true;return {profile:globalThis.__startupProfile,warmup:globalThis._shaderWarmupStats,frames:globalThis._eanpaTest?.completedFrames,settings:{viewport:[innerWidth,innerHeight],devicePixelRatio,sky:document.getElementById("skybox")?.value,clouds:document.getElementById("cloud-type")?.value,weather:document.getElementById("weather")?.value,quality:document.getElementById("quality")?.value},errorText:[...document.body.children].filter(e=>e.style?.zIndex==="99").map(e=>e.textContent).filter(Boolean),resources:performance.getEntriesByType("resource").map(e=>({name:e.name,start:e.startTime,end:e.responseEnd,bytes:e.transferSize,duration:e.duration})),heap:performance.memory?.usedJSHeapSize}})()');
+ const snapshot=await evaluate('(()=>{if(globalThis._eanpaTest)_eanpaTest.paused=true;return {profile:globalThis.__startupProfile,warmup:globalThis._shaderWarmupStats,frames:globalThis._eanpaTest?.completedFrames,settings:{viewport:[innerWidth,innerHeight],devicePixelRatio,sky:document.getElementById("skybox")?.value,clouds:document.getElementById("cloud-type")?.value,weather:document.getElementById("weather")?.value,quality:document.getElementById("quality")?.value,effectsQuality:document.getElementById("effects-quality")?.value},errorText:[...document.body.children].filter(e=>e.style?.zIndex==="99").map(e=>e.textContent).filter(Boolean),resources:performance.getEntriesByType("resource").map(e=>({name:e.name,start:e.startTime,end:e.responseEnd,bytes:e.transferSize,duration:e.duration})),heap:performance.memory?.usedJSHeapSize}})()');
  if(mode==='cpu'){const {profile}=await send('Profiler.stop');await writeFile('.artifacts/startup/'+name+'.cpuprofile',JSON.stringify(profile));}
  // Keep canceled requests visible in the artifact. A 200 HEAD has no body;
  // streamed GETs can also report cancellation after Resource Timing records
@@ -58,10 +60,10 @@ try{
  const failedRequests=[...requests.values()].filter(r=>r.status>=400
   ||(r.error&&!completedCancellationSet.has(r)));
  const valid=!snapshot.errorText.length&&!snapshot.profile?.pipelines.some(p=>p.failed)&&!errors.length&&!failedRequests.length&&snapshot.profile?.done===true;
- const result={url,mode,valid,cpuThrottleRate:Number(rate),httpCacheDisabled:mode!=='warm',
+ const result={url,mode,valid,pauseAtReady,cpuThrottleRate:Number(rate),httpCacheDisabled:mode!=='warm',
   shaderCache:mode==='cold'?'browser shader cache cleared via CDP; driver cache uncontrolled':'not cleared',
-  recordedAt:new Date().toISOString(),...snapshot,requests:[...requests.values()],failedRequests,completedCancellations,logs,errors};
+  recordedAt:new Date().toISOString(),...snapshot,transferBytes:snapshot.resources.reduce((sum,r)=>sum+(r.bytes??0),0),requests:[...requests.values()],failedRequests,completedCancellations,logs,errors};
  await writeFile('.artifacts/startup/'+name+'.json',JSON.stringify(result,null,2));
  if(!valid){console.error('Invalid startup: browser or GPU errors. See artifact.');process.exitCode=1;}
- console.log(JSON.stringify({name,stages:snapshot.profile?.stages,warmup:snapshot.warmup,modules:snapshot.profile?.modules.length,pipelines:snapshot.profile?.pipelines.length,requests:requests.size,bytes:[...requests.values()].reduce((sum,r)=>sum+(r.bytes??0),0),errors:errors.length}));
+ console.log(JSON.stringify({name,stages:snapshot.profile?.stages,warmup:snapshot.warmup,modules:snapshot.profile?.modules.length,pipelines:snapshot.profile?.pipelines.length,requests:requests.size,bytes:result.transferBytes,errors:errors.length}));
 }finally{if(script)await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:script.identifier}).catch(()=>{});await send('Emulation.setCPUThrottlingRate',{rate:1}).catch(()=>{});await send('Network.setCacheDisabled',{cacheDisabled:false}).catch(()=>{});for(const p of pending.values())clearTimeout(p.timer);socket.close();}

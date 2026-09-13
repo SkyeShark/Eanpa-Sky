@@ -44,8 +44,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+class Server(http.server.ThreadingHTTPServer):
+    # Module imports and GLB/image requests arrive in bursts. The default
+    # five-connection backlog can reset valid local requests during boot.
+    request_queue_size = 128
+
+
 if __name__ == '__main__':
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8378
-    server = http.server.ThreadingHTTPServer(('127.0.0.1', port), Handler)
+    server = Server(('127.0.0.1', port), Handler)
     print(f'Eanpa: http://127.0.0.1:{port}/', flush=True)
     server.serve_forever()
