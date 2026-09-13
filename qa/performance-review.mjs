@@ -4,7 +4,7 @@ import {spawn} from 'node:child_process';
 import {createConnection} from 'node:net';
 import {mkdir, mkdtemp, open, readFile, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
-import {join, resolve} from 'node:path';
+import {basename, dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {connect} from './cdp.mjs';
 
@@ -25,25 +25,40 @@ const listening = port => new Promise(done => {
 if (await listening(8378) || await listening(9223)) throw new Error('QA ports occupied; no existing session will be modified');
 await mkdir(output, {recursive: true});
 const profile = await mkdtemp(join(tmpdir(), 'eanpa-performance-'));
+if (dirname(resolve(profile)) !== resolve(tmpdir()) || !basename(profile).startsWith('eanpa-performance-'))
+    throw new Error('Unexpected owned profile directory');
 const children = [];
 let cdp;
+const runtimeErrors = [];
 const launch = async (command, args, name) => {
     const log = await open(join(output, `${name}.log`), 'w');
     try {
-        const child = spawn(command, args, {cwd: root, stdio: ['ignore', log.fd, log.fd]});
+        const child = spawn(command, args, {cwd: root, windowsHide: true, stdio: ['ignore', log.fd, log.fd]});
+        child.role = name;
         child.completed = new Promise(done => child.once('exit', done));
         await new Promise((done, reject) => {child.once('spawn', done); child.once('error', reject)});
         children.push(child);
         return child;
     } finally {await log.close()}
 };
-const errorsExpression = `[...document.body.children].filter(e=>e.style?.zIndex==='99').map(e=>e.textContent).filter(Boolean)`;
+const healthExpression = `({
+    failedFrames:globalThis._eanpaTest?.failedFrames??0,
+    pipelineFailures:globalThis.__startupProfile?.pipelines.filter(p=>p.failed).length??0,
+    cloudFailures:globalThis._spatialClouds?.captureStats?.failures??0,
+    errors:[...document.body.children].filter(e=>e.style?.zIndex==='99').map(e=>e.textContent).filter(Boolean)
+})`;
+const checkHealth = async () => {
+    const health = await cdp.evaluate(healthExpression);
+    const errors = [...health.errors, ...runtimeErrors];
+    if (health.failedFrames || health.pipelineFailures || health.cloudFailures || errors.length)
+        throw new Error(`Invalid rendered frame: ${JSON.stringify({...health, errors})}`);
+    return health;
+};
 const waitUntil = async (expression, timeout = 180000) => {
     const deadline = Date.now() + timeout;
     while (Date.now() < deadline) {
-        const errors = await cdp.evaluate(errorsExpression);
-        if (errors.length) throw new Error(errors.join('\n'));
-        if (await cdp.evaluate(expression)) return;
+        await checkHealth();
+        if (await cdp.evaluate(expression)) { await checkHealth(); return; }
         await sleep(100);
     }
     throw new Error(`Timed out: ${expression}`);
@@ -56,6 +71,7 @@ try {
         : process.platform === 'win32' ? 'C:/Program Files/Google/Chrome/Application/chrome.exe' : 'google-chrome');
     await launch(browser, ['--headless=new', '--remote-debugging-port=9223', '--remote-debugging-address=127.0.0.1',
         `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
+        '--enable-unsafe-webgpu', '--force-device-scale-factor=1',
         '--mute-audio', '--window-size=1280,800', 'about:blank'], 'browser');
     for (let i = 0; i < 80 && (!await listening(8378) || !await listening(9223)); i++) await sleep(100);
     if (!await listening(8378) || !await listening(9223)) throw new Error('Owned browser/server failed to start');
@@ -66,9 +82,17 @@ try {
     const code = await startup.completed;
     if (code !== 0) throw new Error(`Startup failed; see ${output}/startup.log`);
     const initial = JSON.parse(await readFile(resolve(root, '.artifacts/startup', `${startupLabel}.json`)));
+    if (initial.valid !== true || initial.warmup?.weatherGraphReady !== true || (initial.failedFrames ?? 0) > 0)
+        throw new Error('Initial startup did not finish valid GPU warmup; see the startup artifact');
     report.startup = {readyMs: initial.profile.readyAt, warmup: initial.warmup, settings: initial.settings,
         transferBytes: initial.resources.reduce((sum, r) => sum + (r.bytes ?? 0), 0)};
     cdp = await connect();
+    cdp.on('Runtime.consoleAPICalled', event => {
+        if (event.type === 'error') runtimeErrors.push(event.args.map(arg => arg.value ?? arg.description).join(' '));
+    });
+    cdp.on('Runtime.exceptionThrown', event => runtimeErrors.push(event.exceptionDetails.exception?.description ?? event.exceptionDetails.text));
+    await cdp.send('Runtime.enable');
+    await checkHealth();
     report.adapter = await cdp.evaluate(`(async()=>{const a=await navigator.gpu.requestAdapter({powerPreference:'high-performance'});
         return {vendor:a.info.vendor,architecture:a.info.architecture,description:a.info.description,features:[...a.features]}})()`);
     const snapshot = () => cdp.evaluate(`({frames:_eanpaTest.completedFrames,pipelines:__startupProfile.pipelines.length,
@@ -77,23 +101,30 @@ try {
     report.preview = await snapshot();
     if (report.preview.stream && !['preview','disabled'].includes(report.preview.stream.state)) throw new Error('Texture upgrade started before preview capture');
     await shot('initial');
-    await cdp.evaluate(`(()=>{
-        const m=globalThis.__textureUpgradeMeasurement={start:performance.now(),intervals:[],done:false};
+    report.textureUpgrade = null;
+    if (report.preview.stream?.state === 'preview') {
+      await cdp.evaluate(`(()=>{
+        const m=globalThis.__textureUpgradeMeasurement={start:performance.now(),maxInterval:0,done:false};
         let last=m.start;
-        const sample=()=>{const now=performance.now();m.intervals.push(now-last);last=now;
+        const sample=()=>{const now=performance.now();m.maxInterval=Math.max(m.maxInterval,now-last);last=now;
             const state=_terrain.userData.textureStreaming?.state;
             if(!state || ['complete','disabled','failed'].includes(state)){m.done=true;m.end=now;return;}
             requestAnimationFrame(sample);};
         requestAnimationFrame(sample);_eanpaTest.paused=false;
-    })()`);
-    await waitUntil(`!_terrain.userData.textureStreaming || ['complete','disabled','failed'].includes(_terrain.userData.textureStreaming.state)`);
-    report.textures = await snapshot();
-    if (report.textures.stream?.state === 'failed') throw new Error(report.textures.stream.error);
-    await waitUntil('__textureUpgradeMeasurement.done');
-    report.textureUpgrade = await cdp.evaluate(`(()=>{const m=__textureUpgradeMeasurement;return {
-        durationMs:m.end-m.start,maxAnimationFrameIntervalMs:Math.max(0,...m.intervals),
+      })()`);
+      await waitUntil(`['complete','failed'].includes(_terrain.userData.textureStreaming?.state)`);
+      report.textures = await snapshot();
+      if (report.textures.stream.state === 'failed') throw new Error(report.textures.stream.error);
+      await waitUntil('__textureUpgradeMeasurement.done');
+      report.textureUpgrade = await cdp.evaluate(`(()=>{const m=__textureUpgradeMeasurement;return {
+        durationMs:m.end-m.start,maxAnimationFrameIntervalMs:m.maxInterval,
         completedResourceBytes:performance.getEntriesByType('resource').reduce((sum,r)=>sum+r.transferSize,0)}})()`);
+    } else {
+      await cdp.evaluate('_eanpaTest.paused=false');
+      report.textures = await snapshot();
+    }
     await shot('full-textures');
+    await checkHealth();
     const cases = [['quality','performance'],['skybox','ringworld'],['skybox','earth'],['quality','balanced']];
     if (await cdp.evaluate(`!!document.getElementById('effects-quality')`)) cases.push(['effects-quality','performance'],['effects-quality','balanced']);
     for (const [id,value] of cases) {
@@ -116,21 +147,42 @@ try {
             newPipelines:after.pipelines-before.pipelines,warmup:after.warmup,effects:after.effects};
         report.switches.push(result);console.log(JSON.stringify(result));
         await shot(`${id}-${value}`);
+        await checkHealth();
     }
+    report.finalHealth = await checkHealth();
     report.valid = true;
 } catch (error) {
     report.valid = false; report.error = String(error.stack ?? error); process.exitCode = 1;
     console.error(error.message);
 } finally {
-    await writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2));
-    cdp?.close();
-    for (const child of children.reverse()) {
-        if (child.exitCode !== null || child.signalCode !== null) continue;
-        child.kill();
-        await Promise.race([new Promise(done => child.once('exit', done)), sleep(3000)]);
-        if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL');
+    // A failed report or cleanup step must not bypass the remaining resources.
+    const cleanupErrors = [];
+    const attempt = async action => { try { await action(); } catch (error) { cleanupErrors.push(error); } };
+    const exited = child => child.exitCode !== null || child.signalCode !== null;
+    const waitForExit = async child => {
+        let timer;
+        try { await Promise.race([child.completed, new Promise(done => {timer=setTimeout(done,3000)})]); }
+        finally { clearTimeout(timer); }
+    };
+    await attempt(() => writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2)));
+    const browser = children.find(child => child.role === 'browser');
+    if (cdp && browser && !exited(browser)) {
+        // Browser.close can close the socket before its acknowledgement arrives.
+        await cdp.send('Browser.close', {}, 3000).catch(() => {});
     }
-    // The profile is an owned mkdtemp directory, never a user browser profile.
-    await rm(profile, {recursive: true, force: true, maxRetries: 5, retryDelay: 200});
+    await attempt(() => cdp?.close());
+    for (const child of [...children].reverse()) {
+        await attempt(async () => {
+            if (exited(child)) return;
+            if (child.role === 'browser' && cdp) await waitForExit(child);
+            if (!exited(child)) { child.kill(); await waitForExit(child); }
+            if (!exited(child)) { child.kill('SIGKILL'); await waitForExit(child); }
+            if (!exited(child)) throw new Error(`Owned ${child.role} did not exit`);
+        });
+    }
+    // Only remove this run's verified mkdtemp directory after its browser exits.
+    if (!browser || exited(browser))
+        await attempt(() => rm(profile, {recursive: true, force: true, maxRetries: 5, retryDelay: 200}));
+    if (cleanupErrors.length) throw new AggregateError(cleanupErrors, 'Benchmark report/cleanup failed');
     console.log(join(output, 'report.json'));
 }

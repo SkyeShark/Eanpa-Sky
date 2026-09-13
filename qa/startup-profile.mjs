@@ -59,7 +59,10 @@ try{
  const completedCancellationSet=new Set(completedCancellations);
  const failedRequests=[...requests.values()].filter(r=>r.status>=400
   ||(r.error&&!completedCancellationSet.has(r)));
- const valid=!snapshot.errorText.length&&!snapshot.profile?.pipelines.some(p=>p.failed)&&!errors.length&&!failedRequests.length&&snapshot.profile?.done===true;
+ snapshot.failedFrames=await evaluate('globalThis._eanpaTest?.failedFrames??0');
+ const valid=!snapshot.failedFrames&&snapshot.warmup?.weatherGraphReady===true&&!snapshot.errorText.length
+  &&!snapshot.profile?.pipelines.some(p=>p.failed)&&!errors.length&&!logs.some(log=>log.type==='error')
+  &&!failedRequests.length&&snapshot.profile?.done===true;
  const result={url,mode,valid,pauseAtReady,cpuThrottleRate:Number(rate),httpCacheDisabled:mode!=='warm',
   shaderCache:mode==='cold'?'browser shader cache cleared via CDP; driver cache uncontrolled':'not cleared',
   recordedAt:new Date().toISOString(),...snapshot,transferBytes:snapshot.resources.reduce((sum,r)=>sum+(r.bytes??0),0),requests:[...requests.values()],failedRequests,completedCancellations,logs,errors};
