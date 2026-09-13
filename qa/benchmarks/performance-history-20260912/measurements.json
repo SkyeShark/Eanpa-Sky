@@ -1,0 +1,722 @@
+{
+  "date": "2026-09-13T04:25:14.218Z",
+  "revisions": {
+    "old": "31a107fae72a61adcd392440d6f7bdc5a6fb986e",
+    "new": "c52697b5a8323fb9dca83c0a8be4b2c653a9f762"
+  },
+  "browser": {
+    "version": "Chrome/153.0.8010.36",
+    "protocol": "1.3",
+    "javascript": "15.3.76.10",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+  },
+  "viewport": [
+    1920,
+    1080
+  ],
+  "scope": "Earth Rain at 11:00; moving camera; generic host geometry with native SSR/PBR, live cloud shadows, rain, impacts and surface wetness. No sample-world assets.",
+  "method": "Two fresh 30-second throughput runs per profile/version after 30 seconds of real-time warmup, old/new/new/old order. Separate 30-second GPU timestamp profiles. One sky/PMREM refresh scheduled in each measured window.",
+  "historicalLoading": "The six changed existing runtime modules were fulfilled from Git in the one owned browser page. The newer capture-only modules are not imported by the old version. Current QA fixture and r186 vendor code are shared; working-tree engine code is unchanged.",
+  "historicalModules": [
+    {
+      "path": "/engine/quality_presets.js",
+      "revision": "31a107fae72a61adcd392440d6f7bdc5a6fb986e",
+      "sha256": "ec611ce2968ae44cced99e215d83b56143bd2ad87c4a44cb3c55873676355d24"
+    },
+    {
+      "path": "/engine/sky_system.js",
+      "revision": "31a107fae72a61adcd392440d6f7bdc5a6fb986e",
+      "sha256": "d3c8f5387e6bc5389844efa3ab9f87a88534eccdaf117c2d1058d3dbae12f74e"
+    },
+    {
+      "path": "/src/cloudspatial.js",
+      "revision": "31a107fae72a61adcd392440d6f7bdc5a6fb986e",
+      "sha256": "6b2c0ff775fb4128794f9741ce6968ce94d6051c0198d59eb1dc1f22a0b36914"
+    },
+    {
+      "path": "/src/ringsky.js",
+      "revision": "31a107fae72a61adcd392440d6f7bdc5a6fb986e",
+      "sha256": "b652c8921f534c36309fa38547d877bdd9217e7c8c24fa8456d9db93e9475d8c"
+    },
+    {
+      "path": "/src/shieldworld.js",
+      "revision": "31a107fae72a61adcd392440d6f7bdc5a6fb986e",
+      "sha256": "e37def2953e90c9748ca8278d11b502d9bd863b94c3ffd4915fd726758acd7ab"
+    },
+    {
+      "path": "/src/weathersky.js",
+      "revision": "31a107fae72a61adcd392440d6f7bdc5a6fb986e",
+      "sha256": "597a9fd336806cb9c66a1d4acc8ca703f553661327df0b40b36722e45475ab91"
+    }
+  ],
+  "quality": {
+    "old": {
+      "name": "performance",
+      "label": "Performance",
+      "fpsTarget": 120,
+      "skySamples": 20,
+      "lightSamples": 6,
+      "cloudPasses": 2,
+      "cloudDiv": 3,
+      "cloudShadowResolution": 256,
+      "reflectionBake": {
+        "width": 256,
+        "height": 128,
+        "cloudPasses": 2
+      },
+      "cloudReflectionRefreshSeconds": 24,
+      "weather": {
+        "rainCount": 5500,
+        "splashCount": 320,
+        "transitionSeconds": 45,
+        "surfaceResolution": 512,
+        "surfaceRefreshHz": 6
+      },
+      "densityCache": {
+        "size": 128
+      },
+      "lightCache": {
+        "size": [
+          72,
+          20,
+          72
+        ],
+        "refreshSeconds": 0.33
+      }
+    },
+    "new": {
+      "name": "performance",
+      "label": "Performance",
+      "fpsTarget": 120,
+      "cloudDisplayCapture": {
+        "width": 2048,
+        "height": 1024,
+        "bands": 32,
+        "refreshSeconds": 9,
+        "blendSeconds": 9
+      },
+      "skySamples": 64,
+      "lightSamples": 14,
+      "cloudPasses": 4,
+      "cloudDiv": 2,
+      "cloudShadowResolution": 384,
+      "reflectionBake": {
+        "width": 384,
+        "height": 192,
+        "cloudPasses": 3
+      },
+      "cloudReflectionRefreshSeconds": 16,
+      "weather": {
+        "rainCount": 10000,
+        "splashCount": 700,
+        "transitionSeconds": 45,
+        "surfaceResolution": 768,
+        "surfaceRefreshHz": 8
+      },
+      "densityCache": {
+        "size": 128
+      },
+      "lightCache": {
+        "size": [
+          112,
+          28,
+          112
+        ],
+        "refreshSeconds": 0.22
+      }
+    }
+  },
+  "workloadIterations": 1818,
+  "limits": [
+    "One rainy Earth scene and resolution; these are reusable-effect fixture timings, not full-demo or named lower-end-device predictions.",
+    "Background CPU activity exceeded the quiet threshold in all throughput runs. Two native runs also had external GPU peaks above threshold.",
+    "Both replacement GPU profiles had desktop-compositor/terminal peaks slightly above the 5% external-GPU threshold. The reported GPU delta is a measurement under ambient desktop activity, not a GPU-isolated laboratory result.",
+    "Synthetic pressure is CDP CPU rate 4 plus a fixed seeded competing GPU workload on the same RTX 5090 Laptop GPU. Actual workload duration changes with clocks/contention.",
+    "The old preset has lower particle, cloud-shadow, reflection and surface-field budgets. This compares both whole presets as configured, not only the display algorithm.",
+    "The panorama adds 60 MiB of texture storage and approximates cloud parallax/motion between captures."
+  ],
+  "aggregate": [
+    {
+      "profile": "native",
+      "label": "old",
+      "frames": 14367,
+      "seconds": 60.01119999999995,
+      "fps": 239.4053110086119,
+      "meanMs": 4.177016774552792,
+      "medianMs": 4.199999999953434,
+      "p95Ms": 4.300000000046566,
+      "fpsRange": [
+        239.33856976709347,
+        239.47206159281419
+      ]
+    },
+    {
+      "profile": "native",
+      "label": "new",
+      "frames": 14367,
+      "seconds": 60.01109999999986,
+      "fps": 239.40570994366095,
+      "meanMs": 4.177009814157435,
+      "medianMs": 4.199999999953434,
+      "p95Ms": 4.300000000046566,
+      "fpsRange": [
+        239.30541436832368,
+        239.50599181540787
+      ]
+    },
+    {
+      "profile": "limited",
+      "label": "old",
+      "frames": 4741,
+      "seconds": 59.99080000000028,
+      "fps": 79.02878441360971,
+      "meanMs": 12.653617380299574,
+      "medianMs": 12.5,
+      "p95Ms": 18,
+      "fpsRange": [
+        76.78944753610214,
+        81.26747934145958
+      ]
+    },
+    {
+      "profile": "limited",
+      "label": "new",
+      "frames": 4985,
+      "seconds": 60.00919999999995,
+      "fps": 83.07059584197097,
+      "meanMs": 12.037953861584745,
+      "medianMs": 12.399999999906868,
+      "p95Ms": 16.800000000046566,
+      "fpsRange": [
+        82.93305688981076,
+        83.20809354495778
+      ]
+    }
+  ],
+  "gains": [
+    {
+      "profile": "native",
+      "fpsPercent": 0.0001666358391938516,
+      "frameMsSaved": 0.000006960395356969684,
+      "frameTimePercentSaved": 0.00016663556151597092
+    },
+    {
+      "profile": "limited",
+      "fpsPercent": 5.114353533780536,
+      "frameMsSaved": 0.6156635187148289,
+      "frameTimePercentSaved": 4.865513949183864
+    }
+  ],
+  "gpu": [
+    {
+      "label": "old",
+      "seconds": 30.016200000000186,
+      "summary": {
+        "samples": 3611,
+        "meanMs": 1.6604920520631417,
+        "medianMs": 1.6405119999999995,
+        "p95Ms": 1.8005120000000001,
+        "maxMs": 3.0275200000000004
+      },
+      "cloudCaptures": 0,
+      "environmentCaptures": 1,
+      "gpuHardwareBefore": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 11546, 54, 77, 2077, 119.45",
+      "gpuHardwareAfter": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 11544, 32, 70, 1320, 70.74",
+      "cleanGpu": false,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [
+        {
+          "processId": 23000,
+          "process": "WindowsTerminal.exe",
+          "engine": "3d",
+          "peakPercent": 5.14,
+          "meanPercent": 3.09,
+          "owned": false
+        }
+      ],
+      "passes": [
+        {
+          "name": "render:output@1920x1080:reflection-pipeline",
+          "meanMs": 0.7824134699529224
+        },
+        {
+          "name": "render:1920x1080@1920x1080:reflection-pipeline",
+          "meanMs": 0.43677687067294546
+        },
+        {
+          "name": "render:eanpa_current_spatial_clouds@640x360:spatial-clouds",
+          "meanMs": 0.2923969471060656
+        },
+        {
+          "name": "render:screen:reflection-pipeline",
+          "meanMs": 0.0630163744115177
+        },
+        {
+          "name": "render:reflection-current-geometry@1920x1080:reflection-pipeline",
+          "meanMs": 0.03564370202160071
+        },
+        {
+          "name": "render:Current normal, ambient visibility and receiver@1920x1080:reflection-pipeline",
+          "meanMs": 0.0213308047632234
+        },
+        {
+          "name": "render:eanpa_current_spatial_background@640x360:spatial-clouds",
+          "meanMs": 0.009139274439213585
+        },
+        {
+          "name": "render:ShadowMap@1024x1024:reflection-pipeline",
+          "meanMs": 0.008915912489615084
+        },
+        {
+          "name": "render:cloud-column-transmittance@512x256:rain-surface",
+          "meanMs": 0.006024436444198284
+        },
+        {
+          "name": "render:PMREM.cubeUv@384x512:reflection-pipeline",
+          "meanMs": 0.0028386507892550553
+        },
+        {
+          "name": "compute:screen:spatial-clouds",
+          "meanMs": 0.0006056073109941843
+        },
+        {
+          "name": "render:rain-surface-world-normal@512x512:rain-surface",
+          "meanMs": 0.000326717252838549
+        },
+        {
+          "name": "render:output@128x128:reflection-pipeline",
+          "meanMs": 0.00027643533647189153
+        },
+        {
+          "name": "render:PMREM.cubeUv@336x256:sky-reflection-bake",
+          "meanMs": 0.00023596344502907783
+        },
+        {
+          "name": "render:listener-weather@1x1:rain-surface",
+          "meanMs": 0.00023131099418443647
+        },
+        {
+          "name": "render:rainfall-wetness-water-history@128x128:rain-surface",
+          "meanMs": 0.00021383550263085022
+        },
+        {
+          "name": "render:eanpa-local-probe-pmrem@384x512:reflection-pipeline",
+          "meanMs": 0.000066888950429244
+        },
+        {
+          "name": "render:sky_system_env@256x128:sky-reflection-bake",
+          "meanMs": 0.00002146330656327887
+        },
+        {
+          "name": "render:eanpa-owned-sky-pmrem@336x256:sky-reflection-bake",
+          "meanMs": 0.000010820271392965936
+        },
+        {
+          "name": "compute:screen:sky-reflection-bake",
+          "meanMs": 0.000006566602049293825
+        }
+      ],
+      "dedicatedCloudPassMs": 0.2923969471060656
+    },
+    {
+      "label": "new",
+      "seconds": 30.0285,
+      "summary": {
+        "samples": 3599,
+        "meanMs": 1.432249642678521,
+        "medianMs": 1.3863359999999993,
+        "p95Ms": 1.6410239999999996,
+        "maxMs": 3.1512320000000007
+      },
+      "cloudCaptures": 3,
+      "environmentCaptures": 1,
+      "gpuHardwareBefore": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 11648, 52, 78, 2062, 113.00",
+      "gpuHardwareAfter": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 11627, 23, 68, 757, 61.90",
+      "cleanGpu": false,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [
+        {
+          "processId": 2284,
+          "process": "dwm.exe",
+          "engine": "3d",
+          "peakPercent": 6.11,
+          "meanPercent": 1.29,
+          "owned": false
+        },
+        {
+          "processId": 23000,
+          "process": "WindowsTerminal.exe",
+          "engine": "3d",
+          "peakPercent": 5.37,
+          "meanPercent": 3.56,
+          "owned": false
+        }
+      ],
+      "passes": [
+        {
+          "name": "render:output@1920x1080:reflection-pipeline",
+          "meanMs": 0.8061454315087525
+        },
+        {
+          "name": "render:1920x1080@1920x1080:reflection-pipeline",
+          "meanMs": 0.45216718421783675
+        },
+        {
+          "name": "render:screen:reflection-pipeline",
+          "meanMs": 0.061840351208672824
+        },
+        {
+          "name": "render:reflection-current-geometry@1920x1080:reflection-pipeline",
+          "meanMs": 0.03612308307863297
+        },
+        {
+          "name": "render:Current normal, ambient visibility and receiver@1920x1080:reflection-pipeline",
+          "meanMs": 0.02198914809669347
+        },
+        {
+          "name": "render:cloud-column-transmittance@768x384:rain-surface",
+          "meanMs": 0.01791375826618505
+        },
+        {
+          "name": "render:eanpa_current_spatial_background@960x540:spatial-clouds",
+          "meanMs": 0.017045606001667275
+        },
+        {
+          "name": "render:ShadowMap@1024x1024:reflection-pipeline",
+          "meanMs": 0.009438950819672103
+        },
+        {
+          "name": "render:PMREM.cubeUv@384x512:reflection-pipeline",
+          "meanMs": 0.002812434565156989
+        },
+        {
+          "name": "render:eanpa-cloud-panorama-2@2048x1024:spatial-clouds",
+          "meanMs": 0.0016864506807446515
+        },
+        {
+          "name": "render:eanpa-cloud-panorama-1@2048x1024:spatial-clouds",
+          "meanMs": 0.0016721711586551824
+        },
+        {
+          "name": "render:eanpa-cloud-panorama-0@2048x1024:spatial-clouds",
+          "meanMs": 0.0016457193664906919
+        },
+        {
+          "name": "render:rain-surface-world-normal@768x768:rain-surface",
+          "meanMs": 0.0006290458460683525
+        },
+        {
+          "name": "render:output@128x128:reflection-pipeline",
+          "meanMs": 0.0002791442067240901
+        },
+        {
+          "name": "render:PMREM.cubeUv@336x256:sky-reflection-bake",
+          "meanMs": 0.00023845734926368435
+        },
+        {
+          "name": "render:rainfall-wetness-water-history@256x256:rain-surface",
+          "meanMs": 0.0002365901639344261
+        },
+        {
+          "name": "render:listener-weather@1x1:rain-surface",
+          "meanMs": 0.00017011836621283696
+        },
+        {
+          "name": "compute:screen:spatial-clouds",
+          "meanMs": 0.00012155376493470409
+        },
+        {
+          "name": "render:eanpa-local-probe-pmrem@384x512:reflection-pipeline",
+          "meanMs": 0.0000700727979994443
+        },
+        {
+          "name": "render:sky_system_env@384x192:sky-reflection-bake",
+          "meanMs": 0.000012830230619616561
+        },
+        {
+          "name": "render:eanpa-owned-sky-pmrem@336x256:sky-reflection-bake",
+          "meanMs": 0.000011540983606557378
+        }
+      ],
+      "dedicatedCloudPassMs": 0.005004341205890526
+    }
+  ],
+  "exploratoryGpu": [
+    {
+      "label": "old",
+      "summary": {
+        "samples": 2824,
+        "meanMs": 3.9779571218130303,
+        "medianMs": 3.394912,
+        "p95Ms": 7.314208,
+        "maxMs": 26.503519999999995
+      },
+      "gpuHardwareBefore": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 17042, 98, 82, 2197, 147.17",
+      "gpuHardwareAfter": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 16810, 98, 84, 2032, 147.68",
+      "includedInComparison": false,
+      "reason": "Unmonitored first pair crossed a large change in total GPU load and VRAM use: old 98% and about 17 GiB, new 37-45% and about 11 GiB. Repeated both with process counters instead of interpreting the first pair as a speedup."
+    },
+    {
+      "label": "new",
+      "summary": {
+        "samples": 3572,
+        "meanMs": 1.4598496483762544,
+        "medianMs": 1.3921600000000003,
+        "p95Ms": 1.7443839999999995,
+        "maxMs": 4.618144
+      },
+      "gpuHardwareBefore": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 11662, 45, 80, 2437, 123.11",
+      "gpuHardwareAfter": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 11663, 37, 72, 885, 63.27",
+      "includedInComparison": false,
+      "reason": "Unmonitored first pair crossed a large change in total GPU load and VRAM use: old 98% and about 17 GiB, new 37-45% and about 11 GiB. Repeated both with process counters instead of interpreting the first pair as a speedup."
+    }
+  ],
+  "gpuMsSaved": 0.2282424093846207,
+  "gpuPercentSaved": 13.745468344821779,
+  "runs": [
+    {
+      "label": "old",
+      "profile": "native",
+      "repeat": 1,
+      "date": "2026-09-13T04:09:01.269Z",
+      "fps": 239.33856976709347,
+      "meanMs": 4.178181565023664,
+      "p95Ms": 4.300000000046566,
+      "cloudCaptures": 0,
+      "cleanCpu": false,
+      "cleanGpu": false,
+      "externalCpuPercent": 10.709999999999997,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [
+        {
+          "processId": 19548,
+          "process": "chrome.exe",
+          "engine": "3d",
+          "peakPercent": 5.91,
+          "meanPercent": 0.09,
+          "owned": false
+        }
+      ],
+      "syntheticGpu": null
+    },
+    {
+      "label": "old",
+      "profile": "native",
+      "repeat": 2,
+      "date": "2026-09-13T04:13:06.281Z",
+      "fps": 239.47206159281419,
+      "meanMs": 4.175852470424495,
+      "p95Ms": 4.300000000046566,
+      "cloudCaptures": 0,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 7.6899999999999995,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [],
+      "syntheticGpu": null
+    },
+    {
+      "label": "new",
+      "profile": "native",
+      "repeat": 1,
+      "date": "2026-09-13T04:10:39.146Z",
+      "fps": 239.30541436832368,
+      "meanMs": 4.178760445682451,
+      "p95Ms": 4.300000000046566,
+      "cloudCaptures": 3,
+      "cleanCpu": false,
+      "cleanGpu": false,
+      "externalCpuPercent": 10.39,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [
+        {
+          "processId": 23000,
+          "process": "WindowsTerminal.exe",
+          "engine": "3d",
+          "peakPercent": 5.62,
+          "meanPercent": 4.12,
+          "owned": false
+        }
+      ],
+      "syntheticGpu": null
+    },
+    {
+      "label": "new",
+      "profile": "native",
+      "repeat": 2,
+      "date": "2026-09-13T04:11:52.756Z",
+      "fps": 239.50599181540787,
+      "meanMs": 4.175260887713908,
+      "p95Ms": 4.300000000046566,
+      "cloudCaptures": 3,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 7.97,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [],
+      "syntheticGpu": null
+    },
+    {
+      "label": "old",
+      "profile": "limited",
+      "repeat": 1,
+      "date": "2026-09-13T04:14:28.805Z",
+      "fps": 76.78944753610214,
+      "meanMs": 13.02262266608775,
+      "p95Ms": 20,
+      "cloudCaptures": 0,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 9.239999999999998,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [],
+      "syntheticGpu": {
+        "iterations": 1818,
+        "targetMs": 8,
+        "meanMeasuredMs": 8.806554105263155,
+        "minMeasuredMs": 7.081312,
+        "maxMeasuredMs": 10.648672
+      }
+    },
+    {
+      "label": "old",
+      "profile": "limited",
+      "repeat": 2,
+      "date": "2026-09-13T04:18:08.210Z",
+      "fps": 81.26747934145958,
+      "meanMs": 12.305045118950035,
+      "p95Ms": 17,
+      "cloudCaptures": 0,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 8.48,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [],
+      "syntheticGpu": {
+        "iterations": 1818,
+        "targetMs": 8,
+        "meanMeasuredMs": 9.190195368421051,
+        "minMeasuredMs": 7.764864,
+        "maxMeasuredMs": 10.211264
+      }
+    },
+    {
+      "label": "new",
+      "profile": "limited",
+      "repeat": 1,
+      "date": "2026-09-13T04:15:41.765Z",
+      "fps": 83.20809354495778,
+      "meanMs": 12.018061674008846,
+      "p95Ms": 16.800000000046566,
+      "cloudCaptures": 3,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 8.15,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [],
+      "syntheticGpu": {
+        "iterations": 1818,
+        "targetMs": 8,
+        "meanMeasuredMs": 8.959108210526317,
+        "minMeasuredMs": 7.23728,
+        "maxMeasuredMs": 10.390208
+      }
+    },
+    {
+      "label": "new",
+      "profile": "limited",
+      "repeat": 2,
+      "date": "2026-09-13T04:16:54.824Z",
+      "fps": 82.93305688981076,
+      "meanMs": 12.057918006430812,
+      "p95Ms": 16.899999999906868,
+      "cloudCaptures": 3,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 8.06,
+      "externalGpuBefore": [],
+      "externalGpuDuring": [],
+      "syntheticGpu": {
+        "iterations": 1818,
+        "targetMs": 8,
+        "meanMeasuredMs": 8.955735578947369,
+        "minMeasuredMs": 7.376832,
+        "maxMeasuredMs": 10.360768
+      }
+    }
+  ],
+  "archives": [
+    {
+      "file": "raw/performance-history-20260912-old-r1-native.json.gz",
+      "bytes": 7779,
+      "sha256": "e1366aca9f873670f5d5602107d615660e6d4a92aacb130b01b7168d2a3fc0d7",
+      "uncompressedSha256": "f06e9530cfec43f3b101979b5d81136762c19cf0f2dc1a174ec7ee4d864690d8"
+    },
+    {
+      "file": "raw/performance-history-20260912-old-r2-native.json.gz",
+      "bytes": 7451,
+      "sha256": "36bee5b22f81c22b52718eb869e8edf79da683cc1171897a930004827266efd5",
+      "uncompressedSha256": "328e85d2654bacfb34658ea659bc2a523986b6a913fe050645c6eb107c82b729"
+    },
+    {
+      "file": "raw/performance-history-20260912-new-r1-native.json.gz",
+      "bytes": 7764,
+      "sha256": "68de880ae112b2aa25530b4d489d98e7d1eacf8d435ce794a591c7170a5eb42b",
+      "uncompressedSha256": "0ea5c00ef5b8f3991b7289fbcb2bc81c43d812a885ec83061e4f61464867f267"
+    },
+    {
+      "file": "raw/performance-history-20260912-new-r2-native.json.gz",
+      "bytes": 7832,
+      "sha256": "27a674525e2867462d74d3280a96b352eb9ef86f12d8164e3349cec1a9703f38",
+      "uncompressedSha256": "c7f1d77af446050ee36843df9202b53789812333431df5f14fbc7b6ec20daa9b"
+    },
+    {
+      "file": "raw/performance-history-20260912-old-r1-limited.json.gz",
+      "bytes": 7680,
+      "sha256": "5f20ab3cbd2c4009396ce05559061f73c352b5cdd0b724c6dbf3ed6cc62c3cf1",
+      "uncompressedSha256": "ffee555dd5b9594cfa0b3d36e027a463df24b7840df3765ad3e7aba788d20e76"
+    },
+    {
+      "file": "raw/performance-history-20260912-old-r2-limited.json.gz",
+      "bytes": 7543,
+      "sha256": "5cd008fdbe625c7d5b1b58ac295075113452ddfb089bb9e89c43d5508d7c74bb",
+      "uncompressedSha256": "178db62bc58b70669ee93062fe8bf979c7627b7e8bc112b44401663a231e22c6"
+    },
+    {
+      "file": "raw/performance-history-20260912-new-r1-limited.json.gz",
+      "bytes": 7685,
+      "sha256": "1b9a16cab89aecb0f8c2482d39be4fa68a748164e0a77bebb261e179648ff8ad",
+      "uncompressedSha256": "7b97b5f150394dd66f4d51b373a11f9f1bac758bbce766659497490d0437c387"
+    },
+    {
+      "file": "raw/performance-history-20260912-new-r2-limited.json.gz",
+      "bytes": 7930,
+      "sha256": "5774d41d849bb3c718f10c087fc97d4718e7c505a3469d00d01c15c4d87318ce",
+      "uncompressedSha256": "47f14875b366f8a6262df23e769d6d94646520c836b11dec8756f1d0627212f7"
+    },
+    {
+      "file": "raw/performance-history-20260912-old-r1-gpu.json.gz",
+      "bytes": 240382,
+      "sha256": "0e7d3e19b84a3e2aae0b4e74c23128f193cbc8bbb34147a00765673d25dd2042",
+      "uncompressedSha256": "b0fe9115bf677f7104ca1805cc461626290ebc6af0c55dfff1019de0f9e83818"
+    },
+    {
+      "file": "raw/performance-history-20260912-old-r2-gpu.json.gz",
+      "bytes": 279930,
+      "sha256": "df7269fb19b9030e0350639da498dfeaa71c0f96be84d3ce8ba53ee72482d954",
+      "uncompressedSha256": "41e7b2aa6ab0b91c91bd4e229dcb1bdb5091c653433f1e81c46e7522312b2521"
+    },
+    {
+      "file": "raw/performance-history-20260912-new-r1-gpu.json.gz",
+      "bytes": 265482,
+      "sha256": "cd208526d89cb21d2228367f8ef0721a3b23cfaf47c42323e34f9cdffe2ced55",
+      "uncompressedSha256": "60003f3205051fc4e2af600a738a23ed34b4f49fb21b6471d7ae7b937d05d410"
+    },
+    {
+      "file": "raw/performance-history-20260912-new-r2-gpu.json.gz",
+      "bytes": 266486,
+      "sha256": "4c8985ca572c194ad4ddfb65f0b13d7e9b8573ee23c884156eea0d99fed5f173",
+      "uncompressedSha256": "260d475078da7570181e83a361c3da3cdef1b78943c6c9d9ce02e0e7701d6448"
+    }
+  ]
+}
