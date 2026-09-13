@@ -24,6 +24,9 @@ const sourceOnly=p=>/\.(?:blend\d*|psd|xcf|kra|mtlx|usdc|tres)$/.test(p)
     // Superseded first cloud-cache experiment; the corrected motion review
     // replaces its large capture archive in the hosted package. Both stay in Git.
     ||p.startsWith('qa/review/cached-performance/')
+    // Historical motion clips remain in Git and are embedded from their pinned
+    // GitHub revision by the gallery. Keep room for progressive terrain previews.
+    ||/^qa\/review\/feedback-20260909\/[^/]+\.webm$/.test(p)
     ||/^assets\/pbr\/eanpa_southwest_ground_v3\/runtime\/[^/]+_(?:AlbedoGrade|PackedNxyRoughAO)_2K\.png$/.test(p)
     ||/^assets\/terrain\/Desert_(?:rock_chunks_12_pieces|Cliff_Mesa_High|Cliff_Wide_Mesa_Low)_runtime_2k\.glb$/.test(p);
 const files=tracked.filter(p=>include(p)&&!sourceOnly(p)),selected=new Set(files);
