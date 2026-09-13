@@ -970,7 +970,9 @@ const sceneAssetLoads = preloadTasks([
     () => loadOptionalGLTF(new GLTFLoader(), './assets/vegetation/joshuaTree_seed555.glb'),
 ]);
 document.getElementById('boot').textContent = 'building the alluvial valley…';
-const terrain = await makeTerrain(THREE, renderer);
+const terrain = await makeTerrain(THREE, renderer, {
+    progressiveTextures: launchSettings.get('textures') !== 'full',
+});
 scene.add(terrain);
 globalThis._terrain = terrain;
 camera.position.y = terrain.heightAt(camera.position.x, camera.position.z) + 1.82;
@@ -1797,6 +1799,10 @@ async function tick(now, dt) {
     // local PBR shading from the sky radiance and baked reflection environment.
     // All offscreen GPU work stays inside this serialized tick. A slider,
     // weather event, or cycle update only marks the bake dirty.
+    if (terrain.updateTextureStreaming?.()) {
+        reflectionPipeline?.localProbe?.invalidate();
+        reflectionPipeline?.invalidateHistory?.();
+    }
     const currentQuality = QUALITY[document.getElementById('quality').value]
         ?? QUALITY.balanced;
     const movingCloudReflectionDue = active?.sky?.state?.preset !== 'clear'
