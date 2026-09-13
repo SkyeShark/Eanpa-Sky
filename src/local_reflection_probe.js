@@ -152,8 +152,9 @@ export function makeLocalReflectionProbe(T, renderer, scene, viewCamera, {size =
                 renderer.setRenderTarget(cube,0);
                 await renderer.compileAsync(scene,camera.children[0]);
             });
-            for(let i=0;i<6;i++) captureFace();
-            finishCapture();
+            // Keep the environment fallback until update() has captured all
+            // six faces. Compilation prepares the variant; presentation need
+            // not wait for the capture or its PMREM filtering.
         },
         update() {
             if (!environment || disposed) return;
