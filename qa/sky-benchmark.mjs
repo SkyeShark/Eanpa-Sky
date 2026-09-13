@@ -20,14 +20,14 @@ try{
     const before=await resources(3),during=resources(Number(seconds));
     await c.evaluate(`(()=>{
         const f=__skyFixture,old=f.frame,starts=[],ends=[],completed=[];
-        f.animateCamera=true;
+        f.cameraMotionStartTime=f.time;f.animateCamera=true;
         // Include a real sky/PMREM refresh in every profile, including tiers
         // whose regular cadence is longer than this short measurement window.
         f.nextEnvironmentAt=f.time+${Number(seconds)*.5};
-        const initialBakes=f.environmentStats.bakes;
+        const initialBakes=f.environmentStats.bakes,initialCloudCaptures=f.spatial.captureStats?.captures??0;
         const wrapper=async function(...args){const start=performance.now();starts.push(start);const value=await old.apply(this,args);
             ends.push(performance.now()-start);this.renderer.backend.device.queue.onSubmittedWorkDone().then(()=>completed.push(performance.now()));return value;};
-        f.frame=wrapper;globalThis.__fixtureCapture={starts,ends,completed,initialBakes,stop(){if(f.frame===wrapper)f.frame=old;f.animateCamera=false;}};
+        f.frame=wrapper;globalThis.__fixtureCapture={starts,ends,completed,initialBakes,initialCloudCaptures,stop(){if(f.frame===wrapper)f.frame=old;f.animateCamera=false;}};
     })()`);
     await new Promise(done=>setTimeout(done,Number(seconds)*1000));
     const result=await c.evaluate(`(async()=>{
@@ -35,14 +35,14 @@ try{
         const intervals=c.starts.slice(1).map((v,i)=>v-c.starts[i]);const sorted=[...intervals].sort((a,b)=>a-b);
         const cpu=[...c.ends].sort((a,b)=>a-b),n=sorted.length;
         return {date:new Date().toISOString(),kind:f.kind,tier:f.tier,weather:f.weather.state.name,scope:'reusable sky/weather/ground effects with six generic host meshes; no demo assets',
-            size:[f.renderer.domElement.width,f.renderer.domElement.height],movingCamera:true,frames:n,
+            size:[f.renderer.domElement.width,f.renderer.domElement.height],movingCamera:true,cameraPath:'x=3*sin(0.35*t), y=2.2, z=13+3*cos(0.35*t); look at (0,1,-8); t=seconds since measurement start',frames:n,
             fps:n*1000/intervals.reduce((a,b)=>a+b,0),medianMs:sorted[Math.floor(n*.5)],p95Ms:sorted[Math.floor(n*.95)],maxMs:sorted.at(-1),
             completedFps:(c.completed.length-1)*1000/(c.completed.at(-1)-c.completed[0]),
             frameWorkMedianMs:cpu[Math.floor(cpu.length*.5)],
             frameWorkDefinition:'Elapsed frame function including submission and any intentional GPU-budget waits; not isolated CPU execution time.',
             intervalsMs:intervals,errors:[...f.errors],
             constraints:globalThis.__gpuContention?.metadata??null,cloudShadows:f.sky.cloudShadowMap.stats,
-            cloudDisplay:{mode:f.spatial.mode,capture:f.spatial.captureStats??null},
+            cloudDisplay:{mode:f.spatial.mode,capturesDuringRun:(f.spatial.captureStats?.captures??0)-c.initialCloudCaptures,capture:f.spatial.captureStats??null},
             sourceRevision:globalThis.__sourceRevision??null,
             surface:f.weather.surfaceField?.stats??null,quality:f.quality,geometry:f.pipeline.ssrImplementation,
             environment:{capturesDuringRun:f.environmentStats.bakes-c.initialBakes,

@@ -17,7 +17,8 @@ try {
         const read=device.createBuffer({size:16384,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ});
         const proto=GPUCommandEncoder.prototype;
         const originalRender=proto.beginRenderPass,originalCompute=proto.beginComputePass,originalPipeline=pipeline.render;
-        const records=[],started=performance.now(),initialCaptures=globalThis._spatialClouds?.captureStats?.captures??0;
+        const records=[],started=performance.now(),initialCaptures=globalThis._spatialClouds?.captureStats?.captures??0,
+            initialEnvironmentBakes=globalThis.__skyFixture?.environmentStats.bakes??0;
         let index=0, labels=[],failure=null;
         function descriptor(input,kind) {
             if(index>=2048) throw new Error('GPU profile query capacity exceeded');
@@ -61,6 +62,7 @@ try {
             return {date:new Date().toISOString(),sourceRevision:globalThis.__sourceRevision??null,
                 actualSeconds:(performance.now()-started)/1000,
                 cloudCapturesDuringRun:(globalThis._spatialClouds?.captureStats?.captures??0)-initialCaptures,
+                environmentCapturesDuringRun:(globalThis.__skyFixture?.environmentStats.bakes??0)-initialEnvironmentBakes,
                 size:[pipeline.pipeline.renderer.domElement.width,pipeline.pipeline.renderer.domElement.height],
                 cloudDisplay:{mode:globalThis._spatialClouds?.mode,capture:globalThis._spatialClouds?.captureStats??null},
                 sky:document.getElementById('skybox')?.value??globalThis.__skyFixture?.kind,

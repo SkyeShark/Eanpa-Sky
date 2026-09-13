@@ -41,11 +41,14 @@
         if(timed){encoder.resolveQuerySet(query,0,2,resolve,0);encoder.copyBufferToBuffer(resolve,0,read,0,16)}
         device.queue.submit([encoder.finish()]);
     };
-    let iterations=16;
+    const fixedIterations=globalThis.__fixedGpuContentionIterations;
+    if(fixedIterations!==undefined&&(!Number.isInteger(fixedIterations)||fixedIterations<1||fixedIterations>4096))throw new Error('Invalid fixed GPU workload');
+    let iterations=fixedIterations??16;
     for(let attempt=0;attempt<6;attempt++){
         device.queue.writeBuffer(params,0,new Uint32Array([iterations,0,0,0]));dispatch(true);
         await read.mapAsync(GPUMapMode.READ);const ticks=new BigUint64Array(read.getMappedRange());
         const ms=Number(ticks[1]-ticks[0])/1e6;read.unmap();calibration.push({iterations,ms});
+        if(fixedIterations!==undefined)break;
         if(ms>targetMs*.85&&ms<targetMs*1.15)break;
         const next=Math.max(1,Math.min(4096,Math.round(iterations*targetMs/Math.max(ms,.01))));
         if(next===iterations||attempt===5)break;
@@ -80,7 +83,7 @@
         return result;
     };
     owner.render=wrapped;installed=true;
-    const metadata={method:pipelined?'Synthetic GPU memory-latency workload, at most two submissions in flight':'Synthetic GPU memory-latency workload and per-frame completion fence',targetExtraGpuMs:targetMs,calibration,iterations,runtimeSamples,
+    const metadata={method:pipelined?'Synthetic GPU memory-latency workload, at most two submissions in flight':'Synthetic GPU memory-latency workload and per-frame completion fence',targetExtraGpuMs:targetMs,calibration,iterations,fixedIterations:fixedIterations!==undefined,runtimeSamples,
         limitations:'Same RTX 5090 architecture and VRAM; GPU contention is not a physical lower-power GPU or a prediction for a named card.'};
     globalThis.__gpuContention={stop,metadata};
     _eanpaTest.pauseAfterFrame=false;_eanpaTest.paused=false;

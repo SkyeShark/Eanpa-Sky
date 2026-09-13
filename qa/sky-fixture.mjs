@@ -75,7 +75,7 @@ pipeline.setEnvironment(initialEnvironment);pipeline.localProbe?.configure({samp
 globalThis._sky=sky;globalThis._c=camera;globalThis._reflectionPipeline=pipeline;globalThis._spatialClouds=spatial;
 const state=globalThis._eanpaTest={paused:true,pauseAfterFrame:false,completedFrames:0};
 const fixture=globalThis.__skyFixture={renderer,scene,camera,host,sky,weather,pipeline,spatial,active,errors,
-    kind,tier,quality,ready:false,time:0,mode:'effects',animateCamera:false,moving,impacts,
+    kind,tier,quality,ready:false,time:0,mode:'effects',animateCamera:false,cameraMotionStartTime:0,moving,impacts,
     environmentStats:environment.stats,nextEnvironmentAt:quality.cloudReflectionRefreshSeconds,
     async frame(time=this.time+1/60){
         globalThis._frameStage='sky-update';
@@ -86,7 +86,7 @@ const fixture=globalThis.__skyFixture={renderer,scene,camera,host,sky,weather,pi
             pipeline.setEnvironment(environment.update(baked));
             this.nextEnvironmentAt=time+quality.cloudReflectionRefreshSeconds;
         }
-        if(this.animateCamera){camera.position.set(Math.sin(time*.35)*3,2.2,13+Math.cos(time*.35)*3);camera.lookAt(0,1,-8);}
+        if(this.animateCamera){const motionTime=time-this.cameraMotionStartTime;camera.position.set(Math.sin(motionTime*.35)*3,2.2,13+Math.cos(motionTime*.35)*3);camera.lookAt(0,1,-8);}
         moving.rotation.y=time*.3;scene.updateMatrixWorld(true);
         await active.prepareFrame?.(renderer,camera);
         globalThis._frameStage='rain-surface';

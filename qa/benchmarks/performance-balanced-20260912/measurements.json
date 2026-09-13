@@ -1,0 +1,548 @@
+{
+  "runtimeRevision": "6104d2db1aefb5960112e3d7973df44e3f7f7c79",
+  "workingFixtureDiffSha256": "b22ddf79be9c3f6adef0b0a69eeab1a216b7d436c23b3b2c20953230f076c640",
+  "nativeGpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 610.88, 24463, 4286, 69, 76, 2235, 138.58, 150.00",
+  "browser": {
+    "version": "Chrome/153.0.8010.36",
+    "protocol": "1.3",
+    "javascript": "15.3.76.10",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+  },
+  "viewport": [
+    1920,
+    1080
+  ],
+  "scope": "Earth sky, rain at 11:00, moving camera, native PBR/SSR, puddles, rain impacts, cloud shadows; six generic host meshes. No demonstration assets.",
+  "method": "30 real-time seconds warmup, 30 measured seconds per run. Two runs per tier/profile, Balanced/Performance then Performance/Balanced. GPU profiles are separate 30-second runs with render/compute timestamps; their readback pacing is not used as FPS.",
+  "constrained": "CDP CPU rate 4 and an identical fixed 1983-iteration GPU memory-latency workload; calibrated once toward 8 ms. Recorded runtime varies with clocks/contention. No changes to hardware clocks, power limits, other processes or accounts.",
+  "limitations": [
+    "One sky/weather/camera path at one resolution, using an isolated fixture, not full-demo FPS.",
+    "Every throughput run passed the external-GPU quiet check but exceeded the 5% external-CPU activity threshold in at least one resource sampling window. Native differences are small compared with observed variation.",
+    "Synthetic CPU/GPU pressure is not emulation of another GPU architecture or a forecast for a named low-end machine.",
+    "Empty-page RAF baseline was taken later; it is scheduling context, not proof of an exact FPS cap.",
+    "Performance uses approximate panorama parallax and temporal sampling, with 60 MiB of capture textures. Supporting quality budgets match Balanced in this fixture."
+  ],
+  "aggregate": [
+    {
+      "profile": "native",
+      "tier": "balanced",
+      "runs": 2,
+      "frames": 13681,
+      "seconds": 60.0195,
+      "fps": 227.94258532643556,
+      "meanMs": 4.387069658650684,
+      "medianMs": 4.199999988079071,
+      "p95Ms": 5.699999988079071,
+      "fpsRange": [
+        227.14323318412517,
+        228.74205201353536
+      ]
+    },
+    {
+      "profile": "native",
+      "tier": "performance",
+      "runs": 2,
+      "frames": 13909,
+      "seconds": 60.01980000001192,
+      "fps": 231.7401924031276,
+      "meanMs": 4.315177223381402,
+      "medianMs": 4.199999988079071,
+      "p95Ms": 5.0999999940395355,
+      "fpsRange": [
+        229.4736701789956,
+        234.00639744102358
+      ]
+    },
+    {
+      "profile": "limited",
+      "tier": "balanced",
+      "runs": 2,
+      "frames": 3985,
+      "seconds": 59.99790000000596,
+      "fps": 66.41899133135666,
+      "meanMs": 15.055934755333993,
+      "medianMs": 15.199999988079071,
+      "p95Ms": 20.200000017881393,
+      "fpsRange": [
+        63.92587531454664,
+        68.91286373455009
+      ]
+    },
+    {
+      "profile": "limited",
+      "tier": "performance",
+      "runs": 2,
+      "frames": 4393,
+      "seconds": 60.01690000000596,
+      "fps": 73.19604977930489,
+      "meanMs": 13.661939449124963,
+      "medianMs": 12.599999994039536,
+      "p95Ms": 17.900000005960464,
+      "fpsRange": [
+        72.88202243445168,
+        73.51005514920276
+      ]
+    }
+  ],
+  "gains": [
+    {
+      "profile": "native",
+      "fpsPercent": 1.666036678163274,
+      "frameMsSaved": 0.07189243526928202,
+      "frameTimePercentSaved": 1.63873475606936
+    },
+    {
+      "profile": "limited",
+      "fpsPercent": 10.20349498253934,
+      "frameMsSaved": 1.39399530620903,
+      "frameTimePercentSaved": 9.258776215904941
+    }
+  ],
+  "gpu": [
+    {
+      "tier": "balanced",
+      "seconds": 30.007800000011922,
+      "summary": {
+        "samples": 3537,
+        "meanMs": 2.5852553463387107,
+        "medianMs": 2.5465279999999995,
+        "p95Ms": 2.9212800000000003,
+        "maxMs": 4.878784
+      },
+      "cloudCaptures": 0,
+      "environmentCaptures": 1,
+      "passes": [
+        {
+          "label": "render:output@1920x1080:reflection-pipeline",
+          "meanMs": 1.0637394763924195
+        },
+        {
+          "label": "render:eanpa_current_spatial_clouds@960x540:spatial-clouds",
+          "meanMs": 0.8795866779756853
+        },
+        {
+          "label": "render:1920x1080@1920x1080:reflection-pipeline",
+          "meanMs": 0.46323690359061415
+        },
+        {
+          "label": "render:screen:reflection-pipeline",
+          "meanMs": 0.06588395589483369
+        },
+        {
+          "label": "render:reflection-current-geometry@1920x1080:reflection-pipeline",
+          "meanMs": 0.038881556121006376
+        },
+        {
+          "label": "render:Current normal, ambient visibility and receiver@1920x1080:reflection-pipeline",
+          "meanMs": 0.022804944303081425
+        },
+        {
+          "label": "render:eanpa_current_spatial_background@960x540:spatial-clouds",
+          "meanMs": 0.0161691829233814
+        },
+        {
+          "label": "render:cloud-column-transmittance@768x384:rain-surface",
+          "meanMs": 0.014317860333616069
+        },
+        {
+          "label": "render:ShadowMap@1024x1024:reflection-pipeline",
+          "meanMs": 0.0093563675431156
+        },
+        {
+          "label": "compute:screen:spatial-clouds",
+          "meanMs": 0.006226184902459711
+        },
+        {
+          "label": "render:PMREM.cubeUv@384x512:reflection-pipeline",
+          "meanMs": 0.0032055188012439922
+        },
+        {
+          "label": "render:rain-surface-world-normal@768x768:rain-surface",
+          "meanMs": 0.0006432027141645467
+        },
+        {
+          "label": "render:output@128x128:reflection-pipeline",
+          "meanMs": 0.0002911031947978513
+        },
+        {
+          "label": "render:PMREM.cubeUv@336x256:sky-reflection-bake",
+          "meanMs": 0.000282490245971162
+        },
+        {
+          "label": "render:rainfall-wetness-water-history@256x256:rain-surface",
+          "meanMs": 0.00023418716426350033
+        },
+        {
+          "label": "render:listener-weather@1x1:rain-surface",
+          "meanMs": 0.00019013627367825853
+        },
+        {
+          "label": "render:eanpa-local-probe-pmrem@384x512:reflection-pipeline",
+          "meanMs": 0.00007881933842239184
+        },
+        {
+          "label": "render:sky_system_env@384x192:sky-reflection-bake",
+          "meanMs": 0.00006668702290076336
+        },
+        {
+          "label": "compute:screen:sky-reflection-bake",
+          "meanMs": 0.000045914616906983316
+        },
+        {
+          "label": "render:eanpa-owned-sky-pmrem@336x256:sky-reflection-bake",
+          "meanMs": 0.000014176986146451797
+        }
+      ],
+      "dedicatedCloudPassMs": 0.8795866779756853
+    },
+    {
+      "tier": "performance",
+      "seconds": 30.01610000002384,
+      "summary": {
+        "samples": 3605,
+        "meanMs": 1.4355988149791945,
+        "medianMs": 1.3797759999999994,
+        "p95Ms": 1.701728,
+        "maxMs": 3.494048
+      },
+      "cloudCaptures": 3,
+      "environmentCaptures": 1,
+      "passes": [
+        {
+          "label": "render:output@1920x1080:reflection-pipeline",
+          "meanMs": 0.8269561786407778
+        },
+        {
+          "label": "render:1920x1080@1920x1080:reflection-pipeline",
+          "meanMs": 0.4355637259362
+        },
+        {
+          "label": "render:screen:reflection-pipeline",
+          "meanMs": 0.06001576477114863
+        },
+        {
+          "label": "render:reflection-current-geometry@1920x1080:reflection-pipeline",
+          "meanMs": 0.037575598335644986
+        },
+        {
+          "label": "render:Current normal, ambient visibility and receiver@1920x1080:reflection-pipeline",
+          "meanMs": 0.021876282940360606
+        },
+        {
+          "label": "render:cloud-column-transmittance@768x384:rain-surface",
+          "meanMs": 0.017911549514563124
+        },
+        {
+          "label": "render:eanpa_current_spatial_background@960x540:spatial-clouds",
+          "meanMs": 0.0171049897364771
+        },
+        {
+          "label": "render:ShadowMap@1024x1024:reflection-pipeline",
+          "meanMs": 0.008894455478502098
+        },
+        {
+          "label": "render:PMREM.cubeUv@384x512:reflection-pipeline",
+          "meanMs": 0.002840508183079057
+        },
+        {
+          "label": "render:eanpa-cloud-panorama-2@2048x1024:spatial-clouds",
+          "meanMs": 0.001753706518723994
+        },
+        {
+          "label": "render:eanpa-cloud-panorama-1@2048x1024:spatial-clouds",
+          "meanMs": 0.0016799334257975034
+        },
+        {
+          "label": "render:eanpa-cloud-panorama-0@2048x1024:spatial-clouds",
+          "meanMs": 0.0016580970873786409
+        },
+        {
+          "label": "render:rain-surface-world-normal@768x768:rain-surface",
+          "meanMs": 0.000608763384188627
+        },
+        {
+          "label": "render:output@128x128:reflection-pipeline",
+          "meanMs": 0.00027605214979195563
+        },
+        {
+          "label": "render:rainfall-wetness-water-history@256x256:rain-surface",
+          "meanMs": 0.00025755339805825237
+        },
+        {
+          "label": "render:PMREM.cubeUv@336x256:sky-reflection-bake",
+          "meanMs": 0.00023766102635228847
+        },
+        {
+          "label": "render:listener-weather@1x1:rain-surface",
+          "meanMs": 0.00016990624133148398
+        },
+        {
+          "label": "compute:screen:spatial-clouds",
+          "meanMs": 0.0001255500693481276
+        },
+        {
+          "label": "render:eanpa-local-probe-pmrem@384x512:reflection-pipeline",
+          "meanMs": 0.00006686712898751734
+        },
+        {
+          "label": "render:sky_system_env@384x192:sky-reflection-bake",
+          "meanMs": 0.000013288210818307907
+        },
+        {
+          "label": "render:eanpa-owned-sky-pmrem@336x256:sky-reflection-bake",
+          "meanMs": 0.000012382801664355061
+        }
+      ],
+      "dedicatedCloudPassMs": 0.005091737031900139
+    }
+  ],
+  "gpuSaved": 1.1496565313595162,
+  "gpuSavedPercent": 44.46974775577516,
+  "runs": [
+    {
+      "tier": "balanced",
+      "profile": "native",
+      "repeat": 1,
+      "date": "2026-09-13T00:30:24.811Z",
+      "fps": 228.74205201353536,
+      "meanMs": 4.371736596735729,
+      "p95Ms": 5.5999999940395355,
+      "cloudCaptures": 0,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 7.129999999999999,
+      "nativeOrStressFrameWorkMedianMs": 1.300000011920929,
+      "syntheticGpu": null
+    },
+    {
+      "tier": "balanced",
+      "profile": "native",
+      "repeat": 2,
+      "date": "2026-09-13T00:35:01.017Z",
+      "fps": 227.14323318412517,
+      "meanMs": 4.402508434796239,
+      "p95Ms": 5.799999982118607,
+      "cloudCaptures": 0,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 6.23,
+      "nativeOrStressFrameWorkMedianMs": 1.2000000178813934,
+      "syntheticGpu": null
+    },
+    {
+      "tier": "performance",
+      "profile": "native",
+      "repeat": 1,
+      "date": "2026-09-13T00:32:05.141Z",
+      "fps": 234.00639744102358,
+      "meanMs": 4.2733874412644175,
+      "p95Ms": 4.800000011920929,
+      "cloudCaptures": 3,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 6.85,
+      "nativeOrStressFrameWorkMedianMs": 1,
+      "syntheticGpu": null
+    },
+    {
+      "tier": "performance",
+      "profile": "native",
+      "repeat": 2,
+      "date": "2026-09-13T00:33:39.895Z",
+      "fps": 229.4736701789956,
+      "meanMs": 4.35779843160208,
+      "p95Ms": 5.4000000059604645,
+      "cloudCaptures": 4,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 5.7,
+      "nativeOrStressFrameWorkMedianMs": 0.9000000059604645,
+      "syntheticGpu": null
+    },
+    {
+      "tier": "balanced",
+      "profile": "limited",
+      "repeat": 1,
+      "date": "2026-09-13T00:36:49.863Z",
+      "fps": 68.91286373455009,
+      "meanMs": 14.511078858251555,
+      "p95Ms": 19,
+      "cloudCaptures": 0,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 5.42,
+      "nativeOrStressFrameWorkMedianMs": 12.700000017881393,
+      "syntheticGpu": {
+        "iterations": 1983,
+        "targetMs": 8,
+        "meanMeasuredMs": 9.421632780487805,
+        "minMeasuredMs": 7.86784,
+        "maxMeasuredMs": 11.69776
+      }
+    },
+    {
+      "tier": "balanced",
+      "profile": "limited",
+      "repeat": 2,
+      "date": "2026-09-13T00:40:52.707Z",
+      "fps": 63.92587531454664,
+      "meanMs": 15.643117831074035,
+      "p95Ms": 20.700000017881393,
+      "cloudCaptures": 0,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 7.210000000000001,
+      "nativeOrStressFrameWorkMedianMs": 13.800000011920929,
+      "syntheticGpu": {
+        "iterations": 1983,
+        "targetMs": 8,
+        "meanMeasuredMs": 9.166723121951218,
+        "minMeasuredMs": 7.65888,
+        "maxMeasuredMs": 11.399136
+      }
+    },
+    {
+      "tier": "performance",
+      "profile": "limited",
+      "repeat": 1,
+      "date": "2026-09-13T00:38:10.825Z",
+      "fps": 73.51005514920276,
+      "meanMs": 13.603581142339074,
+      "p95Ms": 17.099999994039536,
+      "cloudCaptures": 3,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 9.819999999999997,
+      "nativeOrStressFrameWorkMedianMs": 11.799999982118607,
+      "syntheticGpu": {
+        "iterations": 1983,
+        "targetMs": 8,
+        "meanMeasuredMs": 8.70228136585366,
+        "minMeasuredMs": 7.280544,
+        "maxMeasuredMs": 10.63104
+      }
+    },
+    {
+      "tier": "performance",
+      "profile": "limited",
+      "repeat": 2,
+      "date": "2026-09-13T00:39:31.978Z",
+      "fps": 72.88202243445168,
+      "meanMs": 13.720804755375383,
+      "p95Ms": 19.30000001192093,
+      "cloudCaptures": 3,
+      "environmentCaptures": 1,
+      "cleanCpu": false,
+      "cleanGpu": true,
+      "externalCpuPercent": 6.77,
+      "nativeOrStressFrameWorkMedianMs": 11.600000023841858,
+      "syntheticGpu": {
+        "iterations": 1983,
+        "targetMs": 8,
+        "meanMeasuredMs": 9.228803809523813,
+        "minMeasuredMs": 7.097824,
+        "maxMeasuredMs": 11.123264
+      }
+    }
+  ],
+  "raf": {
+    "date": "2026-09-13T00:44:38.797Z",
+    "samples": 6784,
+    "actualSeconds": 30.00080000001192,
+    "fps": 226.1273032718229,
+    "meanMs": 4.422287735850814,
+    "p95Ms": 8.199999988079071,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "browser": {
+      "version": "Chrome/153.0.8010.36",
+      "protocol": "1.3",
+      "javascript": "15.3.76.10",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36"
+    },
+    "method": "30 seconds of requestAnimationFrame on an empty page in the same owned headless browser, unthrottled; measured after engine tests. Scheduling context only, not an engine result."
+  },
+  "archives": [
+    {
+      "file": "raw/performance-balanced-20260912-balanced-r1-native.json.gz",
+      "uncompressedSha256": "0681fca490675636e97277dc769ec683780001243d5e089b926e8d54681f7f40",
+      "compressedSha256": "ee6e41ed09a76d94706bfe10ef89fd200c9627f0ddd0af8e22bfd2312641b097",
+      "bytes": 9277
+    },
+    {
+      "file": "raw/performance-balanced-20260912-balanced-r2-native.json.gz",
+      "uncompressedSha256": "8f4d79f31deebbf1ba2fdafc51b297b97d0aba398b80aa5cbca4f0b64513851f",
+      "compressedSha256": "073c8a2d928f113ffab1d519f3086a34787f6523b252a60ac0a61631cab62187",
+      "bytes": 8625
+    },
+    {
+      "file": "raw/performance-balanced-20260912-performance-r1-native.json.gz",
+      "uncompressedSha256": "443625183ed37ea89abdb158f0a9fbd8a0da598bad899c207a6d25114741e4a8",
+      "compressedSha256": "0b3fd4b690cc3f9239fb10a009deea1ec489975dbef620a9d9723c244f8aadfa",
+      "bytes": 8412
+    },
+    {
+      "file": "raw/performance-balanced-20260912-performance-r2-native.json.gz",
+      "uncompressedSha256": "2b82b9a0efaf08dd2bf8db788a6d13363824f329d250cb910a4b220d4aa2edf1",
+      "compressedSha256": "55f83e62ff0ca2c5f6428619a20ae73cd877fbc84b4abe89d1b7c474645cd9ae",
+      "bytes": 8221
+    },
+    {
+      "file": "raw/performance-balanced-20260912-balanced-r1-limited.json.gz",
+      "uncompressedSha256": "35547bb93f5ef46c1235118e44e6d97c4f450d8bd1c2832d4f63890399c719ba",
+      "compressedSha256": "5771e8c84f939b27674f98d3db50712a92b577f5628aab7c44e4c65d4cfa5640",
+      "bytes": 7083
+    },
+    {
+      "file": "raw/performance-balanced-20260912-balanced-r2-limited.json.gz",
+      "uncompressedSha256": "aae6fc8e2c958d355a4054e0eeb2022bda07770ce68913d979bb5f92a462ec37",
+      "compressedSha256": "7fafa0b47db9b4ec02b6c778e32dbea5994efef98176b2a6fc30ade17c11296e",
+      "bytes": 6820
+    },
+    {
+      "file": "raw/performance-balanced-20260912-performance-r1-limited.json.gz",
+      "uncompressedSha256": "c483d63917bf4a15363bcfb402ef985ef08b20991717300c60bae8cddcc1338e",
+      "compressedSha256": "3154513541c8c64ae96e54dcaff4c5acab844367f78da71c9841feddb0f9045f",
+      "bytes": 7159
+    },
+    {
+      "file": "raw/performance-balanced-20260912-performance-r2-limited.json.gz",
+      "uncompressedSha256": "3fc14201f87f3fc792bbe7f0a615c418604c0ecffd4cd18d099bd9bcaa269ccb",
+      "compressedSha256": "77889fc61ed51fe91d944085cfa3cf930def604031d29067b8934848aefcbf64",
+      "bytes": 7308
+    },
+    {
+      "file": "raw/performance-balanced-20260912-balanced-r1-gpu.json.gz",
+      "uncompressedSha256": "69dd0a2e3c1bede5d708806882f97cd2d2d613a416425782bc8bac596037738a",
+      "compressedSha256": "63959bd0124d2d166a8be5438d3fe8cd430d89197ee35aa2c2e815ca9191a19c",
+      "bytes": 289214
+    },
+    {
+      "file": "raw/performance-balanced-20260912-performance-r1-gpu.json.gz",
+      "uncompressedSha256": "156b2e07d88df0b52a68ceb05259bb2301b225ce7374f827485f4d148c595531",
+      "compressedSha256": "9ac7f100e59433c71f1ebcebadfff4dd22fb1f38a1829a37055011ecd84dee21",
+      "bytes": 266396
+    },
+    {
+      "file": "raw/raf-baseline.json.gz",
+      "uncompressedSha256": "b54b9b013648c0cfe7f152f8e1c0c777758b5b02d48581db723267abe1ef830b",
+      "compressedSha256": "6b1136a8eb2261a4d2f7ef47bec45ef00abbced9f108baf56687d3891933c4c9",
+      "bytes": 6138
+    },
+    {
+      "file": "raw/final-fixture-state.json.gz",
+      "uncompressedSha256": "1b9f6afac2f1674c34007192c85035b91268fad1ec904fcd25aa8bec9ee7a10d",
+      "compressedSha256": "010211c253acefceb0123d8fd7089cb5d9ddea620136f963a4a6fa271d5ea16c",
+      "bytes": 501
+    }
+  ]
+}
