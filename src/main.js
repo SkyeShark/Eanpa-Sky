@@ -12,6 +12,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { fxaa as requiredFxaaFactory } from 'three/addons/tsl/display/FXAANode.js';
 import { makeAudioSystem } from './audio_system.js';
 import { fetchAssetBlob } from './asset_blob.js';
+import { preloadTasks, loadOptionalGLTF } from './asset_preload.js';
 import { FrameMetrics } from './frame_metrics.js';
 import { installShadowMaterialCache } from './shadow_material_cache.js';
 import { makeShadowRefreshPolicy } from './shadow_refresh.js';
@@ -933,6 +934,41 @@ const [
     { makeTerrain }, { makeTempleScene },
     { makeDesertDressing }, { makeVegetationScene },
 ] = await sceneModulesReady;
+// Fetch independent scene assets while terrain is prepared, with a bounded
+// number of requests/decodes. Construction still follows terrain -> scene.
+const architectureLoader = new GLTFLoader();
+const stoneRoot = './assets/pbr/sandstone_blocks_05/sandstone_blocks_05_';
+const mineralRoot = './assets/temple/materials/';
+const fixtureMetalRoot = './assets/temple/materials/ambientcg_metal010/Metal010_1K-JPG_';
+const perimeterRoot = './assets/eidoverse/perimeter/';
+const sceneAssetLoads = preloadTasks([
+    () => globalThis.loadImageTexture(stoneRoot + 'diff_1k.jpg', { srgb: true, mipmaps: true }),
+    () => globalThis.loadImageTexture(stoneRoot + 'nor_gl_1k.jpg', { mipmaps: true }),
+    () => globalThis.loadImageTexture(stoneRoot + 'rough_1k.jpg', { mipmaps: true }),
+    () => globalThis.loadImageTexture(stoneRoot + 'ao_1k.jpg', { mipmaps: true }),
+    () => globalThis.loadImageTexture(stoneRoot + 'disp_1k.jpg', { mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_diff.png', { srgb: true, mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_normal.png', { mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_rough.png', { mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_height.png', { mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_diff.png', { srgb: true, mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_normal.png', { mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_rough.png', { mipmaps: true }),
+    () => globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_height.png', { mipmaps: true }),
+    () => globalThis.loadImageTexture(fixtureMetalRoot + 'Color.jpg', { srgb: true, mipmaps: true }),
+    () => globalThis.loadImageTexture(fixtureMetalRoot + 'NormalGL.jpg', { mipmaps: true }),
+    () => globalThis.loadImageTexture(fixtureMetalRoot + 'Roughness.jpg', { mipmaps: true }),
+    () => globalThis.loadImageTexture(fixtureMetalRoot + 'Metalness.jpg', { mipmaps: true }),
+    () => globalThis.loadImageTexture('./assets/temple/decals/panel_fastener_decal-v1.png', { srgb: true, mipmaps: true }),
+    () => architectureLoader.loadAsync('./assets/temple/inanna_orb.glb'),
+    () => architectureLoader.loadAsync('./assets/temple/ziggurat_architecture.glb'),
+    () => architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_wall_gate.glb'),
+    () => architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_wall_middle_geometry.glb'),
+    () => architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_wall_pillar_geometry.glb'),
+    () => architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_watchtower_geometry.glb'),
+    () => new GLTFLoader().loadAsync('./assets/vegetation/saguaro_seed555.glb'),
+    () => loadOptionalGLTF(new GLTFLoader(), './assets/vegetation/joshuaTree_seed555.glb'),
+]);
 document.getElementById('boot').textContent = 'building the alluvial valley…';
 const terrain = await makeTerrain(THREE, renderer);
 scene.add(terrain);
@@ -940,42 +976,12 @@ globalThis._terrain = terrain;
 camera.position.y = terrain.heightAt(camera.position.x, camera.position.z) + 1.82;
 
 document.getElementById('boot').textContent = 'assembling the Eidoverse compound…';
-const architectureLoader = new GLTFLoader();
-const stoneRoot = './assets/pbr/sandstone_blocks_05/sandstone_blocks_05_';
-const mineralRoot = './assets/temple/materials/';
-const fixtureMetalRoot = './assets/temple/materials/ambientcg_metal010/Metal010_1K-JPG_';
-const perimeterRoot = './assets/eidoverse/perimeter/';
 const [templeAlbedo, templeNormal, templeRoughness, templeAo, templeDisplacement,
     lapisAlbedo, lapisNormal, lapisRoughness, lapisHeight,
     carnelianAlbedo, carnelianNormal, carnelianRoughness, carnelianHeight,
     fixtureMetalAlbedo, fixtureMetalNormal, fixtureMetalRoughness, fixtureMetalMetalness,
     panelFastenerDecal,
-    inannaGltf, zigguratGltf, gateGltf, wallGltf, pillarGltf, watchtowerGltf] = await Promise.all([
-    globalThis.loadImageTexture(stoneRoot + 'diff_1k.jpg', { srgb: true, mipmaps: true }),
-    globalThis.loadImageTexture(stoneRoot + 'nor_gl_1k.jpg', { mipmaps: true }),
-    globalThis.loadImageTexture(stoneRoot + 'rough_1k.jpg', { mipmaps: true }),
-    globalThis.loadImageTexture(stoneRoot + 'ao_1k.jpg', { mipmaps: true }),
-    globalThis.loadImageTexture(stoneRoot + 'disp_1k.jpg', { mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_diff.png', { srgb: true, mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_normal.png', { mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_rough.png', { mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'lapis_tiles_height.png', { mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_diff.png', { srgb: true, mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_normal.png', { mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_rough.png', { mipmaps: true }),
-    globalThis.loadImageTexture(mineralRoot + 'carnelian_tiles_height.png', { mipmaps: true }),
-    globalThis.loadImageTexture(fixtureMetalRoot + 'Color.jpg', { srgb: true, mipmaps: true }),
-    globalThis.loadImageTexture(fixtureMetalRoot + 'NormalGL.jpg', { mipmaps: true }),
-    globalThis.loadImageTexture(fixtureMetalRoot + 'Roughness.jpg', { mipmaps: true }),
-    globalThis.loadImageTexture(fixtureMetalRoot + 'Metalness.jpg', { mipmaps: true }),
-    globalThis.loadImageTexture('./assets/temple/decals/panel_fastener_decal-v1.png', { srgb: true, mipmaps: true }),
-    architectureLoader.loadAsync('./assets/temple/inanna_orb.glb'),
-    architectureLoader.loadAsync('./assets/temple/ziggurat_architecture.glb'),
-    architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_wall_gate.glb'),
-    architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_wall_middle_geometry.glb'),
-    architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_wall_pillar_geometry.glb'),
-    architectureLoader.loadAsync(perimeterRoot + 'scifi_perimeter_watchtower_geometry.glb'),
-]);
+    inannaGltf, zigguratGltf, gateGltf, wallGltf, pillarGltf, watchtowerGltf, saguaroGltf, joshuaGltf] = await sceneAssetLoads;
 for (const texture of [
     templeAlbedo, templeNormal, templeRoughness, templeAo, templeDisplacement,
     lapisAlbedo, lapisNormal, lapisRoughness, lapisHeight,
@@ -1044,12 +1050,6 @@ scene.add(dressing.group);
 globalThis._desertDressing = dressing;
 
 document.getElementById('boot').textContent = 'planting SeedThree desert LODs…';
-const vegetationLoader = new GLTFLoader();
-const saguaroGltf = await vegetationLoader.loadAsync('./assets/vegetation/saguaro_seed555.glb');
-const joshuaUrl = './assets/vegetation/joshuaTree_seed555.glb';
-const joshuaGltf = (await fetch(joshuaUrl, { method: 'HEAD' })).ok
-    ? await vegetationLoader.loadAsync(joshuaUrl)
-    : null;
 const vegetation = await makeVegetationScene(THREE, {
     terrain,
     saguaroGltf,
