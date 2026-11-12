@@ -468,6 +468,22 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
         const ringZShear = (pIn, ch) => RING_R
             ? ringSlopeAt(pIn).mul(ch).mul(RING_THICK * RING_SHEAR_K)
             : float(0);
+        // Every density below is the macro coverage times the rest, so it is
+        // exactly zero wherever that coverage is. inCoverage(cover, body) runs
+        // the rest (the puff field's weather tap and the erosion FBMs: six
+        // noise reads a step in cloudsAt) only inside a cloud mass and returns
+        // 0 elsewhere, the value the straight-line code gives there. Rays that
+        // cross open sky between masses (the visible march, the cached
+        // panorama's capture, the cloud shadow map's columns, the light cache)
+        // then pay one weather tap a step. opts.coverageSkip=false keeps the
+        // straight-line code for A/B.
+        const COVERAGE_SKIP = opts.coverageSkip !== false;
+        const inCoverage = (cover, body) => {
+            if (!COVERAGE_SKIP) return body();
+            const out = float(0).toVar();
+            If(cover.greaterThan(0), () => { out.assign(body()); });
+            return out;
+        };
         const cloudsAt = (pIn) => {
             const p = pIn.mul(u.stretch);
             const atmoH = atmoHeight(pIn);
@@ -475,18 +491,21 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
             const zW = ringZShear(pIn, ch);
             const p1 = p.add(vec3(u.cloudDisplacement.x.negate(), 0, u.cloudDisplacement.z.negate()));
             const largeWeather = clamp(wSampleL(vec2(p1.z.add(zW), p1.x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
-            const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
-            const weather2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
-            const weather = largeWeather.mul(weather2)
-                .mul(smoothstep(0.0, 0.5, ch))
-                .mul(float(1).sub(smoothstep(0.5, 1.0, ch)));
-            const shapeExp = float(0.3).add(float(1.5).mul(smoothstep(0.2, 0.5, ch)));
-            const cloudShape = pow(weather.max(1e-6), shapeExp);
-            const p3 = p2.add(vec3(u.time.mul(12.3), 0, 0));
-            const den1 = max(cloudShape.sub(fbmE(p3.mul(float(0.01).mul(u.dScale))).mul(0.7)), 0);
-            const p4 = p3.add(vec3(0, u.time.mul(15.2), 0));
-            const den2 = max(den1.sub(fbmE(p4.mul(float(0.05).mul(u.dScale))).mul(0.2)), 0);
-            return { density: largeWeather.mul(u.finalMul).mul(min(den2.mul(5), 1)).mul(ringStrip(pIn)), ch };
+            const density = inCoverage(largeWeather, () => {
+                const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
+                const weather2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
+                const weather = largeWeather.mul(weather2)
+                    .mul(smoothstep(0.0, 0.5, ch))
+                    .mul(float(1).sub(smoothstep(0.5, 1.0, ch)));
+                const shapeExp = float(0.3).add(float(1.5).mul(smoothstep(0.2, 0.5, ch)));
+                const cloudShape = pow(weather.max(1e-6), shapeExp);
+                const p3 = p2.add(vec3(u.time.mul(12.3), 0, 0));
+                const den1 = max(cloudShape.sub(fbmE(p3.mul(float(0.01).mul(u.dScale))).mul(0.7)), 0);
+                const p4 = p3.add(vec3(0, u.time.mul(15.2), 0));
+                const den2 = max(den1.sub(fbmE(p4.mul(float(0.05).mul(u.dScale))).mul(0.2)), 0);
+                return largeWeather.mul(u.finalMul).mul(min(den2.mul(5), 1)).mul(ringStrip(pIn));
+            });
+            return { density, ch };
         };
         // light-march density = reference "fast" path: full weather + first
         // erosion. The old crude blob approximation self-shadowed a DIFFERENT
@@ -498,15 +517,17 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
             const zW = ringZShear(pIn, ch);
             const p1 = p.add(vec3(u.cloudDisplacement.x.negate(), 0, u.cloudDisplacement.z.negate()));
             const lw = clamp(wSampleL(vec2(p1.z.add(zW), p1.x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
-            const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
-            const w2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
-            const weather = lw.mul(w2)
-                .mul(smoothstep(0.0, 0.5, ch))
-                .mul(float(1).sub(smoothstep(0.5, 1.0, ch)));
-            const shape = pow(weather.max(1e-6), float(0.3).add(float(1.5).mul(smoothstep(0.2, 0.5, ch))));
-            const p3 = p2.add(vec3(u.time.mul(12.3), 0, 0));
-            const den = max(shape.sub(fbmFn(p3.mul(float(0.01).mul(u.dScale))).mul(0.7)), 0);
-            return lw.mul(u.finalMul).mul(min(den.mul(5), 1)).mul(ringStrip(pIn));
+            return inCoverage(lw, () => {
+                const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
+                const w2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
+                const weather = lw.mul(w2)
+                    .mul(smoothstep(0.0, 0.5, ch))
+                    .mul(float(1).sub(smoothstep(0.5, 1.0, ch)));
+                const shape = pow(weather.max(1e-6), float(0.3).add(float(1.5).mul(smoothstep(0.2, 0.5, ch))));
+                const p3 = p2.add(vec3(u.time.mul(12.3), 0, 0));
+                const den = max(shape.sub(fbmFn(p3.mul(float(0.01).mul(u.dScale))).mul(0.7)), 0);
+                return lw.mul(u.finalMul).mul(min(den.mul(5), 1)).mul(ringStrip(pIn));
+            });
         };
         const cheapDensity = (pIn) => cheapDensityFbm(pIn, fbmE);
         // Erosion-free density proxy for sparse light integration. Real beams
@@ -520,13 +541,15 @@ import { makeCloudUniformSnapshot } from './cloud_uniform_snapshot.js';
             const zW = ringZShear(pIn, ch);
             const p1 = p.add(vec3(u.cloudDisplacement.x.negate(), 0, u.cloudDisplacement.z.negate()));
             const lw = clamp(wSampleL(vec2(p1.z.add(zW), p1.x).mul(float(-0.00005).mul(u.wScale))).sub(u.largeT).mul(u.largeA), 0, 2);
-            const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
-            const w2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
-            const weather = lw.mul(w2)
-                .mul(smoothstep(0.0, 0.5, ch))
-                .mul(float(1).sub(smoothstep(0.5, 1.0, ch)));
-            const shape = pow(weather.max(1e-6), float(0.3).add(float(1.5).mul(smoothstep(0.2, 0.5, ch))));
-            return lw.mul(u.finalMul).mul(min(shape.mul(3.5), 1)).mul(ringStrip(pIn));
+            return inCoverage(lw, () => {
+                const p2 = p1.add(vec3(u.cloudDisplacement.z.negate().mul(0.4), 0, u.cloudDisplacement.x.negate().mul(-0.4)));
+                const w2 = max(wSampleS(vec2(p2.z.add(zW), p2.x).mul(float(0.00005).mul(u.wScale)).add(vec2(0.37, 0.11))).sub(u.weatherT), 0).div(0.72);
+                const weather = lw.mul(w2)
+                    .mul(smoothstep(0.0, 0.5, ch))
+                    .mul(float(1).sub(smoothstep(0.5, 1.0, ch)));
+                const shape = pow(weather.max(1e-6), float(0.3).add(float(1.5).mul(smoothstep(0.2, 0.5, ch))));
+                return lw.mul(u.finalMul).mul(min(shape.mul(3.5), 1)).mul(ringStrip(pIn));
+            });
         };
         const phaseMie = (c) => {
             const p1 = c.add(0.8194068);
