@@ -160,7 +160,16 @@ export function makeCachedCloudDisplay(T, renderer, sky, camera, options = {}) {
     const api = {
         stats, records, originNode:observerNode, get ready(){return ready;},
         sample(dir, origin, transient = true) {
-            const rgba = T.mix(sampleView(oldView,dir,origin),sampleView(newView,dir,origin),blend);
+            // The outgoing image only while the crossfade runs. Between fades
+            // (most of the time) blend is exactly 1 and mix(old, new, 1) is the
+            // new image, so a uniform branch skips the old one's reads and its
+            // reprojection. options.fadeSkip=false reads both always (A/B).
+            let rgba;
+            if (options.fadeSkip === false) rgba = T.mix(sampleView(oldView,dir,origin),sampleView(newView,dir,origin),blend);
+            else {
+                rgba = sampleView(newView,dir,origin).toVar();
+                T.If(blend.lessThan(1), () => { rgba.assign(T.mix(sampleView(oldView,dir,origin),rgba,blend)); });
+            }
             let radiance = rgba.rgb;
             if(transient){
                 const distance = u.cloudStart.add(u.cloudHeight.mul(.5)).max(1100)
