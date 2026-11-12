@@ -1,0 +1,328 @@
+{
+ "date": "2026-11-12T11:57:30.351Z",
+ "fixture": "qa/sky-fixture.html?sky=earth&weather=rain&tod=11 (quality per run), 1920x1080, DPR 1, headless Chrome (WebGPU), the fixture's own frame loop and camera motion",
+ "timing": "WebGPU timestamps on every render and compute pass (timestampWrites per pass, labelled target:stage as qa/gpu-profile.mjs does); CPU is each fixture.frame() on the main thread",
+ "gpu": "NVIDIA GeForce RTX 5090 Laptop GPU, 621.14",
+ "note": "The machine was shared with other GPU and CPU work during these runs: compare the rows, not the absolutes.",
+ "runs": [
+  {
+   "frames": 900,
+   "failure": null,
+   "environmentBakesDuringRun": 1,
+   "cloudCapturesDuringRun": 2,
+   "gpu_ms": {
+    "mean": 1.7422,
+    "p50": 1.486,
+    "p95": 2.969,
+    "p99": 6.422,
+    "max": 10.527
+   },
+   "cpu_ms": {
+    "mean": 3.721,
+    "p50": 3.6,
+    "p95": 5.2,
+    "p99": 6.5,
+    "max": 7.4
+   },
+   "envFrames": [
+    {
+     "frame": 261,
+     "gpu": 1.738,
+     "cpu": 5.8,
+     "env_gpu": 0.929,
+     "env_passes": 18
+    }
+   ],
+   "passes": {
+    "render:output@1920x1080:reflection-pipeline": {
+     "mean": 1.07012,
+     "max": 9.8787,
+     "frames": 900
+    },
+    "render:1920x1080@1920x1080:reflection-pipeline": {
+     "mean": 0.44109,
+     "max": 7.277,
+     "frames": 900
+    },
+    "render:screen:reflection-pipeline": {
+     "mean": 0.06984,
+     "max": 4.768,
+     "frames": 900
+    },
+    "render:cloud-column-transmittance@768x384:rain-surface": {
+     "mean": 0.05048,
+     "max": 0.3411,
+     "frames": 180
+    },
+    "render:reflection-current-geometry@1920x1080:reflection-pipeline": {
+     "mean": 0.03774,
+     "max": 1.0082,
+     "frames": 900
+    },
+    "render:Current normal, ambient visibility and receiver@1920x1080:reflection-pipeline": {
+     "mean": 0.02291,
+     "max": 1.4573,
+     "frames": 900
+    },
+    "render:eanpa_current_spatial_background@960x540:spatial-clouds": {
+     "mean": 0.01551,
+     "max": 0.2035,
+     "frames": 900
+    },
+    "render:eanpa-cloud-panorama-#@2048x1024:spatial-clouds": {
+     "mean": 0.01303,
+     "max": 0.5967,
+     "frames": 64
+    },
+    "render:PMREM.cubeUv@384x512:reflection-pipeline": {
+     "mean": 0.00834,
+     "max": 1.3753,
+     "frames": 7
+    },
+    "render:ShadowMap@1024x1024:reflection-pipeline": {
+     "mean": 0.00808,
+     "max": 0.0126,
+     "frames": 900
+    },
+    "render:rain-surface-world-normal@768x768:rain-surface": {
+     "mean": 0.00156,
+     "max": 0.0129,
+     "frames": 151
+    },
+    "render:PMREM.cubeUv@336x256:sky-reflection-bake": {
+     "mean": 0.00094,
+     "max": 0.8479,
+     "frames": 1
+    },
+    "render:output@128x128:reflection-pipeline": {
+     "mean": 0.00075,
+     "max": 0.021,
+     "frames": 42
+    },
+    "render:rainfall-wetness-water-history@256x256:rain-surface": {
+     "mean": 0.00062,
+     "max": 0.0103,
+     "frames": 77
+    },
+    "render:listener-weather@1x1:rain-surface": {
+     "mean": 0.00051,
+     "max": 0.0077,
+     "frames": 77
+    },
+    "compute:screen:spatial-clouds": {
+     "mean": 0.00039,
+     "max": 0.1945,
+     "frames": 2
+    },
+    "render:eanpa-local-probe-pmrem@384x512:reflection-pipeline": {
+     "mean": 0.00018,
+     "max": 0.0611,
+     "frames": 3
+    },
+    "render:eanpa-owned-sky-pmrem@336x256:sky-reflection-bake": {
+     "mean": 0.00005,
+     "max": 0.0489,
+     "frames": 1
+    },
+    "render:sky_system_env@384x192:sky-reflection-bake": {
+     "mean": 0.00004,
+     "max": 0.0317,
+     "frames": 1
+    }
+   },
+   "tag": "base-performance",
+   "quality": "performance"
+  },
+  {
+   "frames": 900,
+   "failure": null,
+   "environmentBakesDuringRun": 1,
+   "cloudCapturesDuringRun": 2,
+   "gpu_ms": {
+    "mean": 1.5151,
+    "p50": 1.404,
+    "p95": 1.905,
+    "p99": 2.459,
+    "max": 4.305
+   },
+   "cpu_ms": {
+    "mean": 3.703,
+    "p50": 3.5,
+    "p95": 5.2,
+    "p99": 6.6,
+    "max": 9
+   },
+   "envFrames": [
+    {
+     "frame": 262,
+     "gpu": 1.48,
+     "cpu": 5.2,
+     "env_gpu": 0.045,
+     "env_passes": 1
+    },
+    {
+     "frame": 263,
+     "gpu": 1.432,
+     "cpu": 4.8,
+     "env_gpu": 0.006,
+     "env_passes": 1
+    },
+    {
+     "frame": 264,
+     "gpu": 1.567,
+     "cpu": 4.3,
+     "env_gpu": 0.115,
+     "env_passes": 2
+    },
+    {
+     "frame": 265,
+     "gpu": 1.568,
+     "cpu": 6.6,
+     "env_gpu": 0.126,
+     "env_passes": 2
+    },
+    {
+     "frame": 266,
+     "gpu": 1.769,
+     "cpu": 4.3,
+     "env_gpu": 0.122,
+     "env_passes": 2
+    },
+    {
+     "frame": 267,
+     "gpu": 1.849,
+     "cpu": 5.5,
+     "env_gpu": 0.118,
+     "env_passes": 2
+    },
+    {
+     "frame": 268,
+     "gpu": 1.515,
+     "cpu": 3.3,
+     "env_gpu": 0.113,
+     "env_passes": 2
+    },
+    {
+     "frame": 269,
+     "gpu": 4.305,
+     "cpu": 3.9,
+     "env_gpu": 0.11,
+     "env_passes": 2
+    },
+    {
+     "frame": 270,
+     "gpu": 1.508,
+     "cpu": 4,
+     "env_gpu": 0.108,
+     "env_passes": 2
+    },
+    {
+     "frame": 271,
+     "gpu": 1.77,
+     "cpu": 5.3,
+     "env_gpu": 0.102,
+     "env_passes": 2
+    }
+   ],
+   "passes": {
+    "render:output@1920x1080:reflection-pipeline": {
+     "mean": 0.87913,
+     "max": 2.9374,
+     "frames": 900
+    },
+    "render:1920x1080@1920x1080:reflection-pipeline": {
+     "mean": 0.42513,
+     "max": 2.4881,
+     "frames": 900
+    },
+    "render:screen:reflection-pipeline": {
+     "mean": 0.0589,
+     "max": 0.3805,
+     "frames": 900
+    },
+    "render:cloud-column-transmittance@768x384:rain-surface": {
+     "mean": 0.0486,
+     "max": 0.2888,
+     "frames": 181
+    },
+    "render:reflection-current-geometry@1920x1080:reflection-pipeline": {
+     "mean": 0.03477,
+     "max": 0.2174,
+     "frames": 900
+    },
+    "render:Current normal, ambient visibility and receiver@1920x1080:reflection-pipeline": {
+     "mean": 0.02153,
+     "max": 0.0532,
+     "frames": 900
+    },
+    "render:eanpa_current_spatial_background@960x540:spatial-clouds": {
+     "mean": 0.0144,
+     "max": 0.0187,
+     "frames": 900
+    },
+    "render:eanpa-cloud-panorama-#@2048x1024:spatial-clouds": {
+     "mean": 0.01272,
+     "max": 0.6938,
+     "frames": 64
+    },
+    "render:ShadowMap@1024x1024:reflection-pipeline": {
+     "mean": 0.00831,
+     "max": 0.1842,
+     "frames": 900
+    },
+    "render:PMREM.cubeUv@384x512:reflection-pipeline": {
+     "mean": 0.00671,
+     "max": 1.0335,
+     "frames": 6
+    },
+    "render:rain-surface-world-normal@768x768:rain-surface": {
+     "mean": 0.00154,
+     "max": 0.0113,
+     "frames": 151
+    },
+    "render:PMREM.cubeUv@336x256:sky-reflection-filter": {
+     "mean": 0.00096,
+     "max": 0.1203,
+     "frames": 8
+    },
+    "render:output@128x128:reflection-pipeline": {
+     "mean": 0.00066,
+     "max": 0.0218,
+     "frames": 36
+    },
+    "render:rainfall-wetness-water-history@256x256:rain-surface": {
+     "mean": 0.00062,
+     "max": 0.0102,
+     "frames": 77
+    },
+    "render:listener-weather@1x1:rain-surface": {
+     "mean": 0.00052,
+     "max": 0.0101,
+     "frames": 77
+    },
+    "compute:screen:spatial-clouds": {
+     "mean": 0.00033,
+     "max": 0.1469,
+     "frames": 2
+    },
+    "render:eanpa-local-probe-pmrem@384x512:reflection-pipeline": {
+     "mean": 0.00016,
+     "max": 0.0527,
+     "frames": 3
+    },
+    "render:eanpa-owned-sky-pmrem-staging@336x256:sky-reflection-filter": {
+     "mean": 0.00006,
+     "max": 0.0065,
+     "frames": 9
+    },
+    "render:sky_system_env@384x192:sky-reflection-bake": {
+     "mean": 0.00005,
+     "max": 0.0448,
+     "frames": 1
+    }
+   },
+   "tag": "pmrem-performance",
+   "quality": "performance"
+  }
+ ]
+}
