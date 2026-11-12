@@ -1235,8 +1235,20 @@ function assignReflectionEnvironment(env) {
     return installed?.userData?.eanpaReflectionMaterialCount ?? 0;
 }
 
+// The sky whose bake a sliced PMREM refresh is filtering (stepReflectionFilter publishes it, or drops it if the sky
+// was switched meanwhile).
+let reflectionFilterOwner = null;
+function stepReflectionFilter() {
+    if (!filteredEnvironment.busy) return;
+    if (active !== reflectionFilterOwner) { filteredEnvironment.cancel(); reflectionFilterOwner = null; return; }
+    // Same texture as before: its materials keep their binding and pick up the
+    // new filter through its pmremVersion.
+    if (filteredEnvironment.step()) reflectionFilterOwner = null;
+}
+
 async function rebakeReflections(force = false) {
     if (!force && !reflectionDirty) return;
+    if (force) { filteredEnvironment.cancel(); reflectionFilterOwner = null; }
     try {
         const sky = active?.sky;
         if (!sky?.bakeEnv) return;
@@ -1255,7 +1267,14 @@ async function rebakeReflections(force = false) {
             includeClouds: true,
         });
         if (active !== owner) return;
-        const count = assignReflectionEnvironment(filteredEnvironment.update(env));
+        // A refresh in play filters its PMREM over the next frames, a few
+        // render passes each (stepReflectionFilter); the first bake, a size
+        // change and forced bakes (boot, sky switches) filter at once.
+        const sliced = !force && filteredEnvironment.begin(env);
+        if (sliced) reflectionFilterOwner = owner;
+        const count = sliced
+            ? (globalThis._reflectionStats?.materials ?? 0)
+            : assignReflectionEnvironment(filteredEnvironment.update(env));
         reflectionBakedHours = Number(document.getElementById('tod').value);
         reflectionBakedSolarVisibility=sky.uniforms.solarVisibility?.value??1;
         reflectionBakedWeatherSig = weatherBakeSignature();
@@ -1815,7 +1834,10 @@ async function tick(now, dt) {
     await active?.sky?.prepareCloudShadows?.(renderer, camera);
     if (reflectionBakedWeatherSig !== weatherBakeSignature()) reflectionDirty = true;
     const eclipseChanged=Math.abs((active?.sky?.uniforms.solarVisibility?.value??1)-reflectionBakedSolarVisibility)>.25;
-    if (reflectionDirty && performance.now() - reflectionLastBake >= (eclipseChanged?150:1500)) {
+    if (filteredEnvironment.busy) {
+        globalThis._frameStage = 'reflection-filter';
+        stepReflectionFilter();
+    } else if (reflectionDirty && performance.now() - reflectionLastBake >= (eclipseChanged?150:1500)) {
         globalThis._frameStage = 'reflection-bake';
         await rebakeReflections();
     }
