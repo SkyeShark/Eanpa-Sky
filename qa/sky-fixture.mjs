@@ -80,10 +80,15 @@ const fixture=globalThis.__skyFixture={renderer,scene,camera,host,sky,weather,pi
     async frame(time=this.time+1/60){
         globalThis._frameStage='sky-update';
         this.time=time;active.update(time,1/60);
-        if(time>=this.nextEnvironmentAt){
+        if(environment.busy){
+            // as the application: a refresh's PMREM filters over the frames
+            // after its bake, into the texture the pipeline already holds
+            globalThis._frameStage='sky-reflection-filter';
+            environment.step();
+        }else if(time>=this.nextEnvironmentAt){
             globalThis._frameStage='sky-reflection-bake';
             const baked=await sky.bakeEnv(renderer,{...quality.reflectionBake,assign:false});
-            pipeline.setEnvironment(environment.update(baked));
+            if(!environment.begin(baked))pipeline.setEnvironment(environment.update(baked));
             this.nextEnvironmentAt=time+quality.cloudReflectionRefreshSeconds;
         }
         if(this.animateCamera){const motionTime=time-this.cameraMotionStartTime;camera.position.set(Math.sin(motionTime*.35)*3,2.2,13+Math.cos(motionTime*.35)*3);camera.lookAt(0,1,-8);}
